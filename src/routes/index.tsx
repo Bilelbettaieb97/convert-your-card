@@ -201,56 +201,125 @@ function Logos() {
 /* ────────────────────────────  PROBLEM  ──────────────────────────── */
 
 function Problem() {
+  const oldStats = [
+    { label: "finissent à la poubelle", value: "88%" },
+    { label: "de coût par réimpression", value: "120€" },
+    { label: "perdues = infos figées", value: "1 sur 2" },
+  ];
+  const newStats = [
+    { label: "de contacts sauvegardés", value: "92%" },
+    { label: "économisés par an", value: "−340€" },
+    { label: "mise à jour en temps réel", value: "∞" },
+  ];
+
   return (
-    <section className="py-20 lg:py-28">
+    <section className="relative py-20 lg:py-28 overflow-hidden">
+      {/* ambient bg */}
+      <div aria-hidden className="absolute inset-0 -z-10">
+        <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[700px] h-[700px] rounded-full bg-magenta/5 blur-3xl" />
+      </div>
+
       <div className="max-w-6xl mx-auto px-4">
         <div className="text-center max-w-2xl mx-auto">
-          <span className="text-sm font-semibold text-magenta uppercase tracking-wider">Pourquoi changer</span>
-          <h2 className="mt-3 font-display font-bold text-3xl sm:text-4xl">
+          <span className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-magenta/10 text-magenta text-xs font-semibold uppercase tracking-wider">
+            <Sparkles className="w-3.5 h-3.5" /> Pourquoi changer
+          </span>
+          <h2 className="mt-4 font-display font-bold text-3xl sm:text-4xl lg:text-5xl leading-tight">
             La carte papier coûte cher.<br/>
             <span className="text-gradient">Et ne convertit plus.</span>
           </h2>
-          <p className="mt-4 text-muted-foreground">88% des cartes papier finissent à la poubelle dans la semaine. Le digital change la donne.</p>
+          <p className="mt-4 text-muted-foreground text-base sm:text-lg">
+            En 2026, votre carte papier finit à la poubelle avant même votre relance.
+            Comparez — la différence est sans appel.
+          </p>
         </div>
 
-        <div className="mt-14 grid md:grid-cols-2 gap-10 lg:gap-16 items-center">
-          {/* LEFT — Traditional paper card (crossed out) */}
-          <div className="flex flex-col items-center">
-            <div className="relative">
-              {/* Paper card */}
-              <div className="w-72 sm:w-80 h-44 sm:h-48 bg-[#f5f0e8] rounded-xl shadow-xl border border-[#e0d5c5] p-5 flex flex-col justify-between relative rotate-[-3deg]">
-                <div>
-                  <div className="text-[10px] text-[#8b7355] uppercase tracking-wider">Consultant Digital</div>
-                  <div className="font-serif text-xl text-[#2d2d2d] mt-1">Jean Dupont</div>
-                  <div className="text-xs text-[#666] mt-0.5">06 12 34 56 78</div>
-                  <div className="text-xs text-[#666]">jean.dupont@email.com</div>
+        <div className="mt-14 relative grid md:grid-cols-2 gap-8 lg:gap-6 items-stretch">
+          {/* VS badge */}
+          <div className="hidden md:flex absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 z-20 w-14 h-14 rounded-full bg-background border-2 border-magenta items-center justify-center font-display font-bold text-magenta shadow-xl">
+            VS
+          </div>
+
+          {/* LEFT — Paper card (loser) */}
+          <div className="relative rounded-2xl border border-destructive/20 bg-destructive/[0.03] p-6 sm:p-8 flex flex-col">
+            <div className="flex items-center justify-between mb-6">
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-destructive/10 text-destructive text-[11px] font-bold uppercase tracking-wider">
+                <X className="w-3 h-3" strokeWidth={3} /> Hier
+              </span>
+              <span className="text-xs text-muted-foreground font-medium">Carte papier</span>
+            </div>
+
+            {/* Paper card visual */}
+            <div className="flex-1 flex items-center justify-center py-4">
+              <div className="relative">
+                <div className="w-64 sm:w-72 h-40 sm:h-44 bg-[#f5f0e8] rounded-xl shadow-lg border border-[#e0d5c5] p-5 flex flex-col justify-between rotate-[-4deg] grayscale-[20%] opacity-90">
+                  <div>
+                    <div className="text-[10px] text-[#8b7355] uppercase tracking-wider">Consultant</div>
+                    <div className="font-serif text-lg text-[#2d2d2d] mt-1">Jean Dupont</div>
+                    <div className="text-xs text-[#666] mt-0.5">06 12 34 56 78</div>
+                  </div>
+                  <div className="flex items-end justify-between">
+                    <div className="text-[10px] text-[#999]">jeandupont.fr</div>
+                    <div className="w-7 h-7 bg-[#c9b99a] rounded-full flex items-center justify-center text-white text-[10px] font-bold">JD</div>
+                  </div>
                 </div>
-                <div className="flex items-end justify-between">
-                  <div className="text-[10px] text-[#999]">www.jeandupont.fr</div>
-                  <div className="w-8 h-8 bg-[#c9b99a] rounded-full flex items-center justify-center text-white text-[10px] font-bold">JD</div>
-                </div>
-              </div>
-              {/* Big red X overlay */}
-              <div className="absolute inset-0 flex items-center justify-center">
-                <div className="bg-destructive/90 rounded-full p-3 sm:p-4 shadow-lg">
-                  <X className="w-10 h-10 sm:w-12 sm:h-12 text-white" strokeWidth={3} />
+                {/* torn corner effect */}
+                <div className="absolute -top-2 -right-2 w-10 h-10 bg-background rounded-full shadow-md flex items-center justify-center rotate-12">
+                  <X className="w-5 h-5 text-destructive" strokeWidth={3} />
                 </div>
               </div>
             </div>
-            <p className="mt-6 text-sm font-semibold text-destructive flex items-center gap-2">
-              <X className="w-4 h-4" /> Non, c'est à jeter
-            </p>
-            <p className="mt-1 text-xs text-muted-foreground">88% finissent à la poubelle dans la semaine</p>
+
+            <ul className="mt-6 space-y-2.5">
+              {oldStats.map((s) => (
+                <li key={s.label} className="flex items-center justify-between text-sm border-b border-destructive/10 pb-2 last:border-0">
+                  <span className="text-muted-foreground line-through decoration-destructive/40">{s.label}</span>
+                  <span className="font-display font-bold text-destructive tabular-nums">{s.value}</span>
+                </li>
+              ))}
+            </ul>
           </div>
 
-          {/* RIGHT — Digital card */}
-          <div className="flex flex-col items-center">
-            <DigitalCardVisual />
-            <p className="mt-6 text-sm font-semibold text-success flex items-center gap-2">
-              <Check className="w-4 h-4" strokeWidth={3} /> Le futur de votre réseau
-            </p>
-            <p className="mt-1 text-xs text-muted-foreground">Toujours à jour, accessible en 1 tap</p>
+          {/* RIGHT — Digital card (winner) */}
+          <div className="relative rounded-2xl border-2 border-magenta/30 bg-gradient-to-br from-magenta/[0.04] to-transparent p-6 sm:p-8 flex flex-col shadow-2xl shadow-magenta/10">
+            <div className="absolute -top-3 left-1/2 -translate-x-1/2 px-3 py-1 rounded-full bg-gradient-to-r from-magenta to-magenta/80 text-white text-[11px] font-bold uppercase tracking-wider shadow-lg">
+              ★ Recommandé
+            </div>
+            <div className="flex items-center justify-between mb-6">
+              <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-success/15 text-success text-[11px] font-bold uppercase tracking-wider">
+                <Check className="w-3 h-3" strokeWidth={3} /> Aujourd'hui
+              </span>
+              <span className="text-xs text-magenta font-semibold">OneTap Digital</span>
+            </div>
+
+            <div className="flex-1 flex items-center justify-center py-4">
+              <DigitalCardVisual />
+            </div>
+
+            <ul className="mt-6 space-y-2.5">
+              {newStats.map((s) => (
+                <li key={s.label} className="flex items-center justify-between text-sm border-b border-magenta/10 pb-2 last:border-0">
+                  <span className="text-foreground/80 flex items-center gap-2">
+                    <Check className="w-4 h-4 text-success shrink-0" strokeWidth={3} /> {s.label}
+                  </span>
+                  <span className="font-display font-bold text-magenta tabular-nums">{s.value}</span>
+                </li>
+              ))}
+            </ul>
           </div>
+        </div>
+
+        {/* CTA strip */}
+        <div className="mt-12 flex flex-col sm:flex-row items-center justify-center gap-4 text-center">
+          <p className="text-sm sm:text-base text-muted-foreground">
+            <span className="font-semibold text-foreground">+12 000 pros</span> ont déjà fait le switch.
+          </p>
+          <button
+            onClick={() => triggerCheckout()}
+            className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-magenta to-magenta/85 text-white font-semibold shadow-lg shadow-magenta/30 hover:shadow-xl hover:shadow-magenta/40 hover:-translate-y-0.5 transition-all"
+          >
+            Passer au digital <ArrowRight className="w-4 h-4" />
+          </button>
         </div>
       </div>
     </section>
