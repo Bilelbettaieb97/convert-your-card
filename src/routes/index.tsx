@@ -201,14 +201,9 @@ function Logos() {
 /* ────────────────────────────  PROBLEM  ──────────────────────────── */
 
 function Problem() {
-  const points = [
-    { bad: "Cartes papier oubliées dans une poche", good: "Profil digital toujours à jour, accessible en 1 tap" },
-    { bad: "Coordonnées qui changent → cartes obsolètes", good: "Modifiez vos infos à vie, sans réimprimer" },
-    { bad: "Aucun moyen de mesurer l'impact", good: "Suivez vues, clics et contacts ajoutés (offre Premium)" },
-  ];
   return (
     <section className="py-20 lg:py-28">
-      <div className="max-w-5xl mx-auto px-4">
+      <div className="max-w-6xl mx-auto px-4">
         <div className="text-center max-w-2xl mx-auto">
           <span className="text-sm font-semibold text-magenta uppercase tracking-wider">Pourquoi changer</span>
           <h2 className="mt-3 font-display font-bold text-3xl sm:text-4xl">
@@ -218,17 +213,44 @@ function Problem() {
           <p className="mt-4 text-muted-foreground">88% des cartes papier finissent à la poubelle dans la semaine. Le digital change la donne.</p>
         </div>
 
-        <div className="mt-12 grid md:grid-cols-3 gap-4">
-          {points.map((p, i) => (
-            <div key={i} className="bg-card border border-border rounded-2xl p-6 shadow-card">
-              <div className="flex items-start gap-2.5 text-sm text-muted-foreground line-through opacity-70">
-                <X className="w-4 h-4 text-destructive shrink-0 mt-0.5" />{p.bad}
+        <div className="mt-14 grid md:grid-cols-2 gap-10 lg:gap-16 items-center">
+          {/* LEFT — Traditional paper card (crossed out) */}
+          <div className="flex flex-col items-center">
+            <div className="relative">
+              {/* Paper card */}
+              <div className="w-72 sm:w-80 h-44 sm:h-48 bg-[#f5f0e8] rounded-xl shadow-xl border border-[#e0d5c5] p-5 flex flex-col justify-between relative rotate-[-3deg]">
+                <div>
+                  <div className="text-[10px] text-[#8b7355] uppercase tracking-wider">Consultant Digital</div>
+                  <div className="font-serif text-xl text-[#2d2d2d] mt-1">Jean Dupont</div>
+                  <div className="text-xs text-[#666] mt-0.5">06 12 34 56 78</div>
+                  <div className="text-xs text-[#666]">jean.dupont@email.com</div>
+                </div>
+                <div className="flex items-end justify-between">
+                  <div className="text-[10px] text-[#999]">www.jeandupont.fr</div>
+                  <div className="w-8 h-8 bg-[#c9b99a] rounded-full flex items-center justify-center text-white text-[10px] font-bold">JD</div>
+                </div>
               </div>
-              <div className="mt-4 flex items-start gap-2.5 text-sm font-medium">
-                <Check className="w-4 h-4 text-success shrink-0 mt-0.5" strokeWidth={3} />{p.good}
+              {/* Big red X overlay */}
+              <div className="absolute inset-0 flex items-center justify-center">
+                <div className="bg-destructive/90 rounded-full p-3 sm:p-4 shadow-lg">
+                  <X className="w-10 h-10 sm:w-12 sm:h-12 text-white" strokeWidth={3} />
+                </div>
               </div>
             </div>
-          ))}
+            <p className="mt-6 text-sm font-semibold text-destructive flex items-center gap-2">
+              <X className="w-4 h-4" /> Non, c'est à jeter
+            </p>
+            <p className="mt-1 text-xs text-muted-foreground">88% finissent à la poubelle dans la semaine</p>
+          </div>
+
+          {/* RIGHT — Digital card */}
+          <div className="flex flex-col items-center">
+            <DigitalCardVisual />
+            <p className="mt-6 text-sm font-semibold text-success flex items-center gap-2">
+              <Check className="w-4 h-4" strokeWidth={3} /> Le futur de votre réseau
+            </p>
+            <p className="mt-1 text-xs text-muted-foreground">Toujours à jour, accessible en 1 tap</p>
+          </div>
         </div>
       </div>
     </section>
