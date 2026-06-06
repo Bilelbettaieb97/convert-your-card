@@ -332,7 +332,7 @@ function Pricing() {
           </div>
 
           {/* Offer 3 — Premium (mobile: 3rd, desktop: 3rd) */}
-          <div className="order-3 lg:order-3 flex">
+          <div className="order-3 lg:order-3 flex max-w-md mx-auto w-full lg:max-w-none">
             <OfferCard
               name="OneTap Premium"
               tagline="Analytics & multi-cartes"
