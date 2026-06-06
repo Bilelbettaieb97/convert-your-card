@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import React, { useEffect, useState } from "react";
 import {
   Check, X, Star, Zap, Shield, Smartphone, BarChart3, Leaf,
@@ -44,7 +44,7 @@ function Landing() {
       <HowItWorks />
       <SocialProofBand />
       <VideoTestimonials />
-      <Pricing />
+      
       <GuaranteeBlock />
       <Features />
       <Testimonials />
@@ -62,7 +62,7 @@ function Landing() {
 
 /* ────────────────────────────  TOP  ──────────────────────────── */
 
-function PromoBar() {
+export function PromoBar() {
   return (
     <div className="bg-gradient-brand text-primary-foreground text-sm">
       <div className="max-w-7xl mx-auto px-4 py-2 flex items-center justify-center gap-3 flex-wrap text-center">
@@ -75,7 +75,7 @@ function PromoBar() {
   );
 }
 
-function Nav() {
+export function Nav() {
   return (
     <header className="sticky top-0 z-40 bg-background/80 backdrop-blur-lg border-b border-border">
       <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
@@ -87,7 +87,7 @@ function Nav() {
         </a>
         <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-muted-foreground">
           <a href="#fonctionnement" className="hover:text-foreground transition">Fonctionnement</a>
-          <a href="#offres" className="hover:text-foreground transition">Offres</a>
+          <Link to="/offres" className="hover:text-foreground transition">Offres</Link>
           <a href="#avis" className="hover:text-foreground transition">Avis</a>
           <a href="#faq" className="hover:text-foreground transition">FAQ</a>
         </nav>
@@ -463,7 +463,7 @@ function HowItWorks() {
 
 /* ────────────────────────────  PRICING — FOCUS ON OFFER 1  ──────────────────────────── */
 
-function Pricing() {
+export function Pricing() {
   return (
     <section id="offres" className="py-20 lg:py-28">
       <div className="max-w-7xl mx-auto px-4">
@@ -1197,7 +1197,7 @@ function FinalCTA() {
 
 /* ────────────────────────────  FOOTER + STICKY  ──────────────────────────── */
 
-function Footer() {
+export function Footer() {
   return (
     <footer className="border-t border-border bg-card">
       <div className="max-w-7xl mx-auto px-4 py-10 flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-muted-foreground">
