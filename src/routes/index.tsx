@@ -315,7 +315,7 @@ function Problem() {
             <span className="font-semibold text-foreground">+12 000 pros</span> ont déjà fait le switch.
           </p>
           <button
-            onClick={onCheckoutClick}
+            onClick={() => triggerCheckout()}
             className="inline-flex items-center gap-2 px-6 py-3 rounded-full bg-gradient-to-r from-magenta to-magenta/85 text-white font-semibold shadow-lg shadow-magenta/30 hover:shadow-xl hover:shadow-magenta/40 hover:-translate-y-0.5 transition-all"
           >
             Passer au digital <ArrowRight className="w-4 h-4" />
