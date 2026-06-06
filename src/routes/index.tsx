@@ -279,27 +279,8 @@ function Pricing() {
           <p className="mt-4 text-muted-foreground">Payez une fois, profitez à vie. Garantie satisfait ou remboursé 30 jours.</p>
         </div>
 
-        <div className="mt-14 grid lg:grid-cols-3 gap-6 lg:gap-4 items-start max-w-6xl mx-auto">
-          {/* Offer 2 — Card + physical */}
-          <OfferCard
-            name="OneTap Physique"
-            tagline="Carte NFC + page digitale"
-            oldPrice="48€"
-            price="28,80€"
-            badge="Recevez la carte chez vous"
-            features={[
-              { t: "Tout l'essentiel inclus", v: true },
-              { t: "Carte NFC physique premium", v: true },
-              { t: "Livraison offerte 48h", v: true },
-              { t: "QR code intégré", v: true },
-              { t: "Analytics avancées", v: false },
-              { t: "Multi-cartes", v: false },
-            ]}
-            cta="Commander"
-            order={1}
-          />
-
-          {/* Offer 1 — FOCUS */}
+        <div className="mt-14 grid lg:grid-cols-3 gap-6 lg:gap-5 items-stretch max-w-6xl mx-auto">
+          {/* Offer 1 — Essentiel */}
           <OfferCard
             name="OneTap Essentiel"
             tagline="La carte digitale qui convertit"
@@ -325,10 +306,27 @@ function Pricing() {
             ]}
             cta="Oui, je veux ma carte — 19,80€"
             subCta="Activation immédiate · Garantie 30 jours"
-            order={2}
           />
 
-          {/* Offer 3 */}
+          {/* Offer 2 — Physique */}
+          <OfferCard
+            name="OneTap Physique"
+            tagline="Carte NFC + page digitale"
+            oldPrice="48€"
+            price="28,80€"
+            badge="Recevez la carte chez vous"
+            features={[
+              { t: "Tout l'essentiel inclus", v: true },
+              { t: "Carte NFC physique premium", v: true },
+              { t: "Livraison offerte 48h", v: true },
+              { t: "QR code intégré", v: true },
+              { t: "Analytics avancées", v: false },
+              { t: "Multi-cartes", v: false },
+            ]}
+            cta="Commander"
+          />
+
+          {/* Offer 3 — Premium */}
           <OfferCard
             name="OneTap Premium"
             tagline="Analytics & multi-cartes"
@@ -344,7 +342,6 @@ function Pricing() {
               { t: "Support prioritaire", v: true },
             ]}
             cta="Passer Premium"
-            order={3}
           />
         </div>
 
