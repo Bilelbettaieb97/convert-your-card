@@ -329,27 +329,243 @@ function Problem() {
 /* ────────────────────────────  HOW IT WORKS  ──────────────────────────── */
 
 function HowItWorks() {
-  const steps = [
-    { n: "01", t: "Vous commandez", d: "Choisissez votre offre, payez en 30 secondes. Aucun engagement." },
-    { n: "02", t: "Vous personnalisez", d: "Photo, infos, réseaux, liens. Notre éditeur ultra simple guide chaque étape." },
-    { n: "03", t: "Vous partagez", d: "QR code, lien ou tap NFC : vos contacts sauvegardent vos coordonnées en 2 secondes." },
+  const templates = [
+    {
+      id: "agency",
+      sector: "Agence & conseil",
+      name: "LAREN SMITH",
+      brand: "Company Name",
+      role: "Professionnaliste",
+      accent: "from-violet-500 to-pink-500",
+      header: "from-violet-600 via-fuchsia-500 to-slate-950",
+      chip: "bg-violet-500/15 text-violet-200 border border-violet-400/20",
+      shell: "bg-slate-950",
+      inner: "bg-background",
+      cta: "Ajouter aux contacts",
+      secondary: "Site web",
+      actions: ["Email", "Appeler", "SMS", "Contact", "LinkedIn", "Facebook", "Instagram", "QR code"],
+    },
+    {
+      id: "real-estate",
+      sector: "Immobilier premium",
+      name: "CLAIRE DUBOIS",
+      brand: "LUXURY REALTY GROUP",
+      role: "Agente immobilière confirmée",
+      accent: "from-amber-400 to-yellow-600",
+      header: "from-slate-950 via-slate-900 to-blue-950",
+      chip: "bg-amber-500/15 text-amber-700 border border-amber-500/20",
+      shell: "bg-zinc-900",
+      inner: "bg-background",
+      cta: "Ajouter aux contacts",
+      secondary: "Site web",
+      actions: ["E-mail", "Appeler", "SMS", "Biens", "LinkedIn", "Facebook", "Instagram", "Code QR"],
+    },
+    {
+      id: "coach",
+      sector: "Coach & expert",
+      name: "JONNIN COACH",
+      brand: "BRAND NAME",
+      role: "Réserver en 1 clic",
+      accent: "from-emerald-400 to-teal-500",
+      header: "from-emerald-500 via-emerald-400 to-slate-950",
+      chip: "bg-emerald-500/15 text-emerald-300 border border-emerald-400/20",
+      shell: "bg-zinc-950",
+      inner: "bg-zinc-950 text-white",
+      cta: "Ajouter aux contacts",
+      secondary: "Réserver un appel",
+      actions: ["Email", "Appeler", "WhatsApp", "RDV", "LinkedIn", "Instagram", "YouTube", "QR code"],
+    },
+    {
+      id: "beauty",
+      sector: "Beauté & bien-être",
+      name: "SOPHIE DUBOIS",
+      brand: "Salon Éclat de Beauté",
+      role: "Esthéticienne & maquilleuse",
+      accent: "from-rose-300 to-amber-200",
+      header: "from-rose-200 via-rose-100 to-amber-100",
+      chip: "bg-rose-200/70 text-rose-900 border border-rose-300/70",
+      shell: "bg-rose-100",
+      inner: "bg-background",
+      cta: "Ajouter aux contacts",
+      secondary: "Réserver",
+      actions: ["Prendre RDV", "Appeler", "SMS", "Prestations", "Instagram", "Facebook", "TikTok", "QR code"],
+    },
+    {
+      id: "artisan",
+      sector: "BTP & artisan",
+      name: "JEAN DUPONT",
+      brand: "RENOVATION PRO",
+      role: "Entrepreneur général",
+      accent: "from-orange-500 to-orange-600",
+      header: "from-orange-500 via-orange-500 to-zinc-900",
+      chip: "bg-orange-500/15 text-orange-600 border border-orange-500/20",
+      shell: "bg-zinc-950",
+      inner: "bg-background",
+      cta: "Ajouter aux contacts",
+      secondary: "Demander un devis",
+      actions: ["Devis", "Appeler", "SMS", "Itinéraire", "Réalisations", "Facebook", "Avis Google", "QR code"],
+    },
   ];
-  return (
-    <section id="fonctionnement" className="py-20 lg:py-28 bg-gradient-soft">
-      <div className="max-w-6xl mx-auto px-4">
-        <div className="text-center max-w-2xl mx-auto">
-          <span className="text-sm font-semibold text-magenta uppercase tracking-wider">Comment ça marche</span>
-          <h2 className="mt-3 font-display font-bold text-3xl sm:text-4xl">Prêt à partager en 3 minutes</h2>
-        </div>
 
-        <div className="mt-14 grid md:grid-cols-3 gap-6 relative">
-          {steps.map((s) => (
-            <div key={s.n} className="bg-card border border-border rounded-2xl p-7 shadow-card relative">
-              <div className="text-5xl font-display font-extrabold text-gradient">{s.n}</div>
-              <h3 className="mt-3 font-display font-bold text-xl">{s.t}</h3>
-              <p className="mt-2 text-sm text-muted-foreground">{s.d}</p>
+  const [activeIndex, setActiveIndex] = useState(0);
+  const activeTemplate = templates[activeIndex];
+
+  useEffect(() => {
+    const interval = window.setInterval(() => {
+      setActiveIndex((current) => (current + 1) % templates.length);
+    }, 3500);
+
+    return () => window.clearInterval(interval);
+  }, [templates.length]);
+
+  const goPrev = () => setActiveIndex((current) => (current - 1 + templates.length) % templates.length);
+  const goNext = () => setActiveIndex((current) => (current + 1) % templates.length);
+
+  return (
+    <section id="fonctionnement" className="py-20 lg:py-28 bg-gradient-soft overflow-hidden">
+      <div className="max-w-7xl mx-auto px-4">
+        <div className="grid lg:grid-cols-[0.92fr_1.08fr] gap-10 lg:gap-16 items-center">
+          <div>
+            <span className="inline-flex items-center gap-2 rounded-full bg-card border border-border px-3 py-1.5 text-xs font-semibold uppercase tracking-wider text-magenta">
+              <Smartphone className="w-3.5 h-3.5" /> Modèles de cartes
+            </span>
+            <h2 className="mt-4 font-display font-bold text-3xl sm:text-4xl lg:text-5xl leading-tight">
+              Une carte qui ressemble <span className="text-gradient">à votre métier</span>
+            </h2>
+            <p className="mt-4 text-base sm:text-lg text-muted-foreground max-w-xl">
+              Immobilier, coaching, restaurant, beauté, artisanat… chaque profil peut avoir son univers.
+              Faites défiler les exemples pour visualiser le rendu.
+            </p>
+
+            <div className="mt-8 space-y-3">
+              {templates.map((template, index) => (
+                <button
+                  key={template.id}
+                  type="button"
+                  onClick={() => setActiveIndex(index)}
+                  className={`w-full text-left rounded-2xl border px-4 py-4 transition-all ${
+                    index === activeIndex
+                      ? "bg-card border-magenta/40 shadow-card"
+                      : "bg-background/70 border-border hover:bg-card hover:border-magenta/20"
+                  }`}
+                >
+                  <div className="flex items-center justify-between gap-4">
+                    <div>
+                      <div className="text-sm font-semibold text-foreground">{template.sector}</div>
+                      <div className="mt-1 text-sm text-muted-foreground">{template.secondary}</div>
+                    </div>
+                    <div className={`h-3 w-16 rounded-full bg-gradient-to-r ${template.accent}`} />
+                  </div>
+                </button>
+              ))}
             </div>
-          ))}
+
+            <div className="mt-8 grid sm:grid-cols-3 gap-3">
+              {[
+                { icon: BadgeCheck, title: "100% personnalisable" },
+                { icon: Users, title: "Pensé pour convertir" },
+                { icon: BarChart3, title: "Adapté à chaque activité" },
+              ].map((item) => (
+                <div key={item.title} className="rounded-2xl border border-border bg-card px-4 py-4 shadow-sm">
+                  <item.icon className="w-5 h-5 text-magenta" />
+                  <div className="mt-3 text-sm font-semibold">{item.title}</div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          <div className="relative">
+            <div className="absolute inset-x-10 top-14 bottom-14 bg-gradient-brand opacity-20 blur-3xl rounded-full" aria-hidden />
+
+            <div className="relative flex items-center justify-center">
+              <button
+                type="button"
+                onClick={goPrev}
+                aria-label="Carte précédente"
+                className="hidden md:flex absolute left-0 z-20 h-11 w-11 items-center justify-center rounded-full border border-border bg-background/90 shadow-card backdrop-blur hover:-translate-y-0.5 transition"
+              >
+                <ArrowRight className="w-4 h-4 rotate-180" />
+              </button>
+
+              <div className={`relative mx-auto w-[300px] sm:w-[340px] h-[610px] sm:h-[690px] rounded-[3rem] p-3 shadow-[0_30px_90px_-30px_color-mix(in_oklab,var(--magenta)_55%,transparent)] ${activeTemplate.shell}`}>
+                <div className={`relative h-full w-full overflow-hidden rounded-[2.5rem] ${activeTemplate.inner}`}>
+                  <div className="absolute top-3 left-1/2 z-20 h-7 w-28 -translate-x-1/2 rounded-full bg-foreground" />
+
+                  <div className={`absolute inset-x-0 top-0 h-44 bg-gradient-to-r ${activeTemplate.header}`} />
+                  <div className="absolute inset-x-0 top-0 h-44 opacity-20 bg-[radial-gradient(circle_at_top_left,white_0%,transparent_45%)]" />
+
+                  <div className="relative flex h-full flex-col px-5 pb-5 pt-20 sm:px-6">
+                    <div className="mx-auto h-32 w-32 sm:h-36 sm:w-36 rounded-full bg-background p-1.5 shadow-2xl">
+                      <div className={`h-full w-full rounded-full bg-gradient-to-br ${activeTemplate.accent} p-1.5`}>
+                        <div className="flex h-full w-full items-center justify-center rounded-full bg-card text-3xl font-display font-bold text-foreground">
+                          {activeTemplate.name.split(" ").map((part) => part[0]).join("")}
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="mt-6 text-center">
+                      <div className="font-display text-3xl sm:text-[2.35rem] font-extrabold leading-none text-foreground">
+                        {activeTemplate.name}
+                      </div>
+                      <div className={`mt-2 bg-gradient-to-r ${activeTemplate.accent} bg-clip-text text-lg sm:text-xl font-bold text-transparent`}>
+                        {activeTemplate.brand}
+                      </div>
+                      <div className="mt-1 text-sm sm:text-base text-muted-foreground">{activeTemplate.role}</div>
+                    </div>
+
+                    <div className="mt-7 grid grid-cols-4 gap-x-3 gap-y-5">
+                      {activeTemplate.actions.map((action) => (
+                        <div key={action} className="text-center">
+                          <div className={`mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-r ${activeTemplate.accent} text-white shadow-lg shadow-black/10`}>
+                            <Sparkles className="w-5 h-5" />
+                          </div>
+                          <div className="mt-2 text-[11px] sm:text-xs text-foreground/85 leading-tight">{action}</div>
+                        </div>
+                      ))}
+                    </div>
+
+                    <button className={`mt-7 w-full rounded-full bg-gradient-to-r ${activeTemplate.accent} px-5 py-3.5 text-sm font-bold uppercase tracking-wide text-white shadow-lg`}>
+                      {activeTemplate.cta}
+                    </button>
+                    <button className="mt-3 w-full rounded-full border-2 border-border bg-background px-5 py-3.5 text-sm font-bold uppercase tracking-wide text-foreground">
+                      {activeTemplate.secondary}
+                    </button>
+
+                    <div className="mt-6 rounded-[1.75rem] bg-card/80 p-4 shadow-sm ring-1 ring-border/70 backdrop-blur">
+                      <div className={`inline-flex rounded-full px-3 py-1 text-[11px] font-semibold ${activeTemplate.chip}`}>
+                        {activeTemplate.sector}
+                      </div>
+                      <div className="mt-3 text-xl font-display font-bold text-foreground">À propos</div>
+                      <p className="mt-2 text-sm leading-6 text-muted-foreground">
+                        Un modèle premium pensé pour présenter vos liens clés, inspirer confiance et créer une action immédiate après chaque rencontre.
+                      </p>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                onClick={goNext}
+                aria-label="Carte suivante"
+                className="hidden md:flex absolute right-0 z-20 h-11 w-11 items-center justify-center rounded-full border border-border bg-background/90 shadow-card backdrop-blur hover:-translate-y-0.5 transition"
+              >
+                <ArrowRight className="w-4 h-4" />
+              </button>
+            </div>
+
+            <div className="mt-6 flex items-center justify-center gap-2">
+              {templates.map((template, index) => (
+                <button
+                  key={template.id}
+                  type="button"
+                  aria-label={`Voir ${template.sector}`}
+                  onClick={() => setActiveIndex(index)}
+                  className={`h-2.5 rounded-full transition-all ${index === activeIndex ? "w-8 bg-magenta" : "w-2.5 bg-border hover:bg-magenta/40"}`}
+                />
+              ))}
+            </div>
+          </div>
         </div>
       </div>
     </section>
