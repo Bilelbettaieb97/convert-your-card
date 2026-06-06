@@ -350,6 +350,9 @@ function Pricing() {
           <span className="flex items-center gap-2"><Shield className="w-4 h-4 text-success" /> Paiement 100% sécurisé Stripe</span>
           <span className="flex items-center gap-2"><Truck className="w-4 h-4" /> Livraison 48h (option physique)</span>
         </div>
+
+        <ComparisonTable />
+
       </div>
     </section>
   );
