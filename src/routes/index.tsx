@@ -389,7 +389,7 @@ function HowItWorks() {
                 <ArrowRight className="w-4 h-4 rotate-180" />
               </button>
 
-              <div className="relative mx-auto w-[220px] xs:w-[240px] sm:w-[300px] md:w-[340px] max-w-full">
+              <div className="relative w-[180px] sm:w-[260px] md:w-[320px] max-w-full shrink">
                 <img
                   key={activeTemplate.id}
                   src={activeTemplate.image}
