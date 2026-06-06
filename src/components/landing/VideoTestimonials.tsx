@@ -77,17 +77,17 @@ export function VideoTestimonials() {
         </div>
 
         {/* Mobile & Tablet: carousel */}
-        <div className="lg:hidden relative">
+        <div className="lg:hidden relative -mx-4">
           <button
             onClick={() => scroll("left")}
-            className="absolute left-0 top-1/2 -translate-y-1/2 z-10 w-9 h-9 rounded-full bg-background/90 border border-border shadow-md flex items-center justify-center text-foreground hover:bg-background transition"
+            className="hidden sm:flex absolute left-2 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-background/95 border border-border shadow-lg items-center justify-center text-foreground hover:bg-background transition"
             aria-label="Précédent"
           >
             <ChevronLeft className="w-5 h-5" />
           </button>
           <button
             onClick={() => scroll("right")}
-            className="absolute right-0 top-1/2 -translate-y-1/2 z-10 w-9 h-9 rounded-full bg-background/90 border border-border shadow-md flex items-center justify-center text-foreground hover:bg-background transition"
+            className="hidden sm:flex absolute right-2 top-1/2 -translate-y-1/2 z-10 w-10 h-10 rounded-full bg-background/95 border border-border shadow-lg items-center justify-center text-foreground hover:bg-background transition"
             aria-label="Suivant"
           >
             <ChevronRight className="w-5 h-5" />
@@ -95,12 +95,12 @@ export function VideoTestimonials() {
 
           <div
             ref={scrollRef}
-            className="flex gap-4 overflow-x-auto snap-x snap-mandatory scroll-smooth px-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+            className="flex gap-4 overflow-x-auto snap-x snap-mandatory scroll-smooth px-4 pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
           >
             {VIDEOS.map((v, i) => (
               <div
                 key={v.name}
-                className="snap-center shrink-0 w-[82vw] sm:w-[45vw]"
+                className="snap-center shrink-0 w-[70vw] max-w-[280px] sm:w-[42vw] sm:max-w-[320px]"
               >
                 <VideoCard v={v} onPlay={() => setActive(i)} />
               </div>
