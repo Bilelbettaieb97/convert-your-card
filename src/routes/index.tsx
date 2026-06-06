@@ -32,6 +32,7 @@ function Landing() {
       <Logos />
       <Problem />
       <HowItWorks />
+      <SocialProofBand />
       <Pricing />
       <Features />
       <Testimonials />
