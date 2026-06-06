@@ -280,22 +280,42 @@ function Pricing() {
         </div>
 
         <div className="mt-14 grid lg:grid-cols-3 gap-6 lg:gap-5 items-stretch max-w-6xl mx-auto">
-          {/* Offer 1 — Essentiel */}
+          {/* Offer 1 — Physique (highlight) */}
+          <OfferCard
+            name="OneTap Physique"
+            tagline="Carte NFC + page digitale"
+            oldPrice="48€"
+            price="28,80€"
+            badge="⭐ Le plus populaire"
+            highlight
+            stockLeft={32}
+            stockTotal={100}
+            valueStack={[
+              { t: "Page de carte digitale", v: "49€" },
+              { t: "QR code personnalisé", v: "19€" },
+              { t: "Carte NFC premium", v: "25€" },
+              { t: "Livraison offerte 48h", v: "12€" },
+              { t: "Modifications à vie", v: "29€" },
+            ]}
+            features={[
+              { t: "Tout l'essentiel inclus", v: true },
+              { t: "Carte NFC physique premium", v: true },
+              { t: "Livraison offerte 48h", v: true },
+              { t: "QR code intégré à la carte", v: true },
+              { t: "Compatible iPhone & Android", v: true },
+              { t: "Sans abonnement, paiement unique", v: true },
+            ]}
+            cta="Commander ma carte NFC — 28,80€"
+            subCta="Activation immédiate · Garantie 30 jours"
+          />
+
+          {/* Offer 2 — Essentiel */}
           <OfferCard
             name="OneTap Essentiel"
             tagline="La carte digitale qui convertit"
             oldPrice="33€"
             price="19,80€"
-            badge="⭐ Le plus populaire"
-            highlight
-            stockLeft={47}
-            stockTotal={150}
-            valueStack={[
-              { t: "Page de carte digitale", v: "49€" },
-              { t: "QR code personnalisé", v: "19€" },
-              { t: "Modifications à vie", v: "29€" },
-              { t: "Mises à jour & hébergement", v: "30€" },
-            ]}
+            badge="Digital only"
             features={[
               { t: "Page de carte de visite digitale", v: true },
               { t: "Modifications illimitées à vie", v: true },
@@ -305,25 +325,6 @@ function Pricing() {
               { t: "Sans abonnement, paiement unique", v: true },
             ]}
             cta="Oui, je veux ma carte — 19,80€"
-            subCta="Activation immédiate · Garantie 30 jours"
-          />
-
-          {/* Offer 2 — Physique */}
-          <OfferCard
-            name="OneTap Physique"
-            tagline="Carte NFC + page digitale"
-            oldPrice="48€"
-            price="28,80€"
-            badge="Recevez la carte chez vous"
-            features={[
-              { t: "Tout l'essentiel inclus", v: true },
-              { t: "Carte NFC physique premium", v: true },
-              { t: "Livraison offerte 48h", v: true },
-              { t: "QR code intégré", v: true },
-              { t: "Analytics avancées", v: false },
-              { t: "Multi-cartes", v: false },
-            ]}
-            cta="Commander"
           />
 
           {/* Offer 3 — Premium */}
@@ -360,11 +361,10 @@ function Pricing() {
 
 function ComparisonTable() {
   const offers: { key: string; name: string; price: string; badge: string; highlight?: boolean }[] = [
-    { key: "essentiel", name: "Essentiel", price: "19,80€", badge: "Populaire", highlight: true },
-    { key: "physique", name: "Physique", price: "28,80€", badge: "Carte NFC" },
+    { key: "physique", name: "Physique", price: "28,80€", badge: "Carte NFC", highlight: true },
+    { key: "essentiel", name: "Essentiel", price: "19,80€", badge: "Digital only" },
     { key: "premium", name: "Premium", price: "48€", badge: "Équipes" },
   ];
-
 
   type Cell = boolean | string;
   const rows: { label: string; values: [Cell, Cell, Cell]; group?: string }[] = [
@@ -375,9 +375,9 @@ function ComparisonTable() {
     { label: "Compatible iPhone & Android", values: [true, true, true] },
     { label: "Paiement unique, sans abonnement", values: [true, true, true] },
 
-    { group: "Carte physique", label: "Carte NFC premium livrée", values: [false, true, true] },
-    { label: "Livraison offerte 48h", values: [false, true, true] },
-    { label: "QR code intégré à la carte", values: [false, true, true] },
+    { group: "Carte physique", label: "Carte NFC premium livrée", values: [true, false, true] },
+    { label: "Livraison offerte 48h", values: [true, false, true] },
+    { label: "QR code intégré à la carte", values: [true, false, true] },
 
     { group: "Pro & équipes", label: "Analytics temps réel (vues, clics)", values: [false, false, true] },
     { label: "Lead capture & export CRM", values: [false, false, true] },
