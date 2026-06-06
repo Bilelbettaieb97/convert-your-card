@@ -361,11 +361,10 @@ function Pricing() {
 
 function ComparisonTable() {
   const offers: { key: string; name: string; price: string; badge: string; highlight?: boolean }[] = [
-    { key: "essentiel", name: "Essentiel", price: "19,80€", badge: "Populaire", highlight: true },
-    { key: "physique", name: "Physique", price: "28,80€", badge: "Carte NFC" },
+    { key: "physique", name: "Physique", price: "28,80€", badge: "Carte NFC", highlight: true },
+    { key: "essentiel", name: "Essentiel", price: "19,80€", badge: "Digital only" },
     { key: "premium", name: "Premium", price: "48€", badge: "Équipes" },
   ];
-
 
   type Cell = boolean | string;
   const rows: { label: string; values: [Cell, Cell, Cell]; group?: string }[] = [
@@ -376,9 +375,9 @@ function ComparisonTable() {
     { label: "Compatible iPhone & Android", values: [true, true, true] },
     { label: "Paiement unique, sans abonnement", values: [true, true, true] },
 
-    { group: "Carte physique", label: "Carte NFC premium livrée", values: [false, true, true] },
-    { label: "Livraison offerte 48h", values: [false, true, true] },
-    { label: "QR code intégré à la carte", values: [false, true, true] },
+    { group: "Carte physique", label: "Carte NFC premium livrée", values: [true, false, true] },
+    { label: "Livraison offerte 48h", values: [true, false, true] },
+    { label: "QR code intégré à la carte", values: [true, false, true] },
 
     { group: "Pro & équipes", label: "Analytics temps réel (vues, clics)", values: [false, false, true] },
     { label: "Lead capture & export CRM", values: [false, false, true] },
