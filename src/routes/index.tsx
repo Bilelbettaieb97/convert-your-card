@@ -379,34 +379,32 @@ function HowItWorks() {
           <div className="relative order-1 lg:order-2">
             <div className="absolute inset-x-10 top-14 bottom-14 bg-gradient-brand opacity-20 blur-3xl rounded-full" aria-hidden />
 
-            <div className="relative flex items-center justify-center gap-2 sm:gap-4">
+            <div className="relative mx-auto w-[200px] sm:w-[280px] md:w-[320px]">
+              <img
+                key={activeTemplate.id}
+                src={activeTemplate.image}
+                alt={`Exemple de carte digitale — ${activeTemplate.sector}`}
+                className="block w-full h-auto drop-shadow-[0_30px_60px_rgba(0,0,0,0.25)] animate-in fade-in zoom-in-95 duration-500"
+              />
+
               <button
                 type="button"
                 onClick={goPrev}
                 aria-label="Carte précédente"
-                className="flex shrink-0 z-20 h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-full border border-border bg-background/90 shadow-card backdrop-blur active:scale-95 transition"
+                className="absolute left-0 top-1/2 -translate-y-1/2 -translate-x-1/2 z-20 h-10 w-10 sm:h-11 sm:w-11 flex items-center justify-center rounded-full border border-border bg-background/95 shadow-card backdrop-blur active:scale-95 transition"
               >
                 <ArrowRight className="w-4 h-4 rotate-180" />
               </button>
-
-              <div className="relative w-[180px] sm:w-[260px] md:w-[320px] max-w-full shrink">
-                <img
-                  key={activeTemplate.id}
-                  src={activeTemplate.image}
-                  alt={`Exemple de carte digitale — ${activeTemplate.sector}`}
-                  className="w-full h-auto drop-shadow-[0_30px_60px_rgba(0,0,0,0.25)] animate-in fade-in zoom-in-95 duration-500"
-                />
-              </div>
-
               <button
                 type="button"
                 onClick={goNext}
                 aria-label="Carte suivante"
-                className="flex shrink-0 z-20 h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-full border border-border bg-background/90 shadow-card backdrop-blur active:scale-95 transition"
+                className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-1/2 z-20 h-10 w-10 sm:h-11 sm:w-11 flex items-center justify-center rounded-full border border-border bg-background/95 shadow-card backdrop-blur active:scale-95 transition"
               >
                 <ArrowRight className="w-4 h-4" />
               </button>
             </div>
+
 
             {/* Active sector label (mobile only, gives context) */}
             <div className="mt-4 text-center lg:hidden">
