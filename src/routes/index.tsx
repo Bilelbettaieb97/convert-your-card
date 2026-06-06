@@ -85,7 +85,7 @@ function Nav() {
           <a href="#avis" className="hover:text-foreground transition">Avis</a>
           <a href="#faq" className="hover:text-foreground transition">FAQ</a>
         </nav>
-        <a href="#offres" className="bg-gradient-cta text-primary-foreground px-5 py-2.5 rounded-full text-sm font-semibold shadow-card hover:shadow-glow transition-all">
+        <a href="#offres" onClick={onCheckoutClick} className="bg-gradient-cta text-primary-foreground px-5 py-2.5 rounded-full text-sm font-semibold shadow-card hover:shadow-glow transition-all">
           Commencer · 19,80€
         </a>
       </div>
@@ -142,6 +142,7 @@ function Hero() {
           <div className="mt-8 flex flex-col sm:flex-row gap-3">
             <a
               href="#offres"
+              onClick={onCheckoutClick}
               className="group relative bg-gradient-cta text-primary-foreground px-7 py-4 rounded-xl font-semibold text-base shadow-glow hover:scale-[1.02] transition-all flex items-center justify-center gap-2 animate-pulse-ring"
             >
               Créer ma carte — 19,80€
@@ -404,8 +405,9 @@ function OfferCard({
       )}
 
       <a
-        href="#"
-        className={`mt-6 block text-center px-5 py-3.5 rounded-xl font-semibold transition-all ${
+        href="#offres"
+        onClick={(e) => { e.preventDefault(); triggerCheckout("#offres"); }}
+        className={`mt-6 block text-center px-5 py-3.5 rounded-xl font-semibold transition-all active:scale-[0.98] ${
           highlight
             ? "bg-background text-foreground hover:scale-[1.02] shadow-card"
             : "bg-foreground text-background hover:opacity-90"
@@ -809,6 +811,7 @@ function FinalCTA() {
             </p>
             <a
               href="#offres"
+              onClick={onCheckoutClick}
               className="mt-8 inline-flex items-center gap-2 bg-background text-foreground px-8 py-4 rounded-xl font-bold text-lg shadow-card hover:scale-[1.03] transition-all"
             >
               Créer ma carte — 19,80€
@@ -895,7 +898,7 @@ function StickyMobileCTA() {
         </div>
         <a
           href="#offres"
-          onClick={onTap}
+          onClick={(e) => { e.preventDefault(); triggerCheckout("#offres"); }}
           className="flex items-center gap-3 p-2.5 active:scale-[0.98] transition-transform"
         >
           <div className="flex flex-col items-start pl-1.5 shrink-0">
