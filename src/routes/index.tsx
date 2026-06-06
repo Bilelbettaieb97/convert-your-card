@@ -338,12 +338,12 @@ function Problem() {
 
 function HowItWorks() {
   const templates = [
-    { id: "agency", sector: "Agence & conseil", secondary: "Site web", accent: "from-violet-500 to-pink-500", image: t1Asset.url },
-    { id: "real-estate", sector: "Immobilier premium", secondary: "Site web", accent: "from-amber-400 to-yellow-600", image: t2Asset.url },
-    { id: "restaurant", sector: "Restaurant & hospitalité", secondary: "Réserver une table", accent: "from-red-500 to-rose-700", image: t3Asset.url },
-    { id: "coach", sector: "Coach & expert", secondary: "Réserver un appel", accent: "from-emerald-400 to-teal-500", image: t4Asset.url },
-    { id: "beauty", sector: "Beauté & bien-être", secondary: "Réserver", accent: "from-rose-300 to-amber-200", image: t5Asset.url },
-    { id: "artisan", sector: "BTP & artisan", secondary: "Demander un devis", accent: "from-orange-500 to-orange-600", image: t6Asset.url },
+    { id: "agency", sector: "Agence & conseil", secondary: "Voir le site", icon: Building2, accent: "from-violet-500 to-pink-500", image: t1Asset.url },
+    { id: "real-estate", sector: "Immobilier premium", secondary: "Voir les biens", icon: Home, accent: "from-amber-400 to-yellow-600", image: t2Asset.url },
+    { id: "restaurant", sector: "Restaurant & hospitalité", secondary: "Réserver une table", icon: UtensilsCrossed, accent: "from-red-500 to-rose-700", image: t3Asset.url },
+    { id: "coach", sector: "Coach & expert", secondary: "Réserver un appel", icon: GraduationCap, accent: "from-emerald-400 to-teal-500", image: t4Asset.url },
+    { id: "beauty", sector: "Beauté & bien-être", secondary: "Réserver", icon: Scissors, accent: "from-rose-300 to-amber-200", image: t5Asset.url },
+    { id: "artisan", sector: "BTP & artisan", secondary: "Demander un devis", icon: HardHat, accent: "from-orange-500 to-orange-600", image: t6Asset.url },
   ];
 
   const [activeIndex, setActiveIndex] = useState(0);
@@ -363,7 +363,7 @@ function HowItWorks() {
     <section id="fonctionnement" className="py-16 sm:py-20 lg:py-28 bg-gradient-soft overflow-hidden">
       <div className="max-w-7xl mx-auto px-4">
         {/* Heading — shared */}
-        <div className="text-center lg:text-left lg:max-w-xl">
+        <div className="text-center lg:text-left lg:max-w-2xl">
           <span className="inline-flex items-center gap-2 rounded-full bg-card border border-border px-3 py-1.5 text-xs font-semibold uppercase tracking-wider text-magenta">
             <Smartphone className="w-3.5 h-3.5" /> Modèles de cartes
           </span>
@@ -371,24 +371,80 @@ function HowItWorks() {
             Une carte qui ressemble <span className="text-gradient">à votre métier</span>
           </h2>
           <p className="mt-4 text-base sm:text-lg text-muted-foreground">
-            Immobilier, coaching, restaurant, beauté, artisanat… chaque profil a son univers.
+            Immobilier, coaching, restaurant, beauté, artisanat… chaque profil a son univers, son ton, ses appels à l'action.
           </p>
         </div>
 
-        <div className="mt-10 grid grid-cols-1 lg:grid-cols-[0.92fr_1.08fr] gap-10 lg:gap-16 lg:items-center">
+        <div className="mt-10 lg:mt-14 grid grid-cols-1 lg:grid-cols-[1.05fr_0.95fr] gap-10 lg:gap-14 lg:items-center">
           {/* ===== Carousel (mobile: 1st, desktop: right) ===== */}
           <div className="relative w-full order-1 lg:order-2">
-            <div className="absolute inset-x-10 top-14 bottom-14 bg-gradient-brand opacity-20 blur-3xl rounded-full" aria-hidden />
+            {/* Decorative blob */}
+            <div className="hidden lg:block absolute -inset-8 bg-gradient-brand opacity-[0.18] blur-3xl rounded-[40%]" aria-hidden />
 
-            <div className="relative flex justify-center">
+            {/* Desktop frame */}
+            <div className="relative hidden lg:block">
+              <div className="relative rounded-[2.5rem] border border-border bg-card/60 backdrop-blur-sm shadow-card p-8 xl:p-10">
+                {/* Counter + sector pill */}
+                <div className="flex items-center justify-between gap-4 mb-6">
+                  <div className="inline-flex items-center gap-2 rounded-full bg-background border border-border px-3 py-1.5 text-xs font-semibold">
+                    <span className={`h-2 w-2 rounded-full bg-gradient-to-r ${activeTemplate.accent}`} />
+                    {activeTemplate.sector}
+                  </div>
+                  <div className="text-xs font-mono text-muted-foreground tabular-nums">
+                    {String(activeIndex + 1).padStart(2, "0")} / {String(templates.length).padStart(2, "0")}
+                  </div>
+                </div>
+
+                <div className="relative flex justify-center">
+                  <div className="relative w-[280px] xl:w-[320px]">
+                    <img
+                      key={activeTemplate.id}
+                      src={activeTemplate.image}
+                      alt={`Exemple de carte digitale — ${activeTemplate.sector}`}
+                      className="block w-full h-auto drop-shadow-[0_30px_60px_rgba(0,0,0,0.25)] animate-in fade-in zoom-in-95 duration-500"
+                    />
+
+                    {/* Floating feature chips around device */}
+                    <div className="absolute -left-16 xl:-left-24 top-12 animate-in fade-in slide-in-from-left-4 duration-700">
+                      <div className="rounded-2xl border border-border bg-background shadow-card px-3 py-2 flex items-center gap-2">
+                        <div className="h-7 w-7 rounded-full bg-magenta/10 flex items-center justify-center">
+                          <Zap className="w-3.5 h-3.5 text-magenta" />
+                        </div>
+                        <div className="text-[11px] font-semibold leading-tight">1 tap<br /><span className="text-muted-foreground font-normal">contact partagé</span></div>
+                      </div>
+                    </div>
+
+                    <div className="absolute -right-16 xl:-right-24 top-1/3 animate-in fade-in slide-in-from-right-4 duration-700">
+                      <div className="rounded-2xl border border-border bg-background shadow-card px-3 py-2 flex items-center gap-2">
+                        <div className="h-7 w-7 rounded-full bg-magenta/10 flex items-center justify-center">
+                          <BadgeCheck className="w-3.5 h-3.5 text-magenta" />
+                        </div>
+                        <div className="text-[11px] font-semibold leading-tight">{activeTemplate.secondary}</div>
+                      </div>
+                    </div>
+
+                    <div className="absolute -left-12 xl:-left-20 bottom-16 animate-in fade-in slide-in-from-left-4 duration-700">
+                      <div className="rounded-2xl border border-border bg-background shadow-card px-3 py-2 flex items-center gap-2">
+                        <div className="h-7 w-7 rounded-full bg-magenta/10 flex items-center justify-center">
+                          <Sparkles className="w-3.5 h-3.5 text-magenta" />
+                        </div>
+                        <div className="text-[11px] font-semibold leading-tight">100% personnalisé</div>
+                      </div>
+                    </div>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Mobile carousel (unchanged) */}
+            <div className="relative flex justify-center lg:hidden">
               <div className="relative w-[200px] sm:w-[280px] md:w-[320px]">
                 <img
-                  key={activeTemplate.id}
+                  key={`m-${activeTemplate.id}`}
                   src={activeTemplate.image}
                   alt={`Exemple de carte digitale — ${activeTemplate.sector}`}
                   className="block w-full h-auto drop-shadow-[0_30px_60px_rgba(0,0,0,0.25)] animate-in fade-in zoom-in-95 duration-500"
                 />
-
                 <button
                   type="button"
                   onClick={goPrev}
@@ -408,15 +464,14 @@ function HowItWorks() {
               </div>
             </div>
 
-
-            {/* Active sector label (mobile only, gives context) */}
+            {/* Active sector label (mobile only) */}
             <div className="mt-4 text-center lg:hidden">
               <div className="text-sm font-semibold text-foreground">{activeTemplate.sector}</div>
               <div className="text-xs text-muted-foreground mt-0.5">{activeTemplate.secondary}</div>
             </div>
 
-            {/* Dots */}
-            <div className="mt-4 lg:mt-6 flex items-center justify-center gap-2">
+            {/* Dots (mobile only) */}
+            <div className="mt-4 flex items-center justify-center gap-2 lg:hidden">
               {templates.map((template, index) => (
                 <button
                   key={template.id}
@@ -451,28 +506,51 @@ function HowItWorks() {
               </div>
             </div>
 
-            {/* Desktop: full list */}
-            <div className="hidden lg:block space-y-3">
-              {templates.map((template, index) => (
-                <button
-                  key={template.id}
-                  type="button"
-                  onClick={() => setActiveIndex(index)}
-                  className={`w-full text-left rounded-2xl border px-4 py-4 transition-all ${
-                    index === activeIndex
-                      ? "bg-card border-magenta/40 shadow-card"
-                      : "bg-background/70 border-border hover:bg-card hover:border-magenta/20"
-                  }`}
-                >
-                  <div className="flex items-center justify-between gap-4">
-                    <div>
-                      <div className="text-sm font-semibold text-foreground">{template.sector}</div>
-                      <div className="mt-1 text-sm text-muted-foreground">{template.secondary}</div>
+            {/* Desktop: refined list with icons */}
+            <div className="hidden lg:grid grid-cols-1 gap-2.5">
+              {templates.map((template, index) => {
+                const Icon = template.icon;
+                const isActive = index === activeIndex;
+                return (
+                  <button
+                    key={template.id}
+                    type="button"
+                    onClick={() => setActiveIndex(index)}
+                    aria-pressed={isActive}
+                    className={`group relative w-full text-left rounded-2xl border px-4 py-4 transition-all duration-300 overflow-hidden ${
+                      isActive
+                        ? "bg-card border-magenta/40 shadow-card translate-x-1"
+                        : "bg-background/60 border-border hover:bg-card hover:border-magenta/20 hover:translate-x-0.5"
+                    }`}
+                  >
+                    {/* Active accent bar */}
+                    <span
+                      className={`absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b ${template.accent} transition-opacity ${
+                        isActive ? "opacity-100" : "opacity-0 group-hover:opacity-50"
+                      }`}
+                      aria-hidden
+                    />
+                    <div className="flex items-center gap-4">
+                      <div
+                        className={`shrink-0 h-11 w-11 rounded-xl flex items-center justify-center bg-gradient-to-br ${template.accent} text-white shadow-sm transition-transform ${
+                          isActive ? "scale-105" : "opacity-80 group-hover:opacity-100"
+                        }`}
+                      >
+                        <Icon className="w-5 h-5" />
+                      </div>
+                      <div className="flex-1 min-w-0">
+                        <div className="text-sm font-semibold text-foreground leading-tight">{template.sector}</div>
+                        <div className="mt-0.5 text-xs text-muted-foreground truncate">CTA · {template.secondary}</div>
+                      </div>
+                      <ArrowRight
+                        className={`w-4 h-4 shrink-0 transition-all ${
+                          isActive ? "text-magenta translate-x-0 opacity-100" : "text-muted-foreground -translate-x-2 opacity-0 group-hover:opacity-60 group-hover:translate-x-0"
+                        }`}
+                      />
                     </div>
-                    <div className={`h-3 w-16 rounded-full bg-gradient-to-r ${template.accent}`} />
-                  </div>
-                </button>
-              ))}
+                  </button>
+                );
+              })}
             </div>
 
             <div className="mt-6 lg:mt-8 grid grid-cols-3 gap-2 sm:gap-3">
