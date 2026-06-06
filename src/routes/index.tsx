@@ -874,11 +874,8 @@ function StickyMobileCTA() {
 
   const visible = show && !hide;
 
-  const onTap = () => {
-    if (typeof navigator !== "undefined" && "vibrate" in navigator) {
-      try { (navigator as Navigator & { vibrate: (p: number) => void }).vibrate(10); } catch {}
-    }
-  };
+
+
 
   return (
     <div
