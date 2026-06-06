@@ -1,29 +1,624 @@
 import { createFileRoute } from "@tanstack/react-router";
+import { useEffect, useState } from "react";
+import {
+  Check, X, Star, Zap, Shield, Smartphone, BarChart3, Leaf,
+  CreditCard, Truck, ChevronDown, ArrowRight, Sparkles, Clock, Users, TrendingUp,
+} from "lucide-react";
+import { DigitalCardVisual } from "@/components/landing/DigitalCardVisual";
+import { Countdown } from "@/components/landing/Countdown";
 
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "Your App" },
-      { name: "description", content: "Replace this with a one-sentence description of your app." },
-      { property: "og:title", content: "Your App" },
-      { property: "og:description", content: "Replace this with a one-sentence description of your app." },
+      { title: "OneTap · Carte de visite digitale à 19,80€ — Partagez vos contacts en 1 tap" },
+      { name: "description", content: "Créez votre carte de visite digitale professionnelle en 3 minutes. Partagez vos coordonnées, réseaux et site en un seul tap. À partir de 19,80€. Sans abonnement." },
+      { property: "og:title", content: "OneTap · La carte de visite digitale qui convertit" },
+      { property: "og:description", content: "Partagez vos contacts en 1 tap. À partir de 19,80€. Sans abonnement, mises à jour illimitées." },
+      { property: "og:type", content: "product" },
+      { property: "og:url", content: "/" },
     ],
+    links: [{ rel: "canonical", href: "/" }],
   }),
-  component: Index,
+  component: Landing,
 });
 
-// IMPORTANT: Replace this placeholder. See ./README.md for routing conventions.
-function Index() {
+function Landing() {
+  return (
+    <div className="min-h-screen bg-background text-foreground font-body">
+      <PromoBar />
+      <Nav />
+      <Hero />
+      <Logos />
+      <Problem />
+      <HowItWorks />
+      <Pricing />
+      <Features />
+      <Testimonials />
+      <Comparison />
+      <FAQ />
+      <FinalCTA />
+      <Footer />
+      <StickyMobileCTA />
+    </div>
+  );
+}
+
+/* ────────────────────────────  TOP  ──────────────────────────── */
+
+function PromoBar() {
+  return (
+    <div className="bg-gradient-brand text-primary-foreground text-sm">
+      <div className="max-w-7xl mx-auto px-4 py-2 flex items-center justify-center gap-3 flex-wrap text-center">
+        <Sparkles className="w-4 h-4" />
+        <span className="font-medium">Offre de lancement : -40% sur la carte digitale</span>
+        <span className="hidden sm:inline opacity-80">·</span>
+        <Countdown />
+      </div>
+    </div>
+  );
+}
+
+function Nav() {
+  return (
+    <header className="sticky top-0 z-40 bg-background/80 backdrop-blur-lg border-b border-border">
+      <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+        <a href="#" className="flex items-center gap-2">
+          <div className="w-9 h-9 rounded-xl bg-gradient-brand flex items-center justify-center shadow-card">
+            <Zap className="w-5 h-5 text-primary-foreground" />
+          </div>
+          <span className="font-display font-bold text-lg">OneTap</span>
+        </a>
+        <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-muted-foreground">
+          <a href="#fonctionnement" className="hover:text-foreground transition">Fonctionnement</a>
+          <a href="#offres" className="hover:text-foreground transition">Offres</a>
+          <a href="#avis" className="hover:text-foreground transition">Avis</a>
+          <a href="#faq" className="hover:text-foreground transition">FAQ</a>
+        </nav>
+        <a href="#offres" className="bg-gradient-cta text-primary-foreground px-5 py-2.5 rounded-full text-sm font-semibold shadow-card hover:shadow-glow transition-all">
+          Commencer · 19,80€
+        </a>
+      </div>
+    </header>
+  );
+}
+
+/* ────────────────────────────  HERO  ──────────────────────────── */
+
+function Hero() {
+  return (
+    <section className="relative overflow-hidden bg-gradient-soft">
+      <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_color-mix(in_oklab,var(--magenta)_25%,transparent),transparent_60%)]" />
+      <div className="relative max-w-7xl mx-auto px-4 pt-12 pb-20 lg:pt-20 lg:pb-28 grid lg:grid-cols-2 gap-12 items-center">
+        <div>
+          <div className="inline-flex items-center gap-2 bg-card border border-border rounded-full px-3 py-1.5 text-xs font-semibold shadow-sm">
+            <span className="flex -space-x-1.5">
+              {[1, 2, 3].map((i) => (
+                <div key={i} className="w-5 h-5 rounded-full bg-gradient-brand border-2 border-card" />
+              ))}
+            </span>
+            <span className="text-foreground">+2 400 pros nous font confiance</span>
+            <span className="flex items-center text-magenta">
+              {[...Array(5)].map((_, i) => (
+                <Star key={i} className="w-3 h-3 fill-current" />
+              ))}
+            </span>
+          </div>
+
+          <h1 className="mt-5 font-display font-extrabold text-4xl sm:text-5xl lg:text-6xl leading-[1.05]">
+            Votre <span className="text-gradient">carte de visite digitale</span> qui transforme chaque rencontre en client.
+          </h1>
+
+          <p className="mt-5 text-lg text-muted-foreground max-w-xl">
+            Partagez vos coordonnées, réseaux et site en <strong className="text-foreground">1 seul tap</strong>.
+            Sans appli. Sans abonnement. Mises à jour illimitées à vie.
+          </p>
+
+          <ul className="mt-6 space-y-2.5">
+            {[
+              "Activée en 3 minutes — aucune compétence technique",
+              "Compatible iPhone & Android (sans appli)",
+              "Modifiez vos infos quand vous voulez, à vie",
+            ].map((b) => (
+              <li key={b} className="flex items-start gap-2.5 text-sm">
+                <span className="mt-0.5 w-5 h-5 rounded-full bg-success/15 flex items-center justify-center shrink-0">
+                  <Check className="w-3.5 h-3.5 text-success" strokeWidth={3} />
+                </span>
+                <span className="text-foreground/90">{b}</span>
+              </li>
+            ))}
+          </ul>
+
+          <div className="mt-8 flex flex-col sm:flex-row gap-3">
+            <a
+              href="#offres"
+              className="group relative bg-gradient-cta text-primary-foreground px-7 py-4 rounded-xl font-semibold text-base shadow-glow hover:scale-[1.02] transition-all flex items-center justify-center gap-2 animate-pulse-ring"
+            >
+              Créer ma carte — 19,80€
+              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition" />
+            </a>
+            <a
+              href="#fonctionnement"
+              className="px-7 py-4 rounded-xl font-semibold text-base border border-border bg-card hover:bg-secondary transition flex items-center justify-center gap-2"
+            >
+              Voir une démo
+            </a>
+          </div>
+
+          <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2 text-xs text-muted-foreground">
+            <span className="flex items-center gap-1.5"><Shield className="w-4 h-4 text-success" /> Paiement 100% sécurisé</span>
+            <span className="flex items-center gap-1.5"><Clock className="w-4 h-4 text-success" /> Activation immédiate</span>
+            <span className="flex items-center gap-1.5"><Check className="w-4 h-4 text-success" /> Garantie 30 jours</span>
+          </div>
+        </div>
+
+        <div className="relative">
+          <DigitalCardVisual />
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function Logos() {
+  return (
+    <section className="border-y border-border bg-card">
+      <div className="max-w-7xl mx-auto px-4 py-6 flex flex-wrap items-center justify-center gap-x-10 gap-y-4 text-muted-foreground/70 text-sm font-display font-semibold tracking-wider">
+        <span className="text-xs uppercase">Ils utilisent OneTap :</span>
+        {["NOVA", "PIXELHAUS", "atlas.", "MENTOR&CO", "FORGE", "LUMIA"].map((n) => (
+          <span key={n} className="opacity-60 hover:opacity-100 transition">{n}</span>
+        ))}
+      </div>
+    </section>
+  );
+}
+
+/* ────────────────────────────  PROBLEM  ──────────────────────────── */
+
+function Problem() {
+  const points = [
+    { bad: "Cartes papier oubliées dans une poche", good: "Profil digital toujours à jour, accessible en 1 tap" },
+    { bad: "Coordonnées qui changent → cartes obsolètes", good: "Modifiez vos infos à vie, sans réimprimer" },
+    { bad: "Aucun moyen de mesurer l'impact", good: "Suivez vues, clics et contacts ajoutés (offre Premium)" },
+  ];
+  return (
+    <section className="py-20 lg:py-28">
+      <div className="max-w-5xl mx-auto px-4">
+        <div className="text-center max-w-2xl mx-auto">
+          <span className="text-sm font-semibold text-magenta uppercase tracking-wider">Pourquoi changer</span>
+          <h2 className="mt-3 font-display font-bold text-3xl sm:text-4xl">
+            La carte papier coûte cher.<br/>
+            <span className="text-gradient">Et ne convertit plus.</span>
+          </h2>
+          <p className="mt-4 text-muted-foreground">88% des cartes papier finissent à la poubelle dans la semaine. Le digital change la donne.</p>
+        </div>
+
+        <div className="mt-12 grid md:grid-cols-3 gap-4">
+          {points.map((p, i) => (
+            <div key={i} className="bg-card border border-border rounded-2xl p-6 shadow-card">
+              <div className="flex items-start gap-2.5 text-sm text-muted-foreground line-through opacity-70">
+                <X className="w-4 h-4 text-destructive shrink-0 mt-0.5" />{p.bad}
+              </div>
+              <div className="mt-4 flex items-start gap-2.5 text-sm font-medium">
+                <Check className="w-4 h-4 text-success shrink-0 mt-0.5" strokeWidth={3} />{p.good}
+              </div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ────────────────────────────  HOW IT WORKS  ──────────────────────────── */
+
+function HowItWorks() {
+  const steps = [
+    { n: "01", t: "Vous commandez", d: "Choisissez votre offre, payez en 30 secondes. Aucun engagement." },
+    { n: "02", t: "Vous personnalisez", d: "Photo, infos, réseaux, liens. Notre éditeur ultra simple guide chaque étape." },
+    { n: "03", t: "Vous partagez", d: "QR code, lien ou tap NFC : vos contacts sauvegardent vos coordonnées en 2 secondes." },
+  ];
+  return (
+    <section id="fonctionnement" className="py-20 lg:py-28 bg-gradient-soft">
+      <div className="max-w-6xl mx-auto px-4">
+        <div className="text-center max-w-2xl mx-auto">
+          <span className="text-sm font-semibold text-magenta uppercase tracking-wider">Comment ça marche</span>
+          <h2 className="mt-3 font-display font-bold text-3xl sm:text-4xl">Prêt à partager en 3 minutes</h2>
+        </div>
+
+        <div className="mt-14 grid md:grid-cols-3 gap-6 relative">
+          {steps.map((s) => (
+            <div key={s.n} className="bg-card border border-border rounded-2xl p-7 shadow-card relative">
+              <div className="text-5xl font-display font-extrabold text-gradient">{s.n}</div>
+              <h3 className="mt-3 font-display font-bold text-xl">{s.t}</h3>
+              <p className="mt-2 text-sm text-muted-foreground">{s.d}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ────────────────────────────  PRICING — FOCUS ON OFFER 1  ──────────────────────────── */
+
+function Pricing() {
+  return (
+    <section id="offres" className="py-20 lg:py-28">
+      <div className="max-w-7xl mx-auto px-4">
+        <div className="text-center max-w-2xl mx-auto">
+          <span className="text-sm font-semibold text-magenta uppercase tracking-wider">Choisissez votre formule</span>
+          <h2 className="mt-3 font-display font-bold text-3xl sm:text-4xl">
+            Un tarif unique. <span className="text-gradient">Sans abonnement.</span>
+          </h2>
+          <p className="mt-4 text-muted-foreground">Payez une fois, profitez à vie. Garantie satisfait ou remboursé 30 jours.</p>
+        </div>
+
+        <div className="mt-14 grid lg:grid-cols-3 gap-6 lg:gap-4 items-start max-w-6xl mx-auto">
+          {/* Offer 2 — Card + physical */}
+          <OfferCard
+            name="OneTap Physique"
+            tagline="Carte NFC + page digitale"
+            oldPrice="48€"
+            price="28,80€"
+            badge="Recevez la carte chez vous"
+            features={[
+              { t: "Tout l'essentiel inclus", v: true },
+              { t: "Carte NFC physique premium", v: true },
+              { t: "Livraison offerte 48h", v: true },
+              { t: "QR code intégré", v: true },
+              { t: "Analytics avancées", v: false },
+              { t: "Multi-cartes", v: false },
+            ]}
+            cta="Commander"
+            order={1}
+          />
+
+          {/* Offer 1 — FOCUS */}
+          <OfferCard
+            name="OneTap Essentiel"
+            tagline="La carte digitale qui convertit"
+            oldPrice="33€"
+            price="19,80€"
+            badge="⭐ Le plus populaire"
+            highlight
+            features={[
+              { t: "Page de carte de visite digitale", v: true },
+              { t: "Modifications illimitées à vie", v: true },
+              { t: "QR code personnalisé", v: true },
+              { t: "Tous vos réseaux & liens", v: true },
+              { t: "Compatible iPhone & Android", v: true },
+              { t: "Sans abonnement, paiement unique", v: true },
+            ]}
+            cta="Créer ma carte maintenant"
+            subCta="Activation immédiate · Garantie 30 jours"
+            order={2}
+          />
+
+          {/* Offer 3 */}
+          <OfferCard
+            name="OneTap Premium"
+            tagline="Analytics & multi-cartes"
+            oldPrice="79€"
+            price="48€"
+            badge="Pour les équipes"
+            features={[
+              { t: "Tout l'essentiel + Physique", v: true },
+              { t: "Analytics avancées en temps réel", v: true },
+              { t: "Lead capture & CRM export", v: true },
+              { t: "Multi-cartes (jusqu'à 5)", v: true },
+              { t: "Domaine personnalisé", v: true },
+              { t: "Support prioritaire", v: true },
+            ]}
+            cta="Passer Premium"
+            order={3}
+          />
+        </div>
+
+        <div className="mt-10 flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-sm text-muted-foreground">
+          <span className="flex items-center gap-2"><CreditCard className="w-4 h-4" /> CB · Apple Pay · Google Pay</span>
+          <span className="flex items-center gap-2"><Shield className="w-4 h-4 text-success" /> Paiement 100% sécurisé Stripe</span>
+          <span className="flex items-center gap-2"><Truck className="w-4 h-4" /> Livraison 48h (option physique)</span>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+function OfferCard({
+  name, tagline, oldPrice, price, badge, features, cta, subCta, highlight, order,
+}: {
+  name: string; tagline: string; oldPrice: string; price: string;
+  badge: string; cta: string; subCta?: string; highlight?: boolean; order: number;
+  features: { t: string; v: boolean }[];
+}) {
   return (
     <div
-      className="flex min-h-screen items-center justify-center"
-      style={{ backgroundColor: "#fcfbf8" }}
+      style={{ order }}
+      className={`relative rounded-3xl p-7 ${
+        highlight
+          ? "bg-gradient-brand text-primary-foreground shadow-glow lg:scale-105 lg:-my-2 border-2 border-magenta/40"
+          : "bg-card border border-border shadow-card"
+      }`}
     >
-      <img
-        data-lovable-blank-page-placeholder="REMOVE_THIS"
-        src="https://cdn.gpteng.co/blank-app-v1.svg"
-        alt="Your app will live here!"
-      />
+      <div
+        className={`inline-block text-xs font-bold uppercase tracking-wider px-3 py-1 rounded-full ${
+          highlight ? "bg-white/20 text-primary-foreground" : "bg-accent text-accent-foreground"
+        }`}
+      >
+        {badge}
+      </div>
+      <h3 className={`mt-4 font-display font-bold text-2xl ${highlight ? "" : ""}`}>{name}</h3>
+      <p className={`mt-1 text-sm ${highlight ? "opacity-90" : "text-muted-foreground"}`}>{tagline}</p>
+
+      <div className="mt-6 flex items-baseline gap-2">
+        <span className={`text-sm line-through ${highlight ? "opacity-60" : "text-muted-foreground"}`}>{oldPrice}</span>
+        <span className="font-display font-extrabold text-5xl">{price}</span>
+      </div>
+      <p className={`text-xs ${highlight ? "opacity-80" : "text-muted-foreground"}`}>Paiement unique · TTC</p>
+
+      <a
+        href="#"
+        className={`mt-6 block text-center px-5 py-3.5 rounded-xl font-semibold transition-all ${
+          highlight
+            ? "bg-background text-foreground hover:scale-[1.02] shadow-card"
+            : "bg-foreground text-background hover:opacity-90"
+        }`}
+      >
+        {cta}
+      </a>
+      {subCta && (
+        <p className={`mt-2 text-center text-xs ${highlight ? "opacity-80" : "text-muted-foreground"}`}>{subCta}</p>
+      )}
+
+      <ul className="mt-7 space-y-3">
+        {features.map((f) => (
+          <li key={f.t} className={`flex items-start gap-2.5 text-sm ${!f.v && (highlight ? "opacity-50" : "text-muted-foreground")}`}>
+            {f.v ? (
+              <Check className={`w-4 h-4 mt-0.5 shrink-0 ${highlight ? "text-primary-foreground" : "text-success"}`} strokeWidth={3} />
+            ) : (
+              <X className="w-4 h-4 mt-0.5 shrink-0 opacity-60" />
+            )}
+            <span>{f.t}</span>
+          </li>
+        ))}
+      </ul>
+    </div>
+  );
+}
+
+/* ────────────────────────────  FEATURES  ──────────────────────────── */
+
+function Features() {
+  const items = [
+    { icon: Smartphone, t: "Sans appli à télécharger", d: "Vos contacts ouvrent votre carte instantanément, sur n'importe quel téléphone." },
+    { icon: Zap, t: "Activation en 3 minutes", d: "Un éditeur ultra simple. Aucune compétence technique requise." },
+    { icon: BarChart3, t: "Suivez votre impact", d: "Vues, clics, contacts ajoutés — mesurez vraiment vos rencontres (offre Premium)." },
+    { icon: Leaf, t: "100% éco-responsable", d: "Plus de cartes papier jetées. Une seule carte digitale à vie." },
+    { icon: Shield, t: "Vos données protégées", d: "Hébergement européen, RGPD, vous restez propriétaire de tout." },
+    { icon: TrendingUp, t: "Conçu pour convertir", d: "Boutons d'action optimisés pour transformer un contact en client." },
+  ];
+  return (
+    <section className="py-20 lg:py-28 bg-gradient-soft">
+      <div className="max-w-6xl mx-auto px-4">
+        <div className="text-center max-w-2xl mx-auto">
+          <h2 className="font-display font-bold text-3xl sm:text-4xl">
+            Tout ce qu'il faut. <span className="text-gradient">Rien de superflu.</span>
+          </h2>
+        </div>
+        <div className="mt-12 grid md:grid-cols-2 lg:grid-cols-3 gap-5">
+          {items.map((it) => (
+            <div key={it.t} className="bg-card border border-border rounded-2xl p-6 shadow-card hover:shadow-glow transition-all">
+              <div className="w-11 h-11 rounded-xl bg-gradient-brand flex items-center justify-center shadow-card">
+                <it.icon className="w-5 h-5 text-primary-foreground" />
+              </div>
+              <h3 className="mt-4 font-display font-bold text-lg">{it.t}</h3>
+              <p className="mt-2 text-sm text-muted-foreground">{it.d}</p>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ────────────────────────────  TESTIMONIALS  ──────────────────────────── */
+
+function Testimonials() {
+  const t = [
+    { n: "Sophie M.", r: "Coach business", q: "J'ai capté 3 clients en 2 semaines juste avec ma carte digitale. ROI immédiat.", initials: "SM" },
+    { n: "Karim L.", r: "Agent immobilier", q: "Fini les cartes oubliées. Mes prospects me retrouvent en un clic, je signe plus.", initials: "KL" },
+    { n: "Élodie R.", r: "Freelance design", q: "Esthétique, ultra simple à modifier, et mes clients trouvent ça impressionnant.", initials: "ER" },
+  ];
+  return (
+    <section id="avis" className="py-20 lg:py-28">
+      <div className="max-w-6xl mx-auto px-4">
+        <div className="text-center max-w-2xl mx-auto">
+          <div className="inline-flex items-center gap-2 text-magenta">
+            {[...Array(5)].map((_, i) => <Star key={i} className="w-5 h-5 fill-current" />)}
+            <span className="text-foreground font-bold">4,9/5</span>
+            <span className="text-muted-foreground text-sm">· 2 400+ pros</span>
+          </div>
+          <h2 className="mt-4 font-display font-bold text-3xl sm:text-4xl">
+            Ils ont arrêté <span className="text-gradient">le papier</span>.
+          </h2>
+        </div>
+
+        <div className="mt-12 grid md:grid-cols-3 gap-5">
+          {t.map((p) => (
+            <figure key={p.n} className="bg-card border border-border rounded-2xl p-6 shadow-card">
+              <div className="flex text-magenta mb-3">
+                {[...Array(5)].map((_, i) => <Star key={i} className="w-4 h-4 fill-current" />)}
+              </div>
+              <blockquote className="text-foreground/90 leading-relaxed">"{p.q}"</blockquote>
+              <figcaption className="mt-5 flex items-center gap-3">
+                <div className="w-10 h-10 rounded-full bg-gradient-brand text-primary-foreground flex items-center justify-center text-sm font-bold">
+                  {p.initials}
+                </div>
+                <div>
+                  <div className="font-semibold text-sm">{p.n}</div>
+                  <div className="text-xs text-muted-foreground">{p.r}</div>
+                </div>
+              </figcaption>
+            </figure>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ────────────────────────────  COMPARISON  ──────────────────────────── */
+
+function Comparison() {
+  const rows = [
+    ["Coût annuel moyen", "120€+ (réimpressions)", "19,80€ payés une fois"],
+    ["Mises à jour", "Réimpression complète", "Illimitées en 1 clic"],
+    ["Mesure d'impact", "Aucune", "Vues, clics, contacts"],
+    ["Impact écologique", "Papier jeté", "Zéro déchet"],
+    ["Effet sur prospects", "Banal", "Wow effect"],
+  ];
+  return (
+    <section className="py-20 lg:py-28 bg-gradient-soft">
+      <div className="max-w-4xl mx-auto px-4">
+        <div className="text-center max-w-2xl mx-auto">
+          <h2 className="font-display font-bold text-3xl sm:text-4xl">
+            Papier vs. <span className="text-gradient">OneTap</span>
+          </h2>
+        </div>
+        <div className="mt-10 bg-card border border-border rounded-3xl overflow-hidden shadow-card">
+          <div className="grid grid-cols-3 bg-secondary text-sm font-semibold">
+            <div className="p-4"></div>
+            <div className="p-4 text-center text-muted-foreground">Carte papier</div>
+            <div className="p-4 text-center bg-gradient-brand text-primary-foreground">OneTap</div>
+          </div>
+          {rows.map(([label, a, b], i) => (
+            <div key={i} className={`grid grid-cols-3 text-sm border-t border-border ${i % 2 ? "bg-background" : ""}`}>
+              <div className="p-4 font-medium">{label}</div>
+              <div className="p-4 text-center text-muted-foreground">{a}</div>
+              <div className="p-4 text-center font-semibold text-foreground bg-accent/30">{b}</div>
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ────────────────────────────  FAQ  ──────────────────────────── */
+
+function FAQ() {
+  const items = [
+    { q: "Comment fonctionne la carte digitale à 19,80€ ?", a: "Vous recevez immédiatement l'accès à votre éditeur. En 3 minutes, vous créez votre profil (photo, infos, réseaux, liens). Un QR code et un lien unique sont générés : partagez-les sur votre téléphone, signature mail, présentations, etc." },
+    { q: "Y a-t-il un abonnement caché ?", a: "Non. Vous payez 19,80€ une seule fois. Modifications illimitées à vie incluses. Aucun frais récurrent." },
+    { q: "Quelle est la différence avec l'offre physique à 28,80€ ?", a: "L'offre Physique inclut tout l'essentiel + une carte NFC premium livrée chez vous. Un simple tap sur le téléphone de votre contact ouvre votre carte digitale." },
+    { q: "Compatible avec iPhone et Android ?", a: "Oui, 100%. Aucune application à télécharger, votre carte s'ouvre directement dans le navigateur." },
+    { q: "Et si je ne suis pas satisfait ?", a: "Vous êtes remboursé sous 30 jours, sans question. Zéro risque." },
+    { q: "Mes données sont-elles protégées ?", a: "Oui, hébergement européen, conformité RGPD, vous restez 100% propriétaire de vos données." },
+  ];
+  const [open, setOpen] = useState<number | null>(0);
+  return (
+    <section id="faq" className="py-20 lg:py-28">
+      <div className="max-w-3xl mx-auto px-4">
+        <div className="text-center">
+          <h2 className="font-display font-bold text-3xl sm:text-4xl">Questions <span className="text-gradient">fréquentes</span></h2>
+        </div>
+        <div className="mt-10 space-y-3">
+          {items.map((it, i) => (
+            <div key={i} className="bg-card border border-border rounded-2xl overflow-hidden shadow-card">
+              <button
+                onClick={() => setOpen(open === i ? null : i)}
+                className="w-full px-6 py-5 flex items-center justify-between text-left font-semibold"
+              >
+                <span>{it.q}</span>
+                <ChevronDown className={`w-5 h-5 text-muted-foreground transition-transform ${open === i ? "rotate-180" : ""}`} />
+              </button>
+              {open === i && (
+                <div className="px-6 pb-5 text-sm text-muted-foreground leading-relaxed">{it.a}</div>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ────────────────────────────  FINAL CTA  ──────────────────────────── */
+
+function FinalCTA() {
+  return (
+    <section className="py-20 lg:py-28">
+      <div className="max-w-5xl mx-auto px-4">
+        <div className="relative overflow-hidden rounded-[2.5rem] bg-gradient-brand text-primary-foreground p-10 sm:p-16 text-center shadow-glow">
+          <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_white_0%,_transparent_50%)] opacity-10" />
+          <div className="relative">
+            <div className="inline-flex items-center gap-2 bg-white/20 backdrop-blur px-4 py-1.5 rounded-full text-xs font-semibold">
+              <Users className="w-4 h-4" /> Rejoignez 2 400+ pros
+            </div>
+            <h2 className="mt-5 font-display font-extrabold text-4xl sm:text-5xl leading-tight">
+              Votre prochaine rencontre<br className="hidden sm:block" /> mérite mieux qu'un papier.
+            </h2>
+            <p className="mt-5 text-lg opacity-90 max-w-xl mx-auto">
+              Créez votre carte digitale en 3 minutes. Sans abonnement. Garantie 30 jours.
+            </p>
+            <a
+              href="#offres"
+              className="mt-8 inline-flex items-center gap-2 bg-background text-foreground px-8 py-4 rounded-xl font-bold text-lg shadow-card hover:scale-[1.03] transition-all"
+            >
+              Créer ma carte — 19,80€
+              <ArrowRight className="w-5 h-5" />
+            </a>
+            <p className="mt-4 text-xs opacity-80">Paiement sécurisé · Activation immédiate · Satisfait ou remboursé</p>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ────────────────────────────  FOOTER + STICKY  ──────────────────────────── */
+
+function Footer() {
+  return (
+    <footer className="border-t border-border bg-card">
+      <div className="max-w-7xl mx-auto px-4 py-10 flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-muted-foreground">
+        <div className="flex items-center gap-2">
+          <div className="w-7 h-7 rounded-lg bg-gradient-brand flex items-center justify-center">
+            <Zap className="w-4 h-4 text-primary-foreground" />
+          </div>
+          <span className="font-display font-bold text-foreground">OneTap</span>
+          <span>© {new Date().getFullYear()}</span>
+        </div>
+        <div className="flex gap-6">
+          <a href="#" className="hover:text-foreground transition">Mentions légales</a>
+          <a href="#" className="hover:text-foreground transition">CGV</a>
+          <a href="#" className="hover:text-foreground transition">Confidentialité</a>
+          <a href="#" className="hover:text-foreground transition">Contact</a>
+        </div>
+      </div>
+    </footer>
+  );
+}
+
+function StickyMobileCTA() {
+  const [show, setShow] = useState(false);
+  useEffect(() => {
+    const on = () => setShow(window.scrollY > 600);
+    window.addEventListener("scroll", on);
+    return () => window.removeEventListener("scroll", on);
+  }, []);
+  return (
+    <div
+      className={`md:hidden fixed bottom-4 inset-x-4 z-40 transition-all ${
+        show ? "translate-y-0 opacity-100" : "translate-y-24 opacity-0"
+      }`}
+    >
+      <a
+        href="#offres"
+        className="block text-center bg-gradient-cta text-primary-foreground py-4 rounded-2xl font-bold shadow-glow"
+      >
+        Créer ma carte — 19,80€
+      </a>
     </div>
   );
 }
