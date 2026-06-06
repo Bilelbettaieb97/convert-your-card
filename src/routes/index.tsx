@@ -374,7 +374,7 @@ function HowItWorks() {
           </p>
         </div>
 
-        <div className="mt-10 grid lg:grid-cols-[0.92fr_1.08fr] gap-10 lg:gap-16 lg:items-center">
+        <div className="mt-10 grid grid-cols-1 lg:grid-cols-[0.92fr_1.08fr] gap-10 lg:gap-16 lg:items-center">
           {/* ===== Carousel (mobile: 1st, desktop: right) ===== */}
           <div className="relative w-full order-1 lg:order-2">
             <div className="absolute inset-x-10 top-14 bottom-14 bg-gradient-brand opacity-20 blur-3xl rounded-full" aria-hidden />
