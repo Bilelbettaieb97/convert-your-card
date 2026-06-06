@@ -360,7 +360,7 @@ function OfferCard({
   stockLeft, stockTotal, valueStack,
 }: {
   name: string; tagline: string; oldPrice: string; price: string;
-  badge: string; cta: string; subCta?: string; highlight?: boolean; order: number;
+  badge: string; cta: string; subCta?: string; highlight?: boolean;
   features: { t: string; v: boolean }[];
   stockLeft?: number; stockTotal?: number;
   valueStack?: { t: string; v: string }[];
@@ -372,10 +372,9 @@ function OfferCard({
 
   return (
     <div
-      style={{ order }}
-      className={`relative rounded-3xl p-7 ${
+      className={`relative rounded-3xl p-7 flex flex-col ${
         highlight
-          ? "bg-gradient-brand text-primary-foreground shadow-glow lg:scale-105 lg:-my-2 border-2 border-magenta/40"
+          ? "bg-gradient-brand text-primary-foreground shadow-glow border-2 border-magenta/40"
           : "bg-card border border-border shadow-card"
       }`}
     >
