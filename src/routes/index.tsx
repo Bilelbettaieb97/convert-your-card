@@ -449,7 +449,7 @@ function ComparisonTable() {
               {offers.map((o) => (
                 <td key={o.key} className={`p-4 text-center ${o.highlight ? "bg-magenta/5" : ""}`}>
                   <button
-                    onClick={() => onCheckoutClick(`compare-${o.key}`)}
+                    onClick={() => triggerCheckout("#offres")}
                     className={`inline-flex items-center gap-1 text-xs font-bold px-3 py-2 rounded-lg transition ${
                       o.highlight
                         ? "bg-magenta text-white hover:bg-magenta/90"
@@ -503,7 +503,7 @@ function ComparisonTable() {
               })}
             </ul>
             <button
-              onClick={() => onCheckoutClick(`compare-m-${o.key}`)}
+              onClick={() => triggerCheckout("#offres")}
               className={`mt-4 w-full inline-flex items-center justify-center gap-2 font-bold py-3 rounded-lg ${
                 o.highlight ? "bg-magenta text-white" : "bg-foreground text-background"
               }`}
