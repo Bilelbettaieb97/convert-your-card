@@ -280,7 +280,25 @@ function Pricing() {
         </div>
 
         <div className="mt-14 grid lg:grid-cols-3 gap-6 lg:gap-5 items-stretch max-w-6xl mx-auto">
-          {/* Offer 1 — Physique (highlight) */}
+          {/* Offer 1 — Essentiel */}
+          <OfferCard
+            name="OneTap Essentiel"
+            tagline="La carte digitale qui convertit"
+            oldPrice="33€"
+            price="19,80€"
+            badge="Digital only"
+            features={[
+              { t: "Page de carte de visite digitale", v: true },
+              { t: "Modifications illimitées à vie", v: true },
+              { t: "QR code personnalisé", v: true },
+              { t: "Tous vos réseaux & liens", v: true },
+              { t: "Compatible iPhone & Android", v: true },
+              { t: "Sans abonnement, paiement unique", v: true },
+            ]}
+            cta="Oui, je veux ma carte — 19,80€"
+          />
+
+          {/* Offer 2 — Physique (highlight) */}
           <OfferCard
             name="OneTap Physique"
             tagline="Carte NFC + page digitale"
@@ -307,24 +325,6 @@ function Pricing() {
             ]}
             cta="Commander ma carte NFC — 28,80€"
             subCta="Activation immédiate · Garantie 30 jours"
-          />
-
-          {/* Offer 2 — Essentiel */}
-          <OfferCard
-            name="OneTap Essentiel"
-            tagline="La carte digitale qui convertit"
-            oldPrice="33€"
-            price="19,80€"
-            badge="Digital only"
-            features={[
-              { t: "Page de carte de visite digitale", v: true },
-              { t: "Modifications illimitées à vie", v: true },
-              { t: "QR code personnalisé", v: true },
-              { t: "Tous vos réseaux & liens", v: true },
-              { t: "Compatible iPhone & Android", v: true },
-              { t: "Sans abonnement, paiement unique", v: true },
-            ]}
-            cta="Oui, je veux ma carte — 19,80€"
           />
 
           {/* Offer 3 — Premium */}
