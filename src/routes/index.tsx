@@ -359,22 +359,99 @@ function HowItWorks() {
   const goNext = () => setActiveIndex((current) => (current + 1) % templates.length);
 
   return (
-    <section id="fonctionnement" className="py-20 lg:py-28 bg-gradient-soft overflow-hidden">
+    <section id="fonctionnement" className="py-16 sm:py-20 lg:py-28 bg-gradient-soft overflow-hidden">
       <div className="max-w-7xl mx-auto px-4">
-        <div className="grid lg:grid-cols-[0.92fr_1.08fr] gap-10 lg:gap-16 items-center">
-          <div>
-            <span className="inline-flex items-center gap-2 rounded-full bg-card border border-border px-3 py-1.5 text-xs font-semibold uppercase tracking-wider text-magenta">
-              <Smartphone className="w-3.5 h-3.5" /> Modèles de cartes
-            </span>
-            <h2 className="mt-4 font-display font-bold text-3xl sm:text-4xl lg:text-5xl leading-tight">
-              Une carte qui ressemble <span className="text-gradient">à votre métier</span>
-            </h2>
-            <p className="mt-4 text-base sm:text-lg text-muted-foreground max-w-xl">
-              Immobilier, coaching, restaurant, beauté, artisanat… chaque profil peut avoir son univers.
-              Faites défiler les exemples pour visualiser le rendu.
-            </p>
+        {/* Heading — shared */}
+        <div className="text-center lg:text-left lg:max-w-xl">
+          <span className="inline-flex items-center gap-2 rounded-full bg-card border border-border px-3 py-1.5 text-xs font-semibold uppercase tracking-wider text-magenta">
+            <Smartphone className="w-3.5 h-3.5" /> Modèles de cartes
+          </span>
+          <h2 className="mt-4 font-display font-bold text-3xl sm:text-4xl lg:text-5xl leading-tight">
+            Une carte qui ressemble <span className="text-gradient">à votre métier</span>
+          </h2>
+          <p className="mt-4 text-base sm:text-lg text-muted-foreground">
+            Immobilier, coaching, restaurant, beauté, artisanat… chaque profil a son univers.
+          </p>
+        </div>
 
-            <div className="mt-8 space-y-3">
+        <div className="mt-10 grid lg:grid-cols-[0.92fr_1.08fr] gap-10 lg:gap-16 items-center">
+          {/* ===== Carousel (mobile: 1st, desktop: right) ===== */}
+          <div className="relative order-1 lg:order-2">
+            <div className="absolute inset-x-10 top-14 bottom-14 bg-gradient-brand opacity-20 blur-3xl rounded-full" aria-hidden />
+
+            <div className="relative flex items-center justify-center gap-2 sm:gap-4">
+              <button
+                type="button"
+                onClick={goPrev}
+                aria-label="Carte précédente"
+                className="flex shrink-0 z-20 h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-full border border-border bg-background/90 shadow-card backdrop-blur active:scale-95 transition"
+              >
+                <ArrowRight className="w-4 h-4 rotate-180" />
+              </button>
+
+              <div className="relative mx-auto w-[220px] xs:w-[240px] sm:w-[300px] md:w-[340px] max-w-full">
+                <img
+                  key={activeTemplate.id}
+                  src={activeTemplate.image}
+                  alt={`Exemple de carte digitale — ${activeTemplate.sector}`}
+                  className="w-full h-auto drop-shadow-[0_30px_60px_rgba(0,0,0,0.25)] animate-in fade-in zoom-in-95 duration-500"
+                />
+              </div>
+
+              <button
+                type="button"
+                onClick={goNext}
+                aria-label="Carte suivante"
+                className="flex shrink-0 z-20 h-10 w-10 sm:h-11 sm:w-11 items-center justify-center rounded-full border border-border bg-background/90 shadow-card backdrop-blur active:scale-95 transition"
+              >
+                <ArrowRight className="w-4 h-4" />
+              </button>
+            </div>
+
+            {/* Active sector label (mobile only, gives context) */}
+            <div className="mt-4 text-center lg:hidden">
+              <div className="text-sm font-semibold text-foreground">{activeTemplate.sector}</div>
+              <div className="text-xs text-muted-foreground mt-0.5">{activeTemplate.secondary}</div>
+            </div>
+
+            {/* Dots */}
+            <div className="mt-4 lg:mt-6 flex items-center justify-center gap-2">
+              {templates.map((template, index) => (
+                <button
+                  key={template.id}
+                  type="button"
+                  aria-label={`Voir ${template.sector}`}
+                  onClick={() => setActiveIndex(index)}
+                  className={`h-2.5 rounded-full transition-all ${index === activeIndex ? "w-8 bg-magenta" : "w-2.5 bg-border hover:bg-magenta/40"}`}
+                />
+              ))}
+            </div>
+          </div>
+
+          {/* ===== Selectors + features (mobile: below carousel, desktop: left) ===== */}
+          <div className="order-2 lg:order-1">
+            {/* Mobile: horizontal scroll pills */}
+            <div className="lg:hidden -mx-4 px-4 overflow-x-auto scrollbar-none">
+              <div className="flex gap-2 pb-1 snap-x snap-mandatory">
+                {templates.map((template, index) => (
+                  <button
+                    key={template.id}
+                    type="button"
+                    onClick={() => setActiveIndex(index)}
+                    className={`shrink-0 snap-start rounded-full border px-4 py-2 text-xs font-semibold transition-all ${
+                      index === activeIndex
+                        ? "bg-foreground text-background border-foreground"
+                        : "bg-card text-foreground border-border"
+                    }`}
+                  >
+                    {template.sector}
+                  </button>
+                ))}
+              </div>
+            </div>
+
+            {/* Desktop: full list */}
+            <div className="hidden lg:block space-y-3">
               {templates.map((template, index) => (
                 <button
                   key={template.id}
@@ -397,61 +474,16 @@ function HowItWorks() {
               ))}
             </div>
 
-            <div className="mt-8 grid sm:grid-cols-3 gap-3">
+            <div className="mt-6 lg:mt-8 grid grid-cols-3 gap-2 sm:gap-3">
               {[
                 { icon: BadgeCheck, title: "100% personnalisable" },
                 { icon: Users, title: "Pensé pour convertir" },
-                { icon: BarChart3, title: "Adapté à chaque activité" },
+                { icon: BarChart3, title: "Adapté à chaque métier" },
               ].map((item) => (
-                <div key={item.title} className="rounded-2xl border border-border bg-card px-4 py-4 shadow-sm">
+                <div key={item.title} className="rounded-2xl border border-border bg-card px-3 py-3 sm:px-4 sm:py-4 shadow-sm">
                   <item.icon className="w-5 h-5 text-magenta" />
-                  <div className="mt-3 text-sm font-semibold">{item.title}</div>
+                  <div className="mt-2 sm:mt-3 text-xs sm:text-sm font-semibold leading-tight">{item.title}</div>
                 </div>
-              ))}
-            </div>
-          </div>
-
-          <div className="relative">
-            <div className="absolute inset-x-10 top-14 bottom-14 bg-gradient-brand opacity-20 blur-3xl rounded-full" aria-hidden />
-
-            <div className="relative flex items-center justify-center">
-              <button
-                type="button"
-                onClick={goPrev}
-                aria-label="Carte précédente"
-                className="hidden md:flex absolute left-0 z-20 h-11 w-11 items-center justify-center rounded-full border border-border bg-background/90 shadow-card backdrop-blur hover:-translate-y-0.5 transition"
-              >
-                <ArrowRight className="w-4 h-4 rotate-180" />
-              </button>
-
-              <div className="relative mx-auto w-[280px] sm:w-[340px]">
-                <img
-                  key={activeTemplate.id}
-                  src={activeTemplate.image}
-                  alt={`Exemple de carte digitale — ${activeTemplate.sector}`}
-                  className="w-full h-auto drop-shadow-[0_30px_60px_rgba(0,0,0,0.25)] animate-in fade-in zoom-in-95 duration-500"
-                />
-              </div>
-
-              <button
-                type="button"
-                onClick={goNext}
-                aria-label="Carte suivante"
-                className="hidden md:flex absolute right-0 z-20 h-11 w-11 items-center justify-center rounded-full border border-border bg-background/90 shadow-card backdrop-blur hover:-translate-y-0.5 transition"
-              >
-                <ArrowRight className="w-4 h-4" />
-              </button>
-            </div>
-
-            <div className="mt-6 flex items-center justify-center gap-2">
-              {templates.map((template, index) => (
-                <button
-                  key={template.id}
-                  type="button"
-                  aria-label={`Voir ${template.sector}`}
-                  onClick={() => setActiveIndex(index)}
-                  className={`h-2.5 rounded-full transition-all ${index === activeIndex ? "w-8 bg-magenta" : "w-2.5 bg-border hover:bg-magenta/40"}`}
-                />
               ))}
             </div>
           </div>
