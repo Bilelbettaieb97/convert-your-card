@@ -359,11 +359,12 @@ function Pricing() {
 }
 
 function ComparisonTable() {
-  const offers = [
+  const offers: { key: string; name: string; price: string; badge: string; highlight?: boolean }[] = [
     { key: "essentiel", name: "Essentiel", price: "19,80€", badge: "Populaire", highlight: true },
     { key: "physique", name: "Physique", price: "28,80€", badge: "Carte NFC" },
     { key: "premium", name: "Premium", price: "48€", badge: "Équipes" },
-  ] as const;
+  ];
+
 
   type Cell = boolean | string;
   const rows: { label: string; values: [Cell, Cell, Cell]; group?: string }[] = [
