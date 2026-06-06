@@ -427,15 +427,15 @@ function ComparisonTable() {
           </thead>
           <tbody>
             {rows.map((r, i) => (
-              <>
+              <React.Fragment key={i}>
                 {r.group && (
-                  <tr key={`g-${i}`} className="bg-muted/20">
+                  <tr className="bg-muted/20">
                     <th scope="colgroup" colSpan={4} className="px-5 py-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
                       {r.group}
                     </th>
                   </tr>
                 )}
-                <tr key={i} className="border-t border-border/60">
+                <tr className="border-t border-border/60">
                   <th scope="row" className="p-4 text-sm font-medium text-foreground">{r.label}</th>
                   {r.values.map((v, j) => (
                     <td key={j} className={`p-4 text-center ${offers[j].highlight ? "bg-magenta/5" : ""}`}>
@@ -443,8 +443,9 @@ function ComparisonTable() {
                     </td>
                   ))}
                 </tr>
-              </>
+              </React.Fragment>
             ))}
+
             <tr className="border-t border-border/60 bg-muted/20">
               <td className="p-4" />
               {offers.map((o) => (
