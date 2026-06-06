@@ -360,10 +360,10 @@ function HowItWorks() {
   const goNext = () => setActiveIndex((current) => (current + 1) % templates.length);
 
   return (
-    <section id="fonctionnement" className="py-16 sm:py-20 lg:py-28 bg-gradient-soft overflow-hidden">
+    <section id="fonctionnement" className="py-10 sm:py-14 lg:py-16 bg-gradient-soft overflow-hidden">
       <div className="max-w-7xl mx-auto px-4">
         {/* Heading — shared */}
-        <div className="text-center lg:text-left lg:max-w-2xl">
+        <div className="text-center max-w-3xl mx-auto">
           <span className="inline-flex items-center gap-2 rounded-full bg-card border border-border px-3 py-1.5 text-xs font-semibold uppercase tracking-wider text-magenta">
             <Smartphone className="w-3.5 h-3.5" /> Modèles de cartes
           </span>
