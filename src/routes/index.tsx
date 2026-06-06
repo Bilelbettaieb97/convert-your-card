@@ -328,83 +328,21 @@ function Problem() {
 
 /* ────────────────────────────  HOW IT WORKS  ──────────────────────────── */
 
+import t1Asset from "@/assets/templates/t1-agency.png.asset.json";
+import t2Asset from "@/assets/templates/t2-realestate.png.asset.json";
+import t3Asset from "@/assets/templates/t3-restaurant.png.asset.json";
+import t4Asset from "@/assets/templates/t4-coach.png.asset.json";
+import t5Asset from "@/assets/templates/t5-beauty.png.asset.json";
+import t6Asset from "@/assets/templates/t6-artisan.png.asset.json";
+
 function HowItWorks() {
   const templates = [
-    {
-      id: "agency",
-      sector: "Agence & conseil",
-      name: "LAREN SMITH",
-      brand: "Company Name",
-      role: "Professionnaliste",
-      accent: "from-violet-500 to-pink-500",
-      header: "from-violet-600 via-fuchsia-500 to-slate-950",
-      chip: "bg-violet-500/15 text-violet-200 border border-violet-400/20",
-      shell: "bg-slate-950",
-      inner: "bg-background",
-      cta: "Ajouter aux contacts",
-      secondary: "Site web",
-      actions: ["Email", "Appeler", "SMS", "Contact", "LinkedIn", "Facebook", "Instagram", "QR code"],
-    },
-    {
-      id: "real-estate",
-      sector: "Immobilier premium",
-      name: "CLAIRE DUBOIS",
-      brand: "LUXURY REALTY GROUP",
-      role: "Agente immobilière confirmée",
-      accent: "from-amber-400 to-yellow-600",
-      header: "from-slate-950 via-slate-900 to-blue-950",
-      chip: "bg-amber-500/15 text-amber-700 border border-amber-500/20",
-      shell: "bg-zinc-900",
-      inner: "bg-background",
-      cta: "Ajouter aux contacts",
-      secondary: "Site web",
-      actions: ["E-mail", "Appeler", "SMS", "Biens", "LinkedIn", "Facebook", "Instagram", "Code QR"],
-    },
-    {
-      id: "coach",
-      sector: "Coach & expert",
-      name: "JONNIN COACH",
-      brand: "BRAND NAME",
-      role: "Réserver en 1 clic",
-      accent: "from-emerald-400 to-teal-500",
-      header: "from-emerald-500 via-emerald-400 to-slate-950",
-      chip: "bg-emerald-500/15 text-emerald-300 border border-emerald-400/20",
-      shell: "bg-zinc-950",
-      inner: "bg-zinc-950 text-white",
-      cta: "Ajouter aux contacts",
-      secondary: "Réserver un appel",
-      actions: ["Email", "Appeler", "WhatsApp", "RDV", "LinkedIn", "Instagram", "YouTube", "QR code"],
-    },
-    {
-      id: "beauty",
-      sector: "Beauté & bien-être",
-      name: "SOPHIE DUBOIS",
-      brand: "Salon Éclat de Beauté",
-      role: "Esthéticienne & maquilleuse",
-      accent: "from-rose-300 to-amber-200",
-      header: "from-rose-200 via-rose-100 to-amber-100",
-      chip: "bg-rose-200/70 text-rose-900 border border-rose-300/70",
-      shell: "bg-rose-100",
-      inner: "bg-background",
-      cta: "Ajouter aux contacts",
-      secondary: "Réserver",
-      actions: ["Prendre RDV", "Appeler", "SMS", "Prestations", "Instagram", "Facebook", "TikTok", "QR code"],
-    },
-    {
-      id: "artisan",
-      sector: "BTP & artisan",
-      name: "JEAN DUPONT",
-      brand: "RENOVATION PRO",
-      role: "Entrepreneur général",
-      accent: "from-orange-500 to-orange-600",
-      header: "from-orange-500 via-orange-500 to-zinc-900",
-      chip: "bg-orange-500/15 text-orange-600 border border-orange-500/20",
-      shell: "bg-zinc-950",
-      inner: "bg-background",
-      cta: "Ajouter aux contacts",
-      secondary: "Demander un devis",
-      actions: ["Devis", "Appeler", "SMS", "Itinéraire", "Réalisations", "Facebook", "Avis Google", "QR code"],
-    },
+    { id: "agency", sector: "Agence & conseil", secondary: "Site web", accent: "from-violet-500 to-pink-500", image: t1Asset.url },
+    { id: "real-estate", sector: "Immobilier premium", secondary: "Site web", accent: "from-amber-400 to-yellow-600", image: t2Asset.url },
+    { id: "restaurant", sector: "Restaurant & hospitalité", secondary: "Réserver une table", accent: "from-red-500 to-rose-700", image: t3Asset.url },
+    { id: "coach", sector: "Coach & expert", secondary: "Réserver un appel", accent: "from-emerald-400 to-teal-500", image: t4Asset.url },
+    { id: "beauty", sector: "Beauté & bien-être", secondary: "Réserver", accent: "from-rose-300 to-amber-200", image: t5Asset.url },
+    { id: "artisan", sector: "BTP & artisan", secondary: "Demander un devis", accent: "from-orange-500 to-orange-600", image: t6Asset.url },
   ];
 
   const [activeIndex, setActiveIndex] = useState(0);
@@ -414,7 +352,6 @@ function HowItWorks() {
     const interval = window.setInterval(() => {
       setActiveIndex((current) => (current + 1) % templates.length);
     }, 3500);
-
     return () => window.clearInterval(interval);
   }, [templates.length]);
 
@@ -487,61 +424,13 @@ function HowItWorks() {
                 <ArrowRight className="w-4 h-4 rotate-180" />
               </button>
 
-              <div className={`relative mx-auto w-[300px] sm:w-[340px] h-[610px] sm:h-[690px] rounded-[3rem] p-3 shadow-[0_30px_90px_-30px_color-mix(in_oklab,var(--magenta)_55%,transparent)] ${activeTemplate.shell}`}>
-                <div className={`relative h-full w-full overflow-hidden rounded-[2.5rem] ${activeTemplate.inner}`}>
-                  <div className="absolute top-3 left-1/2 z-20 h-7 w-28 -translate-x-1/2 rounded-full bg-foreground" />
-
-                  <div className={`absolute inset-x-0 top-0 h-44 bg-gradient-to-r ${activeTemplate.header}`} />
-                  <div className="absolute inset-x-0 top-0 h-44 opacity-20 bg-[radial-gradient(circle_at_top_left,white_0%,transparent_45%)]" />
-
-                  <div className="relative flex h-full flex-col px-5 pb-5 pt-20 sm:px-6">
-                    <div className="mx-auto h-32 w-32 sm:h-36 sm:w-36 rounded-full bg-background p-1.5 shadow-2xl">
-                      <div className={`h-full w-full rounded-full bg-gradient-to-br ${activeTemplate.accent} p-1.5`}>
-                        <div className="flex h-full w-full items-center justify-center rounded-full bg-card text-3xl font-display font-bold text-foreground">
-                          {activeTemplate.name.split(" ").map((part) => part[0]).join("")}
-                        </div>
-                      </div>
-                    </div>
-
-                    <div className="mt-6 text-center">
-                      <div className="font-display text-3xl sm:text-[2.35rem] font-extrabold leading-none text-foreground">
-                        {activeTemplate.name}
-                      </div>
-                      <div className={`mt-2 bg-gradient-to-r ${activeTemplate.accent} bg-clip-text text-lg sm:text-xl font-bold text-transparent`}>
-                        {activeTemplate.brand}
-                      </div>
-                      <div className="mt-1 text-sm sm:text-base text-muted-foreground">{activeTemplate.role}</div>
-                    </div>
-
-                    <div className="mt-7 grid grid-cols-4 gap-x-3 gap-y-5">
-                      {activeTemplate.actions.map((action) => (
-                        <div key={action} className="text-center">
-                          <div className={`mx-auto flex h-14 w-14 items-center justify-center rounded-full bg-gradient-to-r ${activeTemplate.accent} text-white shadow-lg shadow-black/10`}>
-                            <Sparkles className="w-5 h-5" />
-                          </div>
-                          <div className="mt-2 text-[11px] sm:text-xs text-foreground/85 leading-tight">{action}</div>
-                        </div>
-                      ))}
-                    </div>
-
-                    <button className={`mt-7 w-full rounded-full bg-gradient-to-r ${activeTemplate.accent} px-5 py-3.5 text-sm font-bold uppercase tracking-wide text-white shadow-lg`}>
-                      {activeTemplate.cta}
-                    </button>
-                    <button className="mt-3 w-full rounded-full border-2 border-border bg-background px-5 py-3.5 text-sm font-bold uppercase tracking-wide text-foreground">
-                      {activeTemplate.secondary}
-                    </button>
-
-                    <div className="mt-6 rounded-[1.75rem] bg-card/80 p-4 shadow-sm ring-1 ring-border/70 backdrop-blur">
-                      <div className={`inline-flex rounded-full px-3 py-1 text-[11px] font-semibold ${activeTemplate.chip}`}>
-                        {activeTemplate.sector}
-                      </div>
-                      <div className="mt-3 text-xl font-display font-bold text-foreground">À propos</div>
-                      <p className="mt-2 text-sm leading-6 text-muted-foreground">
-                        Un modèle premium pensé pour présenter vos liens clés, inspirer confiance et créer une action immédiate après chaque rencontre.
-                      </p>
-                    </div>
-                  </div>
-                </div>
+              <div className="relative mx-auto w-[280px] sm:w-[340px]">
+                <img
+                  key={activeTemplate.id}
+                  src={activeTemplate.image}
+                  alt={`Exemple de carte digitale — ${activeTemplate.sector}`}
+                  className="w-full h-auto drop-shadow-[0_30px_60px_rgba(0,0,0,0.25)] animate-in fade-in zoom-in-95 duration-500"
+                />
               </div>
 
               <button
