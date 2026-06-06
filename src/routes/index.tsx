@@ -8,6 +8,7 @@ import {
 import { DigitalCardVisual } from "@/components/landing/DigitalCardVisual";
 import { Countdown } from "@/components/landing/Countdown";
 import { VideoTestimonials } from "@/components/landing/VideoTestimonials";
+import { LiveActivity, ExitIntent, GuaranteeBlock, StructuredData } from "@/components/landing/CroEnhancements";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -27,6 +28,7 @@ export const Route = createFileRoute("/")({
 function Landing() {
   return (
     <div className="min-h-screen bg-background text-foreground font-body">
+      <StructuredData />
       <PromoBar />
       <Nav />
       <Hero />
@@ -36,6 +38,7 @@ function Landing() {
       <SocialProofBand />
       <VideoTestimonials />
       <Pricing />
+      <GuaranteeBlock />
       <Features />
       <Testimonials />
       <Comparison />
@@ -43,6 +46,8 @@ function Landing() {
       <FinalCTA />
       <Footer />
       <StickyMobileCTA />
+      <LiveActivity />
+      <ExitIntent />
     </div>
   );
 }
