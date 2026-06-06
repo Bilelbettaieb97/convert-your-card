@@ -158,6 +158,20 @@ function Hero() {
             <span className="flex items-center gap-1.5"><Clock className="w-4 h-4 text-success" /> Activation immédiate</span>
             <span className="flex items-center gap-1.5"><Check className="w-4 h-4 text-success" /> Garantie 30 jours</span>
           </div>
+
+          {/* Mobile scarcity strip */}
+          <div className="mt-5 sm:hidden bg-card border border-magenta/30 rounded-2xl p-3 shadow-card">
+            <div className="flex items-center justify-between text-xs font-semibold mb-1.5">
+              <span className="text-foreground">🔥 Offre lancement — plus que 47 places</span>
+              <span className="text-magenta">31%</span>
+            </div>
+            <div className="h-1.5 rounded-full bg-secondary overflow-hidden">
+              <div className="h-full rounded-full bg-gradient-brand" style={{ width: "31%" }} />
+            </div>
+            <p className="mt-2 text-[11px] text-muted-foreground">
+              Tarif -40% bloqué pendant <Countdown />
+            </p>
+          </div>
         </div>
 
         <div className="relative">

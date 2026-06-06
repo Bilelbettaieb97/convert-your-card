@@ -38,7 +38,7 @@ export function LiveActivity() {
   return (
     <div
       aria-hidden={!visible}
-      className={`fixed left-4 bottom-20 sm:bottom-6 z-40 max-w-[18rem] transition-all duration-500 ${
+      className={`hidden sm:block fixed left-4 bottom-6 z-40 max-w-[18rem] transition-all duration-500 ${
         visible ? "opacity-100 translate-y-0" : "opacity-0 translate-y-3 pointer-events-none"
       }`}
     >
