@@ -544,7 +544,7 @@ function OfferCard({
 
   return (
     <div
-      className={`relative rounded-3xl p-7 flex flex-col ${
+      className={`relative w-full rounded-3xl p-7 flex flex-col ${
         highlight
           ? "bg-gradient-brand text-primary-foreground shadow-glow border-2 border-magenta/40"
           : "bg-card border border-border shadow-card"
