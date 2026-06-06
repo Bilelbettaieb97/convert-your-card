@@ -356,7 +356,7 @@ function Pricing() {
 }
 
 function OfferCard({
-  name, tagline, oldPrice, price, badge, features, cta, subCta, highlight, order,
+  name, tagline, oldPrice, price, badge, features, cta, subCta, highlight,
   stockLeft, stockTotal, valueStack,
 }: {
   name: string; tagline: string; oldPrice: string; price: string;
