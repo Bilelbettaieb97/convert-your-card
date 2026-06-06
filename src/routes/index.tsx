@@ -4,6 +4,7 @@ import {
   Check, X, Star, Zap, Shield, Smartphone, BarChart3, Leaf,
   CreditCard, Truck, ChevronDown, ArrowRight, Sparkles, Clock, Users, TrendingUp,
   Award, MessageCircle, BadgeCheck, Quote, ThumbsUp,
+  Building2, Home, UtensilsCrossed, GraduationCap, Scissors, HardHat,
 } from "lucide-react";
 import { DigitalCardVisual } from "@/components/landing/DigitalCardVisual";
 import { Countdown } from "@/components/landing/Countdown";
