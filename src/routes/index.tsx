@@ -476,11 +476,13 @@ function ComparisonTable() {
 
       {/* Mobile: stacked feature list per offer */}
       <div className="md:hidden space-y-4">
-        {offers.map((o, idx) => (
+        {[...offers].sort((a, b) => (b.highlight ? 1 : 0) - (a.highlight ? 1 : 0)).map((o) => {
+          const idx = offers.findIndex((x) => x.key === o.key);
+          return (
           <details
             key={o.key}
             open={!!o.highlight}
-            className={`rounded-xl border bg-card p-4 ${o.highlight ? "border-magenta/40 shadow-md" : "border-border"}`}
+            className={`rounded-2xl border bg-card p-5 ${o.highlight ? "border-magenta/50 shadow-lg ring-1 ring-magenta/20" : "border-border"}`}
           >
             <summary className="flex items-center justify-between cursor-pointer list-none">
               <div>
