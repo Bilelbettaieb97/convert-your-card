@@ -10,6 +10,12 @@ import { Countdown } from "@/components/landing/Countdown";
 import { VideoTestimonials } from "@/components/landing/VideoTestimonials";
 import { LiveActivity, ExitIntent, GuaranteeBlock, StructuredData } from "@/components/landing/CroEnhancements";
 import { CheckoutFlow, onCheckoutClick, triggerCheckout } from "@/components/landing/CheckoutFlow";
+import t1Asset from "@/assets/templates/t1-agency.png.asset.json";
+import t2Asset from "@/assets/templates/t2-realestate.png.asset.json";
+import t3Asset from "@/assets/templates/t3-restaurant.png.asset.json";
+import t4Asset from "@/assets/templates/t4-coach.png.asset.json";
+import t5Asset from "@/assets/templates/t5-beauty.png.asset.json";
+import t6Asset from "@/assets/templates/t6-artisan.png.asset.json";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -328,12 +334,6 @@ function Problem() {
 
 /* ────────────────────────────  HOW IT WORKS  ──────────────────────────── */
 
-import t1Asset from "@/assets/templates/t1-agency.png.asset.json";
-import t2Asset from "@/assets/templates/t2-realestate.png.asset.json";
-import t3Asset from "@/assets/templates/t3-restaurant.png.asset.json";
-import t4Asset from "@/assets/templates/t4-coach.png.asset.json";
-import t5Asset from "@/assets/templates/t5-beauty.png.asset.json";
-import t6Asset from "@/assets/templates/t6-artisan.png.asset.json";
 
 function HowItWorks() {
   const templates = [
