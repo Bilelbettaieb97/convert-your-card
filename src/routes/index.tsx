@@ -360,22 +360,22 @@ function HowItWorks() {
   const goNext = () => setActiveIndex((current) => (current + 1) % templates.length);
 
   return (
-    <section id="fonctionnement" className="py-10 sm:py-14 lg:py-16 bg-gradient-soft overflow-hidden">
+    <section id="fonctionnement" className="py-8 sm:py-10 lg:py-12 bg-gradient-soft overflow-hidden">
       <div className="max-w-7xl mx-auto px-4">
         {/* Heading — shared */}
         <div className="text-center max-w-3xl mx-auto">
           <span className="inline-flex items-center gap-2 rounded-full bg-card border border-border px-3 py-1.5 text-xs font-semibold uppercase tracking-wider text-magenta">
             <Smartphone className="w-3.5 h-3.5" /> Modèles de cartes
           </span>
-          <h2 className="mt-4 font-display font-bold text-3xl sm:text-4xl lg:text-5xl leading-tight">
+          <h2 className="mt-3 font-display font-bold text-3xl sm:text-4xl lg:text-5xl leading-tight">
             Une carte qui ressemble <span className="text-gradient">à votre métier</span>
           </h2>
-          <p className="mt-4 text-base sm:text-lg text-muted-foreground">
+          <p className="mt-3 text-base sm:text-lg text-muted-foreground">
             Immobilier, coaching, restaurant, beauté, artisanat… chaque profil a son univers, son ton, ses appels à l'action.
           </p>
         </div>
 
-        <div className="mt-10 lg:mt-14 grid grid-cols-1 lg:grid-cols-[1.05fr_0.95fr] gap-10 lg:gap-14 lg:items-center">
+        <div className="mt-8 lg:mt-10 grid grid-cols-1 lg:grid-cols-[1.05fr_0.95fr] gap-10 lg:gap-14 lg:items-center">
           {/* ===== Carousel (mobile: 1st, desktop: right) ===== */}
           <div className="relative w-full order-1 lg:order-2">
             {/* Decorative blob */}
