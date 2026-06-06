@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import React, { useEffect, useState } from "react";
 import {
   Check, X, Star, Zap, Shield, Smartphone, BarChart3, Leaf,
@@ -44,7 +44,7 @@ function Landing() {
       <HowItWorks />
       <SocialProofBand />
       <VideoTestimonials />
-      <Pricing />
+      
       <GuaranteeBlock />
       <Features />
       <Testimonials />
@@ -87,7 +87,7 @@ function Nav() {
         </a>
         <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-muted-foreground">
           <a href="#fonctionnement" className="hover:text-foreground transition">Fonctionnement</a>
-          <a href="#offres" className="hover:text-foreground transition">Offres</a>
+          <Link to="/offres" className="hover:text-foreground transition">Offres</Link>
           <a href="#avis" className="hover:text-foreground transition">Avis</a>
           <a href="#faq" className="hover:text-foreground transition">FAQ</a>
         </nav>
@@ -463,7 +463,7 @@ function HowItWorks() {
 
 /* ────────────────────────────  PRICING — FOCUS ON OFFER 1  ──────────────────────────── */
 
-function Pricing() {
+export function Pricing() {
   return (
     <section id="offres" className="py-20 lg:py-28">
       <div className="max-w-7xl mx-auto px-4">
