@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
+import React, { useEffect, useState } from "react";
 import {
   Check, X, Star, Zap, Shield, Smartphone, BarChart3, Leaf,
   CreditCard, Truck, ChevronDown, ArrowRight, Sparkles, Clock, Users, TrendingUp,
