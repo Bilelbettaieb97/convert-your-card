@@ -522,7 +522,8 @@ function ComparisonTable() {
               Choisir {o.name} <ArrowRight className="w-4 h-4" />
             </button>
           </details>
-        ))}
+          );
+        })}
       </div>
     </div>
   );
