@@ -62,7 +62,7 @@ function Landing() {
 
 /* ────────────────────────────  TOP  ──────────────────────────── */
 
-function PromoBar() {
+export function PromoBar() {
   return (
     <div className="bg-gradient-brand text-primary-foreground text-sm">
       <div className="max-w-7xl mx-auto px-4 py-2 flex items-center justify-center gap-3 flex-wrap text-center">
@@ -75,7 +75,7 @@ function PromoBar() {
   );
 }
 
-function Nav() {
+export function Nav() {
   return (
     <header className="sticky top-0 z-40 bg-background/80 backdrop-blur-lg border-b border-border">
       <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
@@ -1197,7 +1197,7 @@ function FinalCTA() {
 
 /* ────────────────────────────  FOOTER + STICKY  ──────────────────────────── */
 
-function Footer() {
+export function Footer() {
   return (
     <footer className="border-t border-border bg-card">
       <div className="max-w-7xl mx-auto px-4 py-10 flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-muted-foreground">
