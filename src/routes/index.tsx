@@ -832,23 +832,72 @@ function Footer() {
 
 function StickyMobileCTA() {
   const [show, setShow] = useState(false);
+  const [hide, setHide] = useState(false);
+
   useEffect(() => {
-    const on = () => setShow(window.scrollY > 600);
-    window.addEventListener("scroll", on);
+    const on = () => setShow(window.scrollY > 280);
+    on();
+    window.addEventListener("scroll", on, { passive: true });
     return () => window.removeEventListener("scroll", on);
   }, []);
+
+  useEffect(() => {
+    if (typeof IntersectionObserver === "undefined") return;
+    const el = document.querySelector("#offres");
+    if (!el) return;
+    const obs = new IntersectionObserver(
+      ([e]) => setHide(e.isIntersecting),
+      { rootMargin: "-20% 0px -20% 0px" }
+    );
+    obs.observe(el);
+    return () => obs.disconnect();
+  }, []);
+
+  const visible = show && !hide;
+
+  const onTap = () => {
+    if (typeof navigator !== "undefined" && "vibrate" in navigator) {
+      try { (navigator as Navigator & { vibrate: (p: number) => void }).vibrate(10); } catch {}
+    }
+  };
+
   return (
     <div
-      className={`md:hidden fixed bottom-4 inset-x-4 z-40 transition-all ${
-        show ? "translate-y-0 opacity-100" : "translate-y-24 opacity-0"
+      aria-hidden={!visible}
+      className={`md:hidden fixed bottom-0 inset-x-0 z-40 transition-all duration-300 ${
+        visible ? "translate-y-0 opacity-100" : "translate-y-full opacity-0 pointer-events-none"
       }`}
+      style={{ paddingBottom: "max(0.5rem, env(safe-area-inset-bottom))" }}
     >
-      <a
-        href="#offres"
-        className="block text-center bg-gradient-cta text-primary-foreground py-4 rounded-2xl font-bold shadow-glow"
-      >
-        Créer ma carte — 19,80€
-      </a>
+      <div className="mx-3 mb-2 bg-card/95 backdrop-blur-lg border border-border rounded-2xl shadow-2xl overflow-hidden">
+        <div className="bg-gradient-brand text-primary-foreground px-3 py-1.5 text-[11px] font-semibold flex items-center justify-between gap-2">
+          <span className="flex items-center gap-1.5 truncate">
+            <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse shrink-0" />
+            🔥 Plus que 47 places à -40%
+          </span>
+          <Countdown />
+        </div>
+        <a
+          href="#offres"
+          onClick={onTap}
+          className="flex items-center gap-3 p-2.5 active:scale-[0.98] transition-transform"
+        >
+          <div className="flex flex-col items-start pl-1.5 shrink-0">
+            <span className="text-[10px] text-muted-foreground line-through leading-none">33€</span>
+            <span className="font-display font-extrabold text-xl leading-tight text-foreground">19,80€</span>
+            <span className="text-[10px] text-success font-semibold leading-none">-13,20€</span>
+          </div>
+          <div className="flex-1 bg-gradient-cta text-primary-foreground rounded-xl py-3 px-3 text-center shadow-glow">
+            <div className="font-bold text-[15px] leading-tight flex items-center justify-center gap-1.5">
+              Créer ma carte
+              <ArrowRight className="w-4 h-4" />
+            </div>
+            <div className="text-[10px] opacity-90 mt-0.5 flex items-center justify-center gap-1">
+              <Shield className="w-2.5 h-2.5" /> Garantie 30j · Activation immédiate
+            </div>
+          </div>
+        </a>
+      </div>
     </div>
   );
 }
