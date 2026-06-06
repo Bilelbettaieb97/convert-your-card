@@ -358,7 +358,167 @@ function Pricing() {
   );
 }
 
+function ComparisonTable() {
+  const offers = [
+    { key: "essentiel", name: "Essentiel", price: "19,80€", badge: "Populaire", highlight: true },
+    { key: "physique", name: "Physique", price: "28,80€", badge: "Carte NFC" },
+    { key: "premium", name: "Premium", price: "48€", badge: "Équipes" },
+  ] as const;
+
+  type Cell = boolean | string;
+  const rows: { label: string; values: [Cell, Cell, Cell]; group?: string }[] = [
+    { group: "L'essentiel", label: "Page de carte digitale", values: [true, true, true] },
+    { label: "QR code personnalisé", values: [true, true, true] },
+    { label: "Modifications illimitées à vie", values: [true, true, true] },
+    { label: "Tous vos réseaux & liens", values: [true, true, true] },
+    { label: "Compatible iPhone & Android", values: [true, true, true] },
+    { label: "Paiement unique, sans abonnement", values: [true, true, true] },
+
+    { group: "Carte physique", label: "Carte NFC premium livrée", values: [false, true, true] },
+    { label: "Livraison offerte 48h", values: [false, true, true] },
+    { label: "QR code intégré à la carte", values: [false, true, true] },
+
+    { group: "Pro & équipes", label: "Analytics temps réel (vues, clics)", values: [false, false, true] },
+    { label: "Lead capture & export CRM", values: [false, false, true] },
+    { label: "Multi-cartes (jusqu'à 5)", values: [false, false, true] },
+    { label: "Domaine personnalisé", values: [false, false, true] },
+    { label: "Support prioritaire", values: [false, false, true] },
+  ];
+
+  const cell = (v: Cell, highlight?: boolean) => {
+    if (v === true) return <Check className={`w-5 h-5 mx-auto ${highlight ? "text-magenta" : "text-success"}`} aria-label="Inclus" />;
+    if (v === false) return <X className="w-5 h-5 mx-auto text-muted-foreground/40" aria-label="Non inclus" />;
+    return <span className="text-sm font-medium">{v}</span>;
+  };
+
+  return (
+    <div className="mt-16 max-w-6xl mx-auto">
+      <div className="text-center max-w-2xl mx-auto mb-8">
+        <span className="text-sm font-semibold text-magenta uppercase tracking-wider">Comparatif détaillé</span>
+        <h3 className="mt-3 font-display font-bold text-2xl sm:text-3xl">La différence en un coup d'œil</h3>
+        <p className="mt-3 text-muted-foreground text-sm">Toutes les fonctionnalités, comparées côte à côte.</p>
+      </div>
+
+      {/* Desktop / tablet table */}
+      <div className="hidden md:block rounded-2xl border border-border bg-card shadow-sm overflow-hidden">
+        <table className="w-full text-left">
+          <caption className="sr-only">Comparatif des formules OneTap</caption>
+          <thead>
+            <tr className="bg-muted/40">
+              <th scope="col" className="p-5 font-semibold text-sm text-muted-foreground w-[40%]">Fonctionnalité</th>
+              {offers.map((o) => (
+                <th
+                  key={o.key}
+                  scope="col"
+                  className={`p-5 text-center align-bottom ${o.highlight ? "bg-magenta/5 relative" : ""}`}
+                >
+                  {o.highlight && (
+                    <span className="absolute top-2 left-1/2 -translate-x-1/2 text-[10px] font-bold uppercase tracking-wider bg-magenta text-white px-2 py-0.5 rounded-full whitespace-nowrap">
+                      ⭐ {o.badge}
+                    </span>
+                  )}
+                  <div className="font-display font-bold text-lg mt-3">{o.name}</div>
+                  <div className={`font-display font-extrabold text-2xl mt-1 ${o.highlight ? "text-magenta" : ""}`}>{o.price}</div>
+                  {!o.highlight && <div className="text-[10px] uppercase tracking-wider text-muted-foreground mt-1">{o.badge}</div>}
+                </th>
+              ))}
+            </tr>
+          </thead>
+          <tbody>
+            {rows.map((r, i) => (
+              <>
+                {r.group && (
+                  <tr key={`g-${i}`} className="bg-muted/20">
+                    <th scope="colgroup" colSpan={4} className="px-5 py-2 text-xs font-semibold uppercase tracking-wider text-muted-foreground">
+                      {r.group}
+                    </th>
+                  </tr>
+                )}
+                <tr key={i} className="border-t border-border/60">
+                  <th scope="row" className="p-4 text-sm font-medium text-foreground">{r.label}</th>
+                  {r.values.map((v, j) => (
+                    <td key={j} className={`p-4 text-center ${offers[j].highlight ? "bg-magenta/5" : ""}`}>
+                      {cell(v, offers[j].highlight)}
+                    </td>
+                  ))}
+                </tr>
+              </>
+            ))}
+            <tr className="border-t border-border/60 bg-muted/20">
+              <td className="p-4" />
+              {offers.map((o) => (
+                <td key={o.key} className={`p-4 text-center ${o.highlight ? "bg-magenta/5" : ""}`}>
+                  <button
+                    onClick={() => onCheckoutClick(`compare-${o.key}`)}
+                    className={`inline-flex items-center gap-1 text-xs font-bold px-3 py-2 rounded-lg transition ${
+                      o.highlight
+                        ? "bg-magenta text-white hover:bg-magenta/90"
+                        : "bg-foreground text-background hover:opacity-90"
+                    }`}
+                  >
+                    Choisir <ArrowRight className="w-3 h-3" />
+                  </button>
+                </td>
+              ))}
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      {/* Mobile: stacked feature list per offer */}
+      <div className="md:hidden space-y-4">
+        {offers.map((o, idx) => (
+          <details
+            key={o.key}
+            open={!!o.highlight}
+            className={`rounded-xl border bg-card p-4 ${o.highlight ? "border-magenta/40 shadow-md" : "border-border"}`}
+          >
+            <summary className="flex items-center justify-between cursor-pointer list-none">
+              <div>
+                <div className="font-display font-bold">{o.name}</div>
+                <div className={`font-display font-extrabold text-xl ${o.highlight ? "text-magenta" : ""}`}>{o.price}</div>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className={`text-[10px] uppercase tracking-wider px-2 py-1 rounded-full ${o.highlight ? "bg-magenta text-white" : "bg-muted text-muted-foreground"}`}>
+                  {o.badge}
+                </span>
+                <ChevronDown className="w-4 h-4 text-muted-foreground transition group-open:rotate-180" />
+              </div>
+            </summary>
+            <ul className="mt-4 space-y-2">
+              {rows.map((r, i) => {
+                const v = r.values[idx];
+                return (
+                  <li key={i} className="flex items-start gap-2 text-sm">
+                    {v === true ? (
+                      <Check className={`w-4 h-4 mt-0.5 shrink-0 ${o.highlight ? "text-magenta" : "text-success"}`} />
+                    ) : (
+                      <X className="w-4 h-4 mt-0.5 shrink-0 text-muted-foreground/40" />
+                    )}
+                    <span className={v ? "text-foreground" : "text-muted-foreground/60 line-through"}>
+                      {r.label}
+                    </span>
+                  </li>
+                );
+              })}
+            </ul>
+            <button
+              onClick={() => onCheckoutClick(`compare-m-${o.key}`)}
+              className={`mt-4 w-full inline-flex items-center justify-center gap-2 font-bold py-3 rounded-lg ${
+                o.highlight ? "bg-magenta text-white" : "bg-foreground text-background"
+              }`}
+            >
+              Choisir {o.name} <ArrowRight className="w-4 h-4" />
+            </button>
+          </details>
+        ))}
+      </div>
+    </div>
+  );
+}
+
 function OfferCard({
+
   name, tagline, oldPrice, price, badge, features, cta, subCta, highlight,
   stockLeft, stockTotal, valueStack,
 }: {
