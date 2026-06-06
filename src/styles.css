@@ -146,3 +146,8 @@
   100% { box-shadow: 0 0 0 0 color-mix(in oklab, var(--primary) 0%, transparent); }
 }
 @utility animate-pulse-ring { animation: pulse-ring 2.5s ease-out infinite; }
+
+@keyframes skeleton-shimmer {
+  0% { background-position: 200% 0; }
+  100% { background-position: -200% 0; }
+}
