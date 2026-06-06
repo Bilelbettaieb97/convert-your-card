@@ -476,55 +476,58 @@ function ComparisonTable() {
 
       {/* Mobile: stacked feature list per offer */}
       <div className="md:hidden space-y-4">
-        {[...offers].sort((a, b) => (b.highlight ? 1 : 0) - (a.highlight ? 1 : 0)).map((o) => {
-          const idx = offers.findIndex((x) => x.key === o.key);
-          return (
-          <details
-            key={o.key}
-            open={!!o.highlight}
-            className={`rounded-2xl border bg-card p-5 ${o.highlight ? "border-magenta/50 shadow-lg ring-1 ring-magenta/20" : "border-border"}`}
-          >
-            <summary className="flex items-center justify-between cursor-pointer list-none">
-              <div>
-                <div className="font-display font-bold">{o.name}</div>
-                <div className={`font-display font-extrabold text-xl ${o.highlight ? "text-magenta" : ""}`}>{o.price}</div>
-              </div>
-              <div className="flex items-center gap-2">
-                <span className={`text-[10px] uppercase tracking-wider px-2 py-1 rounded-full ${o.highlight ? "bg-magenta text-white" : "bg-muted text-muted-foreground"}`}>
-                  {o.badge}
-                </span>
-                <ChevronDown className="w-4 h-4 text-muted-foreground transition group-open:rotate-180" />
-              </div>
-            </summary>
-            <ul className="mt-4 space-y-2">
-              {rows.map((r, i) => {
-                const v = r.values[idx];
-                return (
-                  <li key={i} className="flex items-start gap-2 text-sm">
-                    {v === true ? (
-                      <Check className={`w-4 h-4 mt-0.5 shrink-0 ${o.highlight ? "text-magenta" : "text-success"}`} />
-                    ) : (
-                      <X className="w-4 h-4 mt-0.5 shrink-0 text-muted-foreground/40" />
-                    )}
-                    <span className={v ? "text-foreground" : "text-muted-foreground/60 line-through"}>
-                      {r.label}
+        {[...offers]
+          .sort((a, b) => (b.highlight ? 1 : 0) - (a.highlight ? 1 : 0))
+          .map((o) => {
+            const idx = offers.findIndex((x) => x.key === o.key);
+            return (
+              <details
+                key={o.key}
+                open={!!o.highlight}
+                className={`rounded-2xl border bg-card p-5 ${o.highlight ? "border-magenta/50 shadow-lg ring-1 ring-magenta/20" : "border-border"}`}
+              >
+                <summary className="flex items-center justify-between cursor-pointer list-none">
+                  <div>
+                    <div className="font-display font-bold">{o.name}</div>
+                    <div className={`font-display font-extrabold text-xl ${o.highlight ? "text-magenta" : ""}`}>{o.price}</div>
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className={`text-[10px] uppercase tracking-wider px-2 py-1 rounded-full ${o.highlight ? "bg-magenta text-white" : "bg-muted text-muted-foreground"}`}>
+                      {o.badge}
                     </span>
-                  </li>
-                );
-              })}
-            </ul>
-            <button
-              onClick={() => triggerCheckout("#offres")}
-              className={`mt-4 w-full inline-flex items-center justify-center gap-2 font-bold py-3 rounded-lg ${
-                o.highlight ? "bg-magenta text-white" : "bg-foreground text-background"
-              }`}
-            >
-              Choisir {o.name} <ArrowRight className="w-4 h-4" />
-            </button>
-          </details>
-          );
-        })}
+                    <ChevronDown className="w-4 h-4 text-muted-foreground transition group-open:rotate-180" />
+                  </div>
+                </summary>
+                <ul className="mt-4 space-y-2">
+                  {rows.map((r, i) => {
+                    const v = r.values[idx];
+                    return (
+                      <li key={i} className="flex items-start gap-2 text-sm">
+                        {v === true ? (
+                          <Check className={`w-4 h-4 mt-0.5 shrink-0 ${o.highlight ? "text-magenta" : "text-success"}`} />
+                        ) : (
+                          <X className="w-4 h-4 mt-0.5 shrink-0 text-muted-foreground/40" />
+                        )}
+                        <span className={v ? "text-foreground" : "text-muted-foreground/60 line-through"}>
+                          {r.label}
+                        </span>
+                      </li>
+                    );
+                  })}
+                </ul>
+                <button
+                  onClick={() => triggerCheckout("#offres")}
+                  className={`mt-4 w-full inline-flex items-center justify-center gap-2 font-bold py-3 rounded-lg ${
+                    o.highlight ? "bg-magenta text-white" : "bg-foreground text-background"
+                  }`}
+                >
+                  Choisir {o.name} <ArrowRight className="w-4 h-4" />
+                </button>
+              </details>
+            );
+          })}
       </div>
+
     </div>
   );
 }
