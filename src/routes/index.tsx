@@ -290,6 +290,14 @@ function Pricing() {
             price="19,80€"
             badge="⭐ Le plus populaire"
             highlight
+            stockLeft={47}
+            stockTotal={150}
+            valueStack={[
+              { t: "Page de carte digitale", v: "49€" },
+              { t: "QR code personnalisé", v: "19€" },
+              { t: "Modifications à vie", v: "29€" },
+              { t: "Mises à jour & hébergement", v: "30€" },
+            ]}
             features={[
               { t: "Page de carte de visite digitale", v: true },
               { t: "Modifications illimitées à vie", v: true },
@@ -298,7 +306,7 @@ function Pricing() {
               { t: "Compatible iPhone & Android", v: true },
               { t: "Sans abonnement, paiement unique", v: true },
             ]}
-            cta="Créer ma carte maintenant"
+            cta="Oui, je veux ma carte — 19,80€"
             subCta="Activation immédiate · Garantie 30 jours"
             order={2}
           />
@@ -335,11 +343,19 @@ function Pricing() {
 
 function OfferCard({
   name, tagline, oldPrice, price, badge, features, cta, subCta, highlight, order,
+  stockLeft, stockTotal, valueStack,
 }: {
   name: string; tagline: string; oldPrice: string; price: string;
   badge: string; cta: string; subCta?: string; highlight?: boolean; order: number;
   features: { t: string; v: boolean }[];
+  stockLeft?: number; stockTotal?: number;
+  valueStack?: { t: string; v: string }[];
 }) {
+  const stockPct = stockLeft && stockTotal ? Math.max(8, Math.round((stockLeft / stockTotal) * 100)) : null;
+  const totalValue = valueStack
+    ? valueStack.reduce((sum, v) => sum + (parseInt(v.v.replace(/[^\d]/g, ""), 10) || 0), 0)
+    : null;
+
   return (
     <div
       style={{ order }}
@@ -356,7 +372,7 @@ function OfferCard({
       >
         {badge}
       </div>
-      <h3 className={`mt-4 font-display font-bold text-2xl ${highlight ? "" : ""}`}>{name}</h3>
+      <h3 className={`mt-4 font-display font-bold text-2xl`}>{name}</h3>
       <p className={`mt-1 text-sm ${highlight ? "opacity-90" : "text-muted-foreground"}`}>{tagline}</p>
 
       <div className="mt-6 flex items-baseline gap-2">
@@ -364,6 +380,12 @@ function OfferCard({
         <span className="font-display font-extrabold text-5xl">{price}</span>
       </div>
       <p className={`text-xs ${highlight ? "opacity-80" : "text-muted-foreground"}`}>Paiement unique · TTC</p>
+
+      {totalValue && (
+        <p className={`mt-2 text-xs font-semibold ${highlight ? "text-primary-foreground/90" : "text-magenta"}`}>
+          Valeur totale {totalValue}€ — vous économisez {totalValue - parseFloat(price.replace(",", ".")) | 0}€
+        </p>
+      )}
 
       <a
         href="#"
@@ -379,6 +401,21 @@ function OfferCard({
         <p className={`mt-2 text-center text-xs ${highlight ? "opacity-80" : "text-muted-foreground"}`}>{subCta}</p>
       )}
 
+      {stockPct !== null && (
+        <div className={`mt-5 ${highlight ? "" : ""}`}>
+          <div className={`flex justify-between text-xs font-medium mb-1.5 ${highlight ? "opacity-90" : "text-foreground"}`}>
+            <span>🔥 Plus que {stockLeft} places au tarif lancement</span>
+            <span className={highlight ? "opacity-75" : "text-muted-foreground"}>{stockPct}%</span>
+          </div>
+          <div className={`h-2 rounded-full overflow-hidden ${highlight ? "bg-white/20" : "bg-secondary"}`}>
+            <div
+              className={`h-full rounded-full ${highlight ? "bg-white" : "bg-gradient-brand"}`}
+              style={{ width: `${stockPct}%` }}
+            />
+          </div>
+        </div>
+      )}
+
       <ul className="mt-7 space-y-3">
         {features.map((f) => (
           <li key={f.t} className={`flex items-start gap-2.5 text-sm ${!f.v && (highlight ? "opacity-50" : "text-muted-foreground")}`}>
@@ -391,6 +428,22 @@ function OfferCard({
           </li>
         ))}
       </ul>
+
+      {valueStack && (
+        <div className={`mt-6 pt-5 border-t ${highlight ? "border-white/20" : "border-border"}`}>
+          <p className={`text-xs font-semibold uppercase tracking-wider mb-3 ${highlight ? "opacity-90" : "text-muted-foreground"}`}>
+            Ce que vous obtenez
+          </p>
+          <ul className="space-y-1.5">
+            {valueStack.map((v) => (
+              <li key={v.t} className="flex justify-between text-sm">
+                <span className={highlight ? "opacity-90" : "text-foreground/80"}>{v.t}</span>
+                <span className={`line-through ${highlight ? "opacity-60" : "text-muted-foreground"}`}>{v.v}</span>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
     </div>
   );
 }
