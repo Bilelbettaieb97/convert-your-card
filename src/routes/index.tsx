@@ -281,7 +281,7 @@ function Pricing() {
 
         <div className="mt-14 grid lg:grid-cols-3 gap-6 lg:gap-5 items-stretch max-w-6xl mx-auto">
           {/* Offer 1 — Essentiel (mobile: 2nd, desktop: 1st) */}
-          <div className="order-2 lg:order-1 flex">
+          <div className="order-2 lg:order-1 flex max-w-md mx-auto w-full lg:max-w-none">
             <OfferCard
               name="OneTap Essentiel"
               tagline="La carte digitale qui convertit"
