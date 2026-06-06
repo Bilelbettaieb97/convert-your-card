@@ -9,6 +9,7 @@ import { DigitalCardVisual } from "@/components/landing/DigitalCardVisual";
 import { Countdown } from "@/components/landing/Countdown";
 import { VideoTestimonials } from "@/components/landing/VideoTestimonials";
 import { LiveActivity, ExitIntent, GuaranteeBlock, StructuredData } from "@/components/landing/CroEnhancements";
+import { CheckoutFlow, onCheckoutClick, triggerCheckout } from "@/components/landing/CheckoutFlow";
 
 export const Route = createFileRoute("/")({
   head: () => ({
