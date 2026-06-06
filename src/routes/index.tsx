@@ -431,7 +431,7 @@ function HowItWorks() {
           {/* ===== Selectors + features (mobile: below carousel, desktop: left) ===== */}
           <div className="order-2 lg:order-1">
             {/* Mobile: horizontal scroll pills */}
-            <div className="lg:hidden -mx-4 px-4 overflow-x-auto scrollbar-none">
+            <div className="lg:hidden -mx-4 px-4 overflow-x-auto [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
               <div className="flex gap-2 pb-1 snap-x snap-mandatory">
                 {templates.map((template, index) => (
                   <button
