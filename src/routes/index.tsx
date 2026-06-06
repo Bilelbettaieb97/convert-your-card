@@ -49,6 +49,7 @@ function Landing() {
       <StickyMobileCTA />
       <LiveActivity />
       <ExitIntent />
+      <CheckoutFlow />
     </div>
   );
 }
