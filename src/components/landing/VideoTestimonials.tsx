@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Play, X, BadgeCheck, Star } from "lucide-react";
+import { Play, X, BadgeCheck, Star, ChevronLeft, ChevronRight } from "lucide-react";
 
 type VideoT = {
   name: string;
@@ -44,6 +44,14 @@ const VIDEOS: VideoT[] = [
 
 export function VideoTestimonials() {
   const [active, setActive] = useState<number | null>(null);
+  const scrollRef = useRef<HTMLDivElement>(null);
+
+  const scroll = (dir: "left" | "right") => {
+    const el = scrollRef.current;
+    if (!el) return;
+    const cardW = el.firstElementChild?.clientWidth ?? 280;
+    el.scrollBy({ left: dir === "left" ? -cardW - 16 : cardW + 16, behavior: "smooth" });
+  };
 
   return (
     <section className="py-16 sm:py-20 bg-background">
@@ -61,10 +69,43 @@ export function VideoTestimonials() {
           </p>
         </div>
 
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+        {/* Desktop: grid */}
+        <div className="hidden lg:grid grid-cols-3 gap-6">
           {VIDEOS.map((v, i) => (
             <VideoCard key={v.name} v={v} onPlay={() => setActive(i)} />
           ))}
+        </div>
+
+        {/* Mobile & Tablet: carousel */}
+        <div className="lg:hidden relative">
+          <button
+            onClick={() => scroll("left")}
+            className="absolute left-0 top-1/2 -translate-y-1/2 z-10 w-9 h-9 rounded-full bg-background/90 border border-border shadow-md flex items-center justify-center text-foreground hover:bg-background transition"
+            aria-label="Précédent"
+          >
+            <ChevronLeft className="w-5 h-5" />
+          </button>
+          <button
+            onClick={() => scroll("right")}
+            className="absolute right-0 top-1/2 -translate-y-1/2 z-10 w-9 h-9 rounded-full bg-background/90 border border-border shadow-md flex items-center justify-center text-foreground hover:bg-background transition"
+            aria-label="Suivant"
+          >
+            <ChevronRight className="w-5 h-5" />
+          </button>
+
+          <div
+            ref={scrollRef}
+            className="flex gap-4 overflow-x-auto snap-x snap-mandatory scroll-smooth px-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden"
+          >
+            {VIDEOS.map((v, i) => (
+              <div
+                key={v.name}
+                className="snap-center shrink-0 w-[82vw] sm:w-[45vw]"
+              >
+                <VideoCard v={v} onPlay={() => setActive(i)} />
+              </div>
+            ))}
+          </div>
         </div>
       </div>
 
