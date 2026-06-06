@@ -7,6 +7,7 @@ import {
 } from "lucide-react";
 import { DigitalCardVisual } from "@/components/landing/DigitalCardVisual";
 import { Countdown } from "@/components/landing/Countdown";
+import { VideoTestimonials } from "@/components/landing/VideoTestimonials";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -33,6 +34,7 @@ function Landing() {
       <Problem />
       <HowItWorks />
       <SocialProofBand />
+      <VideoTestimonials />
       <Pricing />
       <Features />
       <Testimonials />
