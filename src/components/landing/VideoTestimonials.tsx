@@ -1,5 +1,5 @@
 import { useEffect, useRef, useState } from "react";
-import { Play, X, BadgeCheck, Star } from "lucide-react";
+import { Play, X, BadgeCheck, Star, ChevronLeft, ChevronRight } from "lucide-react";
 
 type VideoT = {
   name: string;
