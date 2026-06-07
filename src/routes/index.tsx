@@ -1,5 +1,7 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import React, { useEffect, useState } from "react";
+import { supabase } from "@/integrations/supabase/client";
+import { LayoutDashboard, LogOut } from "lucide-react";
 import {
   Check, X, Star, Zap, Shield, Smartphone, BarChart3, Leaf,
   CreditCard, Truck, ChevronDown, ArrowRight, Sparkles, Clock, Users, TrendingUp,
@@ -78,6 +80,28 @@ export function PromoBar() {
 }
 
 export function Nav() {
+  const [userEmail, setUserEmail] = useState<string | null>(null);
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    // Check current session
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      setUserEmail(user?.email ?? null);
+    });
+    // Listen to auth changes
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
+      setUserEmail(session?.user?.email ?? null);
+    });
+    return () => subscription.unsubscribe();
+  }, []);
+
+  async function handleSignOut() {
+    await supabase.auth.signOut();
+    sessionStorage.removeItem("onetap_email");
+    setUserEmail(null);
+    navigate({ to: "/" });
+  }
+
   return (
     <header className="sticky top-0 z-40 bg-background/80 backdrop-blur-lg border-b border-border">
       <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
@@ -94,12 +118,38 @@ export function Nav() {
           <Link to="/carte-physique" className="hover:text-foreground transition">Carte physique</Link>
         </nav>
         <div className="flex items-center gap-2 sm:gap-3">
-          <Link to="/connexion" className="text-sm font-medium text-muted-foreground hover:text-foreground transition whitespace-nowrap">
-            Se connecter
-          </Link>
-          <Link to="/inscription" className="bg-gradient-cta text-primary-foreground px-3 sm:px-5 py-2.5 rounded-full text-sm font-semibold shadow-card hover:shadow-glow transition-all whitespace-nowrap">
-            Inscription gratuite
-          </Link>
+          {userEmail ? (
+            <>
+              <Link
+                to="/dashboard"
+                className="hidden sm:flex items-center gap-1.5 text-sm font-medium text-muted-foreground hover:text-foreground transition"
+              >
+                <LayoutDashboard className="w-4 h-4" />
+                Tableau de bord
+              </Link>
+              <div className="flex items-center gap-2 border border-border rounded-full pl-3 pr-1 py-1 bg-card shadow-card">
+                <span className="text-xs font-medium text-foreground max-w-[120px] truncate hidden sm:block">
+                  {userEmail}
+                </span>
+                <button
+                  onClick={handleSignOut}
+                  className="w-7 h-7 rounded-full bg-muted hover:bg-destructive/10 flex items-center justify-center transition"
+                  title="Se déconnecter"
+                >
+                  <LogOut className="w-3.5 h-3.5 text-muted-foreground hover:text-destructive" />
+                </button>
+              </div>
+            </>
+          ) : (
+            <>
+              <Link to="/connexion" className="text-sm font-medium text-muted-foreground hover:text-foreground transition whitespace-nowrap">
+                Se connecter
+              </Link>
+              <Link to="/inscription" className="bg-gradient-cta text-primary-foreground px-3 sm:px-5 py-2.5 rounded-full text-sm font-semibold shadow-card hover:shadow-glow transition-all whitespace-nowrap">
+                Inscription gratuite
+              </Link>
+            </>
+          )}
         </div>
       </div>
     </header>
