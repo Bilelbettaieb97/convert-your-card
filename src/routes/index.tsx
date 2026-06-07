@@ -101,6 +101,7 @@ export function Nav() {
             Inscription gratuite
           </a>
         </div>
+      </div>
     </header>
   );
 }
