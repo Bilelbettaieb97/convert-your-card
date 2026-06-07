@@ -774,9 +774,7 @@ function PreviewModal({ t, onClose }: { t: Template; onClose: () => void }) {
               style={{ background: t.palette.bg, color: t.palette.fg }}
             >
               <div className="absolute top-2 left-1/2 -translate-x-1/2 w-20 h-5 rounded-full bg-zinc-900 z-10" />
-              <div className="pt-7 w-full h-full">
-                <CardPreview t={t} size="lg" />
-              </div>
+              <CardPreview t={t} size="lg" />
             </div>
           </div>
         </div>
