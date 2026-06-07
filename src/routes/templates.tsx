@@ -33,6 +33,8 @@ import {
   X as XClose,
   Eye,
 } from "lucide-react";
+import { CardPreview, isLightBg, contrastText, InfoRow, SocialIcon } from "@/components/TemplateCardPreview";
+import type { Template, SocialType, StyleId } from "@/components/TemplateCardPreview";
 
 export const Route = createFileRoute("/templates")({
   head: () => ({
