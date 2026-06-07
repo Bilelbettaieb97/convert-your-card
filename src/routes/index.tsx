@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import React, { useEffect, useState } from "react";
 import {
   Check, X, Star, Zap, Shield, Smartphone, BarChart3, Leaf,
@@ -106,6 +106,46 @@ export function Nav() {
   );
 }
 
+/* ────────────────────────────  HERO CTA  ──────────────────────────── */
+
+function HeroCTA() {
+  const [slug, setSlug] = useState("");
+  const navigate = useNavigate();
+
+  const handleStart = () => {
+    if (slug.trim()) {
+      navigate({ to: "/inscription", search: { slug: slug.trim() } });
+    } else {
+      navigate({ to: "/inscription" });
+    }
+  };
+
+  return (
+    <div className="flex flex-col sm:flex-row gap-3">
+      <div className="relative flex-1">
+        <div className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground font-medium text-sm">
+          onetap/
+        </div>
+        <input
+          type="text"
+          value={slug}
+          onChange={(e) => setSlug(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && handleStart()}
+          placeholder="votrenom"
+          className="w-full pl-[4.2rem] pr-4 py-4 rounded-xl border border-border bg-card text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-magenta/30 focus:border-magenta transition font-medium"
+        />
+      </div>
+      <button
+        onClick={handleStart}
+        className="group bg-gradient-cta text-primary-foreground px-7 py-4 rounded-xl font-semibold text-base shadow-glow hover:scale-[1.02] transition-all flex items-center justify-center gap-2 whitespace-nowrap"
+      >
+        Commencer gratuitement
+        <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition" />
+      </button>
+    </div>
+  );
+}
+
 /* ────────────────────────────  HERO  ──────────────────────────── */
 
 function Hero() {
@@ -129,12 +169,11 @@ function Hero() {
           </div>
 
           <h1 className="mt-5 font-display font-extrabold text-4xl sm:text-5xl lg:text-6xl leading-[1.05]">
-            Votre <span className="text-gradient">carte de visite digitale</span> qui transforme chaque rencontre en client.
+            Une carte de visite digitale, <span className="text-gradient">conçue pour vous.</span>
           </h1>
 
           <p className="mt-5 text-lg text-muted-foreground max-w-xl">
-            Partagez vos coordonnées, réseaux et site en <strong className="text-foreground">1 seul tap</strong>.
-            Sans appli. Sans abonnement. Mises à jour illimitées à vie.
+            Rejoignez les pros qui ne distribuent plus de papier. Une seule carte pour partager tout ce que vous êtes — réseaux, site, contact, prise de rendez-vous — d'un simple contact avec un téléphone. Designée et gérée par notre équipe.
           </p>
 
           <ul className="mt-6 space-y-2.5">
@@ -152,21 +191,8 @@ function Hero() {
             ))}
           </ul>
 
-          <div className="mt-8 flex flex-col sm:flex-row gap-3">
-            <a
-              href="#offres"
-              onClick={onCheckoutClick}
-              className="group relative bg-gradient-cta text-primary-foreground px-7 py-4 rounded-xl font-semibold text-base shadow-glow hover:scale-[1.02] transition-all flex items-center justify-center gap-2 animate-pulse-ring"
-            >
-              Créer ma carte — 19,80€
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition" />
-            </a>
-            <a
-              href="#fonctionnement"
-              className="px-7 py-4 rounded-xl font-semibold text-base border border-border bg-card hover:bg-secondary transition flex items-center justify-center gap-2"
-            >
-              Voir une démo
-            </a>
+          <div className="mt-8">
+            <HeroCTA />
           </div>
 
           <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2 text-xs text-muted-foreground">
