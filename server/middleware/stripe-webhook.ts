@@ -1,3 +1,4 @@
+import { defineEventHandler, readRawBody, getHeader } from "h3";
 import { createClient } from "@supabase/supabase-js";
 
 async function verifyStripeSignature(
@@ -115,7 +116,7 @@ export default defineEventHandler(async (event) => {
     const { data: { users } } = await adminSupabase.auth.admin.listUsers();
     const user = users?.find((u: { email?: string }) => u.email === email);
     const userId = user?.id ?? null;
-    console.log("[stripe-webhook] User found:", userId ? "yes" : "no (email:", email, ")");
+    console.log("[stripe-webhook] User found:", userId ? "yes" : "no (email: " + email + ")");
 
     // Generate unique slug
     const slugBase = email.split("@")[0].toLowerCase().replace(/[^a-z0-9]+/g, "-").slice(0, 25);
