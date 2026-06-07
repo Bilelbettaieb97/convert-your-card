@@ -15,6 +15,7 @@ import { Route as InscriptionRouteImport } from './routes/inscription'
 import { Route as ConnexionRouteImport } from './routes/connexion'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as InscriptionSelectionDePlanRouteImport } from './routes/inscription.selection-de-plan'
+import { Route as InscriptionCartePhysiqueRouteImport } from './routes/inscription.carte-physique'
 
 const TemplatesRoute = TemplatesRouteImport.update({
   id: '/templates',
@@ -47,6 +48,12 @@ const InscriptionSelectionDePlanRoute =
     path: '/selection-de-plan',
     getParentRoute: () => InscriptionRoute,
   } as any)
+const InscriptionCartePhysiqueRoute =
+  InscriptionCartePhysiqueRouteImport.update({
+    id: '/carte-physique',
+    path: '/carte-physique',
+    getParentRoute: () => InscriptionRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -54,6 +61,7 @@ export interface FileRoutesByFullPath {
   '/inscription': typeof InscriptionRouteWithChildren
   '/offres': typeof OffresRoute
   '/templates': typeof TemplatesRoute
+  '/inscription/carte-physique': typeof InscriptionCartePhysiqueRoute
   '/inscription/selection-de-plan': typeof InscriptionSelectionDePlanRoute
 }
 export interface FileRoutesByTo {
@@ -62,6 +70,7 @@ export interface FileRoutesByTo {
   '/inscription': typeof InscriptionRouteWithChildren
   '/offres': typeof OffresRoute
   '/templates': typeof TemplatesRoute
+  '/inscription/carte-physique': typeof InscriptionCartePhysiqueRoute
   '/inscription/selection-de-plan': typeof InscriptionSelectionDePlanRoute
 }
 export interface FileRoutesById {
@@ -71,6 +80,7 @@ export interface FileRoutesById {
   '/inscription': typeof InscriptionRouteWithChildren
   '/offres': typeof OffresRoute
   '/templates': typeof TemplatesRoute
+  '/inscription/carte-physique': typeof InscriptionCartePhysiqueRoute
   '/inscription/selection-de-plan': typeof InscriptionSelectionDePlanRoute
 }
 export interface FileRouteTypes {
@@ -81,6 +91,7 @@ export interface FileRouteTypes {
     | '/inscription'
     | '/offres'
     | '/templates'
+    | '/inscription/carte-physique'
     | '/inscription/selection-de-plan'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -89,6 +100,7 @@ export interface FileRouteTypes {
     | '/inscription'
     | '/offres'
     | '/templates'
+    | '/inscription/carte-physique'
     | '/inscription/selection-de-plan'
   id:
     | '__root__'
@@ -97,6 +109,7 @@ export interface FileRouteTypes {
     | '/inscription'
     | '/offres'
     | '/templates'
+    | '/inscription/carte-physique'
     | '/inscription/selection-de-plan'
   fileRoutesById: FileRoutesById
 }
@@ -152,14 +165,23 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof InscriptionSelectionDePlanRouteImport
       parentRoute: typeof InscriptionRoute
     }
+    '/inscription/carte-physique': {
+      id: '/inscription/carte-physique'
+      path: '/carte-physique'
+      fullPath: '/inscription/carte-physique'
+      preLoaderRoute: typeof InscriptionCartePhysiqueRouteImport
+      parentRoute: typeof InscriptionRoute
+    }
   }
 }
 
 interface InscriptionRouteChildren {
+  InscriptionCartePhysiqueRoute: typeof InscriptionCartePhysiqueRoute
   InscriptionSelectionDePlanRoute: typeof InscriptionSelectionDePlanRoute
 }
 
 const InscriptionRouteChildren: InscriptionRouteChildren = {
+  InscriptionCartePhysiqueRoute: InscriptionCartePhysiqueRoute,
   InscriptionSelectionDePlanRoute: InscriptionSelectionDePlanRoute,
 }
 
@@ -177,3 +199,13 @@ const rootRouteChildren: RootRouteChildren = {
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
   ._addFileTypes<FileRouteTypes>()
+
+import type { getRouter } from './router.tsx'
+import type { startInstance } from './start.ts'
+declare module '@tanstack/react-start' {
+  interface Register {
+    ssr: true
+    router: Awaited<ReturnType<typeof getRouter>>
+    config: Awaited<ReturnType<typeof startInstance.getOptions>>
+  }
+}
