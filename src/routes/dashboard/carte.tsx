@@ -1,12 +1,12 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useRef, useState, useCallback } from "react";
+import { useEffect, useRef, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { Toaster } from "@/components/ui/sonner";
 import {
   Upload, Save, Phone, Mail, Globe, MapPin, Calendar, MessageCircle,
   ExternalLink, Copy, Check, Palette, User, Link2, Wifi,
-  X, Plus,
+  X, Smartphone, AlertCircle, Loader2,
 } from "lucide-react";
 import type { Tables } from "@/integrations/supabase/types";
 
@@ -87,6 +87,11 @@ function CartePage() {
   const [photoUrl, setPhotoUrl] = useState("");
   const [boutons, setBoutons] = useState<Bouton[]>(DEFAULT_BOUTONS);
   const [reseaux, setReseaux] = useState<Reseau[]>(DEFAULT_RESEAUX);
+  const [showMobilePreview, setShowMobilePreview] = useState(false);
+  // Slug editing
+  const [newSlug, setNewSlug] = useState("");
+  const [slugSaving, setSlugSaving] = useState(false);
+  const [slugError, setSlugError] = useState("");
 
   useEffect(() => {
     async function load() {
@@ -95,6 +100,7 @@ function CartePage() {
       const { data } = await supabase.from("nfc_profiles").select("*").eq("user_id", user.id).maybeSingle();
       if (data) {
         setProfile(data);
+        setNewSlug(data.slug ?? "");
         const t = THEMES.find((th) => th.id === data.couleur_accent) ? (data.couleur_accent as ThemeId) : "violet";
         setTheme(t);
         setNom(data.nom ?? "");
@@ -185,6 +191,28 @@ function CartePage() {
     navigator.clipboard.writeText(`${appUrl}/${profile.slug}`);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
+  }
+
+  async function handleSlugSave() {
+    if (!profile) return;
+    const cleaned = newSlug.toLowerCase().replace(/[^a-z0-9-]/g, "-").replace(/^-|-$/g, "").slice(0, 40);
+    if (!cleaned) { setSlugError("Le slug ne peut pas être vide."); return; }
+    if (cleaned === profile.slug) { setSlugError("C'est déjà votre slug actuel."); return; }
+    setSlugSaving(true);
+    setSlugError("");
+    try {
+      const { data: existing } = await supabase.from("nfc_profiles").select("id").eq("slug", cleaned).maybeSingle();
+      if (existing) { setSlugError("Ce slug est déjà pris. Choisissez-en un autre."); return; }
+      const { error } = await supabase.from("nfc_profiles").update({ slug: cleaned, updated_at: new Date().toISOString() }).eq("id", profile.id);
+      if (error) throw error;
+      setProfile({ ...profile, slug: cleaned });
+      setNewSlug(cleaned);
+      toast.success("URL mise à jour !");
+    } catch {
+      setSlugError("Erreur lors de la mise à jour.");
+    } finally {
+      setSlugSaving(false);
+    }
   }
 
   if (loading) {
@@ -367,20 +395,52 @@ function CartePage() {
 
             {/* URL */}
             {tab === "url" && profile && (
-              <section className="space-y-4">
+              <section className="space-y-5">
+                {/* Current URL */}
                 <div>
-                  <label className="block text-sm font-medium text-foreground mb-1.5">Votre lien public</label>
-                  <div className="flex items-center gap-2 p-3 rounded-xl border border-border bg-muted/50">
-                    <span className="text-sm text-muted-foreground">{appUrl}/</span>
-                    <span className="text-sm font-semibold text-foreground">{profile.slug}</span>
+                  <label className="block text-sm font-medium text-foreground mb-1.5">Lien public actuel</label>
+                  <div className="flex items-center gap-2 p-3 rounded-xl border border-border bg-muted/40">
+                    <span className="text-xs text-muted-foreground truncate flex-1 font-mono">{cardUrl}</span>
+                    <button onClick={copyLink}
+                      className="flex-shrink-0 flex items-center gap-1.5 text-xs font-semibold px-3 py-1.5 rounded-lg bg-background border border-border hover:bg-accent transition">
+                      {copied ? <Check className="w-3 h-3 text-emerald-500" /> : <Copy className="w-3 h-3" />}
+                      {copied ? "Copié" : "Copier"}
+                    </button>
                   </div>
-                  <p className="text-xs text-muted-foreground mt-1.5">Le slug ne peut pas encore être modifié depuis ici. Contactez le support.</p>
                 </div>
-                <button onClick={copyLink}
-                  className="inline-flex items-center gap-2 px-4 py-2 rounded-full border border-border bg-background hover:bg-accent transition text-sm font-medium">
-                  {copied ? <Check className="w-4 h-4 text-emerald-500" /> : <Copy className="w-4 h-4" />}
-                  {copied ? "Lien copié !" : "Copier mon lien"}
-                </button>
+
+                {/* Slug editor */}
+                <div>
+                  <label className="block text-sm font-medium text-foreground mb-1.5">Modifier mon URL</label>
+                  <div className="flex items-center gap-0 border border-border rounded-xl overflow-hidden bg-background focus-within:ring-2 focus-within:ring-magenta/40 focus-within:border-magenta transition">
+                    <span className="px-3 py-3 text-sm text-muted-foreground bg-muted/50 border-r border-border whitespace-nowrap flex-shrink-0">
+                      {appUrl}/
+                    </span>
+                    <input
+                      type="text"
+                      value={newSlug}
+                      onChange={(e) => { setNewSlug(e.target.value.toLowerCase().replace(/[^a-z0-9-]/g, "-")); setSlugError(""); }}
+                      className="flex-1 px-3 py-3 text-sm text-foreground bg-transparent outline-none min-w-0"
+                      placeholder="mon-nom"
+                    />
+                  </div>
+                  {slugError && (
+                    <p className="flex items-center gap-1.5 text-xs text-red-500 mt-1.5">
+                      <AlertCircle className="w-3 h-3" /> {slugError}
+                    </p>
+                  )}
+                  <p className="text-xs text-muted-foreground mt-1.5">Lettres minuscules, chiffres et tirets uniquement.</p>
+                  <button
+                    onClick={handleSlugSave}
+                    disabled={slugSaving || newSlug === profile.slug}
+                    className="mt-3 inline-flex items-center gap-2 px-4 py-2 rounded-full text-sm font-semibold text-white transition disabled:opacity-50"
+                    style={{ background: "linear-gradient(135deg,#7c3aed,#EC4899)" }}>
+                    {slugSaving ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Check className="w-3.5 h-3.5" />}
+                    {slugSaving ? "Vérification…" : "Valider cette URL"}
+                  </button>
+                </div>
+
+                {/* Open in new tab */}
                 {cardUrl && (
                   <a href={cardUrl} target="_blank" rel="noopener noreferrer"
                     className="flex items-center gap-2 px-4 py-3 rounded-xl border border-border hover:bg-accent transition text-sm font-medium text-foreground">
@@ -393,8 +453,8 @@ function CartePage() {
           </div>
         </div>
 
-        {/* ── Right: phone preview ── */}
-        <div className="hidden xl:flex w-80 flex-shrink-0 sticky top-0 h-screen items-center justify-center p-8 border-l border-border bg-muted/30">
+        {/* ── Right: phone preview (desktop/tablet ≥ lg) ── */}
+        <div className="hidden lg:flex w-80 flex-shrink-0 sticky top-0 h-screen items-center justify-center p-8 border-l border-border bg-muted/30">
           <PhonePreview
             theme={activeTheme}
             nom={nom}
@@ -407,6 +467,41 @@ function CartePage() {
           />
         </div>
       </div>
+
+      {/* ── Mobile preview button (< lg only) ── */}
+      <button
+        onClick={() => setShowMobilePreview(true)}
+        className="lg:hidden fixed bottom-24 right-4 z-40 flex items-center gap-2 px-4 py-3 rounded-full text-white text-sm font-semibold shadow-xl"
+        style={{ background: "linear-gradient(135deg,#7c3aed,#EC4899)" }}>
+        <Smartphone className="w-4 h-4" />
+        Aperçu
+      </button>
+
+      {/* ── Mobile preview modal ── */}
+      {showMobilePreview && (
+        <div className="lg:hidden fixed inset-0 z-50 bg-black/80 flex items-end justify-center" onClick={() => setShowMobilePreview(false)}>
+          <div className="bg-background rounded-t-3xl p-6 pb-10 w-full max-w-sm" onClick={(e) => e.stopPropagation()}>
+            <div className="flex items-center justify-between mb-5">
+              <span className="font-semibold text-foreground">Aperçu de ma carte</span>
+              <button onClick={() => setShowMobilePreview(false)} className="w-8 h-8 rounded-full bg-muted flex items-center justify-center text-muted-foreground hover:text-foreground transition">
+                ✕
+              </button>
+            </div>
+            <div className="flex justify-center">
+              <PhonePreview
+                theme={activeTheme}
+                nom={nom}
+                fonction={fonction}
+                entreprise={entreprise}
+                bio={bio}
+                photoUrl={photoUrl}
+                boutons={activeBoutons}
+                reseaux={activeReseaux}
+              />
+            </div>
+          </div>
+        </div>
+      )}
     </>
   );
 }
