@@ -8,15 +8,34 @@ import type { Tables } from "@/integrations/supabase/types";
 type NfcProfile = Tables<"nfc_profiles">;
 
 type Bouton = {
-  type: "call" | "email" | "website" | "maps" | "rdv";
+  type: "call" | "email" | "website" | "maps" | "rdv" | "whatsapp" | "calendly";
   label: string;
   value: string;
+  active?: boolean;
 };
 
 type Reseau = {
   type: string;
   url: string;
+  label?: string;
+  active?: boolean;
 };
+
+const THEMES = [
+  { id: "violet", accent: "#8B5CF6", bg: "#1a0b2e", text: "#fff", gradient: "linear-gradient(135deg,#6d28d9,#8B5CF6)" },
+  { id: "rose",   accent: "#EC4899", bg: "#1a0b1a", text: "#fff", gradient: "linear-gradient(135deg,#be185d,#EC4899)" },
+  { id: "bleu",   accent: "#0EA5E9", bg: "#0a1a2e", text: "#fff", gradient: "linear-gradient(135deg,#0369a1,#0EA5E9)" },
+  { id: "vert",   accent: "#10B981", bg: "#0a1f1a", text: "#fff", gradient: "linear-gradient(135deg,#047857,#10B981)" },
+  { id: "sombre", accent: "#F59E0B", bg: "#111827", text: "#fff", gradient: "linear-gradient(135deg,#92400e,#F59E0B)" },
+  { id: "clair",  accent: "#6366F1", bg: "#f8f9fa", text: "#111827", gradient: "linear-gradient(135deg,#4338ca,#6366F1)" },
+];
+
+const DEFAULT_THEME = THEMES[0];
+
+function getTheme(couleurAccent: string | null | undefined) {
+  if (!couleurAccent) return DEFAULT_THEME;
+  return THEMES.find((t) => t.id === couleurAccent) ?? DEFAULT_THEME;
+}
 
 const getProfile = createServerFn({ method: "GET" })
   .validator((slug: string) => slug)
@@ -55,44 +74,52 @@ export const Route = createFileRoute("/$slug")({
 
 function ProfilePage() {
   const { profile } = Route.useLoaderData();
-  const boutons = (profile.boutons as Bouton[]) ?? [];
-  const reseaux = (profile.reseaux as Reseau[]) ?? [];
+  const theme = getTheme(profile.couleur_accent);
+
+  const boutons = ((profile.boutons as Bouton[]) ?? []).filter((b) => b.active !== false && b.value);
+  const reseaux = ((profile.reseaux as Reseau[]) ?? []).filter((r) => r.active !== false && r.url);
 
   useEffect(() => {
     logEvent(profile.id, "scan", { referrer: document.referrer, ua: navigator.userAgent.slice(0, 100) });
   }, [profile.id]);
 
-  const accentColor = profile.couleur_accent ?? "#c026d3";
+  const isLight = theme.text !== "#fff";
+  const subTextColor = isLight ? "rgba(17,24,39,0.65)" : "rgba(255,255,255,0.75)";
+  const subTextColorDim = isLight ? "rgba(17,24,39,0.5)" : "rgba(255,255,255,0.6)";
 
   return (
-    <div className="min-h-screen bg-gradient-soft flex flex-col items-center py-8 px-4">
+    <div className="min-h-screen flex flex-col items-center py-8 px-4" style={{ background: theme.bg }}>
       <div className="w-full max-w-sm">
         {/* Header card */}
         <div
-          className="relative rounded-3xl overflow-hidden mb-4 shadow-card"
-          style={{ background: `linear-gradient(135deg, ${accentColor}dd, ${accentColor}88)` }}
+          className="relative rounded-3xl overflow-hidden mb-4"
+          style={{ background: theme.gradient, boxShadow: `0 20px 60px -15px ${theme.accent}66` }}
         >
-          <div className="p-8 text-center text-white">
+          <div className="p-8 text-center">
             {profile.photo_url ? (
               <img
                 src={profile.photo_url}
                 alt={profile.nom}
-                className="w-24 h-24 rounded-full object-cover mx-auto mb-4 border-4 border-white/30 shadow-lg"
+                className="w-24 h-24 rounded-full object-cover mx-auto mb-4 border-4 shadow-lg"
+                style={{ borderColor: "rgba(255,255,255,0.3)" }}
               />
             ) : (
-              <div className="w-24 h-24 rounded-full bg-white/20 flex items-center justify-center mx-auto mb-4 text-3xl font-bold text-white">
+              <div
+                className="w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl font-bold"
+                style={{ backgroundColor: "rgba(255,255,255,0.2)", color: "#fff" }}
+              >
                 {profile.nom.charAt(0).toUpperCase()}
               </div>
             )}
-            <h1 className="text-2xl font-bold">{profile.nom}</h1>
+            <h1 className="text-2xl font-bold" style={{ color: "#fff" }}>{profile.nom}</h1>
             {profile.fonction && (
-              <p className="text-white/80 text-sm mt-1">{profile.fonction}</p>
+              <p className="text-sm mt-1" style={{ color: "rgba(255,255,255,0.82)" }}>{profile.fonction}</p>
             )}
             {profile.entreprise && (
-              <p className="text-white/70 text-xs mt-0.5 font-medium">{profile.entreprise}</p>
+              <p className="text-xs mt-0.5 font-medium" style={{ color: "rgba(255,255,255,0.68)" }}>{profile.entreprise}</p>
             )}
             {profile.bio && (
-              <p className="text-white/70 text-sm mt-3 leading-relaxed">{profile.bio}</p>
+              <p className="text-sm mt-3 leading-relaxed" style={{ color: "rgba(255,255,255,0.72)" }}>{profile.bio}</p>
             )}
           </div>
         </div>
@@ -101,15 +128,18 @@ function ProfilePage() {
         {boutons.length > 0 && (
           <div className="space-y-3 mb-4">
             {boutons.map((btn, i) => (
-              <ActionButton key={i} btn={btn} profileId={profile.id} accentColor={accentColor} />
+              <ActionButton key={i} btn={btn} profileId={profile.id} theme={theme} />
             ))}
           </div>
         )}
 
         {/* Social links */}
         {reseaux.length > 0 && (
-          <div className="bg-card border border-border rounded-2xl p-4 mb-4">
-            <p className="text-xs font-semibold uppercase tracking-wider text-muted-foreground mb-3">Réseaux</p>
+          <div
+            className="rounded-2xl p-4 mb-4"
+            style={{ backgroundColor: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.12)" }}
+          >
+            <p className="text-xs font-semibold uppercase tracking-wider mb-3" style={{ color: subTextColor }}>Réseaux</p>
             <div className="flex flex-wrap gap-3">
               {reseaux.map((r, i) => (
                 <a
@@ -118,10 +148,11 @@ function ProfilePage() {
                   target="_blank"
                   rel="noopener noreferrer"
                   onClick={() => logEvent(profile.id, "social_click", { type: r.type })}
-                  className="flex items-center gap-2 bg-muted hover:bg-muted/80 px-4 py-2 rounded-full text-sm font-medium text-foreground transition"
+                  className="flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition hover:opacity-80"
+                  style={{ backgroundColor: "rgba(255,255,255,0.12)", color: "#fff" }}
                 >
-                  <ExternalLink className="w-3.5 h-3.5 text-muted-foreground" />
-                  {r.type.charAt(0).toUpperCase() + r.type.slice(1)}
+                  <ExternalLink className="w-3.5 h-3.5" style={{ color: "rgba(255,255,255,0.6)" }} />
+                  {r.label || (r.type.charAt(0).toUpperCase() + r.type.slice(1))}
                 </a>
               ))}
             </div>
@@ -131,28 +162,37 @@ function ProfilePage() {
         {/* Save contact */}
         <button
           onClick={() => downloadVCard(profile)}
-          className="flex items-center justify-center gap-2 w-full rounded-full py-3.5 text-sm font-semibold border border-border bg-card hover:bg-accent transition shadow-card"
+          className="flex items-center justify-center gap-2 w-full rounded-full py-3.5 text-sm font-semibold transition hover:opacity-90"
+          style={{
+            backgroundColor: "rgba(255,255,255,0.1)",
+            border: "1px solid rgba(255,255,255,0.2)",
+            color: "#fff",
+          }}
         >
           <Download className="w-4 h-4" />
           Enregistrer le contact
         </button>
 
-        <p className="text-center text-xs text-muted-foreground mt-6">
+        <p className="text-center text-xs mt-6" style={{ color: subTextColorDim }}>
           Propulsé par{" "}
-          <a href="/" className="text-magenta font-semibold hover:underline">OneTap</a>
+          <a href="/" className="font-semibold hover:underline" style={{ color: theme.accent }}>OneTap</a>
         </p>
       </div>
     </div>
   );
 }
 
-function ActionButton({ btn, profileId, accentColor }: { btn: Bouton; profileId: string; accentColor: string }) {
+type Theme = typeof THEMES[number];
+
+function ActionButton({ btn, profileId, theme }: { btn: Bouton; profileId: string; theme: Theme }) {
   const icons: Record<string, React.ReactNode> = {
     call: <Phone className="w-4 h-4" />,
     email: <Mail className="w-4 h-4" />,
     website: <Globe className="w-4 h-4" />,
     maps: <MapPin className="w-4 h-4" />,
     rdv: <Calendar className="w-4 h-4" />,
+    whatsapp: <Phone className="w-4 h-4" />,
+    calendly: <Calendar className="w-4 h-4" />,
   };
 
   const hrefs: Record<string, string> = {
@@ -161,16 +201,20 @@ function ActionButton({ btn, profileId, accentColor }: { btn: Bouton; profileId:
     website: btn.value,
     maps: `https://maps.google.com/?q=${encodeURIComponent(btn.value)}`,
     rdv: btn.value,
+    whatsapp: `https://wa.me/${btn.value.replace(/\D/g, "")}`,
+    calendly: btn.value,
   };
+
+  const openInNew = ["website", "rdv", "maps", "whatsapp", "calendly"].includes(btn.type);
 
   return (
     <a
       href={hrefs[btn.type] ?? "#"}
-      target={btn.type === "website" || btn.type === "rdv" ? "_blank" : undefined}
+      target={openInNew ? "_blank" : undefined}
       rel="noopener noreferrer"
       onClick={() => logEvent(profileId, "button_click", { type: btn.type })}
-      className="flex items-center gap-3 w-full rounded-2xl px-5 py-4 text-sm font-semibold text-white shadow-card transition hover:opacity-90"
-      style={{ backgroundColor: accentColor }}
+      className="flex items-center gap-3 w-full rounded-2xl px-5 py-4 text-sm font-semibold text-white transition hover:opacity-90"
+      style={{ backgroundColor: theme.accent, boxShadow: `0 4px 15px -4px ${theme.accent}80` }}
     >
       {icons[btn.type]}
       {btn.label || btn.type}
