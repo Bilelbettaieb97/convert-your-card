@@ -41,7 +41,6 @@ function Landing() {
       <PromoBar />
       <Nav />
       <Hero />
-      <TrustBar />
       <Logos />
       <Problem />
       <HowItWorks />
