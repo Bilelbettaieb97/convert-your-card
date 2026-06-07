@@ -269,19 +269,20 @@ function TemplatesPage() {
             Tous les modèles sont 100 % personnalisables. Choisissez le plus proche, on s'occupe du reste.
           </p>
           <div className="mt-7 flex flex-col sm:flex-row gap-3 justify-center">
-            <a
-              href="/offres"
+            <Link
+              to="/offres"
               className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-foreground text-background font-semibold hover:opacity-90 transition shadow-lg"
             >
               Créer ma carte
               <ArrowRight className="w-4 h-4" />
-            </a>
-            <a
-              href="/#how-it-works"
+            </Link>
+            <Link
+              to="/"
+              hash="fonctionnement"
               className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-card border border-border font-semibold hover:border-foreground/40 transition"
             >
               Voir comment ça marche
-            </a>
+            </Link>
           </div>
         </div>
       </section>
