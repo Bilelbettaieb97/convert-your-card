@@ -1,40 +1,63 @@
-## Objectif
-Remplacer le flux magic-link (clic depuis l'email) par un flux OTP à 6 chiffres saisis directement sur le site, puis redirection automatique vers `/inscription/selection-de-plan`.
+# Optimisation de la page /templates
 
-## Flux cible
-1. `/inscription` — l'utilisateur saisit son email + clique **Continue**
-2. Envoi d'un code OTP à 6 chiffres par email (au lieu d'un lien magique)
-3. Affichage d'une vue **"Vérification du code"** sur la même page (ou nouvelle route `/inscription/verification`) avec :
-   - Titre : « Vérifie ton e-mail »
-   - Sous-titre : « On vient de t'envoyer un code à 6 chiffres à `email@…` »
-   - 6 cases OTP (un caractère par case, auto-focus, paste support)
-   - Bouton **Renvoyer le code** (avec timer 30 s) + lien **Modifier l'e-mail**
-4. À la saisie du 6ᵉ chiffre → vérification automatique via `supabase.auth.verifyOtp({ type: "email", email, token })`
-5. Si succès → toast « Compte créé ! » + `navigate({ to: "/inscription/selection-de-plan" })`
-6. Si erreur → message sous les cases « Code invalide ou expiré »
+Objectif : transformer les modèles en véritables **previews de cartes de visite digitales** (photo, identité, contact, réseaux sociaux, CTAs), ajouter une vue détaillée plein écran type mobile, et fiabiliser les filtres déjà en place.
 
-## Changements techniques
+Tout reste sur `src/routes/templates.tsx` (aucune nouvelle route, aucune logique backend).
 
-**`src/routes/inscription.tsx`**
-- Ajouter un state `step: "email" | "otp"` (par défaut `"email"`)
-- Étape email :
-  - Remplacer `signInWithOtp` options : supprimer `emailRedirectTo` (inutile pour OTP code), garder `shouldCreateUser: true`, garder `data: { marketing_opt_in }`
-  - Sur succès → passer `step` à `"otp"`
-- Étape OTP :
-  - Nouveau composant inline `OtpVerification` (6 inputs séparés, navigation flèches/backspace, paste auto-split)
-  - Soumission auto à 6 chiffres → `supabase.auth.verifyOtp({ email, token, type: "email" })`
-  - Sur succès → `navigate({ to: "/inscription/selection-de-plan" })`
-  - Bouton « Renvoyer le code » → rappelle `signInWithOtp` + reset timer 30 s
-  - Lien « Utiliser une autre adresse » → revient à `step = "email"`
-- Conserver la colonne droite CRO desktop et les boutons Google/Apple (uniquement affichés à l'étape email)
+---
 
-**Aucun changement** côté base de données, RLS, ou routes ; Supabase envoie le code OTP automatiquement quand on appelle `signInWithOtp` sans `emailRedirectTo`.
+## 1. Enrichir le modèle de données
 
-## Composant OTP — détail UI
-- 6 `<input maxLength={1} inputMode="numeric" pattern="[0-9]*">` dans une grille `gap-2`
-- Auto-focus suivant à la frappe, focus précédent au backspace si vide
-- Support paste : si l'utilisateur colle 6 chiffres, remplir toutes les cases
-- État `verifying` désactive les inputs et affiche un spinner sur le bouton
+Étendre le type `Template` pour qu'il contienne tout ce qu'on retrouve sur une vraie carte digitale :
 
-## Hors scope
-- Pas de modification du template d'email Supabase (le code par défaut est déjà inclus dans le template magic-link via `{{ .Token }}`). Si le code n'apparaît pas dans l'email reçu, il faudra activer/scaffolder les templates d'auth — à confirmer après test.
+- `avatar` (URL photo réaliste — Unsplash/portrait) + fallback initiales
+- `cover` (URL image bandeau optionnelle)
+- `company` (entreprise)
+- `bio` (1–2 phrases)
+- `location` (ville)
+- `website`, `phone`, `email`
+- `socials` : tableau d'objets `{ type: 'linkedin' | 'instagram' | 'x' | 'tiktok' | 'youtube' | 'whatsapp' | 'facebook', handle }`
+
+Compléter les ~40 modèles existants avec des données démo cohérentes par métier (un avocat → LinkedIn only ; un photographe → Instagram + TikTok ; un restaurateur → Insta + Facebook + WhatsApp, etc.). Photos via URLs Unsplash signées (portrait, par métier).
+
+## 2. Refondre la mini-preview (carte dans le mockup téléphone)
+
+Dans `CardPreview` :
+
+- Ajouter une **bande cover** colorée (gradient à partir de `palette.accent`)
+- **Photo de profil ronde** chevauchant la cover (fallback initiales si pas d'avatar)
+- Nom + poste + entreprise
+- Tagline (courte)
+- **Rangée d'actions rapides** (icônes ronds) : 📞 Appeler · ✉️ Email · 💾 vCard · 🔗 Partager
+- **Rangée d'icônes sociales** rendues dynamiquement depuis `socials` (lucide icons : Linkedin, Instagram, Youtube, Facebook + SVG inline pour X/TikTok/WhatsApp non présents dans lucide)
+- CTA principal coloré (réservation/contact selon secteur — déjà géré via `sector.cta`)
+
+## 3. Ajouter une vue détaillée plein écran (modal mobile)
+
+- Au clic sur une carte → ouvre un **modal centré** avec mockup smartphone grand format (≈ 360×740) montrant la carte digitale en taille réelle, interactive (hover sur les liens, scroll si besoin)
+- Header du modal : nom du modèle + secteur + bouton fermer
+- Footer du modal : bouton "Utiliser ce modèle" → `/offres`, et "Personnaliser" → `/inscription/carte-physique`
+- Fermeture : clic backdrop, ESC, bouton X
+- Géré en local state (`selected: Template | null`), pas de Dialog lib supplémentaire (réutiliser le pattern existant ou un simple overlay Tailwind)
+
+## 4. Améliorer le grid + filtres existants
+
+- Garder filtres secteurs + recherche tels quels (déjà bons)
+- Ajouter un sous-filtre **style** (Minimal · Bold · Elegant · Dark · Soft · Neo) en chips secondaires
+- Sur chaque card du grid : un bouton "Voir en grand" (ouvre le modal) en plus du bouton "Utiliser ce modèle"
+
+## 5. Détails techniques
+
+- Tout en TSX dans `src/routes/templates.tsx` (1 seul fichier touché)
+- Icônes sociales : lucide-react pour celles dispo (`Linkedin`, `Instagram`, `Youtube`, `Facebook`) + composants SVG inline minimaux pour `x`, `tiktok`, `whatsapp`
+- Photos : URLs Unsplash directes (pas d'upload d'assets — démo uniquement)
+- Aucun changement de routes, aucune migration DB, pas de nouveau package npm
+- Respect des design tokens existants (`bg-card`, `text-foreground`, etc.) — couleurs des modèles restent dans `palette` inline (volontaire, car ce sont des thèmes de cartes)
+
+---
+
+## Fichier modifié
+- `src/routes/templates.tsx`
+
+## Fichier NON modifié
+- `src/routes/inscription.carte-physique.tsx` (l'éditeur reste tel quel)
