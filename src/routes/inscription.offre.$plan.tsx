@@ -95,14 +95,6 @@ const PLANS: Record<PlanId, PlanData> = {
   },
 };
 
-const STRIPE_PK = typeof window !== "undefined"
-  ? (import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY ?? "")
-  : "";
-
-const stripePromise = STRIPE_PK && !STRIPE_PK.includes("FILL_IN")
-  ? loadStripe(STRIPE_PK)
-  : null;
-
 function OffrePage() {
   const { plan } = Route.useParams();
   const { billing: initialBilling } = Route.useSearch();
@@ -112,20 +104,31 @@ function OffrePage() {
   const planData = PLANS[planId];
 
   const [billing, setBilling] = useState<Billing>(initialBilling);
-  const [userEmail, setUserEmail] = useState<string | null>(
-    typeof window !== "undefined" ? sessionStorage.getItem("onetap_email") : null
-  );
+  const [userEmail, setUserEmail] = useState<string | null>(null);
   const [checkoutKey, setCheckoutKey] = useState(0);
+  // mounted = true only after client hydration, to avoid SSR mismatch with Stripe
+  const [mounted, setMounted] = useState(false);
+  const [stripePromise] = useState(() =>
+    typeof window !== "undefined"
+      ? loadStripe(import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY ?? "")
+      : null
+  );
 
   useEffect(() => {
-    if (userEmail) return;
-    supabase.auth.getUser().then(({ data: { user } }) => {
-      if (user?.email) {
-        sessionStorage.setItem("onetap_email", user.email);
-        setUserEmail(user.email);
-      }
-    });
-  }, [userEmail]);
+    setMounted(true);
+    // Read email from sessionStorage (instant) or Supabase fallback
+    const cached = sessionStorage.getItem("onetap_email");
+    if (cached) {
+      setUserEmail(cached);
+    } else {
+      supabase.auth.getUser().then(({ data: { user } }) => {
+        if (user?.email) {
+          sessionStorage.setItem("onetap_email", user.email);
+          setUserEmail(user.email);
+        }
+      });
+    }
+  }, []);
 
   // Remount embedded checkout when billing or plan changes
   useEffect(() => {
@@ -281,7 +284,12 @@ function OffrePage() {
 
         {/* ─── Colonne droite — Stripe Embedded Checkout ─── */}
         <div className="lg:w-[50%] border-t lg:border-t-0 lg:border-l border-border bg-background">
-          {!userEmail ? (
+          {/* Ne render Stripe que côté client après hydration */}
+          {!mounted || !stripePromise ? (
+            <div className="flex items-center justify-center h-full min-h-[400px]">
+              <p className="text-muted-foreground text-sm">Chargement du paiement…</p>
+            </div>
+          ) : !userEmail ? (
             <div className="flex items-center justify-center h-full min-h-[400px]">
               <div className="text-center px-6">
                 <p className="text-muted-foreground mb-4">Tu dois être connecté pour accéder au paiement.</p>
@@ -290,7 +298,7 @@ function OffrePage() {
                 </Link>
               </div>
             </div>
-          ) : stripePromise ? (
+          ) : (
             <EmbeddedCheckoutProvider
               key={String(checkoutKey)}
               stripe={stripePromise}
@@ -298,10 +306,6 @@ function OffrePage() {
             >
               <EmbeddedCheckout />
             </EmbeddedCheckoutProvider>
-          ) : (
-            <div className="flex items-center justify-center h-full min-h-[400px]">
-              <p className="text-muted-foreground text-sm">Chargement du paiement…</p>
-            </div>
           )}
         </div>
       </div>
