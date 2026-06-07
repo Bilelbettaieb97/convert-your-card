@@ -468,7 +468,7 @@ function TemplateCard({ t, onPreview }: { t: Template; onPreview: () => void }) 
         aria-label={`Voir le modèle ${t.name} en grand`}
       >
         {/* Phone frame */}
-        <div className="relative w-full max-w-[210px] aspect-[9/19] rounded-[2rem] bg-zinc-900 p-1.5 shadow-2xl transition-transform duration-500 group-hover:scale-105 group-hover:-rotate-1">
+        <div className="relative w-full max-w-[240px] aspect-[9/18] rounded-[2rem] bg-zinc-900 p-1.5 shadow-2xl transition-transform duration-500 group-hover:scale-105 group-hover:-rotate-1">
           <div
             className="relative w-full h-full rounded-[1.6rem] overflow-hidden flex flex-col"
             style={{ background: t.palette.bg, color: t.palette.fg }}
@@ -564,7 +564,7 @@ function CardPreview({ t, size = "sm" }: { t: Template; size?: "sm" | "lg" }) {
       {/* Avatar + identity */}
       <div className={`${isLg ? "px-5" : "px-3"} flex flex-col items-center text-center`}>
         <div
-          className={`${isLg ? "w-20 h-20 -mt-10" : "w-12 h-12 -mt-6"} rounded-full overflow-hidden shrink-0 shadow-lg`}
+          className={`${isLg ? "w-20 h-20 -mt-10" : "w-14 h-14 -mt-7"} rounded-full overflow-hidden shrink-0 shadow-lg`}
           style={{
             background: t.palette.accent,
             color: contrastText(t.palette.accent),
@@ -574,27 +574,27 @@ function CardPreview({ t, size = "sm" }: { t: Template; size?: "sm" | "lg" }) {
           {t.avatar ? (
             <img src={t.avatar} alt={t.person} className="w-full h-full object-cover" loading="lazy" />
           ) : (
-            <div className={`w-full h-full flex items-center justify-center font-bold ${isLg ? "text-xl" : "text-[10px]"}`}>
+            <div className={`w-full h-full flex items-center justify-center font-bold ${isLg ? "text-xl" : "text-xs"}`}>
               {t.initials}
             </div>
           )}
         </div>
-        <div className={`${isLg ? "mt-2 text-lg" : "mt-1 text-[10px]"} font-bold truncate w-full`}>{t.person}</div>
-        <div className={`${isLg ? "text-sm" : "text-[7px]"} truncate w-full`} style={{ color: mutedFg }}>
+        <div className={`${isLg ? "mt-2 text-lg" : "mt-1.5 text-[12px]"} font-bold truncate w-full leading-tight`}>{t.person}</div>
+        <div className={`${isLg ? "text-sm" : "text-[10px]"} truncate w-full leading-tight`} style={{ color: mutedFg }}>
           {t.job}
         </div>
-        <div className={`${isLg ? "text-xs mt-0.5" : "text-[7px]"} truncate w-full font-semibold`} style={{ color: t.palette.accent }}>
+        <div className={`${isLg ? "text-xs mt-0.5" : "text-[9px] mt-0.5"} truncate w-full font-semibold leading-tight`} style={{ color: t.palette.accent }}>
           {t.company}
         </div>
-        <div className={`${isLg ? "mt-1 text-xs gap-1" : "mt-0.5 text-[6px] gap-0.5"} flex items-center justify-center`} style={{ color: mutedFg }}>
-          <MapPin className={isLg ? "w-3 h-3" : "w-1.5 h-1.5"} />
+        <div className={`${isLg ? "mt-1 text-xs gap-1" : "mt-1 text-[9px] gap-1"} flex items-center justify-center`} style={{ color: mutedFg }}>
+          <MapPin className={isLg ? "w-3 h-3" : "w-2.5 h-2.5"} />
           {t.location}
         </div>
       </div>
 
       {/* Tagline */}
-      <div className={`${isLg ? "px-5 mt-3" : "px-3 mt-1.5"} text-center`}>
-        <div className={`font-display font-semibold ${isLg ? "text-sm" : "text-[8px]"} leading-snug ${isLg ? "" : "line-clamp-2"}`}>
+      <div className={`${isLg ? "px-5 mt-3" : "px-3 mt-2"} text-center`}>
+        <div className={`font-display font-semibold ${isLg ? "text-sm" : "text-[10px]"} leading-snug ${isLg ? "" : "line-clamp-2"}`}>
           "{t.tagline}"
         </div>
         {isLg && (
@@ -603,7 +603,7 @@ function CardPreview({ t, size = "sm" }: { t: Template; size?: "sm" | "lg" }) {
       </div>
 
       {/* Quick actions */}
-      <div className={`${isLg ? "px-5 mt-4 gap-2" : "px-3 mt-2 gap-1"} flex justify-center`}>
+      <div className={`${isLg ? "px-5 mt-4 gap-2" : "px-3 mt-2.5 gap-1.5"} flex justify-center`}>
         {[
           { icon: Phone, label: "Appeler" },
           { icon: Mail, label: "Email" },
@@ -612,26 +612,26 @@ function CardPreview({ t, size = "sm" }: { t: Template; size?: "sm" | "lg" }) {
         ].map(({ icon: I, label }) => (
           <div
             key={label}
-            className={`${isLg ? "w-10 h-10" : "w-5 h-5"} rounded-full flex items-center justify-center`}
+            className={`${isLg ? "w-10 h-10" : "w-7 h-7"} rounded-full flex items-center justify-center`}
             style={{ background: subtleBg, color: t.palette.fg }}
             title={label}
           >
-            <I className={isLg ? "w-4 h-4" : "w-2 h-2"} />
+            <I className={isLg ? "w-4 h-4" : "w-3 h-3"} />
           </div>
         ))}
       </div>
 
       {/* Socials */}
       {t.socials.length > 0 && (
-        <div className={`${isLg ? "px-5 mt-3 gap-2" : "px-3 mt-1.5 gap-1"} flex justify-center flex-wrap`}>
+        <div className={`${isLg ? "px-5 mt-3 gap-2" : "px-3 mt-2 gap-1.5"} flex justify-center flex-wrap`}>
           {t.socials.map((soc) => (
             <div
               key={soc}
-              className={`${isLg ? "w-9 h-9" : "w-5 h-5"} rounded-full flex items-center justify-center`}
+              className={`${isLg ? "w-9 h-9" : "w-7 h-7"} rounded-full flex items-center justify-center`}
               style={{ background: t.palette.accent, color: contrastText(t.palette.accent) }}
               title={soc}
             >
-              <SocialIcon type={soc} className={isLg ? "w-4 h-4" : "w-2.5 h-2.5"} />
+              <SocialIcon type={soc} className={isLg ? "w-4 h-4" : "w-3 h-3"} />
             </div>
           ))}
         </div>
@@ -649,20 +649,20 @@ function CardPreview({ t, size = "sm" }: { t: Template; size?: "sm" | "lg" }) {
       <div className="flex-1" />
 
       {/* CTA */}
-      <div className={`${isLg ? "px-5 mt-4" : "px-3 mt-2"}`}>
+      <div className={`${isLg ? "px-5 mt-4" : "px-3 mt-2.5"}`}>
         <div
-          className={`rounded-full text-center font-semibold flex items-center justify-center gap-1.5 ${isLg ? "py-3 text-sm" : "py-1.5 text-[8px]"}`}
+          className={`rounded-full text-center font-semibold flex items-center justify-center gap-1.5 ${isLg ? "py-3 text-sm" : "py-2 text-[10px]"}`}
           style={{ background: t.palette.accent, color: contrastText(t.palette.accent) }}
         >
-          <Check className={isLg ? "w-4 h-4" : "w-2 h-2"} />
+          <Check className={isLg ? "w-4 h-4" : "w-3 h-3"} />
           {ctaLabel}
         </div>
 
         <div
-          className={`rounded-full text-center font-medium border flex items-center justify-center gap-1.5 ${isLg ? "mt-2 py-2 text-xs" : "mt-1 py-1 text-[7px]"}`}
+          className={`rounded-full text-center font-medium border flex items-center justify-center gap-1.5 ${isLg ? "mt-2 py-2 text-xs" : "mt-1.5 py-1.5 text-[9px]"}`}
           style={{ borderColor: dividerColor, color: mutedFg }}
         >
-          <Smartphone className={isLg ? "w-3.5 h-3.5" : "w-2 h-2"} />
+          <Smartphone className={isLg ? "w-3.5 h-3.5" : "w-2.5 h-2.5"} />
           Ajouter aux contacts
         </div>
       </div>
