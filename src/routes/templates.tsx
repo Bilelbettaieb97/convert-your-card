@@ -69,37 +69,6 @@ type Sector = {
   cta: string;
 };
 
-type SocialType =
-  | "linkedin"
-  | "instagram"
-  | "x"
-  | "tiktok"
-  | "youtube"
-  | "whatsapp"
-  | "facebook";
-
-type StyleId = "minimal" | "bold" | "elegant" | "neo" | "dark" | "soft";
-
-type Template = {
-  id: string;
-  name: string;
-  sector: string;
-  job: string;
-  company: string;
-  person: string;
-  initials: string;
-  tagline: string;
-  bio: string;
-  location: string;
-  website: string;
-  phone: string;
-  email: string;
-  avatar: string;
-  socials: SocialType[];
-  style: StyleId;
-  palette: { bg: string; fg: string; accent: string };
-  badge?: string;
-};
 
 /* ──────────────────────────── Sectors ──────────────────────────── */
 
