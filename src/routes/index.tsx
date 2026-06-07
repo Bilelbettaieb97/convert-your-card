@@ -113,11 +113,10 @@ function HeroCTA() {
   const navigate = useNavigate();
 
   const handleStart = () => {
-    if (slug.trim()) {
-      navigate({ to: "/inscription", search: { slug: slug.trim() } });
-    } else {
-      navigate({ to: "/inscription" });
+    if (slug.trim() && typeof window !== "undefined") {
+      sessionStorage.setItem("onetap_desired_slug", slug.trim());
     }
+    navigate({ to: "/inscription" });
   };
 
   return (
