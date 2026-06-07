@@ -550,23 +550,12 @@ function CardPreview({ t, size = "sm" }: { t: Template; size?: "sm" | "lg" }) {
   return (
     <div className={`relative w-full h-full flex flex-col overflow-y-auto ${isLg ? "pb-5" : "pb-2"}`}>
       {/* Notch-safe top spacer */}
-      <div className={`${isLg ? "h-7" : "h-5"} shrink-0`} />
-
-      {/* Cover */}
-      <div
-        className={`${isLg ? "h-20" : "h-9"} w-full shrink-0 relative`}
-        style={{
-          background: `linear-gradient(135deg, ${t.palette.accent}, ${shade(t.palette.accent, -30)})`,
-        }}
-      >
-        {/* subtle pattern */}
-        <div className="absolute inset-0 opacity-20 [background-image:radial-gradient(circle_at_30%_50%,rgba(255,255,255,0.3),transparent_60%)]" />
-      </div>
+      <div className={`${isLg ? "h-10" : "h-7"} shrink-0`} />
 
       {/* Avatar + identity */}
-      <div className={`${isLg ? "px-5" : "px-3"} flex flex-col items-center text-center`}>
+      <div className={`${isLg ? "px-5 mt-2" : "px-3 mt-1.5"} flex flex-col items-center text-center`}>
         <div
-          className={`${isLg ? "w-20 h-20 -mt-10" : "w-14 h-14 -mt-7"} rounded-full overflow-hidden shrink-0 shadow-lg`}
+          className={`${isLg ? "w-20 h-20" : "w-14 h-14"} rounded-full overflow-hidden shrink-0 shadow-lg`}
           style={{
             background: t.palette.accent,
             color: contrastText(t.palette.accent),
