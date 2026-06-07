@@ -211,7 +211,7 @@ export function CardPreview({ t, size = "sm", ctaLabel }: { t: Template; size?: 
           style={{ background: t.palette.accent, color: contrastText(t.palette.accent) }}
         >
           <Check className={isLg ? "w-4 h-4" : "w-3 h-3"} />
-          {ctaLabel}
+          {finalCta}
         </div>
 
         <div
