@@ -187,6 +187,13 @@ function PlanSelectionPage() {
           <p className="text-center text-xs text-muted-foreground mt-10 max-w-3xl mx-auto">
             * Disponible selon le forfait. ** Hors frais de traitement de paiement. Sans engagement · Paiement sécurisé · TVA incluse.
           </p>
+
+          <div className="mt-10 flex items-center justify-center gap-2 rounded-2xl border border-border bg-muted/30 px-5 py-4 max-w-2xl mx-auto">
+            <span className="text-sm text-muted-foreground">
+              Carte NFC physique disponible en option après inscription
+            </span>
+            <span className="inline-flex h-2 w-2 rounded-full bg-magenta" aria-hidden />
+          </div>
         </div>
       </main>
       <Footer />
