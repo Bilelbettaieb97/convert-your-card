@@ -7,10 +7,9 @@ import {
   HeadContent,
   Scripts,
 } from "@tanstack/react-router";
-import { useEffect, type ReactNode } from "react";
+import { type ReactNode } from "react";
 
 import appCss from "../styles.css?url";
-import { reportLovableError } from "../lib/lovable-error-reporting";
 
 function NotFoundComponent() {
   return (
@@ -37,10 +36,6 @@ function NotFoundComponent() {
 function ErrorComponent({ error, reset }: { error: Error; reset: () => void }) {
   console.error(error);
   const router = useRouter();
-  useEffect(() => {
-    reportLovableError(error, { boundary: "tanstack_root_error_component" });
-  }, [error]);
-
   return (
     <div className="flex min-h-screen items-center justify-center bg-background px-4">
       <div className="max-w-md text-center">
@@ -77,18 +72,15 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "taptap" },
-      { name: "description", content: "taptap" },
-      { name: "author", content: "Lovable" },
-      { property: "og:title", content: "taptap" },
-      { property: "og:description", content: "taptap" },
+      { title: "OneTap — Carte de visite digitale NFC" },
+      { name: "description", content: "Crée ta carte de visite digitale et partage tes contacts en 1 tap. Gratuit, sans application." },
+      { property: "og:title", content: "OneTap — Carte de visite digitale NFC" },
+      { property: "og:description", content: "Crée ta carte de visite digitale et partage tes contacts en 1 tap. Gratuit, sans application." },
       { property: "og:type", content: "website" },
-      { name: "twitter:card", content: "summary" },
-      { name: "twitter:site", content: "@Lovable" },
-      { name: "twitter:title", content: "taptap" },
-      { name: "twitter:description", content: "taptap" },
-      { property: "og:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/d222b733-3d63-4db5-a4b8-130e9701b7ba/id-preview-cd0d5253--5382dd38-0f6a-4a3e-968a-65321f461907.lovable.app-1780792253672.png" },
-      { name: "twitter:image", content: "https://pub-bb2e103a32db4e198524a2e9ed8f35b4.r2.dev/d222b733-3d63-4db5-a4b8-130e9701b7ba/id-preview-cd0d5253--5382dd38-0f6a-4a3e-968a-65321f461907.lovable.app-1780792253672.png" },
+      { property: "og:url", content: "https://convert-your-card.vercel.app" },
+      { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "OneTap — Carte de visite digitale NFC" },
+      { name: "twitter:description", content: "Crée ta carte de visite digitale et partage tes contacts en 1 tap. Gratuit, sans application." },
     ],
     links: [
       { rel: "stylesheet", href: appCss },

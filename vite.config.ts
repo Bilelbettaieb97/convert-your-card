@@ -7,23 +7,14 @@
 import { defineConfig } from "@lovable.dev/vite-tanstack-config";
 
 export default defineConfig({
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   nitro: {
     preset: "vercel",
     handlers: [
-      {
-        middleware: true,
-        handler: "./server/middleware/stripe-webhook",
-      },
-      {
-        middleware: true,
-        handler: "./server/middleware/magic-link",
-      },
-      {
-        middleware: true,
-        handler: "./server/middleware/auth",
-      },
+      { middleware: true, handler: "./server/middleware/stripe-webhook" },
+      { middleware: true, handler: "./server/middleware/auth" },
     ],
-  },
+  } as any,
   tanstackStart: {
     server: { entry: "server" },
   },

@@ -21,6 +21,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as DashboardIndexRouteImport } from './routes/dashboard/index'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as InscriptionSelectionDePlanRouteImport } from './routes/inscription.selection-de-plan'
+import { Route as InscriptionIndexRouteImport } from './routes/inscription.index'
 import { Route as InscriptionCartePhysiqueRouteImport } from './routes/inscription.carte-physique'
 import { Route as DashboardProfilRouteImport } from './routes/dashboard/profil'
 import { Route as DashboardAbonnementRouteImport } from './routes/dashboard/abonnement'
@@ -86,6 +87,11 @@ const InscriptionSelectionDePlanRoute =
     path: '/selection-de-plan',
     getParentRoute: () => InscriptionRoute,
   } as any)
+const InscriptionIndexRoute = InscriptionIndexRouteImport.update({
+  id: '/inscription/',
+  path: '/',
+  getParentRoute: () => InscriptionRoute,
+} as any)
 const InscriptionCartePhysiqueRoute =
   InscriptionCartePhysiqueRouteImport.update({
     id: '/carte-physique',
@@ -117,6 +123,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/profil': typeof DashboardProfilRoute
   '/inscription/carte-physique': typeof InscriptionCartePhysiqueRoute
   '/inscription/selection-de-plan': typeof InscriptionSelectionDePlanRoute
+  '/inscription/': typeof InscriptionIndexRoute
   '/admin/': typeof AdminIndexRoute
   '/dashboard/': typeof DashboardIndexRoute
 }
@@ -133,6 +140,7 @@ export interface FileRoutesByTo {
   '/dashboard/profil': typeof DashboardProfilRoute
   '/inscription/carte-physique': typeof InscriptionCartePhysiqueRoute
   '/inscription/selection-de-plan': typeof InscriptionSelectionDePlanRoute
+  '/inscription': typeof InscriptionIndexRoute
   '/admin': typeof AdminIndexRoute
   '/dashboard': typeof DashboardIndexRoute
 }
@@ -151,6 +159,7 @@ export interface FileRoutesById {
   '/dashboard/profil': typeof DashboardProfilRoute
   '/inscription/carte-physique': typeof InscriptionCartePhysiqueRoute
   '/inscription/selection-de-plan': typeof InscriptionSelectionDePlanRoute
+  '/inscription/': typeof InscriptionIndexRoute
   '/admin/': typeof AdminIndexRoute
   '/dashboard/': typeof DashboardIndexRoute
 }
@@ -170,6 +179,7 @@ export interface FileRouteTypes {
     | '/dashboard/profil'
     | '/inscription/carte-physique'
     | '/inscription/selection-de-plan'
+    | '/inscription/'
     | '/admin/'
     | '/dashboard/'
   fileRoutesByTo: FileRoutesByTo
@@ -188,6 +198,7 @@ export interface FileRouteTypes {
     | '/inscription/selection-de-plan'
     | '/admin'
     | '/dashboard'
+    | '/inscription'
   id:
     | '__root__'
     | '/'
@@ -203,6 +214,7 @@ export interface FileRouteTypes {
     | '/dashboard/profil'
     | '/inscription/carte-physique'
     | '/inscription/selection-de-plan'
+    | '/inscription/'
     | '/admin/'
     | '/dashboard/'
   fileRoutesById: FileRoutesById
@@ -306,6 +318,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof InscriptionSelectionDePlanRouteImport
       parentRoute: typeof InscriptionRoute
     }
+    '/inscription/': {
+      id: '/inscription/'
+      path: '/'
+      fullPath: '/inscription/'
+      preLoaderRoute: typeof InscriptionIndexRouteImport
+      parentRoute: typeof InscriptionRoute
+    }
     '/inscription/carte-physique': {
       id: '/inscription/carte-physique'
       path: '/carte-physique'
@@ -349,11 +368,13 @@ const DashboardRouteWithChildren = DashboardRoute._addFileChildren(
 interface InscriptionRouteChildren {
   InscriptionCartePhysiqueRoute: typeof InscriptionCartePhysiqueRoute
   InscriptionSelectionDePlanRoute: typeof InscriptionSelectionDePlanRoute
+  InscriptionIndexRoute: typeof InscriptionIndexRoute
 }
 
 const InscriptionRouteChildren: InscriptionRouteChildren = {
   InscriptionCartePhysiqueRoute: InscriptionCartePhysiqueRoute,
   InscriptionSelectionDePlanRoute: InscriptionSelectionDePlanRoute,
+  InscriptionIndexRoute: InscriptionIndexRoute,
 }
 
 const InscriptionRouteWithChildren = InscriptionRoute._addFileChildren(
