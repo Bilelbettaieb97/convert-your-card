@@ -145,33 +145,36 @@ const SECTOR_SOCIALS: Record<string, SocialType[]> = {
   formation: ["linkedin", "youtube"],
 };
 
-/* Avatar helper — deterministic portrait per template id */
+/* Avatar helper — deterministic gendered portrait per template id */
+const FEMALE_POOL = [
+  "1494790108377-be9c29b29330",
+  "1544005313-94ddf0286df2",
+  "1438761681033-6461ffad8d80",
+  "1573496359142-b8d87734a5a2",
+  "1531123897727-8f129e1688ce",
+  "1517841905240-472988babdf9",
+  "1546961342-a23b8d4fd1b0",
+  "1487412720507-e7ab37603c6f",
+];
+const MALE_POOL = [
+  "1500648767791-00dcc994a43e",
+  "1488161628813-04466f872be2",
+  "1502685104226-ee32379fefbe",
+  "1564564321837-a57b7070ac4f",
+  "1547425260-76bcadfb4f2c",
+  "1521119989659-a83eee488004",
+  "1507003211169-0a1dd7228f2d",
+  "1492562080023-ab3db95bfbce",
+];
+
 function avatarFor(id: string, female: boolean) {
-  const base = female
-    ? "https://images.unsplash.com/photo-1494790108377-be9c29b29330" // woman
-    : "https://images.unsplash.com/photo-1500648767791-00dcc994a43e"; // man
-  // pool of stable portrait IDs
-  const pool = [
-    "1544005313-94ddf0286df2",
-    "1488161628813-04466f872be2",
-    "1531123897727-8f129e1688ce",
-    "1438761681033-6461ffad8d80",
-    "1502685104226-ee32379fefbe",
-    "1564564321837-a57b7070ac4f",
-    "1517841905240-472988babdf9",
-    "1500648767791-00dcc994a43e",
-    "1547425260-76bcadfb4f2c",
-    "1573496359142-b8d87734a5a2",
-    "1546961342-a23b8d4fd1b0",
-    "1521119989659-a83eee488004",
-  ];
+  const pool = female ? FEMALE_POOL : MALE_POOL;
   const hash = [...id].reduce((a, c) => a + c.charCodeAt(0), 0);
   const slug = pool[hash % pool.length];
   return `https://images.unsplash.com/photo-${slug}?w=400&h=400&fit=crop&crop=faces&auto=format&q=80`;
 }
 
 function isFemale(firstName: string) {
-  // crude heuristic on common French first-name endings + explicit list
   const female = ["Camille", "Élise", "Léa", "Inès", "Manon", "Chloé", "Sarah", "Sophie", "Marie", "Aïcha", "Élodie", "Iris", "Anaïs", "Margot", "Nadia", "Laure"];
   return female.includes(firstName);
 }
@@ -275,7 +278,7 @@ const TEMPLATES: Template[] = RAW_TEMPLATES.map((t, idx) => {
   return {
     ...t,
     company: companies[idx % companies.length],
-    bio: `${t.tagline}. ${female ? "Disponible" : "Disponible"} du lundi au samedi sur ${CITIES[idx % CITIES.length]} et sa région.`,
+    bio: `${t.tagline}. Disponible du lundi au samedi sur ${CITIES[idx % CITIES.length]} et sa région.`,
     location: CITIES[idx % CITIES.length],
     website: `onetap.cards/${initialsSlug}`,
     phone: `+33 6 ${10 + (idx % 80)} ${20 + (idx % 70)} ${30 + (idx % 60)} ${40 + (idx % 50)}`.replace(/\s+/g, " "),
