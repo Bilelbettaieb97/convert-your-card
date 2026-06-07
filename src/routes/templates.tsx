@@ -278,7 +278,7 @@ const TEMPLATES: Template[] = RAW_TEMPLATES.map((t, idx) => {
   return {
     ...t,
     company: companies[idx % companies.length],
-    bio: `${t.tagline}. ${female ? "Disponible" : "Disponible"} du lundi au samedi sur ${CITIES[idx % CITIES.length]} et sa région.`,
+    bio: `${t.tagline}. Disponible du lundi au samedi sur ${CITIES[idx % CITIES.length]} et sa région.`,
     location: CITIES[idx % CITIES.length],
     website: `onetap.cards/${initialsSlug}`,
     phone: `+33 6 ${10 + (idx % 80)} ${20 + (idx % 70)} ${30 + (idx % 60)} ${40 + (idx % 50)}`.replace(/\s+/g, " "),
