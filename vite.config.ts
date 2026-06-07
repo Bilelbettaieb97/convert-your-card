@@ -18,6 +18,10 @@ export default defineConfig({
         middleware: true,
         handler: "./server/middleware/magic-link",
       },
+      {
+        middleware: true,
+        handler: "./server/middleware/auth",
+      },
     ],
   },
   tanstackStart: {
