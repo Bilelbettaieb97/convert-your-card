@@ -1,91 +1,164 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { Check, Sparkles, Zap, Crown } from "lucide-react";
+import { Check } from "lucide-react";
 import { PromoBar, Nav, Footer } from "./index";
 
 export const Route = createFileRoute("/offres")({
   head: () => ({
     meta: [
       { title: "Choisis ton forfait — OneTap" },
-      { name: "description", content: "Trouve le forfait OneTap qu'il te faut : Starter, Pro ou Premium. Essai gratuit 7 jours." },
+      { name: "description", content: "Trouve le forfait OneTap qu'il te faut : Free, Starter, Pro ou Premium. Essai gratuit 7 jours." },
       { property: "og:title", content: "Choisis ton forfait — OneTap" },
-      { property: "og:description", content: "Starter, Pro ou Premium — trouve le plan parfait pour ta carte de visite digitale." },
+      { property: "og:description", content: "Free, Starter, Pro ou Premium — trouve le plan parfait pour ta carte de visite digitale." },
     ],
   }),
   component: PlanSelectionPage,
 });
 
+type FeatureGroup = {
+  title?: string;
+  items: { name: string; desc?: string }[];
+};
+
 type Plan = {
-  id: "starter" | "pro" | "premium";
+  id: "free" | "starter" | "pro" | "premium";
   name: string;
-  icon: typeof Sparkles;
-  price: string;
-  priceSuffix: string;
-  prefix?: string;
-  trial?: string;
   tagline: string;
-  features: string[];
+  price: string;
+  priceSuffix?: string;
+  billingNote?: string;
   cta: string;
+  ctaHref: string;
   highlight?: boolean;
   badge?: string;
+  intro?: string; // e.g. "Everything in Free, plus:"
+  groups: FeatureGroup[];
 };
 
 const PLANS: Plan[] = [
   {
+    id: "free",
+    name: "Free",
+    tagline: "Découvre OneTap avec une carte digitale personnelle.",
+    price: "0 €",
+    billingNote: "Gratuit, pour toujours",
+    cta: "Commencer",
+    ctaHref: "/inscription",
+    groups: [
+      {
+        title: "Fonctionnalités clés :",
+        items: [
+          { name: "Liens illimités" },
+          { name: "Icônes sociales, vidéos & médias" },
+          { name: "Statistiques essentielles" },
+          { name: "Design optimisé SEO" },
+          { name: "QR code unique" },
+        ],
+      },
+      {
+        title: "Partage*",
+        items: [
+          { name: "Partage NFC & QR code", desc: "Partage ta carte d'un simple contact avec un téléphone." },
+        ],
+      },
+    ],
+  },
+  {
     id: "starter",
     name: "Starter",
-    icon: Sparkles,
-    prefix: "À partir de",
-    price: "10,50€",
-    priceSuffix: "/mois",
-    tagline: "L'essentiel pour démarrer ta carte digitale.",
-    features: [
-      "1 carte de visite digitale",
-      "Partage NFC & QR code",
-      "Profil personnalisable",
-      "Statistiques de base",
-      "Support par email",
+    tagline: "Pour les pros qui démarrent leur carte digitale.",
+    price: "4,50 €",
+    priceSuffix: "EUR/mois",
+    billingNote: "Facturé annuellement, ou 6 € par mois",
+    cta: "Commencer",
+    ctaHref: "/inscription",
+    intro: "Tout du Free, plus :",
+    groups: [
+      {
+        title: "Carte de visite",
+        items: [
+          { name: "Thèmes personnalisés", desc: "Palettes de couleurs et thèmes pour matcher ton style." },
+          { name: "Capture tes contacts", desc: "Collecte et gère les leads qui scannent ta carte." },
+          { name: "Liens de redirection", desc: "Redirige temporairement vers un lien clé, parfait pour les promos." },
+        ],
+      },
+      {
+        title: "Monétisation*",
+        items: [
+          { name: "Frais réduits", desc: "Vends tes produits/services digitaux avec 9 % de frais**." },
+        ],
+      },
     ],
-    cta: "Commencer avec Starter",
   },
   {
     id: "pro",
     name: "Pro",
-    icon: Zap,
-    price: "19,50€",
-    priceSuffix: "/mois",
-    trial: "Essai gratuit pendant 7 jours",
-    tagline: "Le plus populaire — tout ce qu'il faut pour un pro qui réseaute.",
-    features: [
-      "Tout du plan Starter, plus :",
-      "Cartes illimitées",
-      "Templates premium par secteur",
-      "Capture de leads + CRM intégré",
-      "Statistiques avancées en temps réel",
-      "Intégrations (HubSpot, Salesforce, Zapier)",
-      "Support prioritaire 7j/7",
-    ],
-    cta: "Démarrer mon essai gratuit",
+    tagline: "Pour les pros qui veulent grandir et convertir.",
+    price: "10,50 €",
+    priceSuffix: "EUR/mois",
+    billingNote: "Facturé annuellement, ou 13 € par mois",
+    cta: "Essai gratuit 7 jours",
+    ctaHref: "/inscription",
     highlight: true,
-    badge: "Le plus populaire",
+    badge: "Recommandé",
+    intro: "Tout du Starter, plus :",
+    groups: [
+      {
+        title: "Carte de visite",
+        items: [
+          { name: "Carte personnalisée", desc: "Ajoute ton logo, des visuels plein écran et un design sur-mesure." },
+          { name: "Liens mis en avant", desc: "Mets en avant ce qui compte avec des liens animés et accrocheurs." },
+          { name: "Statistiques complètes", desc: "Vois les liens les plus performants et optimise ce qui convertit." },
+        ],
+      },
+      {
+        title: "Outils de croissance",
+        items: [
+          { name: "Réponses Instagram automatisées", desc: "Booste l'engagement et les ventes via DM automatiques." },
+          { name: "Raccourcisseur de liens", desc: "Crée des shortlinks personnalisés avec UTM intégrés." },
+          { name: "Intégrations email", desc: "Synchronise tes contacts avec Mailchimp, Google Sheets, Klaviyo…" },
+        ],
+      },
+      {
+        title: "Monétisation*",
+        items: [
+          { name: "Frais réduits", desc: "Vends tes produits/services digitaux avec 9 % de frais**." },
+        ],
+      },
+    ],
   },
   {
     id: "premium",
     name: "Premium",
-    icon: Crown,
-    price: "27€",
-    priceSuffix: "/mois",
-    trial: "Essai gratuit pendant 7 jours",
-    tagline: "Pour les équipes et entreprises qui veulent tout.",
-    features: [
-      "Tout du plan Pro, plus :",
-      "Gestion d'équipe illimitée",
-      "Branding entreprise (logo, couleurs, domaine)",
-      "Tableau de bord administrateur",
-      "API & webhooks personnalisés",
-      "Account manager dédié",
-      "SLA & sécurité avancée",
+    tagline: "Pour les équipes & marques qui veulent zéro limite.",
+    price: "27,50 €",
+    priceSuffix: "EUR/mois",
+    billingNote: "Facturé annuellement, ou 32 € par mois",
+    cta: "Commencer",
+    ctaHref: "/inscription",
+    intro: "Tout du Pro, plus :",
+    groups: [
+      {
+        title: "Carte de visite",
+        items: [
+          { name: "Onboarding concierge", desc: "Accompagnement sur-mesure avec support prioritaire dédié." },
+        ],
+      },
+      {
+        title: "Outils de croissance",
+        items: [
+          { name: "Posts sociaux illimités", desc: "Passe à l'échelle avec des posts illimités sur 3 marques." },
+          { name: "Outils d'équipe en option", desc: "Chat, collaboration et workflows d'approbation." },
+          { name: "Réponses Instagram illimitées", desc: "Reach maximal avec auto-réponses illimitées." },
+        ],
+      },
+      {
+        title: "Monétisation*",
+        items: [
+          { name: "0 % de frais**", desc: "Chaque euro de tes ventes digitales va directement sur ton compte." },
+          { name: "100 % des commissions**", desc: "Vends des produits affiliés et garde toute la commission." },
+        ],
+      },
     ],
-    cta: "Démarrer mon essai gratuit",
   },
 ];
 
@@ -95,7 +168,7 @@ function PlanSelectionPage() {
       <PromoBar />
       <Nav />
       <main>
-        <div className="mx-auto max-w-6xl px-4 py-12 sm:py-16 lg:py-20">
+        <div className="mx-auto max-w-7xl px-4 py-12 sm:py-16 lg:py-20">
           <div className="text-center mb-12 sm:mb-16 animate-fade-in">
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground tracking-tight">
               Trouve le forfait qu'il te faut
@@ -105,14 +178,14 @@ function PlanSelectionPage() {
             </p>
           </div>
 
-          <div className="grid gap-6 lg:gap-8 md:grid-cols-3 items-stretch">
+          <div className="grid gap-5 lg:gap-6 md:grid-cols-2 lg:grid-cols-4 items-stretch">
             {PLANS.map((plan) => (
               <PlanCard key={plan.id} plan={plan} />
             ))}
           </div>
 
-          <p className="text-center text-xs text-muted-foreground mt-10">
-            Sans engagement · Paiement sécurisé · TVA incluse
+          <p className="text-center text-xs text-muted-foreground mt-10 max-w-3xl mx-auto">
+            * Disponible selon le forfait. ** Hors frais de traitement de paiement. Sans engagement · Paiement sécurisé · TVA incluse.
           </p>
         </div>
       </main>
@@ -122,88 +195,92 @@ function PlanSelectionPage() {
 }
 
 function PlanCard({ plan }: { plan: Plan }) {
-  const Icon = plan.icon;
   const isHighlight = plan.highlight;
 
   return (
     <div
       className={[
-        "relative flex flex-col rounded-3xl p-7 sm:p-8 transition-all duration-300 hover-scale",
+        "relative flex flex-col rounded-3xl overflow-hidden transition-all duration-300 hover-scale",
         isHighlight
-          ? "bg-gradient-cta text-primary-foreground shadow-glow scale-100 md:scale-105 ring-2 ring-magenta/40"
-          : "bg-card text-card-foreground border border-border shadow-card hover:shadow-glow",
+          ? "ring-2 ring-magenta/40 shadow-glow"
+          : "border border-border shadow-card hover:shadow-glow",
+        "bg-card text-card-foreground",
       ].join(" ")}
     >
-      {plan.badge && (
-        <span className="absolute -top-3 left-1/2 -translate-x-1/2 bg-background text-magenta text-xs font-bold uppercase tracking-wider px-3 py-1.5 rounded-full shadow-card border border-magenta/30">
-          {plan.badge}
-        </span>
-      )}
-
-      <div className="flex items-center gap-2.5 mb-4">
-        <div
-          className={[
-            "h-10 w-10 rounded-xl flex items-center justify-center",
-            isHighlight ? "bg-white/20" : "bg-magenta/10 text-magenta",
-          ].join(" ")}
-        >
-          <Icon className="h-5 w-5" />
-        </div>
-        <h2 className="text-xl font-bold">{plan.name}</h2>
-      </div>
-
-      <p className={["text-sm mb-6", isHighlight ? "text-primary-foreground/90" : "text-muted-foreground"].join(" ")}>
-        {plan.tagline}
-      </p>
-
-      <div className="mb-2">
-        {plan.prefix && (
-          <span className={["block text-xs mb-1", isHighlight ? "text-primary-foreground/80" : "text-muted-foreground"].join(" ")}>
-            {plan.prefix}
-          </span>
-        )}
-        <div className="flex items-baseline gap-1">
-          <span className="text-4xl sm:text-5xl font-bold tracking-tight">{plan.price}</span>
-          <span className={["text-sm font-medium", isHighlight ? "text-primary-foreground/80" : "text-muted-foreground"].join(" ")}>
-            {plan.priceSuffix}
-          </span>
-        </div>
-      </div>
-
+      {/* Colored header */}
       <div
         className={[
-          "min-h-[24px] mb-6 text-sm font-semibold",
-          isHighlight ? "text-primary-foreground" : "text-magenta",
+          "px-6 pt-7 pb-6 relative",
+          isHighlight ? "bg-gradient-cta text-primary-foreground" : "bg-muted text-foreground",
         ].join(" ")}
       >
-        {plan.trial || "\u00A0"}
+        {plan.badge && (
+          <span className="absolute top-4 right-4 bg-background text-magenta text-[10px] font-bold uppercase tracking-wider px-2.5 py-1 rounded-full shadow-card border border-magenta/30">
+            {plan.badge}
+          </span>
+        )}
+        <h2 className="text-2xl font-bold mb-1.5">{plan.name}</h2>
+        <p
+          className={[
+            "text-sm leading-snug min-h-[40px]",
+            isHighlight ? "text-primary-foreground/90" : "text-muted-foreground",
+          ].join(" ")}
+        >
+          {plan.tagline}
+        </p>
       </div>
 
-      <button
-        type="button"
-        className={[
-          "w-full rounded-full py-3 text-sm font-semibold transition-all mb-6",
-          isHighlight
-            ? "bg-background text-magenta hover:bg-background/90 shadow-card"
-            : "bg-foreground text-background hover:opacity-90",
-        ].join(" ")}
-      >
-        {plan.cta}
-      </button>
+      {/* Price + CTA */}
+      <div className="px-6 pt-6 pb-2">
+        <div className="flex items-baseline gap-1.5 mb-1">
+          <span className="text-3xl sm:text-4xl font-bold tracking-tight">{plan.price}</span>
+          {plan.priceSuffix && (
+            <span className="text-xs font-medium text-muted-foreground">{plan.priceSuffix}</span>
+          )}
+        </div>
+        <p className="text-xs text-muted-foreground min-h-[16px] mb-5">{plan.billingNote || "\u00A0"}</p>
 
-      <ul className="space-y-3 text-sm">
-        {plan.features.map((feature, i) => (
-          <li key={i} className="flex items-start gap-2.5">
-            <Check
-              className={[
-                "h-4 w-4 mt-0.5 flex-shrink-0",
-                isHighlight ? "text-primary-foreground" : "text-magenta",
-              ].join(" ")}
-            />
-            <span className={isHighlight ? "text-primary-foreground/95" : "text-foreground/85"}>{feature}</span>
-          </li>
-        ))}
-      </ul>
+        <Link
+          to={plan.ctaHref}
+          className={[
+            "block w-full text-center rounded-full py-3 text-sm font-semibold transition-all",
+            isHighlight
+              ? "bg-magenta/15 text-magenta hover:bg-magenta/25 border border-magenta/30"
+              : "border border-foreground text-foreground hover:bg-foreground hover:text-background",
+          ].join(" ")}
+        >
+          {plan.cta}
+        </Link>
+      </div>
+
+      {/* Features */}
+      <div className="px-6 pt-6 pb-7 flex-1">
+        {plan.intro && (
+          <p className="text-sm font-semibold mb-5">{plan.intro}</p>
+        )}
+        <div className="space-y-6">
+          {plan.groups.map((group, gi) => (
+            <div key={gi}>
+              {group.title && (
+                <h3 className="text-sm font-semibold text-foreground/90 mb-3">{group.title}</h3>
+              )}
+              <ul className="space-y-3">
+                {group.items.map((item, i) => (
+                  <li key={i} className="flex items-start gap-2.5">
+                    <Check className="h-4 w-4 mt-0.5 flex-shrink-0 text-magenta" />
+                    <div>
+                      <p className="text-sm font-medium text-foreground">{item.name}</p>
+                      {item.desc && (
+                        <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed">{item.desc}</p>
+                      )}
+                    </div>
+                  </li>
+                ))}
+              </ul>
+            </div>
+          ))}
+        </div>
+      </div>
     </div>
   );
 }
