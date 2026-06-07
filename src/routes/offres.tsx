@@ -1,5 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Check, Sparkles, Zap, Crown } from "lucide-react";
+import { PromoBar, Nav, Footer } from "./index";
 
 export const Route = createFileRoute("/offres")({
   head: () => ({
