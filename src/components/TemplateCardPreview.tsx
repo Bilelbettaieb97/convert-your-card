@@ -1,4 +1,4 @@
-import { Phone, Mail, Share2, Save, Globe, Linkedin, Instagram, Youtube, Facebook, X as XClose, Check, Smartphone } from "lucide-react";
+import { Phone, Mail, Share2, Save, Globe, Linkedin, Instagram, Youtube, Facebook, X as XClose, Check, Smartphone, MapPin } from "lucide-react";
 
 export type SocialType =
   | "linkedin"
