@@ -542,44 +542,6 @@ function CardPreview({ t, size = "sm" }: { t: Template; size?: "sm" | "lg" }) {
   const subtleBg = isLight ? "rgba(0,0,0,0.05)" : "rgba(255,255,255,0.08)";
   const dividerColor = isLight ? "rgba(0,0,0,0.08)" : "rgba(255,255,255,0.12)";
 
-  // Scale tokens — sm = mini preview in grid, lg = modal full size
-  const s = size === "lg"
-    ? {
-        coverH: "h-24",
-        avatar: "w-20 h-20 -mt-10",
-        avatarText: "text-xl",
-        name: "text-lg",
-        job: "text-sm",
-        company: "text-xs",
-        tagline: "text-sm",
-        body: "text-xs",
-        icon: "w-4 h-4",
-        actionBtn: "w-10 h-10",
-        actionIcon: "w-4 h-4",
-        social: "w-9 h-9",
-        socialIcon: "w-4 h-4",
-        cta: "py-3 text-sm",
-        padX: "px-5",
-        gapY: "space-y-3",
-      }
-    : {
-        coverH: "h-10",
-        avatar: "w-10 h-10 -mt-5",
-        avatarText: "text-[9px]",
-        name: "text-[10px]",
-        job: "text-[7px]",
-        company: "text-[6px]",
-        tagline: "text-[8px]",
-        body: "text-[7px]",
-        icon: "w-2 h-2",
-        actionBtn: "w-5 h-5",
-        actionIcon: "w-2 h-2",
-        social: "w-5 h-5",
-        socialIcon: "w-2.5 h-2.5",
-        cta: "py-1.5 text-[8px]",
-        padX: "px-3",
-        gapY: "space-y-1.5",
-      };
 
   const isLg = size === "lg";
 
