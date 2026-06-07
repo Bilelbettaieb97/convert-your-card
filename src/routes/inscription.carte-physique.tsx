@@ -209,7 +209,7 @@ function CartePhysiqueUpsellPage() {
             </Section>
 
             {/* Modèles */}
-            <Section title="5. Modèle de carte">
+            <Section title="4. Modèle de carte">
               <div className="grid grid-cols-3 gap-2">
                 {[
                   { bg: "#0f1b3d", fg: "#ffffff", accent: "#d4a574", label: "Premium" },
@@ -241,7 +241,7 @@ function CartePhysiqueUpsellPage() {
             </Section>
 
             {/* Logo */}
-            <Section title="6. Logo (optionnel)">
+            <Section title="5. Logo (optionnel)">
               <input
                 ref={fileRef}
                 type="file"
