@@ -23,7 +23,10 @@ export const createCheckoutSession = createServerFn({ method: "POST" })
       success_url: `${appUrl}/bienvenue?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: `${appUrl}/inscription/selection-de-plan`,
       allow_promotion_codes: true,
-      subscription_data: { metadata: { plan: data.plan, email: data.email } },
+      subscription_data: {
+        metadata: { plan: data.plan, email: data.email },
+        ...( ["pro", "premium"].includes(data.plan) ? { trial_period_days: 7 } : {} ),
+      },
     });
 
     return { url: session.url };
