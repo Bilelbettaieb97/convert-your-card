@@ -129,12 +129,11 @@ function Hero() {
           </div>
 
           <h1 className="mt-5 font-display font-extrabold text-4xl sm:text-5xl lg:text-6xl leading-[1.05]">
-            Votre <span className="text-gradient">carte de visite digitale</span> qui transforme chaque rencontre en client.
+            Une carte de visite digitale, <span className="text-gradient">conçue pour vous.</span>
           </h1>
 
           <p className="mt-5 text-lg text-muted-foreground max-w-xl">
-            Partagez vos coordonnées, réseaux et site en <strong className="text-foreground">1 seul tap</strong>.
-            Sans appli. Sans abonnement. Mises à jour illimitées à vie.
+            Rejoignez les pros qui ne distribuent plus de papier. Une seule carte pour partager tout ce que vous êtes — réseaux, site, contact, prise de rendez-vous — d'un simple contact avec un téléphone. Designée et gérée par notre équipe.
           </p>
 
           <ul className="mt-6 space-y-2.5">
@@ -152,21 +151,8 @@ function Hero() {
             ))}
           </ul>
 
-          <div className="mt-8 flex flex-col sm:flex-row gap-3">
-            <a
-              href="#offres"
-              onClick={onCheckoutClick}
-              className="group relative bg-gradient-cta text-primary-foreground px-7 py-4 rounded-xl font-semibold text-base shadow-glow hover:scale-[1.02] transition-all flex items-center justify-center gap-2 animate-pulse-ring"
-            >
-              Créer ma carte — 19,80€
-              <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition" />
-            </a>
-            <a
-              href="#fonctionnement"
-              className="px-7 py-4 rounded-xl font-semibold text-base border border-border bg-card hover:bg-secondary transition flex items-center justify-center gap-2"
-            >
-              Voir une démo
-            </a>
+          <div className="mt-8">
+            <HeroCTA />
           </div>
 
           <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2 text-xs text-muted-foreground">
