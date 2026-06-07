@@ -584,50 +584,64 @@ function CardPreview({ t, size = "sm" }: { t: Template; size?: "sm" | "lg" }) {
   const isLg = size === "lg";
 
   return (
-    <div className={`relative w-full h-full flex flex-col ${isLg ? "pb-4" : "pb-2"} overflow-y-auto`}>
+    <div className={`relative w-full h-full flex flex-col overflow-y-auto ${isLg ? "pb-5" : "pb-2"}`}>
+      {/* Notch-safe top spacer */}
+      <div className={`${isLg ? "h-7" : "h-5"} shrink-0`} />
+
       {/* Cover */}
       <div
-        className={`${s.coverH} w-full shrink-0`}
+        className={`${isLg ? "h-20" : "h-9"} w-full shrink-0 relative`}
         style={{
-          background: `linear-gradient(135deg, ${t.palette.accent}, ${shade(t.palette.accent, -25)})`,
+          background: `linear-gradient(135deg, ${t.palette.accent}, ${shade(t.palette.accent, -30)})`,
         }}
-      />
+      >
+        {/* subtle pattern */}
+        <div className="absolute inset-0 opacity-20 [background-image:radial-gradient(circle_at_30%_50%,rgba(255,255,255,0.3),transparent_60%)]" />
+      </div>
 
       {/* Avatar + identity */}
-      <div className={`${s.padX} flex flex-col items-center text-center`}>
+      <div className={`${isLg ? "px-5" : "px-3"} flex flex-col items-center text-center`}>
         <div
-          className={`${s.avatar} rounded-full ring-2 overflow-hidden shrink-0 shadow-lg`}
-          style={{ background: t.palette.accent, color: contrastText(t.palette.accent), boxShadow: `0 0 0 2px ${t.palette.bg}` }}
+          className={`${isLg ? "w-20 h-20 -mt-10" : "w-12 h-12 -mt-6"} rounded-full overflow-hidden shrink-0 shadow-lg`}
+          style={{
+            background: t.palette.accent,
+            color: contrastText(t.palette.accent),
+            boxShadow: `0 0 0 ${isLg ? 3 : 2}px ${t.palette.bg}, 0 4px 12px rgba(0,0,0,0.25)`,
+          }}
         >
           {t.avatar ? (
             <img src={t.avatar} alt={t.person} className="w-full h-full object-cover" loading="lazy" />
           ) : (
-            <div className={`w-full h-full flex items-center justify-center font-bold ${s.avatarText}`}>
+            <div className={`w-full h-full flex items-center justify-center font-bold ${isLg ? "text-xl" : "text-[10px]"}`}>
               {t.initials}
             </div>
           )}
         </div>
-        <div className={`mt-${isLg ? 2 : 1} font-bold ${s.name} truncate w-full`}>{t.person}</div>
-        <div className={`${s.job} truncate w-full`} style={{ color: mutedFg }}>
+        <div className={`${isLg ? "mt-2 text-lg" : "mt-1 text-[10px]"} font-bold truncate w-full`}>{t.person}</div>
+        <div className={`${isLg ? "text-sm" : "text-[7px]"} truncate w-full`} style={{ color: mutedFg }}>
           {t.job}
         </div>
-        <div className={`${s.company} truncate w-full font-semibold`} style={{ color: t.palette.accent }}>
+        <div className={`${isLg ? "text-xs mt-0.5" : "text-[7px]"} truncate w-full font-semibold`} style={{ color: t.palette.accent }}>
           {t.company}
+        </div>
+        <div className={`${isLg ? "mt-1 text-xs gap-1" : "mt-0.5 text-[6px] gap-0.5"} flex items-center justify-center`} style={{ color: mutedFg }}>
+          <MapPin className={isLg ? "w-3 h-3" : "w-1.5 h-1.5"} />
+          {t.location}
         </div>
       </div>
 
       {/* Tagline */}
-      <div className={`${s.padX} mt-${isLg ? 3 : 1.5} text-center`}>
-        <div className={`font-display font-semibold ${s.tagline} leading-snug ${isLg ? "" : "line-clamp-2"}`}>
+      <div className={`${isLg ? "px-5 mt-3" : "px-3 mt-1.5"} text-center`}>
+        <div className={`font-display font-semibold ${isLg ? "text-sm" : "text-[8px]"} leading-snug ${isLg ? "" : "line-clamp-2"}`}>
           "{t.tagline}"
         </div>
         {isLg && (
-          <p className="mt-2 text-xs opacity-70 leading-relaxed">{t.bio}</p>
+          <p className="mt-2 text-xs opacity-70 leading-relaxed line-clamp-3">{t.bio}</p>
         )}
       </div>
 
       {/* Quick actions */}
-      <div className={`${s.padX} mt-${isLg ? 4 : 2} flex justify-center gap-${isLg ? 2 : 1}`}>
+      <div className={`${isLg ? "px-5 mt-4 gap-2" : "px-3 mt-2 gap-1"} flex justify-center`}>
         {[
           { icon: Phone, label: "Appeler" },
           { icon: Mail, label: "Email" },
@@ -636,26 +650,26 @@ function CardPreview({ t, size = "sm" }: { t: Template; size?: "sm" | "lg" }) {
         ].map(({ icon: I, label }) => (
           <div
             key={label}
-            className={`${s.actionBtn} rounded-full flex items-center justify-center`}
+            className={`${isLg ? "w-10 h-10" : "w-5 h-5"} rounded-full flex items-center justify-center`}
             style={{ background: subtleBg, color: t.palette.fg }}
             title={label}
           >
-            <I className={s.actionIcon} />
+            <I className={isLg ? "w-4 h-4" : "w-2 h-2"} />
           </div>
         ))}
       </div>
 
       {/* Socials */}
       {t.socials.length > 0 && (
-        <div className={`${s.padX} mt-${isLg ? 3 : 1.5} flex justify-center gap-${isLg ? 2 : 1} flex-wrap`}>
+        <div className={`${isLg ? "px-5 mt-3 gap-2" : "px-3 mt-1.5 gap-1"} flex justify-center flex-wrap`}>
           {t.socials.map((soc) => (
             <div
               key={soc}
-              className={`${s.social} rounded-full flex items-center justify-center`}
+              className={`${isLg ? "w-9 h-9" : "w-5 h-5"} rounded-full flex items-center justify-center`}
               style={{ background: t.palette.accent, color: contrastText(t.palette.accent) }}
               title={soc}
             >
-              <SocialIcon type={soc} className={s.socialIcon} />
+              <SocialIcon type={soc} className={isLg ? "w-4 h-4" : "w-2.5 h-2.5"} />
             </div>
           ))}
         </div>
@@ -663,34 +677,30 @@ function CardPreview({ t, size = "sm" }: { t: Template; size?: "sm" | "lg" }) {
 
       {/* Info rows (lg only) */}
       {isLg && (
-        <div className={`${s.padX} mt-4 ${s.gapY}`}>
+        <div className="px-5 mt-4 space-y-2">
           <InfoRow icon={Globe} label={t.website} muted={mutedFg} accent={t.palette.accent} />
           <InfoRow icon={Phone} label={t.phone} muted={mutedFg} accent={t.palette.accent} />
           <InfoRow icon={Mail} label={t.email} muted={mutedFg} accent={t.palette.accent} />
-          <InfoRow icon={MapPin} label={t.location} muted={mutedFg} accent={t.palette.accent} />
         </div>
       )}
 
       <div className="flex-1" />
 
-      {/* Divider before CTA on sm */}
-      {!isLg && <div className="mx-3 my-1.5 h-px" style={{ background: dividerColor }} />}
-
       {/* CTA */}
-      <div className={`${s.padX} mt-${isLg ? 4 : 0}`}>
+      <div className={`${isLg ? "px-5 mt-4" : "px-3 mt-2"}`}>
         <div
-          className={`rounded-full text-center font-semibold ${s.cta} flex items-center justify-center gap-1.5`}
+          className={`rounded-full text-center font-semibold flex items-center justify-center gap-1.5 ${isLg ? "py-3 text-sm" : "py-1.5 text-[8px]"}`}
           style={{ background: t.palette.accent, color: contrastText(t.palette.accent) }}
         >
-          <Check className={s.icon} />
+          <Check className={isLg ? "w-4 h-4" : "w-2 h-2"} />
           {ctaLabel}
         </div>
 
         <div
-          className={`mt-${isLg ? 2 : 1} rounded-full text-center font-medium ${isLg ? "py-2 text-xs" : "py-1 text-[7px]"} border flex items-center justify-center gap-1.5`}
+          className={`rounded-full text-center font-medium border flex items-center justify-center gap-1.5 ${isLg ? "mt-2 py-2 text-xs" : "mt-1 py-1 text-[7px]"}`}
           style={{ borderColor: dividerColor, color: mutedFg }}
         >
-          <Smartphone className={s.icon} />
+          <Smartphone className={isLg ? "w-3.5 h-3.5" : "w-2 h-2"} />
           Ajouter aux contacts
         </div>
       </div>
