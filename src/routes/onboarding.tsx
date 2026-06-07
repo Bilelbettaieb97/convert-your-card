@@ -1,6 +1,8 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState, useEffect, useCallback } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { toast } from "sonner";
+import { Toaster } from "@/components/ui/sonner";
 import {
   Check, ChevronRight, ChevronLeft, Zap, Phone, Mail, Globe,
   Linkedin, Instagram, Twitter, Youtube, MessageCircle, Calendar,
@@ -101,34 +103,41 @@ function OnboardingPage() {
   async function handlePublish() {
     if (!data.nom.trim()) return;
     setSaving(true);
-    const { data: { user } } = await supabase.auth.getUser();
-    if (!user) { navigate({ to: "/connexion" }); return; }
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) { navigate({ to: "/connexion" }); return; }
 
-    let slug = data.slug || toSlug(data.nom);
-    // Auto-resolve slug conflicts
-    const { data: existing } = await supabase.from("nfc_profiles").select("id").eq("slug", slug).maybeSingle();
-    if (existing && existing.id !== profileId) {
-      slug = `${slug}-${Math.floor(Math.random() * 8000) + 1000}`;
+      let slug = data.slug || toSlug(data.nom);
+      const { data: existing } = await supabase.from("nfc_profiles").select("id").eq("slug", slug).maybeSingle();
+      if (existing && existing.id !== profileId) {
+        slug = `${slug}-${Math.floor(Math.random() * 8000) + 1000}`;
+      }
+
+      const payload = {
+        nom: data.nom, fonction: data.fonction, entreprise: data.entreprise,
+        email: data.email, telephone: data.telephone, bio: data.bio, slug,
+        couleur_accent: data.theme,
+        boutons: data.boutons as unknown as Record<string, unknown>[],
+        reseaux: data.reseaux as unknown as Record<string, unknown>[],
+        actif: true, user_id: user.id,
+      };
+
+      if (profileId) {
+        const { error } = await supabase.from("nfc_profiles").update(payload).eq("id", profileId);
+        if (error) throw error;
+      } else {
+        const { error } = await supabase.from("nfc_profiles").insert(payload);
+        if (error) throw error;
+      }
+
+      setCardUrl(`${window.location.origin}/${slug}`);
+      setPublished(true);
+    } catch (err: unknown) {
+      const msg = err instanceof Error ? err.message : "Erreur lors de la publication";
+      toast.error(msg);
+    } finally {
+      setSaving(false);
     }
-
-    const payload = {
-      nom: data.nom, fonction: data.fonction, entreprise: data.entreprise,
-      email: data.email, telephone: data.telephone, bio: data.bio, slug,
-      couleur_accent: data.theme,
-      boutons: data.boutons as unknown as Record<string, unknown>[],
-      reseaux: data.reseaux as unknown as Record<string, unknown>[],
-      actif: true, user_id: user.id,
-    };
-
-    if (profileId) {
-      await supabase.from("nfc_profiles").update(payload).eq("id", profileId);
-    } else {
-      await supabase.from("nfc_profiles").insert(payload);
-    }
-
-    setSaving(false);
-    setCardUrl(`${window.location.origin}/${slug}`);
-    setPublished(true);
   }
 
   if (published && cardUrl) {
@@ -146,6 +155,7 @@ function OnboardingPage() {
 
   return (
     <div className="min-h-screen bg-background flex flex-col">
+      <Toaster />
       <style>{`
         @keyframes float { 0%,100%{transform:translateY(0)} 50%{transform:translateY(-10px)} }
         @keyframes glow  { 0%,100%{opacity:.25;transform:scaleX(1)} 50%{opacity:.1;transform:scaleX(.7)} }
