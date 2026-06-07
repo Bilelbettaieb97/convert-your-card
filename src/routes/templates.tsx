@@ -1,4 +1,4 @@
-import { createFileRoute } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useState } from "react";
 import { Nav, PromoBar, Footer } from "./index";
 import {
@@ -269,19 +269,20 @@ function TemplatesPage() {
             Tous les modèles sont 100 % personnalisables. Choisissez le plus proche, on s'occupe du reste.
           </p>
           <div className="mt-7 flex flex-col sm:flex-row gap-3 justify-center">
-            <a
-              href="/offres"
+            <Link
+              to="/offres"
               className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-foreground text-background font-semibold hover:opacity-90 transition shadow-lg"
             >
               Créer ma carte
               <ArrowRight className="w-4 h-4" />
-            </a>
-            <a
-              href="/#how-it-works"
+            </Link>
+            <Link
+              to="/"
+              hash="fonctionnement"
               className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-card border border-border font-semibold hover:border-foreground/40 transition"
             >
               Voir comment ça marche
-            </a>
+            </Link>
           </div>
         </div>
       </section>
@@ -338,13 +339,13 @@ function TemplateCard({ t }: { t: Template }) {
           </span>
         </div>
 
-        <a
-          href="/offres"
+        <Link
+          to="/offres"
           className="mt-4 inline-flex items-center justify-center gap-2 w-full px-4 py-2.5 rounded-full bg-foreground text-background text-sm font-semibold hover:opacity-90 transition group/btn"
         >
           Utiliser ce modèle
           <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover/btn:translate-x-0.5" />
-        </a>
+        </Link>
       </div>
     </article>
   );
