@@ -17,11 +17,11 @@ type Reseau = { type: string; label: string; url: string; active: boolean };
 type ThemeId = "violet" | "rose" | "bleu" | "vert" | "sombre" | "clair";
 
 const THEMES: { id: ThemeId; label: string; accent: string; bg: string; text: string; gradient: string }[] = [
-  { id: "violet", label: "Violet", accent: "#8B5CF6", bg: "#1a0b2e", text: "#fff", gradient: "linear-gradient(135deg,#6d28d9,#8B5CF6)" },
-  { id: "rose",   label: "Rose",   accent: "#EC4899", bg: "#1a0b1a", text: "#fff", gradient: "linear-gradient(135deg,#be185d,#EC4899)" },
-  { id: "bleu",   label: "Bleu",   accent: "#0EA5E9", bg: "#0a1a2e", text: "#fff", gradient: "linear-gradient(135deg,#0369a1,#0EA5E9)" },
-  { id: "vert",   label: "Vert",   accent: "#10B981", bg: "#0a1f1a", text: "#fff", gradient: "linear-gradient(135deg,#047857,#10B981)" },
-  { id: "sombre", label: "Sombre", accent: "#F59E0B", bg: "#111827", text: "#fff", gradient: "linear-gradient(135deg,#92400e,#F59E0B)" },
+  { id: "violet", label: "Violet", accent: "#8B5CF6", bg: "#1a0b2e", text: "#ffffff", gradient: "linear-gradient(135deg,#6d28d9,#8B5CF6)" },
+  { id: "rose",   label: "Rose",   accent: "#EC4899", bg: "#1a0b1a", text: "#ffffff", gradient: "linear-gradient(135deg,#be185d,#EC4899)" },
+  { id: "bleu",   label: "Bleu",   accent: "#0EA5E9", bg: "#0a1a2e", text: "#ffffff", gradient: "linear-gradient(135deg,#0369a1,#0EA5E9)" },
+  { id: "vert",   label: "Vert",   accent: "#10B981", bg: "#0a1f1a", text: "#ffffff", gradient: "linear-gradient(135deg,#047857,#10B981)" },
+  { id: "sombre", label: "Sombre", accent: "#F59E0B", bg: "#111827", text: "#ffffff", gradient: "linear-gradient(135deg,#92400e,#F59E0B)" },
   { id: "clair",  label: "Clair",  accent: "#6366F1", bg: "#f8f9fa", text: "#111827", gradient: "linear-gradient(135deg,#4338ca,#6366F1)" },
 ];
 

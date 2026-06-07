@@ -22,11 +22,11 @@ type OData = {
 };
 
 const THEMES: { id: ThemeId; label: string; accent: string; bg: string; text: string; gradient: string }[] = [
-  { id: "violet", label: "Violet", accent: "#8B5CF6", bg: "#1a0b2e", text: "#fff", gradient: "linear-gradient(135deg,#6d28d9,#8B5CF6)" },
-  { id: "rose",   label: "Rose",   accent: "#EC4899", bg: "#1a0b1a", text: "#fff", gradient: "linear-gradient(135deg,#be185d,#EC4899)" },
-  { id: "bleu",   label: "Bleu",   accent: "#0EA5E9", bg: "#0a1a2e", text: "#fff", gradient: "linear-gradient(135deg,#0369a1,#0EA5E9)" },
-  { id: "vert",   label: "Vert",   accent: "#10B981", bg: "#0a1f1a", text: "#fff", gradient: "linear-gradient(135deg,#047857,#10B981)" },
-  { id: "sombre", label: "Sombre", accent: "#F59E0B", bg: "#111827", text: "#fff", gradient: "linear-gradient(135deg,#92400e,#F59E0B)" },
+  { id: "violet", label: "Violet", accent: "#8B5CF6", bg: "#1a0b2e", text: "#ffffff", gradient: "linear-gradient(135deg,#6d28d9,#8B5CF6)" },
+  { id: "rose",   label: "Rose",   accent: "#EC4899", bg: "#1a0b1a", text: "#ffffff", gradient: "linear-gradient(135deg,#be185d,#EC4899)" },
+  { id: "bleu",   label: "Bleu",   accent: "#0EA5E9", bg: "#0a1a2e", text: "#ffffff", gradient: "linear-gradient(135deg,#0369a1,#0EA5E9)" },
+  { id: "vert",   label: "Vert",   accent: "#10B981", bg: "#0a1f1a", text: "#ffffff", gradient: "linear-gradient(135deg,#047857,#10B981)" },
+  { id: "sombre", label: "Sombre", accent: "#F59E0B", bg: "#111827", text: "#ffffff", gradient: "linear-gradient(135deg,#92400e,#F59E0B)" },
   { id: "clair",  label: "Clair",  accent: "#6366F1", bg: "#ffffff", text: "#111827", gradient: "linear-gradient(135deg,#4338ca,#6366F1)" },
 ];
 
@@ -366,12 +366,28 @@ function OnboardingPage() {
                   <div className="grid grid-cols-2 gap-3">
                     <div>
                       <label className="block text-xs font-medium text-muted-foreground mb-1.5">Téléphone</label>
-                      <input type="tel" value={data.telephone} onChange={(e) => upd("telephone", e.target.value)} placeholder="+33 6 12 34 56 78"
+                      <input type="tel" value={data.telephone}
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          setData((prev) => ({
+                            ...prev, telephone: val,
+                            boutons: prev.boutons.map((b) => b.type === "telephone" ? { ...b, value: val, active: true } : b),
+                          }));
+                        }}
+                        placeholder="+33 6 12 34 56 78"
                         className="w-full rounded-xl border border-border bg-background px-3 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-magenta/30 focus:border-magenta transition" />
                     </div>
                     <div>
                       <label className="block text-xs font-medium text-muted-foreground mb-1.5">Email</label>
-                      <input type="email" value={data.email} onChange={(e) => upd("email", e.target.value)} placeholder="vous@exemple.com"
+                      <input type="email" value={data.email}
+                        onChange={(e) => {
+                          const val = e.target.value;
+                          setData((prev) => ({
+                            ...prev, email: val,
+                            boutons: prev.boutons.map((b) => b.type === "email" ? { ...b, value: val, active: true } : b),
+                          }));
+                        }}
+                        placeholder="vous@exemple.com"
                         className="w-full rounded-xl border border-border bg-background px-3 py-2.5 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-magenta/30 focus:border-magenta transition" />
                     </div>
                   </div>
