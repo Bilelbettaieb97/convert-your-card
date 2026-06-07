@@ -94,6 +94,7 @@ function ConnexionPage() {
         }
       >
         {step === "email" ? (
+          <>
           <form onSubmit={handleEmailSubmit} className="space-y-4">
             <div>
               <label htmlFor="email" className="block text-sm font-medium text-foreground mb-1.5">
@@ -139,6 +140,7 @@ function ConnexionPage() {
             </svg>
             Continuer avec Google
           </button>
+          </>
         ) : (
           <OtpStep
             email={email}
