@@ -216,7 +216,7 @@ function Hero() {
         </div>
 
         <div className="relative">
-          <DigitalCardVisual />
+          <HeroCards />
         </div>
       </div>
     </section>
