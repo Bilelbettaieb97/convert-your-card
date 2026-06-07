@@ -511,6 +511,15 @@ function HowItWorks() {
           <p className="mt-3 text-base sm:text-lg text-muted-foreground">
             Immobilier, coaching, restaurant, beauté, artisanat… chaque profil a son univers, son ton, ses appels à l'action.
           </p>
+          <div className="mt-6">
+            <Link
+              to="/templates"
+              className="inline-flex items-center justify-center gap-2 px-6 py-3 rounded-full bg-foreground text-background text-sm font-semibold hover:opacity-90 transition"
+            >
+              Voir tous les modèles
+              <ArrowRight className="w-4 h-4" />
+            </Link>
+          </div>
         </div>
 
         <div className="mt-8 lg:mt-10 grid grid-cols-1 lg:grid-cols-[1.05fr_0.95fr] gap-10 lg:gap-14 lg:items-center">
