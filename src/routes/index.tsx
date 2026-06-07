@@ -7,6 +7,7 @@ import {
   Building2, Home, UtensilsCrossed, GraduationCap, Scissors, HardHat,
 } from "lucide-react";
 import { DigitalCardVisual } from "@/components/landing/DigitalCardVisual";
+import { HeroCards } from "@/components/landing/HeroCards";
 import { Countdown } from "@/components/landing/Countdown";
 import { VideoTestimonials } from "@/components/landing/VideoTestimonials";
 import { LiveActivity, ExitIntent, GuaranteeBlock, StructuredData } from "@/components/landing/CroEnhancements";
