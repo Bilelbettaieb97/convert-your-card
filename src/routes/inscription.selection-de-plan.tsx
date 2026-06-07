@@ -110,7 +110,7 @@ function PlanSelectionPage() {
 
   function handleSelect(planId: PlanId) {
     if (planId === "free") {
-      navigate({ to: "/dashboard" });
+      navigate({ to: "/onboarding" });
       return;
     }
     navigate({
