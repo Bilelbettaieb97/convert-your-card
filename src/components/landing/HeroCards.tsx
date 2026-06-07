@@ -84,17 +84,17 @@ export function HeroCards() {
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-gradient-brand opacity-20 blur-[100px] rounded-full pointer-events-none" />
 
       {/* Left card */}
-      <div className="absolute left-0 sm:left-4 bottom-0 z-10 transform scale-[0.62] sm:scale-[0.68] origin-bottom-right -rotate-[10deg] translate-x-4 sm:translate-x-0 opacity-90">
+      <div className="absolute left-[-40px] sm:left-[-20px] bottom-0 z-10 transform scale-[0.72] sm:scale-[0.78] origin-bottom-right -rotate-[8deg] opacity-95">
         <PhoneFrame t={LEFT} />
       </div>
 
       {/* Right card */}
-      <div className="absolute right-0 sm:right-4 bottom-0 z-10 transform scale-[0.62] sm:scale-[0.68] origin-bottom-left rotate-[10deg] -translate-x-4 sm:translate-x-0 opacity-90">
+      <div className="absolute right-[-40px] sm:right-[-20px] bottom-0 z-10 transform scale-[0.72] sm:scale-[0.78] origin-bottom-left rotate-[8deg] opacity-95">
         <PhoneFrame t={RIGHT} />
       </div>
 
       {/* Center card */}
-      <div className="relative z-20 transform scale-100">
+      <div className="relative z-20 transform scale-[0.92] sm:scale-100">
         <PhoneFrame t={CENTER} size="lg" />
       </div>
     </div>
