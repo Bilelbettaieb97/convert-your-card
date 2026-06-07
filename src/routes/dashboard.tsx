@@ -25,9 +25,15 @@ function DashboardLayout() {
   const currentPath = routerState.location.pathname;
 
   useEffect(() => {
-    supabase.auth.getSession().then(({ data: { session } }) => {
+    supabase.auth.getSession().then(async ({ data: { session } }) => {
       if (!session) { navigate({ to: "/connexion", replace: true }); return; }
       setUserEmail(session.user.email ?? null);
+      const { data: profile } = await supabase
+        .from("nfc_profiles")
+        .select("id")
+        .eq("user_id", session.user.id)
+        .maybeSingle();
+      if (!profile) { navigate({ to: "/onboarding", replace: true }); return; }
       setLoading(false);
     });
   }, [navigate]);

@@ -37,7 +37,7 @@ function ConnexionPage() {
     }
     setSubmitting(true);
     try {
-      const { error } = await supabase.auth.signInWithPassword({
+      const { data: authData, error } = await supabase.auth.signInWithPassword({
         email: parsed.data.email,
         password: parsed.data.password,
       });
@@ -45,7 +45,12 @@ function ConnexionPage() {
         toast.error("Email ou mot de passe incorrect");
         return;
       }
-      navigate({ to: "/dashboard" });
+      const { data: profile } = await supabase
+        .from("nfc_profiles")
+        .select("id")
+        .eq("user_id", authData.user.id)
+        .maybeSingle();
+      navigate({ to: profile ? "/dashboard" : "/onboarding" });
     } catch {
       toast.error("Une erreur est survenue");
     } finally {
