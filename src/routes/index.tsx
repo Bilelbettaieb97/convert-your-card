@@ -7,6 +7,7 @@ import {
   Building2, Home, UtensilsCrossed, GraduationCap, Scissors, HardHat,
 } from "lucide-react";
 import { DigitalCardVisual } from "@/components/landing/DigitalCardVisual";
+import { HeroCards } from "@/components/landing/HeroCards";
 import { Countdown } from "@/components/landing/Countdown";
 import { VideoTestimonials } from "@/components/landing/VideoTestimonials";
 import { LiveActivity, ExitIntent, GuaranteeBlock, StructuredData } from "@/components/landing/CroEnhancements";
@@ -148,7 +149,7 @@ function HeroCTA() {
 
 function Hero() {
   return (
-    <section className="relative overflow-hidden bg-gradient-soft">
+    <section className="relative bg-gradient-soft">
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_color-mix(in_oklab,var(--magenta)_25%,transparent),transparent_60%)]" />
       <div className="relative max-w-7xl mx-auto px-4 pt-12 pb-20 lg:pt-20 lg:pb-28 grid lg:grid-cols-2 gap-12 items-center">
         <div>
@@ -215,7 +216,7 @@ function Hero() {
         </div>
 
         <div className="relative">
-          <DigitalCardVisual />
+          <HeroCards />
         </div>
       </div>
     </section>
