@@ -20,13 +20,15 @@ import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as SlugRouteImport } from './routes/$slug'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as DashboardIndexRouteImport } from './routes/dashboard/index'
+import { Route as DashboardCarteRouteImport } from './routes/dashboard/carte'
+import { Route as DashboardStatistiquesRouteImport } from './routes/dashboard/statistiques'
+import { Route as DashboardModelesRouteImport } from './routes/dashboard/modeles'
+import { Route as DashboardAbonnementRouteImport } from './routes/dashboard/abonnement'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as InscriptionSelectionDePlanRouteImport } from './routes/inscription.selection-de-plan'
 import { Route as InscriptionIndexRouteImport } from './routes/inscription.index'
 import { Route as InscriptionCartePhysiqueRouteImport } from './routes/inscription.carte-physique'
 import { Route as InscriptionOffrePlanRouteImport } from './routes/inscription.offre.$plan'
-import { Route as DashboardProfilRouteImport } from './routes/dashboard/profil'
-import { Route as DashboardAbonnementRouteImport } from './routes/dashboard/abonnement'
 
 const TemplatesRoute = TemplatesRouteImport.update({
   id: '/templates',
@@ -83,6 +85,26 @@ const DashboardIndexRoute = DashboardIndexRouteImport.update({
   path: '/',
   getParentRoute: () => DashboardRoute,
 } as any)
+const DashboardCarteRoute = DashboardCarteRouteImport.update({
+  id: '/carte',
+  path: '/carte',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardStatistiquesRoute = DashboardStatistiquesRouteImport.update({
+  id: '/statistiques',
+  path: '/statistiques',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardModelesRoute = DashboardModelesRouteImport.update({
+  id: '/modeles',
+  path: '/modeles',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardAbonnementRoute = DashboardAbonnementRouteImport.update({
+  id: '/abonnement',
+  path: '/abonnement',
+  getParentRoute: () => DashboardRoute,
+} as any)
 const AdminIndexRoute = AdminIndexRouteImport.update({
   id: '/admin/',
   path: '/admin/',
@@ -110,16 +132,6 @@ const InscriptionCartePhysiqueRoute =
     path: '/carte-physique',
     getParentRoute: () => InscriptionRoute,
   } as any)
-const DashboardProfilRoute = DashboardProfilRouteImport.update({
-  id: '/profil',
-  path: '/profil',
-  getParentRoute: () => DashboardRoute,
-} as any)
-const DashboardAbonnementRoute = DashboardAbonnementRouteImport.update({
-  id: '/abonnement',
-  path: '/abonnement',
-  getParentRoute: () => DashboardRoute,
-} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
@@ -133,7 +145,9 @@ export interface FileRoutesByFullPath {
   '/offres': typeof OffresRoute
   '/templates': typeof TemplatesRoute
   '/dashboard/abonnement': typeof DashboardAbonnementRoute
-  '/dashboard/profil': typeof DashboardProfilRoute
+  '/dashboard/carte': typeof DashboardCarteRoute
+  '/dashboard/statistiques': typeof DashboardStatistiquesRoute
+  '/dashboard/modeles': typeof DashboardModelesRoute
   '/inscription/carte-physique': typeof InscriptionCartePhysiqueRoute
   '/inscription/selection-de-plan': typeof InscriptionSelectionDePlanRoute
   '/inscription/': typeof InscriptionIndexRoute
@@ -152,7 +166,9 @@ export interface FileRoutesByTo {
   '/offres': typeof OffresRoute
   '/templates': typeof TemplatesRoute
   '/dashboard/abonnement': typeof DashboardAbonnementRoute
-  '/dashboard/profil': typeof DashboardProfilRoute
+  '/dashboard/carte': typeof DashboardCarteRoute
+  '/dashboard/statistiques': typeof DashboardStatistiquesRoute
+  '/dashboard/modeles': typeof DashboardModelesRoute
   '/inscription/carte-physique': typeof InscriptionCartePhysiqueRoute
   '/inscription/selection-de-plan': typeof InscriptionSelectionDePlanRoute
   '/inscription': typeof InscriptionIndexRoute
@@ -173,7 +189,9 @@ export interface FileRoutesById {
   '/offres': typeof OffresRoute
   '/templates': typeof TemplatesRoute
   '/dashboard/abonnement': typeof DashboardAbonnementRoute
-  '/dashboard/profil': typeof DashboardProfilRoute
+  '/dashboard/carte': typeof DashboardCarteRoute
+  '/dashboard/statistiques': typeof DashboardStatistiquesRoute
+  '/dashboard/modeles': typeof DashboardModelesRoute
   '/inscription/carte-physique': typeof InscriptionCartePhysiqueRoute
   '/inscription/selection-de-plan': typeof InscriptionSelectionDePlanRoute
   '/inscription/': typeof InscriptionIndexRoute
@@ -195,7 +213,9 @@ export interface FileRouteTypes {
     | '/offres'
     | '/templates'
     | '/dashboard/abonnement'
-    | '/dashboard/profil'
+    | '/dashboard/carte'
+    | '/dashboard/statistiques'
+    | '/dashboard/modeles'
     | '/inscription/carte-physique'
     | '/inscription/selection-de-plan'
     | '/inscription/'
@@ -214,7 +234,9 @@ export interface FileRouteTypes {
     | '/offres'
     | '/templates'
     | '/dashboard/abonnement'
-    | '/dashboard/profil'
+    | '/dashboard/carte'
+    | '/dashboard/statistiques'
+    | '/dashboard/modeles'
     | '/inscription/carte-physique'
     | '/inscription/selection-de-plan'
     | '/inscription/offre/$plan'
@@ -234,7 +256,9 @@ export interface FileRouteTypes {
     | '/offres'
     | '/templates'
     | '/dashboard/abonnement'
-    | '/dashboard/profil'
+    | '/dashboard/carte'
+    | '/dashboard/statistiques'
+    | '/dashboard/modeles'
     | '/inscription/carte-physique'
     | '/inscription/selection-de-plan'
     | '/inscription/'
@@ -336,6 +360,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardIndexRouteImport
       parentRoute: typeof DashboardRoute
     }
+    '/dashboard/carte': {
+      id: '/dashboard/carte'
+      path: '/carte'
+      fullPath: '/dashboard/carte'
+      preLoaderRoute: typeof DashboardCarteRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/statistiques': {
+      id: '/dashboard/statistiques'
+      path: '/statistiques'
+      fullPath: '/dashboard/statistiques'
+      preLoaderRoute: typeof DashboardStatistiquesRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/modeles': {
+      id: '/dashboard/modeles'
+      path: '/modeles'
+      fullPath: '/dashboard/modeles'
+      preLoaderRoute: typeof DashboardModelesRouteImport
+      parentRoute: typeof DashboardRoute
+    }
     '/admin/': {
       id: '/admin/'
       path: '/admin'
@@ -371,13 +416,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof InscriptionOffrePlanRouteImport
       parentRoute: typeof InscriptionRoute
     }
-    '/dashboard/profil': {
-      id: '/dashboard/profil'
-      path: '/profil'
-      fullPath: '/dashboard/profil'
-      preLoaderRoute: typeof DashboardProfilRouteImport
-      parentRoute: typeof DashboardRoute
-    }
     '/dashboard/abonnement': {
       id: '/dashboard/abonnement'
       path: '/abonnement'
@@ -390,13 +428,17 @@ declare module '@tanstack/react-router' {
 
 interface DashboardRouteChildren {
   DashboardAbonnementRoute: typeof DashboardAbonnementRoute
-  DashboardProfilRoute: typeof DashboardProfilRoute
+  DashboardCarteRoute: typeof DashboardCarteRoute
+  DashboardStatistiquesRoute: typeof DashboardStatistiquesRoute
+  DashboardModelesRoute: typeof DashboardModelesRoute
   DashboardIndexRoute: typeof DashboardIndexRoute
 }
 
 const DashboardRouteChildren: DashboardRouteChildren = {
   DashboardAbonnementRoute: DashboardAbonnementRoute,
-  DashboardProfilRoute: DashboardProfilRoute,
+  DashboardCarteRoute: DashboardCarteRoute,
+  DashboardStatistiquesRoute: DashboardStatistiquesRoute,
+  DashboardModelesRoute: DashboardModelesRoute,
   DashboardIndexRoute: DashboardIndexRoute,
 }
 
