@@ -14,6 +14,10 @@ export default defineConfig({
         middleware: true,
         handler: "./server/middleware/stripe-webhook",
       },
+      {
+        middleware: true,
+        handler: "./server/middleware/magic-link",
+      },
     ],
   },
   tanstackStart: {

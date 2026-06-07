@@ -43,15 +43,15 @@ function InscriptionPage() {
 
   async function sendOtp(targetEmail: string) {
     const redirectTo = (typeof window !== "undefined" ? window.location.origin : "https://convert-your-card.vercel.app") + "/inscription/selection-de-plan";
-    const { error } = await supabase.auth.signInWithOtp({
-      email: targetEmail,
-      options: {
-        shouldCreateUser: true,
-        data: { marketing_opt_in: optIn },
-        emailRedirectTo: redirectTo,
-      },
+    const res = await fetch("/api/send-magic-link", {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ email: targetEmail, redirectTo, createUser: true, userData: { marketing_opt_in: optIn } }),
     });
-    if (error) throw error;
+    if (!res.ok) {
+      const data = await res.json().catch(() => ({}));
+      throw new Error(data.error ?? "Impossible d'envoyer le lien");
+    }
   }
 
   async function handleEmailSubmit(e: React.FormEvent) {
