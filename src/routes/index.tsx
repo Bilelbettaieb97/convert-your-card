@@ -41,6 +41,7 @@ function Landing() {
       <PromoBar />
       <Nav />
       <Hero />
+      <TrustBar />
       <Logos />
       <Problem />
       <HowItWorks />
@@ -217,6 +218,112 @@ function Hero() {
 
         <div className="relative">
           <HeroCards />
+        </div>
+      </div>
+    </section>
+  );
+}
+
+/* ────────────────────────────  TRUST BAR  ──────────────────────────── */
+
+function TrustBar() {
+  const reviews = [
+    {
+      name: "Sarah L.",
+      role: "Coiffeuse à Lyon",
+      avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=100&h=100&fit=crop&crop=faces&auto=format&q=80",
+      text: "Mes clients adorent. Un simple tap et ils ont tout.",
+    },
+    {
+      name: "Karim B.",
+      role: "Consultant IT à Paris",
+      avatar: "https://images.unsplash.com/photo-1500648767791-00dcc994a43e?w=100&h=100&fit=crop&crop=faces&auto=format&q=80",
+      text: "J'ai arrêté les cartes papier. C'est 100x plus pro.",
+    },
+    {
+      name: "Élodie M.",
+      role: "Photographe à Bordeaux",
+      avatar: "https://images.unsplash.com/photo-1494790108377-be9c29b29330?w=100&h=100&fit=crop&crop=faces&auto=format&q=80",
+      text: "Design impeccable, facile à modifier. Je recommande.",
+    },
+  ];
+
+  return (
+    <section className="border-y border-border bg-card">
+      <div className="max-w-7xl mx-auto px-4 py-8 lg:py-10">
+        {/* Top row — rating + security */}
+        <div className="flex flex-col lg:flex-row items-center justify-between gap-6 lg:gap-10">
+          {/* Rating block */}
+          <div className="flex items-center gap-4">
+            <div className="flex items-center gap-1.5">
+              {[...Array(5)].map((_, i) => (
+                <Star key={i} className="w-5 h-5 fill-amber-400 text-amber-400" />
+              ))}
+            </div>
+            <div>
+              <div className="flex items-baseline gap-1.5">
+                <span className="font-display font-bold text-xl">4.8</span>
+                <span className="text-sm text-muted-foreground">/ 5</span>
+              </div>
+              <p className="text-xs text-muted-foreground">Basé sur <span className="font-semibold text-foreground">+2 400 avis</span> vérifiés</p>
+            </div>
+          </div>
+
+          {/* Security badges */}
+          <div className="flex flex-wrap items-center justify-center gap-x-6 gap-y-2 text-sm text-muted-foreground">
+            <span className="flex items-center gap-2">
+              <span className="w-8 h-8 rounded-lg bg-success/10 flex items-center justify-center">
+                <Shield className="w-4 h-4 text-success" />
+              </span>
+              <span className="hidden sm:inline">Paiement sécurisé</span>
+            </span>
+            <span className="flex items-center gap-2">
+              <span className="w-8 h-8 rounded-lg bg-primary/10 flex items-center justify-center">
+                <CreditCard className="w-4 h-4 text-primary" />
+              </span>
+              <span className="hidden sm:inline">CB & PayPal</span>
+            </span>
+            <span className="flex items-center gap-2">
+              <span className="w-8 h-8 rounded-lg bg-magenta/10 flex items-center justify-center">
+                <BadgeCheck className="w-4 h-4 text-magenta" />
+              </span>
+              <span className="hidden sm:inline">RGPD conforme</span>
+            </span>
+            <span className="flex items-center gap-2">
+              <span className="w-8 h-8 rounded-lg bg-amber-500/10 flex items-center justify-center">
+                <Award className="w-4 h-4 text-amber-500" />
+              </span>
+              <span className="hidden sm:inline">Garantie 30 jours</span>
+            </span>
+          </div>
+        </div>
+
+        {/* Review cards */}
+        <div className="mt-8 grid sm:grid-cols-3 gap-4">
+          {reviews.map((r) => (
+            <div key={r.name} className="bg-background border border-border rounded-2xl p-4 flex items-start gap-3 shadow-sm">
+              <img src={r.avatar} alt={r.name} className="w-10 h-10 rounded-full object-cover shrink-0" loading="lazy" />
+              <div>
+                <div className="flex items-center gap-1.5">
+                  <span className="font-semibold text-sm">{r.name}</span>
+                  <BadgeCheck className="w-3.5 h-3.5 text-primary" />
+                </div>
+                <p className="text-[11px] text-muted-foreground">{r.role}</p>
+                <p className="mt-1.5 text-sm leading-snug">"{r.text}"</p>
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {/* Guarantee strip */}
+        <div className="mt-6 flex flex-col sm:flex-row items-center justify-center gap-3 text-center sm:text-left bg-gradient-to-r from-success/5 to-primary/5 rounded-2xl border border-success/20 px-5 py-3.5">
+          <div className="w-10 h-10 rounded-full bg-success/10 flex items-center justify-center shrink-0">
+            <Check className="w-5 h-5 text-success" strokeWidth={3} />
+          </div>
+          <div>
+            <p className="font-semibold text-sm">Satisfait ou remboursé pendant 30 jours</p>
+            <p className="text-xs text-muted-foreground">Si votre carte ne vous convient pas, on vous rembourse. Sans question.</p>
+          </div>
         </div>
       </div>
     </section>
