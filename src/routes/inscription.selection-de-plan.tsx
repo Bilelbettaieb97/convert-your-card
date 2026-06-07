@@ -1,5 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
+import { useState, useEffect } from "react";
+import { loadStripe } from "@stripe/stripe-js";
 import { Check, Clock } from "lucide-react";
 import { PromoBar, Nav, Footer } from "./index";
 
@@ -136,6 +137,12 @@ const PLANS: Plan[] = [
 function PlanSelectionPage() {
   const navigate = useNavigate();
   const [billing, setBilling] = useState<BillingCycle>("monthly");
+
+  // Précharger Stripe.js en arrière-plan pendant que l'utilisateur lit les offres
+  useEffect(() => {
+    const pk = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY;
+    if (pk && !pk.includes("FILL_IN")) loadStripe(pk);
+  }, []);
 
   function handleSelect(planId: PlanId) {
     if (planId === "free") {

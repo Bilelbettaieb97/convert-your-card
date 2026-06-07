@@ -56,6 +56,7 @@ function InscriptionPage() {
           toast.error("Ce compte existe déjà. Va sur la page connexion.");
           return;
         }
+        sessionStorage.setItem("onetap_email", parsed.data.email);
         navigate({ to: "/inscription/selection-de-plan" });
         return;
       }
@@ -75,6 +76,7 @@ function InscriptionPage() {
         return;
       }
 
+      sessionStorage.setItem("onetap_email", parsed.data.email);
       navigate({ to: "/inscription/selection-de-plan" });
     } catch {
       toast.error("Une erreur est survenue");

@@ -159,14 +159,21 @@ function OffrePage() {
   const planData = PLANS[planId];
 
   const [billing, setBilling] = useState<"monthly" | "annual">(initialBilling);
-  const [userEmail, setUserEmail] = useState<string | null>(null);
+  // Read from sessionStorage instantly (set during signup), fallback to Supabase
+  const [userEmail, setUserEmail] = useState<string | null>(
+    typeof window !== "undefined" ? sessionStorage.getItem("onetap_email") : null
+  );
   const [checkoutKey, setCheckoutKey] = useState(0);
 
   useEffect(() => {
+    if (userEmail) return; // already have it from sessionStorage
     supabase.auth.getUser().then(({ data: { user } }) => {
-      if (user?.email) setUserEmail(user.email);
+      if (user?.email) {
+        sessionStorage.setItem("onetap_email", user.email);
+        setUserEmail(user.email);
+      }
     });
-  }, []);
+  }, [userEmail]);
 
   if (!planData) {
     return (
