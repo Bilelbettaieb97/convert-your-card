@@ -103,8 +103,8 @@ export function InfoRow({
   );
 }
 
-export function CardPreview({ t, size = "sm" }: { t: Template; size?: "sm" | "lg" }) {
-  const ctaLabel = "Me contacter";
+export function CardPreview({ t, size = "sm", ctaLabel }: { t: Template; size?: "sm" | "lg"; ctaLabel?: string }) {
+  const finalCta = ctaLabel ?? "Me contacter";
   const isLight = isLightBg(t.palette.bg);
   const mutedFg = isLight ? "rgba(0,0,0,0.6)" : "rgba(255,255,255,0.7)";
   const subtleBg = isLight ? "rgba(0,0,0,0.05)" : "rgba(255,255,255,0.08)";
