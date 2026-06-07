@@ -1,4 +1,9 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { useState } from "react";
+import { toast } from "sonner";
+import { Toaster } from "@/components/ui/sonner";
+import { supabase } from "@/integrations/supabase/client";
+import { createCheckoutSession } from "@/fns/checkout";
 import { Check, Sparkles, Zap, Crown } from "lucide-react";
 
 export const Route = createFileRoute("/inscription/selection-de-plan")({
@@ -89,38 +94,101 @@ const PLANS: Plan[] = [
 ];
 
 function PlanSelectionPage() {
+  const [billing, setBilling] = useState<"monthly" | "annual">("monthly");
+  const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
+
+  async function handleSelectPlan(planId: "starter" | "pro" | "premium") {
+    setLoadingPlan(planId);
+    try {
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user?.email) {
+        toast.error("Tu dois être connecté pour choisir un plan.");
+        return;
+      }
+
+      const result = await createCheckoutSession({ data: { plan: planId, billing, email: user.email } });
+      if (!result?.url) {
+        toast.error("Impossible de créer la session de paiement.");
+        return;
+      }
+
+      window.location.href = result.url;
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Une erreur est survenue");
+    } finally {
+      setLoadingPlan(null);
+    }
+  }
+
   return (
-    <main className="min-h-screen bg-background">
-      <div className="mx-auto max-w-6xl px-4 py-12 sm:py-16 lg:py-20">
-        <div className="text-center mb-12 sm:mb-16 animate-fade-in">
-          <Link to="/" className="inline-block mb-6">
-            <span className="text-2xl font-bold bg-gradient-cta bg-clip-text text-transparent">OneTap</span>
-          </Link>
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground tracking-tight">
-            Trouve le forfait qu'il te faut
-          </h1>
-          <p className="mt-4 text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto">
-            Compare en quelques secondes et lance ta carte digitale dès aujourd'hui. Annulable à tout moment.
+    <>
+      <Toaster />
+      <main className="min-h-screen bg-background">
+        <div className="mx-auto max-w-6xl px-4 py-12 sm:py-16 lg:py-20">
+          <div className="text-center mb-12 sm:mb-16 animate-fade-in">
+            <Link to="/" className="inline-block mb-6">
+              <span className="text-2xl font-bold bg-gradient-cta bg-clip-text text-transparent">OneTap</span>
+            </Link>
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground tracking-tight">
+              Trouve le forfait qu'il te faut
+            </h1>
+            <p className="mt-4 text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto">
+              Compare en quelques secondes et lance ta carte digitale dès aujourd'hui. Annulable à tout moment.
+            </p>
+
+            {/* Billing toggle */}
+            <div className="mt-8 inline-flex items-center rounded-full border border-border p-1 gap-1 bg-muted">
+              <button
+                onClick={() => setBilling("monthly")}
+                className={`px-5 py-2 rounded-full text-sm font-semibold transition-all ${billing === "monthly" ? "bg-background shadow-card text-foreground" : "text-muted-foreground"}`}
+              >
+                Mensuel
+              </button>
+              <button
+                onClick={() => setBilling("annual")}
+                className={`px-5 py-2 rounded-full text-sm font-semibold transition-all ${billing === "annual" ? "bg-background shadow-card text-foreground" : "text-muted-foreground"}`}
+              >
+                Annuel <span className="ml-1 text-xs text-emerald-500 font-bold">-25%</span>
+              </button>
+            </div>
+          </div>
+
+          <div className="grid gap-6 lg:gap-8 md:grid-cols-3 items-stretch">
+            {PLANS.map((plan) => (
+              <PlanCard
+                key={plan.id}
+                plan={plan}
+                billing={billing}
+                loading={loadingPlan === plan.id}
+                onSelect={() => handleSelectPlan(plan.id)}
+              />
+            ))}
+          </div>
+
+          <p className="text-center text-xs text-muted-foreground mt-10">
+            Sans engagement · Paiement sécurisé · TVA incluse
           </p>
         </div>
-
-        <div className="grid gap-6 lg:gap-8 md:grid-cols-3 items-stretch">
-          {PLANS.map((plan) => (
-            <PlanCard key={plan.id} plan={plan} />
-          ))}
-        </div>
-
-        <p className="text-center text-xs text-muted-foreground mt-10">
-          Sans engagement · Paiement sécurisé · TVA incluse
-        </p>
-      </div>
-    </main>
+      </main>
+    </>
   );
 }
 
-function PlanCard({ plan }: { plan: Plan }) {
+const ANNUAL_PRICES: Record<Plan["id"], string> = {
+  starter: "4,50\u20AC",
+  pro: "10,50\u20AC",
+  premium: "27\u20AC",
+};
+
+function PlanCard({ plan, billing, loading, onSelect }: {
+  plan: Plan;
+  billing: "monthly" | "annual";
+  loading: boolean;
+  onSelect: () => void;
+}) {
   const Icon = plan.icon;
   const isHighlight = plan.highlight;
+  const displayPrice = billing === "annual" ? ANNUAL_PRICES[plan.id] : plan.price;
 
   return (
     <div
@@ -160,11 +228,16 @@ function PlanCard({ plan }: { plan: Plan }) {
           </span>
         )}
         <div className="flex items-baseline gap-1">
-          <span className="text-4xl sm:text-5xl font-bold tracking-tight">{plan.price}</span>
+          <span className="text-4xl sm:text-5xl font-bold tracking-tight">{displayPrice}</span>
           <span className={["text-sm font-medium", isHighlight ? "text-primary-foreground/80" : "text-muted-foreground"].join(" ")}>
             {plan.priceSuffix}
           </span>
         </div>
+        {billing === "annual" && (
+          <p className={`text-xs mt-1 ${isHighlight ? "text-primary-foreground/60" : "text-muted-foreground"}`}>
+            Factur\u00E9 annuellement
+          </p>
+        )}
       </div>
 
       <div
@@ -178,14 +251,16 @@ function PlanCard({ plan }: { plan: Plan }) {
 
       <button
         type="button"
+        onClick={onSelect}
+        disabled={loading}
         className={[
-          "w-full rounded-full py-3 text-sm font-semibold transition-all mb-6",
+          "w-full rounded-full py-3 text-sm font-semibold transition-all mb-6 disabled:opacity-60",
           isHighlight
             ? "bg-background text-magenta hover:bg-background/90 shadow-card"
             : "bg-foreground text-background hover:opacity-90",
         ].join(" ")}
       >
-        {plan.cta}
+        {loading ? "Chargement\u2026" : plan.cta}
       </button>
 
       <ul className="space-y-3 text-sm">

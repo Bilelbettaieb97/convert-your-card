@@ -7,40 +7,160 @@ export type Json =
   | Json[]
 
 export type Database = {
-  // Allows to automatically instantiate createClient with right options
-  // instead of createClient<Database, { PostgrestVersion: 'XX' }>(URL, KEY)
   __InternalSupabase: {
     PostgrestVersion: "14.5"
   }
   public: {
     Tables: {
-      profiles: {
+      nfc_profiles: {
         Row: {
-          avatar_url: string | null
-          created_at: string
-          display_name: string | null
-          email: string | null
+          actif: boolean | null
+          bio: string | null
+          boutons: Json
+          couleur_accent: string | null
+          created_at: string | null
+          email: string
+          entreprise: string
+          fonction: string
           id: string
-          marketing_opt_in: boolean
-          updated_at: string
+          logo_url: string | null
+          nom: string
+          photo_url: string | null
+          plan: string | null
+          reseaux: Json
+          slug: string
+          telephone: string
+          updated_at: string | null
+          user_id: string | null
         }
         Insert: {
-          avatar_url?: string | null
-          created_at?: string
-          display_name?: string | null
-          email?: string | null
-          id: string
-          marketing_opt_in?: boolean
-          updated_at?: string
+          actif?: boolean | null
+          bio?: string | null
+          boutons?: Json
+          couleur_accent?: string | null
+          created_at?: string | null
+          email?: string
+          entreprise?: string
+          fonction?: string
+          id?: string
+          logo_url?: string | null
+          nom?: string
+          photo_url?: string | null
+          plan?: string | null
+          reseaux?: Json
+          slug: string
+          telephone?: string
+          updated_at?: string | null
+          user_id?: string | null
         }
         Update: {
-          avatar_url?: string | null
-          created_at?: string
-          display_name?: string | null
-          email?: string | null
+          actif?: boolean | null
+          bio?: string | null
+          boutons?: Json
+          couleur_accent?: string | null
+          created_at?: string | null
+          email?: string
+          entreprise?: string
+          fonction?: string
           id?: string
-          marketing_opt_in?: boolean
-          updated_at?: string
+          logo_url?: string | null
+          nom?: string
+          photo_url?: string | null
+          plan?: string | null
+          reseaux?: Json
+          slug?: string
+          telephone?: string
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      nfc_analytics: {
+        Row: {
+          created_at: string | null
+          event_data: Json | null
+          event_type: string
+          id: string
+          profile_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          event_data?: Json | null
+          event_type: string
+          id?: string
+          profile_id: string
+        }
+        Update: {
+          created_at?: string | null
+          event_data?: Json | null
+          event_type?: string
+          id?: string
+          profile_id?: string
+        }
+        Relationships: [
+          {
+            foreignKeyName: "nfc_analytics_profile_id_fkey"
+            columns: ["profile_id"]
+            isOneToOne: false
+            referencedRelation: "nfc_profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      subscriptions: {
+        Row: {
+          created_at: string | null
+          current_period_end: string | null
+          id: string
+          plan: string | null
+          status: string | null
+          stripe_customer_id: string | null
+          stripe_subscription_id: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          current_period_end?: string | null
+          id?: string
+          plan?: string | null
+          status?: string | null
+          stripe_customer_id?: string | null
+          stripe_subscription_id?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          current_period_end?: string | null
+          id?: string
+          plan?: string | null
+          status?: string | null
+          stripe_customer_id?: string | null
+          stripe_subscription_id?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      user_roles: {
+        Row: {
+          created_at: string | null
+          id: string
+          role: string
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          role?: string
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          role?: string
+          user_id?: string | null
         }
         Relationships: []
       }
@@ -49,7 +169,49 @@ export type Database = {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      admin_create_nfc_profile: {
+        Args: {
+          p_bio?: string
+          p_email: string
+          p_entreprise: string
+          p_fonction: string
+          p_nom: string
+          p_photo_url?: string
+          p_slug: string
+          p_telephone: string
+        }
+        Returns: {
+          actif: boolean | null
+          bio: string | null
+          boutons: Json
+          couleur_accent: string | null
+          created_at: string | null
+          email: string
+          entreprise: string
+          fonction: string
+          id: string
+          logo_url: string | null
+          nom: string
+          photo_url: string | null
+          plan: string | null
+          reseaux: Json
+          slug: string
+          telephone: string
+          updated_at: string | null
+          user_id: string | null
+        }
+      }
+      create_nfc_client: {
+        Args: {
+          p_boutons?: Json
+          p_email: string
+          p_nom: string
+          p_password: string
+          p_slug: string
+          p_telephone: string
+        }
+        Returns: string
+      }
     }
     Enums: {
       [_ in never]: never
@@ -158,23 +320,6 @@ export type Enums<
   ? DatabaseWithoutInternals[DefaultSchemaEnumNameOrOptions["schema"]]["Enums"][EnumName]
   : DefaultSchemaEnumNameOrOptions extends keyof DefaultSchema["Enums"]
     ? DefaultSchema["Enums"][DefaultSchemaEnumNameOrOptions]
-    : never
-
-export type CompositeTypes<
-  PublicCompositeTypeNameOrOptions extends
-    | keyof DefaultSchema["CompositeTypes"]
-    | { schema: keyof DatabaseWithoutInternals },
-  CompositeTypeName extends PublicCompositeTypeNameOrOptions extends {
-    schema: keyof DatabaseWithoutInternals
-  }
-    ? keyof DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"]
-    : never = never,
-> = PublicCompositeTypeNameOrOptions extends {
-  schema: keyof DatabaseWithoutInternals
-}
-  ? DatabaseWithoutInternals[PublicCompositeTypeNameOrOptions["schema"]]["CompositeTypes"][CompositeTypeName]
-  : PublicCompositeTypeNameOrOptions extends keyof DefaultSchema["CompositeTypes"]
-    ? DefaultSchema["CompositeTypes"][PublicCompositeTypeNameOrOptions]
     : never
 
 export const Constants = {

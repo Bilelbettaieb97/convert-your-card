@@ -1,11 +1,11 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { z } from "zod";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
-import { lovable } from "@/integrations/lovable";
-import { AuthShell, SocialButtons, Divider } from "@/components/auth/AuthShell";
+import { AuthShell } from "@/components/auth/AuthShell";
 import { Toaster } from "@/components/ui/sonner";
+import { Mail, ArrowLeft, ShieldCheck } from "lucide-react";
 
 export const Route = createFileRoute("/connexion")({
   head: () => ({
@@ -28,9 +28,17 @@ const emailSchema = z
 
 function ConnexionPage() {
   const navigate = useNavigate();
+  const [step, setStep] = useState<"email" | "otp">("email");
   const [email, setEmail] = useState("");
   const [submitting, setSubmitting] = useState(false);
-  const [socialLoading, setSocialLoading] = useState<string | null>(null);
+
+  async function sendOtp(targetEmail: string) {
+    const { error } = await supabase.auth.signInWithOtp({
+      email: targetEmail,
+      options: { shouldCreateUser: false },
+    });
+    if (error) throw error;
+  }
 
   async function handleEmailSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -41,12 +49,10 @@ function ConnexionPage() {
     }
     setSubmitting(true);
     try {
-      const { error } = await supabase.auth.signInWithOtp({
-        email: parsed.data,
-        options: { emailRedirectTo: window.location.origin },
-      });
-      if (error) throw error;
-      toast.success("Lien de connexion envoyé — vérifie tes emails.");
+      await sendOtp(parsed.data);
+      setEmail(parsed.data);
+      setStep("otp");
+      toast.success("Code envoyé ! Vérifie ta boîte mail.");
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Une erreur est survenue");
     } finally {
@@ -54,32 +60,21 @@ function ConnexionPage() {
     }
   }
 
-  async function handleOAuth(provider: "google" | "apple") {
-    setSocialLoading(provider);
-    try {
-      const result = await lovable.auth.signInWithOAuth(provider, {
-        redirect_uri: window.location.origin,
-      });
-      if (result.error) {
-        toast.error(result.error.message || "Connexion impossible");
-        return;
-      }
-      if (result.redirected) return;
-      toast.success("Bienvenue !");
-      navigate({ to: "/" });
-    } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Connexion impossible");
-    } finally {
-      setSocialLoading(null);
-    }
+  function handleVerified() {
+    toast.success("Bienvenue !");
+    navigate({ to: "/dashboard" });
   }
 
   return (
     <>
       <Toaster />
       <AuthShell
-        title="Connecte-toi"
-        subtitle="Heureux de te revoir ! Entre ton email pour recevoir un lien de connexion."
+        title={step === "email" ? "Connecte-toi" : "Vérifie ton e-mail"}
+        subtitle={
+          step === "email"
+            ? "Entre ton email pour recevoir un code de connexion."
+            : undefined
+        }
         footer={
           <>
             Pas encore de compte ?{" "}
@@ -89,40 +84,203 @@ function ConnexionPage() {
           </>
         }
       >
-        <form onSubmit={handleEmailSubmit} className="space-y-4">
-          <div>
-            <label htmlFor="email" className="block text-sm font-medium text-foreground mb-1.5">
-              E-mail
-            </label>
-            <input
-              id="email"
-              type="email"
-              required
-              autoComplete="email"
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
-              className="w-full rounded-xl border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-magenta/40 focus:border-magenta transition"
-              placeholder="ton.email@exemple.com"
-            />
-          </div>
+        {step === "email" ? (
+          <form onSubmit={handleEmailSubmit} className="space-y-4">
+            <div>
+              <label htmlFor="email" className="block text-sm font-medium text-foreground mb-1.5">
+                E-mail
+              </label>
+              <input
+                id="email"
+                type="email"
+                required
+                autoComplete="email"
+                value={email}
+                onChange={(e) => setEmail(e.target.value)}
+                className="w-full rounded-xl border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-magenta/40 focus:border-magenta transition"
+                placeholder="ton.email@exemple.com"
+              />
+            </div>
 
-          <button
-            type="submit"
-            disabled={submitting}
-            className="w-full bg-gradient-cta text-primary-foreground rounded-full py-3 text-sm font-semibold shadow-card hover:shadow-glow transition-all disabled:opacity-60"
-          >
-            {submitting ? "Envoi…" : "Recevoir le lien"}
-          </button>
-        </form>
-
-        <Divider label="OU" />
-
-        <SocialButtons
-          onGoogle={() => handleOAuth("google")}
-          onApple={() => handleOAuth("apple")}
-          loading={socialLoading}
-        />
+            <button
+              type="submit"
+              disabled={submitting}
+              className="w-full bg-gradient-cta text-primary-foreground rounded-full py-3 text-sm font-semibold shadow-card hover:shadow-glow transition-all disabled:opacity-60"
+            >
+              {submitting ? "Envoi…" : "Recevoir le code"}
+            </button>
+          </form>
+        ) : (
+          <OtpStep
+            email={email}
+            onBack={() => setStep("email")}
+            onResend={() => sendOtp(email)}
+            onVerified={handleVerified}
+          />
+        )}
       </AuthShell>
+    </>
+  );
+}
+
+function OtpStep({
+  email, onBack, onResend, onVerified,
+}: {
+  email: string;
+  onBack: () => void;
+  onResend: () => Promise<void>;
+  onVerified: () => void;
+}) {
+  const [digits, setDigits] = useState<string[]>(["", "", "", "", "", ""]);
+  const [verifying, setVerifying] = useState(false);
+  const [error, setError] = useState<string | null>(null);
+  const [cooldown, setCooldown] = useState(30);
+  const [resending, setResending] = useState(false);
+  const inputsRef = useRef<Array<HTMLInputElement | null>>([]);
+
+  useEffect(() => {
+    inputsRef.current[0]?.focus();
+  }, []);
+
+  useEffect(() => {
+    if (cooldown <= 0) return;
+    const t = setTimeout(() => setCooldown((c) => c - 1), 1000);
+    return () => clearTimeout(t);
+  }, [cooldown]);
+
+  async function verify(code: string) {
+    setVerifying(true);
+    setError(null);
+    try {
+      const { error } = await supabase.auth.verifyOtp({
+        email,
+        token: code,
+        type: "email",
+      });
+      if (error) throw error;
+      onVerified();
+    } catch (err) {
+      setError(err instanceof Error ? err.message : "Code invalide ou expiré");
+      setDigits(["", "", "", "", "", ""]);
+      inputsRef.current[0]?.focus();
+    } finally {
+      setVerifying(false);
+    }
+  }
+
+  function handleChange(idx: number, value: string) {
+    const clean = value.replace(/\D/g, "");
+    if (!clean) {
+      const next = [...digits];
+      next[idx] = "";
+      setDigits(next);
+      return;
+    }
+    if (clean.length > 1) {
+      const chars = clean.slice(0, 6 - idx).split("");
+      const next = [...digits];
+      chars.forEach((c, i) => { next[idx + i] = c; });
+      setDigits(next);
+      const lastFilled = Math.min(idx + chars.length, 5);
+      inputsRef.current[lastFilled]?.focus();
+      const joined = next.join("");
+      if (joined.length === 6) verify(joined);
+      return;
+    }
+    const next = [...digits];
+    next[idx] = clean;
+    setDigits(next);
+    if (idx < 5) inputsRef.current[idx + 1]?.focus();
+    const joined = next.join("");
+    if (joined.length === 6) verify(joined);
+  }
+
+  function handleKeyDown(idx: number, e: React.KeyboardEvent<HTMLInputElement>) {
+    if (e.key === "Backspace" && !digits[idx] && idx > 0) {
+      inputsRef.current[idx - 1]?.focus();
+    }
+    if (e.key === "ArrowLeft" && idx > 0) inputsRef.current[idx - 1]?.focus();
+    if (e.key === "ArrowRight" && idx < 5) inputsRef.current[idx + 1]?.focus();
+  }
+
+  async function handleResend() {
+    if (cooldown > 0 || resending) return;
+    setResending(true);
+    try {
+      await onResend();
+      toast.success("Nouveau code envoyé !");
+      setCooldown(30);
+      setDigits(["", "", "", "", "", ""]);
+      setError(null);
+      inputsRef.current[0]?.focus();
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Impossible d'envoyer le code");
+    } finally {
+      setResending(false);
+    }
+  }
+
+  return (
+    <>
+      <button
+        onClick={onBack}
+        className="inline-flex items-center gap-1.5 text-xs font-medium text-muted-foreground hover:text-foreground transition mb-4"
+      >
+        <ArrowLeft className="w-3.5 h-3.5" />
+        Modifier l'e-mail
+      </button>
+
+      <div className="w-12 h-12 rounded-2xl bg-magenta/10 flex items-center justify-center mb-4">
+        <Mail className="w-6 h-6 text-magenta" />
+      </div>
+
+      <p className="mt-1 text-sm text-muted-foreground mb-6">
+        Code envoyé à <span className="font-semibold text-foreground">{email}</span>
+      </p>
+
+      <div className="flex gap-2 justify-between">
+        {digits.map((d, i) => (
+          <input
+            key={i}
+            ref={(el) => { inputsRef.current[i] = el; }}
+            type="text"
+            inputMode="numeric"
+            pattern="[0-9]*"
+            maxLength={6}
+            value={d}
+            disabled={verifying}
+            onChange={(e) => handleChange(i, e.target.value)}
+            onKeyDown={(e) => handleKeyDown(i, e)}
+            className="w-12 h-14 text-center text-xl font-bold rounded-xl border-2 border-border bg-background text-foreground focus:outline-none focus:border-magenta focus:ring-2 focus:ring-magenta/30 transition disabled:opacity-60"
+          />
+        ))}
+      </div>
+
+      {error && (
+        <p className="mt-3 text-xs text-red-500 font-medium">{error}</p>
+      )}
+
+      {verifying && (
+        <p className="mt-3 text-xs text-muted-foreground">Vérification…</p>
+      )}
+
+      <div className="mt-6 text-center text-xs text-muted-foreground">
+        Tu n'as rien reçu ?{" "}
+        <button
+          onClick={handleResend}
+          disabled={cooldown > 0 || resending}
+          className="text-magenta font-semibold hover:underline disabled:opacity-50 disabled:no-underline disabled:cursor-not-allowed"
+        >
+          {cooldown > 0 ? `Renvoyer dans ${cooldown}s` : resending ? "Envoi…" : "Renvoyer le code"}
+        </button>
+      </div>
+
+      <div className="mt-6 pt-5 border-t border-border">
+        <div className="flex items-center gap-2 text-[11px] text-muted-foreground">
+          <ShieldCheck className="w-3.5 h-3.5 text-emerald-500" />
+          Pense à vérifier ton dossier spam si tu ne trouves pas l'e-mail.
+        </div>
+      </div>
     </>
   );
 }

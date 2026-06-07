@@ -3,8 +3,6 @@ import { useEffect, useRef, useState } from "react";
 import { z } from "zod";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
-import { lovable } from "@/integrations/lovable";
-import { SocialButtons, Divider } from "@/components/auth/AuthShell";
 import { Toaster } from "@/components/ui/sonner";
 import { Zap, ShieldCheck, Lock, Users, Star, Quote, TrendingUp, Award, Mail, ArrowLeft } from "lucide-react";
 
@@ -33,7 +31,6 @@ function InscriptionPage() {
   const [email, setEmail] = useState("");
   const [optIn, setOptIn] = useState(true);
   const [submitting, setSubmitting] = useState(false);
-  const [socialLoading, setSocialLoading] = useState<string | null>(null);
 
   async function sendOtp(targetEmail: string) {
     const { error } = await supabase.auth.signInWithOtp({
@@ -63,26 +60,6 @@ function InscriptionPage() {
       toast.error(err instanceof Error ? err.message : "Une erreur est survenue");
     } finally {
       setSubmitting(false);
-    }
-  }
-
-  async function handleOAuth(provider: "google" | "apple") {
-    setSocialLoading(provider);
-    try {
-      const result = await lovable.auth.signInWithOAuth(provider, {
-        redirect_uri: `${window.location.origin}/inscription/selection-de-plan`,
-      });
-      if (result.error) {
-        toast.error(result.error.message || "Connexion impossible");
-        return;
-      }
-      if (result.redirected) return;
-      toast.success("Bienvenue !");
-      navigate({ to: "/inscription/selection-de-plan" });
-    } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Connexion impossible");
-    } finally {
-      setSocialLoading(null);
     }
   }
 
@@ -125,9 +102,6 @@ function InscriptionPage() {
                   setOptIn={setOptIn}
                   submitting={submitting}
                   onSubmit={handleEmailSubmit}
-                  onGoogle={() => handleOAuth("google")}
-                  onApple={() => handleOAuth("apple")}
-                  socialLoading={socialLoading}
                 />
               ) : (
                 <OtpStep
@@ -230,11 +204,10 @@ function StatCard({ icon, iconBg, value, label }: { icon: React.ReactNode; iconB
 }
 
 function EmailStep({
-  email, setEmail, optIn, setOptIn, submitting, onSubmit, onGoogle, onApple, socialLoading,
+  email, setEmail, optIn, setOptIn, submitting, onSubmit,
 }: {
   email: string; setEmail: (v: string) => void; optIn: boolean; setOptIn: (v: boolean) => void;
   submitting: boolean; onSubmit: (e: React.FormEvent) => void;
-  onGoogle: () => void; onApple: () => void; socialLoading: string | null;
 }) {
   return (
     <>
@@ -301,14 +274,6 @@ function EmailStep({
             En cliquant sur Continue, tu acceptes la politique de confidentialité, les conditions générales et la politique relative aux cookies de OneTap.
           </p>
         </form>
-
-        <Divider label="OU" />
-
-        <SocialButtons
-          onGoogle={onGoogle}
-          onApple={onApple}
-          loading={socialLoading}
-        />
       </div>
     </>
   );
