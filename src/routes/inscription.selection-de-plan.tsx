@@ -1,10 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState } from "react";
-import { toast } from "sonner";
-import { Toaster } from "@/components/ui/sonner";
-import { supabase } from "@/integrations/supabase/client";
-import { createCheckoutSession } from "@/fns/checkout";
-import { Check } from "lucide-react";
+import { Check, Clock } from "lucide-react";
 import { PromoBar, Nav, Footer } from "./index";
 
 export const Route = createFileRoute("/inscription/selection-de-plan")({
@@ -17,21 +13,24 @@ export const Route = createFileRoute("/inscription/selection-de-plan")({
   component: PlanSelectionPage,
 });
 
+type BillingCycle = "monthly" | "annual";
+type PlanId = "free" | "starter" | "pro" | "premium";
+
 type FeatureGroup = {
   title?: string;
   items: { name: string; desc?: string }[];
 };
 
 type Plan = {
-  id: "free" | "starter" | "pro" | "premium";
+  id: PlanId;
   name: string;
   tagline: string;
-  price: string;
-  priceSuffix?: string;
-  billingNote?: string;
+  monthly: { price: string; suffix?: string; note: string };
+  annual: { price: string; suffix?: string; note: string };
   cta: string;
   highlight?: boolean;
   badge?: string;
+  hasTrial?: boolean;
   intro?: string;
   groups: FeatureGroup[];
 };
@@ -41,8 +40,8 @@ const PLANS: Plan[] = [
     id: "free",
     name: "Free",
     tagline: "Découvre OneTap avec une carte digitale personnelle.",
-    price: "0 €",
-    billingNote: "Gratuit, pour toujours",
+    monthly: { price: "0 €", note: "Gratuit, pour toujours" },
+    annual: { price: "0 €", note: "Gratuit, pour toujours" },
     cta: "Continuer en Free",
     groups: [
       {
@@ -55,36 +54,23 @@ const PLANS: Plan[] = [
           { name: "QR code unique" },
         ],
       },
-      {
-        title: "Partage*",
-        items: [
-          { name: "Partage NFC & QR code", desc: "Partage ta carte d'un simple contact avec un téléphone." },
-        ],
-      },
     ],
   },
   {
     id: "starter",
     name: "Starter",
     tagline: "Pour les pros qui démarrent leur carte digitale.",
-    price: "4,50 €",
-    priceSuffix: "EUR/mois",
-    billingNote: "Facturé annuellement, ou 6 € par mois",
+    monthly: { price: "6 €", suffix: "/ mois", note: "Facturation mensuelle" },
+    annual: { price: "4,50 €", suffix: "/ mois", note: "Facturé 54 €/an · 2 mois offerts" },
     cta: "Commencer",
     intro: "Tout du Free, plus :",
     groups: [
       {
         title: "Carte de visite",
         items: [
-          { name: "Thèmes personnalisés", desc: "Palettes de couleurs et thèmes pour matcher ton style." },
+          { name: "Thèmes personnalisés", desc: "Palettes et thèmes pour matcher ton style." },
           { name: "Capture tes contacts", desc: "Collecte et gère les leads qui scannent ta carte." },
-          { name: "Liens de redirection", desc: "Redirige temporairement vers un lien clé, parfait pour les promos." },
-        ],
-      },
-      {
-        title: "Monétisation*",
-        items: [
-          { name: "Frais réduits", desc: "Vends tes produits/services digitaux avec 9 % de frais**." },
+          { name: "Liens de redirection", desc: "Redirige temporairement vers un lien clé." },
         ],
       },
     ],
@@ -93,34 +79,28 @@ const PLANS: Plan[] = [
     id: "pro",
     name: "Pro",
     tagline: "Pour les pros qui veulent grandir et convertir.",
-    price: "10,50 €",
-    priceSuffix: "EUR/mois",
-    billingNote: "Facturé annuellement, ou 13 € par mois",
+    monthly: { price: "13 €", suffix: "/ mois", note: "Facturation mensuelle" },
+    annual: { price: "10,50 €", suffix: "/ mois", note: "Facturé 126 €/an · 2 mois offerts" },
     cta: "Essai gratuit 7 jours",
     highlight: true,
     badge: "Recommandé",
+    hasTrial: true,
     intro: "Tout du Starter, plus :",
     groups: [
       {
         title: "Carte de visite",
         items: [
-          { name: "Carte personnalisée", desc: "Ajoute ton logo, des visuels plein écran et un design sur-mesure." },
-          { name: "Liens mis en avant", desc: "Mets en avant ce qui compte avec des liens animés et accrocheurs." },
-          { name: "Statistiques complètes", desc: "Vois les liens les plus performants et optimise ce qui convertit." },
+          { name: "Carte personnalisée", desc: "Logo, visuels plein écran, design sur-mesure." },
+          { name: "Liens mis en avant", desc: "Liens animés et accrocheurs." },
+          { name: "Statistiques complètes", desc: "Analyse ce qui convertit." },
         ],
       },
       {
         title: "Outils de croissance",
         items: [
-          { name: "Réponses Instagram automatisées", desc: "Booste l'engagement et les ventes via DM automatiques." },
-          { name: "Raccourcisseur de liens", desc: "Crée des shortlinks personnalisés avec UTM intégrés." },
-          { name: "Intégrations email", desc: "Synchronise tes contacts avec Mailchimp, Google Sheets, Klaviyo…" },
-        ],
-      },
-      {
-        title: "Monétisation*",
-        items: [
-          { name: "Frais réduits", desc: "Vends tes produits/services digitaux avec 9 % de frais**." },
+          { name: "Réponses Instagram automatisées" },
+          { name: "Raccourcisseur de liens" },
+          { name: "Intégrations email" },
         ],
       },
     ],
@@ -129,31 +109,24 @@ const PLANS: Plan[] = [
     id: "premium",
     name: "Premium",
     tagline: "Pour les équipes & marques qui veulent zéro limite.",
-    price: "27,50 €",
-    priceSuffix: "EUR/mois",
-    billingNote: "Facturé annuellement, ou 32 € par mois",
-    cta: "Commencer",
+    monthly: { price: "32 €", suffix: "/ mois", note: "Facturation mensuelle" },
+    annual: { price: "27,50 €", suffix: "/ mois", note: "Facturé 330 €/an · 2 mois offerts" },
+    cta: "Essai gratuit 7 jours",
+    hasTrial: true,
     intro: "Tout du Pro, plus :",
     groups: [
       {
         title: "Carte de visite",
         items: [
-          { name: "Onboarding concierge", desc: "Accompagnement sur-mesure avec support prioritaire dédié." },
+          { name: "Onboarding concierge", desc: "Support prioritaire dédié." },
         ],
       },
       {
         title: "Outils de croissance",
         items: [
-          { name: "Posts sociaux illimités", desc: "Passe à l'échelle avec des posts illimités sur 3 marques." },
-          { name: "Outils d'équipe en option", desc: "Chat, collaboration et workflows d'approbation." },
-          { name: "Réponses Instagram illimitées", desc: "Reach maximal avec auto-réponses illimitées." },
-        ],
-      },
-      {
-        title: "Monétisation*",
-        items: [
-          { name: "0 % de frais**", desc: "Chaque euro de tes ventes digitales va directement sur ton compte." },
-          { name: "100 % des commissions**", desc: "Vends des produits affiliés et garde toute la commission." },
+          { name: "Posts sociaux illimités" },
+          { name: "Réponses Instagram illimitées" },
+          { name: "0 % de frais de vente" },
         ],
       },
     ],
@@ -162,71 +135,86 @@ const PLANS: Plan[] = [
 
 function PlanSelectionPage() {
   const navigate = useNavigate();
-  const [loadingPlan, setLoadingPlan] = useState<string | null>(null);
+  const [billing, setBilling] = useState<BillingCycle>("monthly");
 
-  async function handleSelect(planId: Plan["id"]) {
+  function handleSelect(planId: PlanId) {
     if (planId === "free") {
       navigate({ to: "/dashboard" });
       return;
     }
-    setLoadingPlan(planId);
-    try {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user?.email) {
-        toast.error("Tu dois être connecté pour choisir un plan.");
-        navigate({ to: "/inscription" });
-        return;
-      }
-      const result = await createCheckoutSession({ data: { plan: planId as "starter" | "pro" | "premium", billing: "annual", email: user.email } });
-      if (!result?.url) {
-        toast.error("Impossible de créer la session de paiement.");
-        return;
-      }
-      window.location.href = result.url;
-    } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Une erreur est survenue");
-    } finally {
-      setLoadingPlan(null);
-    }
+    navigate({
+      to: "/inscription/offre/$plan",
+      params: { plan: planId },
+      search: { billing },
+    });
   }
 
   return (
     <div className="min-h-screen bg-background text-foreground font-body">
-      <Toaster />
       <PromoBar />
       <Nav />
       <main>
         <div className="mx-auto max-w-7xl px-4 py-12 sm:py-16 lg:py-20">
-          <div className="text-center mb-12 sm:mb-16 animate-fade-in">
+          {/* Header */}
+          <div className="text-center mb-10 sm:mb-12 animate-fade-in">
             <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground tracking-tight">
               Trouve le forfait qu'il te faut
             </h1>
             <p className="mt-4 text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto">
               Compare en quelques secondes et lance ta carte digitale dès aujourd'hui. Annulable à tout moment.
             </p>
+
+            {/* Billing toggle */}
+            <div className="mt-8 inline-flex items-center bg-muted rounded-full p-1 gap-1">
+              <button
+                onClick={() => setBilling("monthly")}
+                className={[
+                  "px-6 py-2 rounded-full text-sm font-semibold transition-all",
+                  billing === "monthly"
+                    ? "bg-card text-foreground shadow-card"
+                    : "text-muted-foreground hover:text-foreground",
+                ].join(" ")}
+              >
+                Par mois
+              </button>
+              <button
+                onClick={() => setBilling("annual")}
+                className={[
+                  "px-6 py-2 rounded-full text-sm font-semibold transition-all flex items-center gap-2",
+                  billing === "annual"
+                    ? "bg-card text-foreground shadow-card"
+                    : "text-muted-foreground hover:text-foreground",
+                ].join(" ")}
+              >
+                Par an
+                <span className="text-[10px] font-bold text-emerald-600 bg-emerald-100 dark:bg-emerald-900/40 px-1.5 py-0.5 rounded-full">
+                  -25%
+                </span>
+              </button>
+            </div>
+
+            {billing === "annual" && (
+              <p className="mt-3 text-sm text-emerald-600 dark:text-emerald-400 font-medium animate-fade-in">
+                ✓ Facturation annuelle — l'équivalent de 2 mois offerts
+              </p>
+            )}
           </div>
 
+          {/* Plans grid */}
           <div className="grid gap-5 lg:gap-6 md:grid-cols-2 lg:grid-cols-4 items-stretch">
             {PLANS.map((plan) => (
               <PlanCard
                 key={plan.id}
                 plan={plan}
-                loading={loadingPlan === plan.id}
+                billing={billing}
                 onSelect={() => handleSelect(plan.id)}
               />
             ))}
           </div>
 
           <p className="text-center text-xs text-muted-foreground mt-10 max-w-3xl mx-auto">
-            * Disponible selon le forfait. ** Hors frais de traitement de paiement. Sans engagement · Paiement sécurisé · TVA incluse.
+            Sans engagement · Paiement sécurisé · TVA incluse · Annulable à tout moment
           </p>
-
-          <div className="mt-10 flex items-center justify-center gap-2 rounded-2xl border border-border bg-muted/30 px-5 py-4 max-w-2xl mx-auto">
-            <span className="text-sm text-muted-foreground">
-              Carte NFC physique disponible en option après inscription
-            </span>
-            <span className="inline-flex h-2 w-2 rounded-full bg-magenta" aria-hidden />
-          </div>
         </div>
       </main>
       <Footer />
@@ -234,8 +222,17 @@ function PlanSelectionPage() {
   );
 }
 
-function PlanCard({ plan, loading, onSelect }: { plan: Plan; loading: boolean; onSelect: () => void }) {
+function PlanCard({
+  plan,
+  billing,
+  onSelect,
+}: {
+  plan: Plan;
+  billing: BillingCycle;
+  onSelect: () => void;
+}) {
   const isHighlight = plan.highlight;
+  const pricing = billing === "monthly" ? plan.monthly : plan.annual;
 
   return (
     <div
@@ -259,6 +256,12 @@ function PlanCard({ plan, loading, onSelect }: { plan: Plan; loading: boolean; o
             {plan.badge}
           </span>
         )}
+        {plan.hasTrial && (
+          <div className="flex items-center gap-1 mb-2">
+            <Clock className="w-3.5 h-3.5 text-emerald-400" />
+            <span className="text-xs font-semibold text-emerald-400">Essai 7 jours — 0 € aujourd'hui</span>
+          </div>
+        )}
         <h2 className="text-2xl font-bold mb-1.5">{plan.name}</h2>
         <p className={["text-sm leading-snug min-h-[40px]", isHighlight ? "text-primary-foreground/90" : "text-muted-foreground"].join(" ")}>
           {plan.tagline}
@@ -268,25 +271,26 @@ function PlanCard({ plan, loading, onSelect }: { plan: Plan; loading: boolean; o
       {/* Price + CTA */}
       <div className="px-6 pt-6 pb-2">
         <div className="flex items-baseline gap-1.5 mb-1">
-          <span className="text-3xl sm:text-4xl font-bold tracking-tight">{plan.price}</span>
-          {plan.priceSuffix && (
-            <span className="text-xs font-medium text-muted-foreground">{plan.priceSuffix}</span>
+          <span className="text-3xl sm:text-4xl font-bold tracking-tight transition-all duration-300">
+            {pricing.price}
+          </span>
+          {pricing.suffix && (
+            <span className="text-xs font-medium text-muted-foreground">{pricing.suffix}</span>
           )}
         </div>
-        <p className="text-xs text-muted-foreground min-h-[16px] mb-5">{plan.billingNote || " "}</p>
+        <p className="text-xs text-muted-foreground min-h-[16px] mb-5">{pricing.note}</p>
 
         <button
           type="button"
           onClick={onSelect}
-          disabled={loading}
           className={[
-            "block w-full text-center rounded-full py-3 text-sm font-semibold transition-all disabled:opacity-60",
+            "block w-full text-center rounded-full py-3 text-sm font-semibold transition-all",
             isHighlight
               ? "bg-magenta/15 text-magenta hover:bg-magenta/25 border border-magenta/30"
               : "border border-foreground text-foreground hover:bg-foreground hover:text-background",
           ].join(" ")}
         >
-          {loading ? "Chargement…" : plan.cta}
+          {plan.cta}
         </button>
       </div>
 
@@ -303,7 +307,9 @@ function PlanCard({ plan, loading, onSelect }: { plan: Plan; loading: boolean; o
                     <Check className="h-4 w-4 mt-0.5 flex-shrink-0 text-magenta" />
                     <div>
                       <p className="text-sm font-medium text-foreground">{item.name}</p>
-                      {item.desc && <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed">{item.desc}</p>}
+                      {item.desc && (
+                        <p className="text-xs text-muted-foreground mt-0.5 leading-relaxed">{item.desc}</p>
+                      )}
                     </div>
                   </li>
                 ))}

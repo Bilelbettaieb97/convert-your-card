@@ -23,6 +23,7 @@ import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as InscriptionSelectionDePlanRouteImport } from './routes/inscription.selection-de-plan'
 import { Route as InscriptionIndexRouteImport } from './routes/inscription.index'
 import { Route as InscriptionCartePhysiqueRouteImport } from './routes/inscription.carte-physique'
+import { Route as InscriptionOffrePlanRouteImport } from './routes/inscription.offre.$plan'
 import { Route as DashboardProfilRouteImport } from './routes/dashboard/profil'
 import { Route as DashboardAbonnementRouteImport } from './routes/dashboard/abonnement'
 
@@ -92,6 +93,11 @@ const InscriptionIndexRoute = InscriptionIndexRouteImport.update({
   path: '/',
   getParentRoute: () => InscriptionRoute,
 } as any)
+const InscriptionOffrePlanRoute = InscriptionOffrePlanRouteImport.update({
+  id: '/inscription/offre/$plan',
+  path: '/offre/$plan',
+  getParentRoute: () => InscriptionRoute,
+} as any)
 const InscriptionCartePhysiqueRoute =
   InscriptionCartePhysiqueRouteImport.update({
     id: '/carte-physique',
@@ -124,6 +130,7 @@ export interface FileRoutesByFullPath {
   '/inscription/carte-physique': typeof InscriptionCartePhysiqueRoute
   '/inscription/selection-de-plan': typeof InscriptionSelectionDePlanRoute
   '/inscription/': typeof InscriptionIndexRoute
+  '/inscription/offre/$plan': typeof InscriptionOffrePlanRoute
   '/admin/': typeof AdminIndexRoute
   '/dashboard/': typeof DashboardIndexRoute
 }
@@ -141,6 +148,7 @@ export interface FileRoutesByTo {
   '/inscription/carte-physique': typeof InscriptionCartePhysiqueRoute
   '/inscription/selection-de-plan': typeof InscriptionSelectionDePlanRoute
   '/inscription': typeof InscriptionIndexRoute
+  '/inscription/offre/$plan': typeof InscriptionOffrePlanRoute
   '/admin': typeof AdminIndexRoute
   '/dashboard': typeof DashboardIndexRoute
 }
@@ -160,6 +168,7 @@ export interface FileRoutesById {
   '/inscription/carte-physique': typeof InscriptionCartePhysiqueRoute
   '/inscription/selection-de-plan': typeof InscriptionSelectionDePlanRoute
   '/inscription/': typeof InscriptionIndexRoute
+  '/inscription/offre/$plan': typeof InscriptionOffrePlanRoute
   '/admin/': typeof AdminIndexRoute
   '/dashboard/': typeof DashboardIndexRoute
 }
@@ -180,6 +189,7 @@ export interface FileRouteTypes {
     | '/inscription/carte-physique'
     | '/inscription/selection-de-plan'
     | '/inscription/'
+    | '/inscription/offre/$plan'
     | '/admin/'
     | '/dashboard/'
   fileRoutesByTo: FileRoutesByTo
@@ -196,6 +206,7 @@ export interface FileRouteTypes {
     | '/dashboard/profil'
     | '/inscription/carte-physique'
     | '/inscription/selection-de-plan'
+    | '/inscription/offre/$plan'
     | '/admin'
     | '/dashboard'
     | '/inscription'
@@ -215,6 +226,7 @@ export interface FileRouteTypes {
     | '/inscription/carte-physique'
     | '/inscription/selection-de-plan'
     | '/inscription/'
+    | '/inscription/offre/$plan'
     | '/admin/'
     | '/dashboard/'
   fileRoutesById: FileRoutesById
@@ -332,6 +344,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof InscriptionCartePhysiqueRouteImport
       parentRoute: typeof InscriptionRoute
     }
+    '/inscription/offre/$plan': {
+      id: '/inscription/offre/$plan'
+      path: '/offre/$plan'
+      fullPath: '/inscription/offre/$plan'
+      preLoaderRoute: typeof InscriptionOffrePlanRouteImport
+      parentRoute: typeof InscriptionRoute
+    }
     '/dashboard/profil': {
       id: '/dashboard/profil'
       path: '/profil'
@@ -369,12 +388,14 @@ interface InscriptionRouteChildren {
   InscriptionCartePhysiqueRoute: typeof InscriptionCartePhysiqueRoute
   InscriptionSelectionDePlanRoute: typeof InscriptionSelectionDePlanRoute
   InscriptionIndexRoute: typeof InscriptionIndexRoute
+  InscriptionOffrePlanRoute: typeof InscriptionOffrePlanRoute
 }
 
 const InscriptionRouteChildren: InscriptionRouteChildren = {
   InscriptionCartePhysiqueRoute: InscriptionCartePhysiqueRoute,
   InscriptionSelectionDePlanRoute: InscriptionSelectionDePlanRoute,
   InscriptionIndexRoute: InscriptionIndexRoute,
+  InscriptionOffrePlanRoute: InscriptionOffrePlanRoute,
 }
 
 const InscriptionRouteWithChildren = InscriptionRoute._addFileChildren(

@@ -29,6 +29,35 @@ async function verifyStripeSignature(
   return computedHex === sig;
 }
 
+async function sendTrialEndingEmail(email: string, nom: string, trialEndDate: Date) {
+  const resendKey = process.env.RESEND_API_KEY;
+  if (!resendKey) return;
+  const appUrl = process.env.VITE_APP_URL ?? "https://convert-your-card.vercel.app";
+  const firstName = nom.split(" ")[0];
+  const dateStr = trialEndDate.toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long" });
+
+  await fetch("https://api.resend.com/emails", {
+    method: "POST",
+    headers: { Authorization: `Bearer ${resendKey}`, "Content-Type": "application/json" },
+    body: JSON.stringify({
+      from: "Bilel · OneTap <bilel@convertilab.com>",
+      to: email,
+      subject: `⏰ Ton essai gratuit OneTap se termine demain`,
+      html: `<div style="font-family:sans-serif;max-width:600px;margin:0 auto;padding:40px 20px">
+        <h1 style="color:#1a1a2e">Ton essai se termine demain 🕐</h1>
+        <p style="color:#6b7280">Salut ${firstName}, ton essai gratuit OneTap se termine le <strong>${dateStr}</strong>.</p>
+        <p style="color:#6b7280">À partir de là, ton abonnement sera automatiquement activé et ta carte bancaire sera débitée.</p>
+        <div style="background:#fef3c7;border:1px solid #fcd34d;border-radius:12px;padding:20px;margin:24px 0">
+          <p style="margin:0;color:#92400e;font-weight:600">Tu veux annuler ?</p>
+          <p style="margin:8px 0 0;color:#92400e;font-size:14px">Rends-toi dans ton dashboard → Abonnement → Annuler avant minuit ce soir.</p>
+        </div>
+        <a href="${appUrl}/dashboard/abonnement" style="display:inline-block;background:linear-gradient(135deg,#c026d3,#7c3aed);color:white;padding:14px 28px;border-radius:50px;text-decoration:none;font-weight:600">Gérer mon abonnement →</a>
+        <p style="margin-top:24px;color:#9ca3af;font-size:12px">Si tu continues, merci de nous faire confiance. Annulable à tout moment depuis ton dashboard.</p>
+      </div>`,
+    }),
+  });
+}
+
 async function sendWelcomeEmail(
   email: string,
   nom: string,
@@ -176,6 +205,24 @@ export default defineEventHandler(async (event) => {
     await adminSupabase.from("subscriptions")
       .update({ plan: sub.metadata?.plan ?? "starter", status: sub.status, current_period_end: sub.current_period_end ? new Date(sub.current_period_end * 1000).toISOString() : null, updated_at: new Date().toISOString() })
       .eq("stripe_subscription_id", sub.id);
+
+  } else if (stripeEvent.type === "customer.subscription.trial_will_end") {
+    const sub = stripeEvent.data.object;
+    const trialEnd = new Date(sub.trial_end * 1000);
+    // Find user by stripe customer ID
+    const { data: subscription } = await adminSupabase
+      .from("subscriptions")
+      .select("user_id")
+      .eq("stripe_subscription_id", sub.id)
+      .maybeSingle();
+    if (subscription?.user_id) {
+      const { data: { user } } = await adminSupabase.auth.admin.getUserById(subscription.user_id);
+      if (user?.email) {
+        const nom = user.email.split("@")[0];
+        await sendTrialEndingEmail(user.email, nom, trialEnd);
+        console.log("[stripe-webhook] Trial ending email sent to:", user.email);
+      }
+    }
 
   } else if (stripeEvent.type === "customer.subscription.deleted") {
     const sub = stripeEvent.data.object;
