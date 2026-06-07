@@ -45,7 +45,7 @@ function InscriptionPage() {
       const { error } = await supabase.auth.signInWithOtp({
         email: parsed.data,
         options: {
-          emailRedirectTo: window.location.origin,
+          emailRedirectTo: `${window.location.origin}/inscription/selection-de-plan`,
           data: { marketing_opt_in: optIn },
         },
       });

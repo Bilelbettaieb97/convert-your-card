@@ -14,6 +14,7 @@ import { Route as OffresRouteImport } from './routes/offres'
 import { Route as InscriptionRouteImport } from './routes/inscription'
 import { Route as ConnexionRouteImport } from './routes/connexion'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as InscriptionSelectionDePlanRouteImport } from './routes/inscription.selection-de-plan'
 
 const TemplatesRoute = TemplatesRouteImport.update({
   id: '/templates',
@@ -40,34 +41,55 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const InscriptionSelectionDePlanRoute =
+  InscriptionSelectionDePlanRouteImport.update({
+    id: '/selection-de-plan',
+    path: '/selection-de-plan',
+    getParentRoute: () => InscriptionRoute,
+  } as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/connexion': typeof ConnexionRoute
-  '/inscription': typeof InscriptionRoute
+  '/inscription': typeof InscriptionRouteWithChildren
   '/offres': typeof OffresRoute
   '/templates': typeof TemplatesRoute
+  '/inscription/selection-de-plan': typeof InscriptionSelectionDePlanRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/connexion': typeof ConnexionRoute
-  '/inscription': typeof InscriptionRoute
+  '/inscription': typeof InscriptionRouteWithChildren
   '/offres': typeof OffresRoute
   '/templates': typeof TemplatesRoute
+  '/inscription/selection-de-plan': typeof InscriptionSelectionDePlanRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/connexion': typeof ConnexionRoute
-  '/inscription': typeof InscriptionRoute
+  '/inscription': typeof InscriptionRouteWithChildren
   '/offres': typeof OffresRoute
   '/templates': typeof TemplatesRoute
+  '/inscription/selection-de-plan': typeof InscriptionSelectionDePlanRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
-  fullPaths: '/' | '/connexion' | '/inscription' | '/offres' | '/templates'
+  fullPaths:
+    | '/'
+    | '/connexion'
+    | '/inscription'
+    | '/offres'
+    | '/templates'
+    | '/inscription/selection-de-plan'
   fileRoutesByTo: FileRoutesByTo
-  to: '/' | '/connexion' | '/inscription' | '/offres' | '/templates'
+  to:
+    | '/'
+    | '/connexion'
+    | '/inscription'
+    | '/offres'
+    | '/templates'
+    | '/inscription/selection-de-plan'
   id:
     | '__root__'
     | '/'
@@ -75,12 +97,13 @@ export interface FileRouteTypes {
     | '/inscription'
     | '/offres'
     | '/templates'
+    | '/inscription/selection-de-plan'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   ConnexionRoute: typeof ConnexionRoute
-  InscriptionRoute: typeof InscriptionRoute
+  InscriptionRoute: typeof InscriptionRouteWithChildren
   OffresRoute: typeof OffresRoute
   TemplatesRoute: typeof TemplatesRoute
 }
@@ -122,13 +145,32 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/inscription/selection-de-plan': {
+      id: '/inscription/selection-de-plan'
+      path: '/selection-de-plan'
+      fullPath: '/inscription/selection-de-plan'
+      preLoaderRoute: typeof InscriptionSelectionDePlanRouteImport
+      parentRoute: typeof InscriptionRoute
+    }
   }
 }
+
+interface InscriptionRouteChildren {
+  InscriptionSelectionDePlanRoute: typeof InscriptionSelectionDePlanRoute
+}
+
+const InscriptionRouteChildren: InscriptionRouteChildren = {
+  InscriptionSelectionDePlanRoute: InscriptionSelectionDePlanRoute,
+}
+
+const InscriptionRouteWithChildren = InscriptionRoute._addFileChildren(
+  InscriptionRouteChildren,
+)
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   ConnexionRoute: ConnexionRoute,
-  InscriptionRoute: InscriptionRoute,
+  InscriptionRoute: InscriptionRouteWithChildren,
   OffresRoute: OffresRoute,
   TemplatesRoute: TemplatesRoute,
 }
