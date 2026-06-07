@@ -464,17 +464,19 @@ function TemplateCard({ t, onPreview }: { t: Template; onPreview: () => void }) 
       <button
         type="button"
         onClick={onPreview}
-        className="relative w-full aspect-[4/5] overflow-hidden bg-gradient-to-br from-secondary/40 to-background flex items-center justify-center p-5 cursor-pointer"
+        className="relative w-full aspect-[4/5] overflow-hidden bg-gradient-to-br from-secondary/40 to-background flex items-center justify-center p-4 cursor-pointer"
         aria-label={`Voir le modèle ${t.name} en grand`}
       >
-        {/* Phone frame */}
-        <div className="relative w-full max-w-[240px] aspect-[9/18] rounded-[2rem] bg-zinc-900 p-1.5 shadow-2xl transition-transform duration-500 group-hover:scale-105 group-hover:-rotate-1">
-          <div
-            className="relative w-full h-full rounded-[1.6rem] overflow-hidden flex flex-col"
-            style={{ background: t.palette.bg, color: t.palette.fg }}
-          >
-            <div className="absolute top-1.5 left-1/2 -translate-x-1/2 w-14 h-3.5 rounded-full bg-zinc-900 z-10" />
-            <CardPreview t={t} size="sm" />
+        {/* Phone frame — identical to modal, scaled down to fit card */}
+        <div className="transition-transform duration-500 group-hover:scale-[0.78] group-hover:-rotate-1 scale-[0.72] origin-center">
+          <div className="relative w-[300px] aspect-[9/19] rounded-[2.5rem] bg-zinc-900 p-2 shadow-2xl">
+            <div
+              className="relative w-full h-full rounded-[2rem] overflow-hidden flex flex-col"
+              style={{ background: t.palette.bg, color: t.palette.fg }}
+            >
+              <div className="absolute top-2 left-1/2 -translate-x-1/2 w-20 h-5 rounded-full bg-zinc-900 z-10" />
+              <CardPreview t={t} size="lg" />
+            </div>
           </div>
         </div>
 
