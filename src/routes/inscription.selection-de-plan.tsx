@@ -140,8 +140,15 @@ function PlanSelectionPage() {
             </div>
 
             <h1 className="text-4xl sm:text-5xl font-display font-bold tracking-tight text-foreground leading-tight">
-              Le bon plan pour{" "}
-              <span className="bg-gradient-cta bg-clip-text text-transparent">chaque étape</span>
+              Trouve le forfait{" "}
+              <span className="relative whitespace-nowrap">
+                <span className="relative z-10 text-foreground">qu'il te faut</span>
+                <span
+                  aria-hidden="true"
+                  className="absolute bottom-1 left-0 right-0 h-[10px] rounded-full opacity-30 -z-0"
+                  style={{ background: "var(--gradient-cta)" }}
+                />
+              </span>
             </h1>
 
             <p className="mt-4 text-base sm:text-lg text-muted-foreground max-w-lg mx-auto">
