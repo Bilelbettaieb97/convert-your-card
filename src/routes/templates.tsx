@@ -597,7 +597,7 @@ function CardPreview({ t, size = "sm" }: { t: Template; size?: "sm" | "lg" }) {
       <div className={`${s.padX} flex flex-col items-center text-center`}>
         <div
           className={`${s.avatar} rounded-full ring-2 overflow-hidden shrink-0 shadow-lg`}
-          style={{ ringColor: t.palette.bg, background: t.palette.accent, color: contrastText(t.palette.accent) }}
+          style={{ background: t.palette.accent, color: contrastText(t.palette.accent), boxShadow: `0 0 0 2px ${t.palette.bg}` }}
         >
           {t.avatar ? (
             <img src={t.avatar} alt={t.person} className="w-full h-full object-cover" loading="lazy" />
