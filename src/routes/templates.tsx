@@ -468,7 +468,7 @@ function TemplateCard({ t, onPreview }: { t: Template; onPreview: () => void }) 
         aria-label={`Voir le modèle ${t.name} en grand`}
       >
         {/* Phone frame */}
-        <div className="relative w-full max-w-[210px] aspect-[9/19] rounded-[2rem] bg-zinc-900 p-1.5 shadow-2xl transition-transform duration-500 group-hover:scale-105 group-hover:-rotate-1">
+        <div className="relative w-full max-w-[240px] aspect-[9/18] rounded-[2rem] bg-zinc-900 p-1.5 shadow-2xl transition-transform duration-500 group-hover:scale-105 group-hover:-rotate-1">
           <div
             className="relative w-full h-full rounded-[1.6rem] overflow-hidden flex flex-col"
             style={{ background: t.palette.bg, color: t.palette.fg }}
