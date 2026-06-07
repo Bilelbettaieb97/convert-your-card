@@ -176,13 +176,13 @@ declare module '@tanstack/react-router' {
 }
 
 interface InscriptionRouteChildren {
-  InscriptionSelectionDePlanRoute: typeof InscriptionSelectionDePlanRoute
   InscriptionCartePhysiqueRoute: typeof InscriptionCartePhysiqueRoute
+  InscriptionSelectionDePlanRoute: typeof InscriptionSelectionDePlanRoute
 }
 
 const InscriptionRouteChildren: InscriptionRouteChildren = {
-  InscriptionSelectionDePlanRoute: InscriptionSelectionDePlanRoute,
   InscriptionCartePhysiqueRoute: InscriptionCartePhysiqueRoute,
+  InscriptionSelectionDePlanRoute: InscriptionSelectionDePlanRoute,
 }
 
 const InscriptionRouteWithChildren = InscriptionRoute._addFileChildren(
