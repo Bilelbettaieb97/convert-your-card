@@ -97,7 +97,7 @@ export function Nav() {
           <a href="#" className="text-sm font-medium text-muted-foreground hover:text-foreground transition whitespace-nowrap">
             Se connecter
           </a>
-          <a href="#offres" onClick={onCheckoutClick} className="bg-gradient-cta text-primary-foreground px-3 sm:px-5 py-2.5 rounded-full text-sm font-semibold shadow-card hover:shadow-glow transition-all whitespace-nowrap">
+          <a href="#offres" className="bg-gradient-cta text-primary-foreground px-3 sm:px-5 py-2.5 rounded-full text-sm font-semibold shadow-card hover:shadow-glow transition-all whitespace-nowrap">
             Inscription gratuite
           </a>
         </div>
