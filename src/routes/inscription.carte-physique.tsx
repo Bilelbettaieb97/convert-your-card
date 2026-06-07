@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useRef, useState } from "react";
-import { Check, CreditCard, Sparkles, Upload, X, Wifi, ArrowRight, LayoutTemplate } from "lucide-react";
+import { Check, CreditCard, Sparkles, Upload, X, Wifi, ArrowRight } from "lucide-react";
 
 export const Route = createFileRoute("/inscription/carte-physique")({
   head: () => ({
