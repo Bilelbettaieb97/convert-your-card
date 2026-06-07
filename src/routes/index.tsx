@@ -80,18 +80,18 @@ export function Nav() {
   return (
     <header className="sticky top-0 z-40 bg-background/80 backdrop-blur-lg border-b border-border">
       <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
-        <a href="#" className="flex items-center gap-2">
+        <Link to="/" className="flex items-center gap-2">
           <div className="w-9 h-9 rounded-xl bg-gradient-brand flex items-center justify-center shadow-card">
             <Zap className="w-5 h-5 text-primary-foreground" />
           </div>
           <span className="font-display font-bold text-lg">OneTap</span>
-        </a>
+        </Link>
         <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-muted-foreground">
-          <a href="#fonctionnement" className="hover:text-foreground transition">Fonctionnement</a>
+          <Link to="/" hash="fonctionnement" className="hover:text-foreground transition">Fonctionnement</Link>
           <Link to="/templates" className="hover:text-foreground transition">Modèles</Link>
           <Link to="/offres" className="hover:text-foreground transition">Offres</Link>
-          <a href="#avis" className="hover:text-foreground transition">Avis</a>
-          <a href="#faq" className="hover:text-foreground transition">FAQ</a>
+          <Link to="/" hash="avis" className="hover:text-foreground transition">Avis</Link>
+          <Link to="/" hash="faq" className="hover:text-foreground transition">FAQ</Link>
         </nav>
         <div className="flex items-center gap-2 sm:gap-3">
           <Link to="/connexion" className="text-sm font-medium text-muted-foreground hover:text-foreground transition whitespace-nowrap">
