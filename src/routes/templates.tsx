@@ -449,7 +449,7 @@ function TemplateCard({ t, onPreview }: { t: Template; onPreview: () => void }) 
               style={{ background: t.palette.bg, color: t.palette.fg }}
             >
               <div className="absolute top-2 left-1/2 -translate-x-1/2 w-20 h-5 rounded-full bg-zinc-900 z-10" />
-              <CardPreview t={t} size="lg" />
+              <CardPreview t={t} size="lg" ctaLabel={sector?.cta} />
             </div>
           </div>
         </div>
@@ -554,7 +554,7 @@ function PreviewModal({ t, onClose }: { t: Template; onClose: () => void }) {
               style={{ background: t.palette.bg, color: t.palette.fg }}
             >
               <div className="absolute top-2 left-1/2 -translate-x-1/2 w-20 h-5 rounded-full bg-zinc-900 z-10" />
-              <CardPreview t={t} size="lg" />
+              <CardPreview t={t} size="lg" ctaLabel={sector?.cta} />
             </div>
           </div>
         </div>
