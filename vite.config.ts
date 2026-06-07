@@ -12,7 +12,7 @@ export default defineConfig({
     handlers: [
       {
         middleware: true,
-        handler: "~/server/middleware/stripe-webhook",
+        handler: "./server/middleware/stripe-webhook",
       },
     ],
   },
