@@ -1,6 +1,6 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useRef, useState } from "react";
-import { Check, CreditCard, Sparkles, Upload, X, Wifi, ArrowRight } from "lucide-react";
+import { Check, CreditCard, Sparkles, Upload, X, Wifi, ArrowRight, LayoutTemplate } from "lucide-react";
 
 export const Route = createFileRoute("/inscription/carte-physique")({
   head: () => ({
@@ -208,8 +208,40 @@ function CartePhysiqueUpsellPage() {
               </div>
             </Section>
 
+            {/* Modèles */}
+            <Section title="4. Modèle de carte">
+              <div className="grid grid-cols-3 gap-2">
+                {[
+                  { bg: "#0f1b3d", fg: "#ffffff", accent: "#d4a574", label: "Premium" },
+                  { bg: "#fafaf7", fg: "#1a1a1a", accent: "#c47a3d", label: "Minimal" },
+                  { bg: "#0a0a0a", fg: "#f5f0e0", accent: "#c9a84c", label: "Prestige" },
+                ].map((m, i) => (
+                  <div
+                    key={i}
+                    className="relative rounded-xl border border-border overflow-hidden cursor-pointer hover:ring-2 hover:ring-magenta/40 transition-all"
+                    style={{ background: m.bg }}
+                  >
+                    <div className="h-16 sm:h-20 flex items-end p-2.5">
+                      <div className="text-[10px] font-semibold truncate" style={{ color: m.fg }}>
+                        {m.label}
+                      </div>
+                    </div>
+                    <div className="absolute top-2 right-2 h-2 w-2 rounded-full" style={{ background: m.accent }} />
+                  </div>
+                ))}
+              </div>
+              <Link
+                to="/templates"
+                className="mt-3 inline-flex items-center gap-2 text-sm font-medium text-magenta hover:underline underline-offset-4 transition-colors"
+              >
+                <LayoutTemplate className="h-4 w-4" />
+                Voir tous les modèles
+                <ArrowRight className="h-3.5 w-3.5" />
+              </Link>
+            </Section>
+
             {/* Logo */}
-            <Section title="4. Logo (optionnel)">
+            <Section title="5. Logo (optionnel)">
               <input
                 ref={fileRef}
                 type="file"
