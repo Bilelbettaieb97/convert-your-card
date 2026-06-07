@@ -339,13 +339,13 @@ function TemplateCard({ t }: { t: Template }) {
           </span>
         </div>
 
-        <a
-          href="/offres"
+        <Link
+          to="/offres"
           className="mt-4 inline-flex items-center justify-center gap-2 w-full px-4 py-2.5 rounded-full bg-foreground text-background text-sm font-semibold hover:opacity-90 transition group/btn"
         >
           Utiliser ce modèle
           <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover/btn:translate-x-0.5" />
-        </a>
+        </Link>
       </div>
     </article>
   );
