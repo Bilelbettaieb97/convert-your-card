@@ -106,6 +106,46 @@ export function Nav() {
   );
 }
 
+/* ────────────────────────────  HERO CTA  ──────────────────────────── */
+
+function HeroCTA() {
+  const [slug, setSlug] = useState("");
+  const navigate = useNavigate();
+
+  const handleStart = () => {
+    if (slug.trim()) {
+      navigate({ to: "/inscription", search: { slug: slug.trim() } });
+    } else {
+      navigate({ to: "/inscription" });
+    }
+  };
+
+  return (
+    <div className="flex flex-col sm:flex-row gap-3">
+      <div className="relative flex-1">
+        <div className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground font-medium text-sm">
+          onetap/
+        </div>
+        <input
+          type="text"
+          value={slug}
+          onChange={(e) => setSlug(e.target.value)}
+          onKeyDown={(e) => e.key === "Enter" && handleStart()}
+          placeholder="votrenom"
+          className="w-full pl-[4.2rem] pr-4 py-4 rounded-xl border border-border bg-card text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-magenta/30 focus:border-magenta transition font-medium"
+        />
+      </div>
+      <button
+        onClick={handleStart}
+        className="group bg-gradient-cta text-primary-foreground px-7 py-4 rounded-xl font-semibold text-base shadow-glow hover:scale-[1.02] transition-all flex items-center justify-center gap-2 whitespace-nowrap"
+      >
+        Commencer gratuitement
+        <ArrowRight className="w-4 h-4 group-hover:translate-x-1 transition" />
+      </button>
+    </div>
+  );
+}
+
 /* ────────────────────────────  HERO  ──────────────────────────── */
 
 function Hero() {
