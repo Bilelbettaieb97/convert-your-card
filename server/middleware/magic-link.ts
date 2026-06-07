@@ -55,6 +55,10 @@ export default defineEventHandler(async (event) => {
   const magicLink = data.properties.action_link;
   const firstName = email.split("@")[0];
 
+  // Wrap the Supabase link in our own redirect page so email scanners (Gmail/Outlook)
+  // don't consume the one-time token before the user clicks.
+  const safeLink = `${appUrl}/auth/redirect?to=${encodeURIComponent(magicLink)}`;
+
   // Send via Resend (no rate limits)
   const emailRes = await fetch("https://api.resend.com/emails", {
     method: "POST",
@@ -77,7 +81,7 @@ export default defineEventHandler(async (event) => {
           <p style="color:#6b7280;font-size:15px;margin:0 0 32px;line-height:1.6">
             Clique sur le bouton ci-dessous pour te connecter. Ce lien expire dans 1 heure.
           </p>
-          <a href="${magicLink}" style="display:block;text-align:center;background:linear-gradient(135deg,#c026d3,#7c3aed);color:white;padding:16px 32px;border-radius:50px;text-decoration:none;font-weight:700;font-size:16px;margin-bottom:24px">
+          <a href="${safeLink}" style="display:block;text-align:center;background:linear-gradient(135deg,#c026d3,#7c3aed);color:white;padding:16px 32px;border-radius:50px;text-decoration:none;font-weight:700;font-size:16px;margin-bottom:24px">
             Se connecter →
           </a>
           <p style="color:#9ca3af;font-size:12px;text-align:center;margin:0">
