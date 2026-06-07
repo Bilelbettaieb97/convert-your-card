@@ -91,31 +91,33 @@ const PLANS: Plan[] = [
 
 function PlanSelectionPage() {
   return (
-    <main className="min-h-screen bg-background">
-      <div className="mx-auto max-w-6xl px-4 py-12 sm:py-16 lg:py-20">
-        <div className="text-center mb-12 sm:mb-16 animate-fade-in">
-          <Link to="/" className="inline-block mb-6">
-            <span className="text-2xl font-bold bg-gradient-cta bg-clip-text text-transparent">OneTap</span>
-          </Link>
-          <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground tracking-tight">
-            Trouve le forfait qu'il te faut
-          </h1>
-          <p className="mt-4 text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto">
-            Compare en quelques secondes et lance ta carte digitale dès aujourd'hui. Annulable à tout moment.
+    <div className="min-h-screen bg-background text-foreground font-body">
+      <PromoBar />
+      <Nav />
+      <main>
+        <div className="mx-auto max-w-6xl px-4 py-12 sm:py-16 lg:py-20">
+          <div className="text-center mb-12 sm:mb-16 animate-fade-in">
+            <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground tracking-tight">
+              Trouve le forfait qu'il te faut
+            </h1>
+            <p className="mt-4 text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto">
+              Compare en quelques secondes et lance ta carte digitale dès aujourd'hui. Annulable à tout moment.
+            </p>
+          </div>
+
+          <div className="grid gap-6 lg:gap-8 md:grid-cols-3 items-stretch">
+            {PLANS.map((plan) => (
+              <PlanCard key={plan.id} plan={plan} />
+            ))}
+          </div>
+
+          <p className="text-center text-xs text-muted-foreground mt-10">
+            Sans engagement · Paiement sécurisé · TVA incluse
           </p>
         </div>
-
-        <div className="grid gap-6 lg:gap-8 md:grid-cols-3 items-stretch">
-          {PLANS.map((plan) => (
-            <PlanCard key={plan.id} plan={plan} />
-          ))}
-        </div>
-
-        <p className="text-center text-xs text-muted-foreground mt-10">
-          Sans engagement · Paiement sécurisé · TVA incluse
-        </p>
-      </div>
-    </main>
+      </main>
+      <Footer />
+    </div>
   );
 }
 
