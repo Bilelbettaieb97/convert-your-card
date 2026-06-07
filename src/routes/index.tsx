@@ -90,8 +90,7 @@ export function Nav() {
           <Link to="/" hash="fonctionnement" className="hover:text-foreground transition">Fonctionnement</Link>
           <Link to="/templates" className="hover:text-foreground transition">Modèles</Link>
           <Link to="/offres" className="hover:text-foreground transition">Offres</Link>
-          <Link to="/" hash="avis" className="hover:text-foreground transition">Avis</Link>
-          <Link to="/" hash="faq" className="hover:text-foreground transition">FAQ</Link>
+          <Link to="/carte-physique" className="hover:text-foreground transition">Carte physique</Link>
         </nav>
         <div className="flex items-center gap-2 sm:gap-3">
           <Link to="/connexion" className="text-sm font-medium text-muted-foreground hover:text-foreground transition whitespace-nowrap">

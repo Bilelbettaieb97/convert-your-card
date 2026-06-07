@@ -13,6 +13,7 @@ import { Route as TemplatesRouteImport } from './routes/templates'
 import { Route as OffresRouteImport } from './routes/offres'
 import { Route as InscriptionRouteImport } from './routes/inscription'
 import { Route as ConnexionRouteImport } from './routes/connexion'
+import { Route as CartePhysiqueRouteImport } from './routes/carte-physique'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as InscriptionSelectionDePlanRouteImport } from './routes/inscription.selection-de-plan'
 import { Route as InscriptionCartePhysiqueRouteImport } from './routes/inscription.carte-physique'
@@ -37,6 +38,11 @@ const ConnexionRoute = ConnexionRouteImport.update({
   path: '/connexion',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CartePhysiqueRoute = CartePhysiqueRouteImport.update({
+  id: '/carte-physique',
+  path: '/carte-physique',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
@@ -57,6 +63,7 @@ const InscriptionCartePhysiqueRoute =
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
+  '/carte-physique': typeof CartePhysiqueRoute
   '/connexion': typeof ConnexionRoute
   '/inscription': typeof InscriptionRouteWithChildren
   '/offres': typeof OffresRoute
@@ -66,6 +73,7 @@ export interface FileRoutesByFullPath {
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
+  '/carte-physique': typeof CartePhysiqueRoute
   '/connexion': typeof ConnexionRoute
   '/inscription': typeof InscriptionRouteWithChildren
   '/offres': typeof OffresRoute
@@ -76,6 +84,7 @@ export interface FileRoutesByTo {
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
+  '/carte-physique': typeof CartePhysiqueRoute
   '/connexion': typeof ConnexionRoute
   '/inscription': typeof InscriptionRouteWithChildren
   '/offres': typeof OffresRoute
@@ -87,6 +96,7 @@ export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
   fullPaths:
     | '/'
+    | '/carte-physique'
     | '/connexion'
     | '/inscription'
     | '/offres'
@@ -96,6 +106,7 @@ export interface FileRouteTypes {
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
+    | '/carte-physique'
     | '/connexion'
     | '/inscription'
     | '/offres'
@@ -105,6 +116,7 @@ export interface FileRouteTypes {
   id:
     | '__root__'
     | '/'
+    | '/carte-physique'
     | '/connexion'
     | '/inscription'
     | '/offres'
@@ -115,6 +127,7 @@ export interface FileRouteTypes {
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
+  CartePhysiqueRoute: typeof CartePhysiqueRoute
   ConnexionRoute: typeof ConnexionRoute
   InscriptionRoute: typeof InscriptionRouteWithChildren
   OffresRoute: typeof OffresRoute
@@ -149,6 +162,13 @@ declare module '@tanstack/react-router' {
       path: '/connexion'
       fullPath: '/connexion'
       preLoaderRoute: typeof ConnexionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/carte-physique': {
+      id: '/carte-physique'
+      path: '/carte-physique'
+      fullPath: '/carte-physique'
+      preLoaderRoute: typeof CartePhysiqueRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/': {
@@ -191,6 +211,7 @@ const InscriptionRouteWithChildren = InscriptionRoute._addFileChildren(
 
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
+  CartePhysiqueRoute: CartePhysiqueRoute,
   ConnexionRoute: ConnexionRoute,
   InscriptionRoute: InscriptionRouteWithChildren,
   OffresRoute: OffresRoute,
