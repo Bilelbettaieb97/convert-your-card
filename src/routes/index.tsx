@@ -88,6 +88,7 @@ export function Nav() {
         </a>
         <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-muted-foreground">
           <a href="#fonctionnement" className="hover:text-foreground transition">Fonctionnement</a>
+          <Link to="/templates" className="hover:text-foreground transition">Modèles</Link>
           <Link to="/offres" className="hover:text-foreground transition">Offres</Link>
           <a href="#avis" className="hover:text-foreground transition">Avis</a>
           <a href="#faq" className="hover:text-foreground transition">FAQ</a>
