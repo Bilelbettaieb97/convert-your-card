@@ -119,6 +119,19 @@
 }
 
 @utility bg-gradient-brand { background: var(--gradient-brand); }
+@utility input-base {
+  width: 100%;
+  border-radius: 0.75rem;
+  border: 1px solid var(--color-border);
+  background: var(--color-background);
+  padding: 0.625rem 0.75rem;
+  font-size: 0.875rem;
+  color: var(--color-foreground);
+  outline: none;
+  transition: box-shadow 0.15s, border-color 0.15s;
+  &:focus { box-shadow: 0 0 0 2px color-mix(in oklab, var(--magenta) 30%, transparent); border-color: var(--color-magenta); }
+  &::placeholder { color: var(--color-muted-foreground); }
+}
 @utility bg-gradient-cta { background: var(--gradient-cta); }
 @utility bg-gradient-soft { background: var(--gradient-soft); }
 @utility shadow-glow { box-shadow: var(--shadow-glow); }

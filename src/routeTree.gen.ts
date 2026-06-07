@@ -16,6 +16,7 @@ import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as ConnexionRouteImport } from './routes/connexion'
 import { Route as CartePhysiqueRouteImport } from './routes/carte-physique'
 import { Route as BienvenueRouteImport } from './routes/bienvenue'
+import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as SlugRouteImport } from './routes/$slug'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as DashboardIndexRouteImport } from './routes/dashboard/index'
@@ -60,6 +61,11 @@ const CartePhysiqueRoute = CartePhysiqueRouteImport.update({
 const BienvenueRoute = BienvenueRouteImport.update({
   id: '/bienvenue',
   path: '/bienvenue',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OnboardingRoute = OnboardingRouteImport.update({
+  id: '/onboarding',
+  path: '/onboarding',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SlugRoute = SlugRouteImport.update({
@@ -119,6 +125,7 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/$slug': typeof SlugRoute
   '/bienvenue': typeof BienvenueRoute
+  '/onboarding': typeof OnboardingRoute
   '/carte-physique': typeof CartePhysiqueRoute
   '/connexion': typeof ConnexionRoute
   '/dashboard': typeof DashboardRouteWithChildren
@@ -138,6 +145,7 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/$slug': typeof SlugRoute
   '/bienvenue': typeof BienvenueRoute
+  '/onboarding': typeof OnboardingRoute
   '/carte-physique': typeof CartePhysiqueRoute
   '/connexion': typeof ConnexionRoute
   '/inscription': typeof InscriptionRouteWithChildren
@@ -157,6 +165,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/$slug': typeof SlugRoute
   '/bienvenue': typeof BienvenueRoute
+  '/onboarding': typeof OnboardingRoute
   '/carte-physique': typeof CartePhysiqueRoute
   '/connexion': typeof ConnexionRoute
   '/dashboard': typeof DashboardRouteWithChildren
@@ -178,6 +187,7 @@ export interface FileRouteTypes {
     | '/'
     | '/$slug'
     | '/bienvenue'
+    | '/onboarding'
     | '/carte-physique'
     | '/connexion'
     | '/dashboard'
@@ -197,6 +207,7 @@ export interface FileRouteTypes {
     | '/'
     | '/$slug'
     | '/bienvenue'
+    | '/onboarding'
     | '/carte-physique'
     | '/connexion'
     | '/inscription'
@@ -215,6 +226,7 @@ export interface FileRouteTypes {
     | '/'
     | '/$slug'
     | '/bienvenue'
+    | '/onboarding'
     | '/carte-physique'
     | '/connexion'
     | '/dashboard'
@@ -235,6 +247,7 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   SlugRoute: typeof SlugRoute
   BienvenueRoute: typeof BienvenueRoute
+  OnboardingRoute: typeof OnboardingRoute
   CartePhysiqueRoute: typeof CartePhysiqueRoute
   ConnexionRoute: typeof ConnexionRoute
   DashboardRoute: typeof DashboardRouteWithChildren
@@ -293,6 +306,13 @@ declare module '@tanstack/react-router' {
       path: '/bienvenue'
       fullPath: '/bienvenue'
       preLoaderRoute: typeof BienvenueRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/onboarding': {
+      id: '/onboarding'
+      path: '/onboarding'
+      fullPath: '/onboarding'
+      preLoaderRoute: typeof OnboardingRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/$slug': {
@@ -406,6 +426,7 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   SlugRoute: SlugRoute,
   BienvenueRoute: BienvenueRoute,
+  OnboardingRoute: OnboardingRoute,
   CartePhysiqueRoute: CartePhysiqueRoute,
   ConnexionRoute: ConnexionRoute,
   DashboardRoute: DashboardRouteWithChildren,
