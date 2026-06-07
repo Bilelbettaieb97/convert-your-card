@@ -13,7 +13,6 @@ export default defineConfig({
     handlers: [
       { middleware: true, handler: "./server/middleware/stripe-webhook" },
       { middleware: true, handler: "./server/middleware/auth" },
-      { middleware: true, handler: "./server/middleware/checkout-embedded" },
     ],
   } as any,
   tanstackStart: {

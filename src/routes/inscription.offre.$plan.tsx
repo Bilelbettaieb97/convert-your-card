@@ -4,6 +4,7 @@ import { z } from "zod";
 import { loadStripe } from "@stripe/stripe-js";
 import { EmbeddedCheckout, EmbeddedCheckoutProvider } from "@stripe/react-stripe-js";
 import { supabase } from "@/integrations/supabase/client";
+import { createEmbeddedCheckout } from "@/fns/checkout-embedded";
 import { Check, ArrowLeft, Shield, Zap, Clock, Star } from "lucide-react";
 
 const STRIPE_PK = import.meta.env.VITE_STRIPE_PUBLISHABLE_KEY ?? "";
@@ -180,13 +181,10 @@ function OffrePage() {
 
   const fetchClientSecret = useCallback(async () => {
     if (!userEmail) return "";
-    const res = await fetch("/api/checkout-embedded", {
-      method: "POST",
-      headers: { "Content-Type": "application/json" },
-      body: JSON.stringify({ plan: planId, billing, email: userEmail }),
+    const result = await createEmbeddedCheckout({
+      data: { plan: planId, billing, email: userEmail },
     });
-    const data = await res.json();
-    return data.clientSecret ?? "";
+    return result.clientSecret ?? "";
   }, [planId, billing, userEmail]);
 
   function handleBillingChange(newBilling: "monthly" | "annual") {
