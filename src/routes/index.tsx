@@ -1,4 +1,4 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import React, { useEffect, useState } from "react";
 import {
   Check, X, Star, Zap, Shield, Smartphone, BarChart3, Leaf,
