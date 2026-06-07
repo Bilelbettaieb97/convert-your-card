@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useEffect, useRef, useState } from "react";
+import { useEffect, useState } from "react";
 import { z } from "zod";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
@@ -42,9 +42,13 @@ function ConnexionPage() {
   const [submitting, setSubmitting] = useState(false);
 
   async function sendOtp(targetEmail: string) {
+    const redirectTo = (typeof window !== "undefined" ? window.location.origin : "https://convert-your-card.vercel.app") + "/dashboard";
     const { error } = await supabase.auth.signInWithOtp({
       email: targetEmail,
-      options: { shouldCreateUser: false },
+      options: {
+        shouldCreateUser: false,
+        emailRedirectTo: redirectTo,
+      },
     });
     if (error) throw error;
   }
@@ -155,23 +159,15 @@ function ConnexionPage() {
 }
 
 function OtpStep({
-  email, onBack, onResend, onVerified,
+  email, onBack, onResend,
 }: {
   email: string;
   onBack: () => void;
   onResend: () => Promise<void>;
   onVerified: () => void;
 }) {
-  const [digits, setDigits] = useState<string[]>(["", "", "", "", "", ""]);
-  const [verifying, setVerifying] = useState(false);
-  const [error, setError] = useState<string | null>(null);
   const [cooldown, setCooldown] = useState(30);
   const [resending, setResending] = useState(false);
-  const inputsRef = useRef<Array<HTMLInputElement | null>>([]);
-
-  useEffect(() => {
-    inputsRef.current[0]?.focus();
-  }, []);
 
   useEffect(() => {
     if (cooldown <= 0) return;
@@ -179,73 +175,15 @@ function OtpStep({
     return () => clearTimeout(t);
   }, [cooldown]);
 
-  async function verify(code: string) {
-    setVerifying(true);
-    setError(null);
-    try {
-      const { error } = await supabase.auth.verifyOtp({
-        email,
-        token: code,
-        type: "email",
-      });
-      if (error) throw error;
-      onVerified();
-    } catch (err) {
-      setError(err instanceof Error ? err.message : "Code invalide ou expiré");
-      setDigits(["", "", "", "", "", ""]);
-      inputsRef.current[0]?.focus();
-    } finally {
-      setVerifying(false);
-    }
-  }
-
-  function handleChange(idx: number, value: string) {
-    const clean = value.replace(/\D/g, "");
-    if (!clean) {
-      const next = [...digits];
-      next[idx] = "";
-      setDigits(next);
-      return;
-    }
-    if (clean.length > 1) {
-      const chars = clean.slice(0, 6 - idx).split("");
-      const next = [...digits];
-      chars.forEach((c, i) => { next[idx + i] = c; });
-      setDigits(next);
-      const lastFilled = Math.min(idx + chars.length, 5);
-      inputsRef.current[lastFilled]?.focus();
-      const joined = next.join("");
-      if (joined.length === 6) verify(joined);
-      return;
-    }
-    const next = [...digits];
-    next[idx] = clean;
-    setDigits(next);
-    if (idx < 5) inputsRef.current[idx + 1]?.focus();
-    const joined = next.join("");
-    if (joined.length === 6) verify(joined);
-  }
-
-  function handleKeyDown(idx: number, e: React.KeyboardEvent<HTMLInputElement>) {
-    if (e.key === "Backspace" && !digits[idx] && idx > 0) {
-      inputsRef.current[idx - 1]?.focus();
-    }
-    if (e.key === "ArrowLeft" && idx > 0) inputsRef.current[idx - 1]?.focus();
-    if (e.key === "ArrowRight" && idx < 5) inputsRef.current[idx + 1]?.focus();
-  }
-
   async function handleResend() {
     if (cooldown > 0 || resending) return;
     setResending(true);
     try {
       await onResend();
-      toast.success("Nouveau code envoyé !");
-      setCooldown(30);
-      setDigits(["", "", "", "", "", ""]);
-      setError(null);
-      inputsRef.current[0]?.focus();
+      toast.success("Lien renvoyé !");
+      setCooldown(60);
     } catch (err) {
-      toast.error(err instanceof Error ? err.message : "Impossible d'envoyer le code");
+      toast.error(err instanceof Error ? err.message : "Impossible d'envoyer le lien");
     } finally {
       setResending(false);
     }
@@ -261,55 +199,42 @@ function OtpStep({
         Modifier l'e-mail
       </button>
 
-      <div className="w-12 h-12 rounded-2xl bg-magenta/10 flex items-center justify-center mb-4">
-        <Mail className="w-6 h-6 text-magenta" />
+      <div className="w-14 h-14 rounded-2xl bg-magenta/10 flex items-center justify-center mb-5">
+        <Mail className="w-7 h-7 text-magenta" />
       </div>
 
-      <p className="mt-1 text-sm text-muted-foreground mb-6">
-        Code envoyé à <span className="font-semibold text-foreground">{email}</span>
+      <h2 className="font-display text-2xl font-bold text-foreground">
+        Vérifie ton e-mail !
+      </h2>
+      <p className="mt-2 text-sm text-muted-foreground leading-relaxed">
+        Lien de connexion envoyé à<br />
+        <span className="font-semibold text-foreground">{email}</span>
       </p>
 
-      <div className="flex gap-2 justify-between">
-        {digits.map((d, i) => (
-          <input
-            key={i}
-            ref={(el) => { inputsRef.current[i] = el; }}
-            type="text"
-            inputMode="numeric"
-            pattern="[0-9]*"
-            maxLength={6}
-            value={d}
-            disabled={verifying}
-            onChange={(e) => handleChange(i, e.target.value)}
-            onKeyDown={(e) => handleKeyDown(i, e)}
-            className="w-12 h-14 text-center text-xl font-bold rounded-xl border-2 border-border bg-background text-foreground focus:outline-none focus:border-magenta focus:ring-2 focus:ring-magenta/30 transition disabled:opacity-60"
-          />
-        ))}
+      <div className="mt-6 bg-muted/50 rounded-2xl p-5 text-sm leading-relaxed">
+        <p className="font-semibold text-foreground mb-1">Comment ça marche ?</p>
+        <ol className="list-decimal list-inside space-y-1 text-xs text-muted-foreground">
+          <li>Ouvre ton email (vérifie aussi le spam)</li>
+          <li>Clique sur le bouton <span className="font-semibold text-foreground">« Se connecter »</span></li>
+          <li>Tu seras automatiquement redirigé</li>
+        </ol>
       </div>
 
-      {error && (
-        <p className="mt-3 text-xs text-red-500 font-medium">{error}</p>
-      )}
-
-      {verifying && (
-        <p className="mt-3 text-xs text-muted-foreground">Vérification…</p>
-      )}
-
-      <div className="mt-6 text-center text-xs text-muted-foreground">
+      <div className="mt-5 text-center text-xs text-muted-foreground">
         Tu n'as rien reçu ?{" "}
         <button
           onClick={handleResend}
           disabled={cooldown > 0 || resending}
           className="text-magenta font-semibold hover:underline disabled:opacity-50 disabled:no-underline disabled:cursor-not-allowed"
         >
-          {cooldown > 0 ? `Renvoyer dans ${cooldown}s` : resending ? "Envoi…" : "Renvoyer le code"}
+          {cooldown > 0 ? `Renvoyer dans ${cooldown}s` : resending ? "Envoi…" : "Renvoyer le lien"}
         </button>
       </div>
 
-      <div className="mt-6 pt-5 border-t border-border">
+      <div className="mt-5 pt-5 border-t border-border">
         <div className="flex items-center gap-2 text-[11px] text-muted-foreground">
           <ShieldCheck className="w-3.5 h-3.5 text-emerald-500" />
-          Pense à vérifier ton dossier spam si tu ne trouves pas l'e-mail.
+          Pense à vérifier ton dossier spam.
         </div>
       </div>
     </>
