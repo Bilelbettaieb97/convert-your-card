@@ -28,9 +28,13 @@ export default defineEventHandler(async (event) => {
   });
 
   if (error) {
-    // User already exists → let client handle signIn directly
-    if (error.message.includes("already been registered") || error.message.includes("already registered")) {
-      return new Response(JSON.stringify({ error: "Ce compte existe déjà. Connecte-toi." }), {
+    // email_exists → return 409 so client can attempt signIn directly
+    const isEmailExists =
+      error.message?.toLowerCase().includes("already") ||
+      (error as { code?: string }).code === "email_exists" ||
+      String(error).includes("email_exists");
+    if (isEmailExists) {
+      return new Response(JSON.stringify({ exists: true }), {
         status: 409,
         headers: { "Content-Type": "application/json" },
       });
