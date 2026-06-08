@@ -254,27 +254,29 @@ export default defineEventHandler(async (event) => {
 
     // Create or update nfc_profile
     let profileSlug = slug;
+    let profileNom = email.split("@")[0];
     if (userId) {
-      const { data: existing } = await adminSupabase.from("nfc_profiles").select("id,slug").eq("user_id", userId).maybeSingle();
+      const { data: existing } = await adminSupabase.from("nfc_profiles").select("id,slug,nom").eq("user_id", userId).maybeSingle();
       if (existing) {
         profileSlug = existing.slug;
+        if (existing.nom) profileNom = existing.nom;
         await adminSupabase.from("nfc_profiles").update({ plan, actif: true }).eq("id", existing.id);
         console.log("[stripe-webhook] Updated existing profile:", profileSlug);
       } else {
         const { data: newProfile } = await adminSupabase
           .from("nfc_profiles")
-          .insert({ slug, nom: email.split("@")[0], email, telephone: "", entreprise: "", fonction: "", plan, boutons: [], reseaux: [], actif: true, user_id: userId })
-          .select("slug").single();
-        if (newProfile) profileSlug = newProfile.slug;
+          .insert({ slug, nom: profileNom, email, telephone: "", entreprise: "", fonction: "", plan, boutons: [], reseaux: [], actif: true, user_id: userId })
+          .select("slug,nom").single();
+        if (newProfile) { profileSlug = newProfile.slug; if (newProfile.nom) profileNom = newProfile.nom; }
         console.log("[stripe-webhook] Created new profile:", profileSlug);
       }
     } else {
       // User hasn't signed up yet — create profile without user_id
       const { data: newProfile } = await adminSupabase
         .from("nfc_profiles")
-        .insert({ slug, nom: email.split("@")[0], email, telephone: "", entreprise: "", fonction: "", plan, boutons: [], reseaux: [], actif: true })
-        .select("slug").single();
-      if (newProfile) profileSlug = newProfile.slug;
+        .insert({ slug, nom: profileNom, email, telephone: "", entreprise: "", fonction: "", plan, boutons: [], reseaux: [], actif: true })
+        .select("slug,nom").single();
+      if (newProfile) { profileSlug = newProfile.slug; if (newProfile.nom) profileNom = newProfile.nom; }
       console.log("[stripe-webhook] Created profile (no user):", profileSlug);
     }
 
@@ -288,7 +290,7 @@ export default defineEventHandler(async (event) => {
 
     // Send welcome email + admin notification
     try {
-      await sendWelcomeEmail(email, email.split("@")[0], profileSlug, plan);
+      await sendWelcomeEmail(email, profileNom, profileSlug, plan);
       console.log("[stripe-webhook] Welcome email sent to:", email);
     } catch (e) {
       console.error("[stripe-webhook] Email error:", e);
