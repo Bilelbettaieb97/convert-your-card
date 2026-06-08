@@ -47,7 +47,8 @@ function ThemePage() {
   const lightThemes = CARD_THEMES.filter((t) => t.palette.mode === "light");
 
   return (
-    <div className="mx-auto max-w-[1400px] px-5 sm:px-8 py-8 grid grid-cols-1 xl:grid-cols-[1fr_380px] gap-8 items-start">
+    <div className="mx-auto max-w-[1400px] px-5 sm:px-8 py-8 grid grid-cols-1 xl:grid-cols-[1fr_340px] gap-8 items-start">
+
       <section>
         <div className="flex items-center gap-3 mb-6">
           <Link to="/dashboard/card" className="h-8 w-8 grid place-items-center rounded-lg border border-border text-muted-foreground hover:text-foreground hover:bg-muted transition shrink-0">
@@ -59,7 +60,8 @@ function ThemePage() {
           </div>
         </div>
 
-        <div className="space-y-6">
+        {/* Dark + Light side by side */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
           <ThemeGroup
             label="Thèmes sombres"
             themes={darkThemes}
@@ -96,7 +98,7 @@ function ThemeGroup({ label, themes, activeId, onSelect }: {
   return (
     <div>
       <p className="text-xs uppercase tracking-widest text-muted-foreground mb-3">{label}</p>
-      <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+      <div className="grid grid-cols-2 gap-3">
         {themes.map((t) => (
           <ThemeCard
             key={t.id}
