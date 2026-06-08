@@ -10,29 +10,41 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TemplatesRouteImport } from './routes/templates'
+import { Route as PricingRouteImport } from './routes/pricing'
+import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as OffresRouteImport } from './routes/offres'
 import { Route as InscriptionRouteImport } from './routes/inscription'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as ConnexionRouteImport } from './routes/connexion'
 import { Route as CartePhysiqueRouteImport } from './routes/carte-physique'
+import { Route as BuilderRouteImport } from './routes/builder'
 import { Route as BienvenueRouteImport } from './routes/bienvenue'
-import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as SlugRouteImport } from './routes/$slug'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as InscriptionIndexRouteImport } from './routes/inscription.index'
 import { Route as DashboardIndexRouteImport } from './routes/dashboard/index'
-import { Route as DashboardCarteRouteImport } from './routes/dashboard/carte'
-import { Route as DashboardStatistiquesRouteImport } from './routes/dashboard/statistiques'
-import { Route as DashboardModelesRouteImport } from './routes/dashboard/modeles'
-import { Route as DashboardAbonnementRouteImport } from './routes/dashboard/abonnement'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as InscriptionSelectionDePlanRouteImport } from './routes/inscription.selection-de-plan'
-import { Route as InscriptionIndexRouteImport } from './routes/inscription.index'
 import { Route as InscriptionCartePhysiqueRouteImport } from './routes/inscription.carte-physique'
+import { Route as DashboardStatistiquesRouteImport } from './routes/dashboard/statistiques'
+import { Route as DashboardModelesRouteImport } from './routes/dashboard/modeles'
+import { Route as DashboardCarteRouteImport } from './routes/dashboard/carte'
+import { Route as DashboardAbonnementRouteImport } from './routes/dashboard/abonnement'
 import { Route as InscriptionOffrePlanRouteImport } from './routes/inscription.offre.$plan'
 
 const TemplatesRoute = TemplatesRouteImport.update({
   id: '/templates',
   path: '/templates',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PricingRoute = PricingRouteImport.update({
+  id: '/pricing',
+  path: '/pricing',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const OnboardingRoute = OnboardingRouteImport.update({
+  id: '/onboarding',
+  path: '/onboarding',
   getParentRoute: () => rootRouteImport,
 } as any)
 const OffresRoute = OffresRouteImport.update({
@@ -60,14 +72,14 @@ const CartePhysiqueRoute = CartePhysiqueRouteImport.update({
   path: '/carte-physique',
   getParentRoute: () => rootRouteImport,
 } as any)
+const BuilderRoute = BuilderRouteImport.update({
+  id: '/builder',
+  path: '/builder',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const BienvenueRoute = BienvenueRouteImport.update({
   id: '/bienvenue',
   path: '/bienvenue',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const OnboardingRoute = OnboardingRouteImport.update({
-  id: '/onboarding',
-  path: '/onboarding',
   getParentRoute: () => rootRouteImport,
 } as any)
 const SlugRoute = SlugRouteImport.update({
@@ -80,29 +92,14 @@ const IndexRoute = IndexRouteImport.update({
   path: '/',
   getParentRoute: () => rootRouteImport,
 } as any)
+const InscriptionIndexRoute = InscriptionIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => InscriptionRoute,
+} as any)
 const DashboardIndexRoute = DashboardIndexRouteImport.update({
   id: '/',
   path: '/',
-  getParentRoute: () => DashboardRoute,
-} as any)
-const DashboardCarteRoute = DashboardCarteRouteImport.update({
-  id: '/carte',
-  path: '/carte',
-  getParentRoute: () => DashboardRoute,
-} as any)
-const DashboardStatistiquesRoute = DashboardStatistiquesRouteImport.update({
-  id: '/statistiques',
-  path: '/statistiques',
-  getParentRoute: () => DashboardRoute,
-} as any)
-const DashboardModelesRoute = DashboardModelesRouteImport.update({
-  id: '/modeles',
-  path: '/modeles',
-  getParentRoute: () => DashboardRoute,
-} as any)
-const DashboardAbonnementRoute = DashboardAbonnementRouteImport.update({
-  id: '/abonnement',
-  path: '/abonnement',
   getParentRoute: () => DashboardRoute,
 } as any)
 const AdminIndexRoute = AdminIndexRouteImport.update({
@@ -116,88 +113,108 @@ const InscriptionSelectionDePlanRoute =
     path: '/selection-de-plan',
     getParentRoute: () => InscriptionRoute,
   } as any)
-const InscriptionIndexRoute = InscriptionIndexRouteImport.update({
-  id: '/inscription/',
-  path: '/',
-  getParentRoute: () => InscriptionRoute,
-} as any)
-const InscriptionOffrePlanRoute = InscriptionOffrePlanRouteImport.update({
-  id: '/inscription/offre/$plan',
-  path: '/offre/$plan',
-  getParentRoute: () => InscriptionRoute,
-} as any)
 const InscriptionCartePhysiqueRoute =
   InscriptionCartePhysiqueRouteImport.update({
     id: '/carte-physique',
     path: '/carte-physique',
     getParentRoute: () => InscriptionRoute,
   } as any)
+const DashboardStatistiquesRoute = DashboardStatistiquesRouteImport.update({
+  id: '/statistiques',
+  path: '/statistiques',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardModelesRoute = DashboardModelesRouteImport.update({
+  id: '/modeles',
+  path: '/modeles',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardCarteRoute = DashboardCarteRouteImport.update({
+  id: '/carte',
+  path: '/carte',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardAbonnementRoute = DashboardAbonnementRouteImport.update({
+  id: '/abonnement',
+  path: '/abonnement',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const InscriptionOffrePlanRoute = InscriptionOffrePlanRouteImport.update({
+  id: '/offre/$plan',
+  path: '/offre/$plan',
+  getParentRoute: () => InscriptionRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/$slug': typeof SlugRoute
   '/bienvenue': typeof BienvenueRoute
-  '/onboarding': typeof OnboardingRoute
+  '/builder': typeof BuilderRoute
   '/carte-physique': typeof CartePhysiqueRoute
   '/connexion': typeof ConnexionRoute
   '/dashboard': typeof DashboardRouteWithChildren
   '/inscription': typeof InscriptionRouteWithChildren
   '/offres': typeof OffresRoute
+  '/onboarding': typeof OnboardingRoute
+  '/pricing': typeof PricingRoute
   '/templates': typeof TemplatesRoute
   '/dashboard/abonnement': typeof DashboardAbonnementRoute
   '/dashboard/carte': typeof DashboardCarteRoute
-  '/dashboard/statistiques': typeof DashboardStatistiquesRoute
   '/dashboard/modeles': typeof DashboardModelesRoute
+  '/dashboard/statistiques': typeof DashboardStatistiquesRoute
   '/inscription/carte-physique': typeof InscriptionCartePhysiqueRoute
   '/inscription/selection-de-plan': typeof InscriptionSelectionDePlanRoute
-  '/inscription/': typeof InscriptionIndexRoute
-  '/inscription/offre/$plan': typeof InscriptionOffrePlanRoute
   '/admin/': typeof AdminIndexRoute
   '/dashboard/': typeof DashboardIndexRoute
+  '/inscription/': typeof InscriptionIndexRoute
+  '/inscription/offre/$plan': typeof InscriptionOffrePlanRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/$slug': typeof SlugRoute
   '/bienvenue': typeof BienvenueRoute
-  '/onboarding': typeof OnboardingRoute
+  '/builder': typeof BuilderRoute
   '/carte-physique': typeof CartePhysiqueRoute
   '/connexion': typeof ConnexionRoute
-  '/inscription': typeof InscriptionRouteWithChildren
   '/offres': typeof OffresRoute
+  '/onboarding': typeof OnboardingRoute
+  '/pricing': typeof PricingRoute
   '/templates': typeof TemplatesRoute
   '/dashboard/abonnement': typeof DashboardAbonnementRoute
   '/dashboard/carte': typeof DashboardCarteRoute
-  '/dashboard/statistiques': typeof DashboardStatistiquesRoute
   '/dashboard/modeles': typeof DashboardModelesRoute
+  '/dashboard/statistiques': typeof DashboardStatistiquesRoute
   '/inscription/carte-physique': typeof InscriptionCartePhysiqueRoute
   '/inscription/selection-de-plan': typeof InscriptionSelectionDePlanRoute
-  '/inscription': typeof InscriptionIndexRoute
-  '/inscription/offre/$plan': typeof InscriptionOffrePlanRoute
   '/admin': typeof AdminIndexRoute
   '/dashboard': typeof DashboardIndexRoute
+  '/inscription': typeof InscriptionIndexRoute
+  '/inscription/offre/$plan': typeof InscriptionOffrePlanRoute
 }
 export interface FileRoutesById {
   __root__: typeof rootRouteImport
   '/': typeof IndexRoute
   '/$slug': typeof SlugRoute
   '/bienvenue': typeof BienvenueRoute
-  '/onboarding': typeof OnboardingRoute
+  '/builder': typeof BuilderRoute
   '/carte-physique': typeof CartePhysiqueRoute
   '/connexion': typeof ConnexionRoute
   '/dashboard': typeof DashboardRouteWithChildren
   '/inscription': typeof InscriptionRouteWithChildren
   '/offres': typeof OffresRoute
+  '/onboarding': typeof OnboardingRoute
+  '/pricing': typeof PricingRoute
   '/templates': typeof TemplatesRoute
   '/dashboard/abonnement': typeof DashboardAbonnementRoute
   '/dashboard/carte': typeof DashboardCarteRoute
-  '/dashboard/statistiques': typeof DashboardStatistiquesRoute
   '/dashboard/modeles': typeof DashboardModelesRoute
+  '/dashboard/statistiques': typeof DashboardStatistiquesRoute
   '/inscription/carte-physique': typeof InscriptionCartePhysiqueRoute
   '/inscription/selection-de-plan': typeof InscriptionSelectionDePlanRoute
-  '/inscription/': typeof InscriptionIndexRoute
-  '/inscription/offre/$plan': typeof InscriptionOffrePlanRoute
   '/admin/': typeof AdminIndexRoute
   '/dashboard/': typeof DashboardIndexRoute
+  '/inscription/': typeof InscriptionIndexRoute
+  '/inscription/offre/$plan': typeof InscriptionOffrePlanRoute
 }
 export interface FileRouteTypes {
   fileRoutesByFullPath: FileRoutesByFullPath
@@ -205,78 +222,85 @@ export interface FileRouteTypes {
     | '/'
     | '/$slug'
     | '/bienvenue'
-    | '/onboarding'
+    | '/builder'
     | '/carte-physique'
     | '/connexion'
     | '/dashboard'
     | '/inscription'
     | '/offres'
+    | '/onboarding'
+    | '/pricing'
     | '/templates'
     | '/dashboard/abonnement'
     | '/dashboard/carte'
-    | '/dashboard/statistiques'
     | '/dashboard/modeles'
+    | '/dashboard/statistiques'
     | '/inscription/carte-physique'
     | '/inscription/selection-de-plan'
-    | '/inscription/'
-    | '/inscription/offre/$plan'
     | '/admin/'
     | '/dashboard/'
+    | '/inscription/'
+    | '/inscription/offre/$plan'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/$slug'
     | '/bienvenue'
-    | '/onboarding'
+    | '/builder'
     | '/carte-physique'
     | '/connexion'
-    | '/inscription'
     | '/offres'
+    | '/onboarding'
+    | '/pricing'
     | '/templates'
     | '/dashboard/abonnement'
     | '/dashboard/carte'
-    | '/dashboard/statistiques'
     | '/dashboard/modeles'
+    | '/dashboard/statistiques'
     | '/inscription/carte-physique'
     | '/inscription/selection-de-plan'
-    | '/inscription/offre/$plan'
     | '/admin'
     | '/dashboard'
     | '/inscription'
+    | '/inscription/offre/$plan'
   id:
     | '__root__'
     | '/'
     | '/$slug'
     | '/bienvenue'
-    | '/onboarding'
+    | '/builder'
     | '/carte-physique'
     | '/connexion'
     | '/dashboard'
     | '/inscription'
     | '/offres'
+    | '/onboarding'
+    | '/pricing'
     | '/templates'
     | '/dashboard/abonnement'
     | '/dashboard/carte'
-    | '/dashboard/statistiques'
     | '/dashboard/modeles'
+    | '/dashboard/statistiques'
     | '/inscription/carte-physique'
     | '/inscription/selection-de-plan'
-    | '/inscription/'
-    | '/inscription/offre/$plan'
     | '/admin/'
     | '/dashboard/'
+    | '/inscription/'
+    | '/inscription/offre/$plan'
   fileRoutesById: FileRoutesById
 }
 export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   SlugRoute: typeof SlugRoute
   BienvenueRoute: typeof BienvenueRoute
-  OnboardingRoute: typeof OnboardingRoute
+  BuilderRoute: typeof BuilderRoute
   CartePhysiqueRoute: typeof CartePhysiqueRoute
   ConnexionRoute: typeof ConnexionRoute
   DashboardRoute: typeof DashboardRouteWithChildren
   InscriptionRoute: typeof InscriptionRouteWithChildren
   OffresRoute: typeof OffresRoute
+  OnboardingRoute: typeof OnboardingRoute
+  PricingRoute: typeof PricingRoute
   TemplatesRoute: typeof TemplatesRoute
   AdminIndexRoute: typeof AdminIndexRoute
 }
@@ -288,6 +312,20 @@ declare module '@tanstack/react-router' {
       path: '/templates'
       fullPath: '/templates'
       preLoaderRoute: typeof TemplatesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/pricing': {
+      id: '/pricing'
+      path: '/pricing'
+      fullPath: '/pricing'
+      preLoaderRoute: typeof PricingRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/onboarding': {
+      id: '/onboarding'
+      path: '/onboarding'
+      fullPath: '/onboarding'
+      preLoaderRoute: typeof OnboardingRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/offres': {
@@ -325,18 +363,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof CartePhysiqueRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/builder': {
+      id: '/builder'
+      path: '/builder'
+      fullPath: '/builder'
+      preLoaderRoute: typeof BuilderRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/bienvenue': {
       id: '/bienvenue'
       path: '/bienvenue'
       fullPath: '/bienvenue'
       preLoaderRoute: typeof BienvenueRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/onboarding': {
-      id: '/onboarding'
-      path: '/onboarding'
-      fullPath: '/onboarding'
-      preLoaderRoute: typeof OnboardingRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/$slug': {
@@ -353,32 +391,18 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/inscription/': {
+      id: '/inscription/'
+      path: '/'
+      fullPath: '/inscription/'
+      preLoaderRoute: typeof InscriptionIndexRouteImport
+      parentRoute: typeof InscriptionRoute
+    }
     '/dashboard/': {
       id: '/dashboard/'
       path: '/'
       fullPath: '/dashboard/'
       preLoaderRoute: typeof DashboardIndexRouteImport
-      parentRoute: typeof DashboardRoute
-    }
-    '/dashboard/carte': {
-      id: '/dashboard/carte'
-      path: '/carte'
-      fullPath: '/dashboard/carte'
-      preLoaderRoute: typeof DashboardCarteRouteImport
-      parentRoute: typeof DashboardRoute
-    }
-    '/dashboard/statistiques': {
-      id: '/dashboard/statistiques'
-      path: '/statistiques'
-      fullPath: '/dashboard/statistiques'
-      preLoaderRoute: typeof DashboardStatistiquesRouteImport
-      parentRoute: typeof DashboardRoute
-    }
-    '/dashboard/modeles': {
-      id: '/dashboard/modeles'
-      path: '/modeles'
-      fullPath: '/dashboard/modeles'
-      preLoaderRoute: typeof DashboardModelesRouteImport
       parentRoute: typeof DashboardRoute
     }
     '/admin/': {
@@ -395,13 +419,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof InscriptionSelectionDePlanRouteImport
       parentRoute: typeof InscriptionRoute
     }
-    '/inscription/': {
-      id: '/inscription/'
-      path: '/'
-      fullPath: '/inscription/'
-      preLoaderRoute: typeof InscriptionIndexRouteImport
-      parentRoute: typeof InscriptionRoute
-    }
     '/inscription/carte-physique': {
       id: '/inscription/carte-physique'
       path: '/carte-physique'
@@ -409,12 +426,26 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof InscriptionCartePhysiqueRouteImport
       parentRoute: typeof InscriptionRoute
     }
-    '/inscription/offre/$plan': {
-      id: '/inscription/offre/$plan'
-      path: '/offre/$plan'
-      fullPath: '/inscription/offre/$plan'
-      preLoaderRoute: typeof InscriptionOffrePlanRouteImport
-      parentRoute: typeof InscriptionRoute
+    '/dashboard/statistiques': {
+      id: '/dashboard/statistiques'
+      path: '/statistiques'
+      fullPath: '/dashboard/statistiques'
+      preLoaderRoute: typeof DashboardStatistiquesRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/modeles': {
+      id: '/dashboard/modeles'
+      path: '/modeles'
+      fullPath: '/dashboard/modeles'
+      preLoaderRoute: typeof DashboardModelesRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/carte': {
+      id: '/dashboard/carte'
+      path: '/carte'
+      fullPath: '/dashboard/carte'
+      preLoaderRoute: typeof DashboardCarteRouteImport
+      parentRoute: typeof DashboardRoute
     }
     '/dashboard/abonnement': {
       id: '/dashboard/abonnement'
@@ -423,22 +454,29 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardAbonnementRouteImport
       parentRoute: typeof DashboardRoute
     }
+    '/inscription/offre/$plan': {
+      id: '/inscription/offre/$plan'
+      path: '/offre/$plan'
+      fullPath: '/inscription/offre/$plan'
+      preLoaderRoute: typeof InscriptionOffrePlanRouteImport
+      parentRoute: typeof InscriptionRoute
+    }
   }
 }
 
 interface DashboardRouteChildren {
   DashboardAbonnementRoute: typeof DashboardAbonnementRoute
   DashboardCarteRoute: typeof DashboardCarteRoute
-  DashboardStatistiquesRoute: typeof DashboardStatistiquesRoute
   DashboardModelesRoute: typeof DashboardModelesRoute
+  DashboardStatistiquesRoute: typeof DashboardStatistiquesRoute
   DashboardIndexRoute: typeof DashboardIndexRoute
 }
 
 const DashboardRouteChildren: DashboardRouteChildren = {
   DashboardAbonnementRoute: DashboardAbonnementRoute,
   DashboardCarteRoute: DashboardCarteRoute,
-  DashboardStatistiquesRoute: DashboardStatistiquesRoute,
   DashboardModelesRoute: DashboardModelesRoute,
+  DashboardStatistiquesRoute: DashboardStatistiquesRoute,
   DashboardIndexRoute: DashboardIndexRoute,
 }
 
@@ -468,12 +506,14 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   SlugRoute: SlugRoute,
   BienvenueRoute: BienvenueRoute,
-  OnboardingRoute: OnboardingRoute,
+  BuilderRoute: BuilderRoute,
   CartePhysiqueRoute: CartePhysiqueRoute,
   ConnexionRoute: ConnexionRoute,
   DashboardRoute: DashboardRouteWithChildren,
   InscriptionRoute: InscriptionRouteWithChildren,
   OffresRoute: OffresRoute,
+  OnboardingRoute: OnboardingRoute,
+  PricingRoute: PricingRoute,
   TemplatesRoute: TemplatesRoute,
   AdminIndexRoute: AdminIndexRoute,
 }
