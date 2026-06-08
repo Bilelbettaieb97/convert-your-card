@@ -1,6 +1,9 @@
-import { useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import { toast } from "sonner";
-import { Sparkles, Check, ChevronDown, Lock, Crown, Flame } from "lucide-react";
+import { Sparkles, Check, ChevronDown, Lock, Crown, Flame, GripVertical } from "lucide-react";
+import { DndContext, closestCenter, type DragEndEvent } from "@dnd-kit/core";
+import { SortableContext, useSortable, verticalListSortingStrategy, arrayMove } from "@dnd-kit/sortable";
+import { CSS } from "@dnd-kit/utilities";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import {
@@ -10,7 +13,7 @@ import { BusinessCard } from "@/components/card/BusinessCard";
 import { PhoneFrame } from "@/components/card/PhoneFrame";
 import { StepHeader } from "@/components/builder/StepHeader";
 import { StepFooter } from "@/components/builder/StepFooter";
-import { THEMES_BY_ID } from "@/lib/card-themes";
+import { THEMES_BY_ID, PROFESSIONS } from "@/lib/card-themes";
 import type { CardData, BrickId } from "@/lib/card-types";
 import { renderBrickBody } from "@/components/builder/bricks";
 import {
@@ -47,28 +50,31 @@ interface SectionDef {
   description: string;
   recommended?: boolean;
   popular?: boolean;
+  immobilierOnly?: boolean;
 }
 
 const ESSENTIALS: SectionDef[] = [
   { key: "identity",       brick: "identity", label: "Identité",                       description: "Nom, titre, photo et couverture — toujours visible.",                 recommended: true },
   { key: "actions",        brick: "actions",  label: "Boutons d'action",               description: "Appeler, WhatsApp, email, site — accès rapide en un tap.",            recommended: true },
+  { key: "socialsEnabled", brick: "socials",  label: "Réseaux sociaux",                description: "LinkedIn, Instagram, WhatsApp public.",                               recommended: true },
   { key: "vcardEnabled",   brick: "vcard",    label: "Ajouter au répertoire (vCard)",  description: "Un bouton pour s'enregistrer dans les contacts.",                     recommended: true },
   { key: "aboutEnabled",   brick: "about",    label: "À propos",                       description: "Bio courte et badges de certification.",                              recommended: true },
-  { key: "contactEnabled", brick: "contact",  label: "Contact",                        description: "Téléphone, email et site web — l'essentiel pour être joignable.",     recommended: true },
 ];
 
-const EXTRAS: SectionDef[] = [
-  { key: "socialsEnabled",      brick: "socials",      label: "Réseaux sociaux",              description: "LinkedIn, Instagram, WhatsApp public.",                popular: true },
+const EXTRAS_RAW: SectionDef[] = [
+  { key: "contactEnabled",      brick: "contact",      label: "Contact",                      description: "Téléphone, email et site web — l'essentiel pour être joignable.",  popular: true },
   { key: "servicesEnabled",     brick: "services",     label: "Services",                     description: "Liste de vos prestations ou spécialités.",             popular: true },
   { key: "testimonialsEnabled", brick: "testimonials", label: "Témoignages",                  description: "Avis clients pour rassurer.",                          popular: true },
   { key: "statsEnabled",        brick: "stats",        label: "Chiffres clés",                description: "Années d'expérience, projets, note clients." },
-  { key: "listingsEnabled",     brick: "listings",     label: "Sélection de biens",           description: "Annonces immobilières avec photo, surface et prix." },
-  { key: "galleryEnabled",      brick: "gallery",      label: "Galerie de photos",             description: "Portfolio visuel — photos + légendes." },
+  { key: "listingsEnabled",     brick: "listings",     label: "Sélection de biens",           description: "Annonces immobilières avec photo, surface et prix.",  immobilierOnly: true },
+  { key: "galleryEnabled",      brick: "gallery",      label: "Galerie de photos",            description: "Portfolio visuel — photos + légendes." },
   { key: "videoEnabled",        brick: "video",        label: "Vidéo de présentation",        description: "Une vidéo YouTube intégrée." },
   { key: "calendarEnabled",     brick: "calendar",     label: "Prise de rendez-vous",         description: "Lien Calendly ou équivalent." },
   { key: "ctaEnabled",          brick: "cta",          label: "Bannière d'appel à l'action",  description: "Message + bouton pour convertir." },
   { key: "languagesEnabled",    brick: "languages",    label: "Langues parlées",              description: "Pratique pour un public international." },
 ];
+
+const IMMOBILIER_CATEGORY = "Immobilier";
 
 function isEnabled(data: CardData, key: SectionKey): boolean {
   if (key === "identity") return true;
@@ -114,16 +120,21 @@ interface Props {
 
 export function BuilderSections({ step, data, setData, update, plan, setPlan, completedThrough, onGoToStep, onBack, onNext }: Props) {
   const isEssentials = step === "essentials";
+
+  const IMMOBILIER_IDS = new Set(PROFESSIONS.filter((p) => p.category === IMMOBILIER_CATEGORY).map((p) => p.id));
+  const isImmobilier = data.profession ? IMMOBILIER_IDS.has(data.profession) : false;
+
+  const EXTRAS = EXTRAS_RAW.filter((d) => !d.immobilierOnly || isImmobilier);
+
   const defs = isEssentials
     ? ESSENTIALS
     : [...EXTRAS].sort((a, b) => planRank(sectionTier(a.key)) - planRank(sectionTier(b.key)));
 
-  const [openSet, setOpenSet] = useState<Set<SectionKey>>(() => {
-    const s = new Set<SectionKey>();
-    if (isEssentials) s.add("identity");
-    for (const d of defs) if (isEnabled(data, d.key)) s.add(d.key);
-    return s;
-  });
+  const [openSet, setOpenSet] = useState<Set<SectionKey>>(() =>
+    new Set<SectionKey>(isEssentials ? ["identity"] : []),
+  );
+
+  const rowRefs = useRef<Record<string, HTMLDivElement | null>>({});
 
   /** Quelle section est en train de proposer un upgrade (mini-modale inline). */
   const [pendingUpgrade, setPendingUpgrade] = useState<SectionKey | null>(null);
@@ -163,12 +174,34 @@ export function BuilderSections({ step, data, setData, update, plan, setPlan, co
   };
 
   const toggleOpen = (key: SectionKey) => {
+    const isOpening = !openSet.has(key);
     setOpenSet((prev) => {
       const n = new Set(prev);
       if (n.has(key)) n.delete(key);
       else n.add(key);
       return n;
     });
+    if (isOpening && !isEssentials) {
+      const brick = defs.find((d) => d.key === key)?.brick;
+      requestAnimationFrame(() => {
+        rowRefs.current[key]?.scrollIntoView({ block: "center", behavior: "smooth" });
+        if (brick) scrollPhoneToBrick(brick);
+      });
+    }
+  };
+
+  const handleDragEnd = ({ active, over }: DragEndEvent) => {
+    if (!over || active.id === over.id) return;
+    const oldIdx = defs.findIndex((d) => d.key === active.id);
+    const newIdx = defs.findIndex((d) => d.key === over.id);
+    if (oldIdx < 0 || newIdx < 0) return;
+    const oldBrick = defs[oldIdx].brick;
+    const newBrick = defs[newIdx].brick;
+    const so = data.sectionOrder;
+    const oldPos = so.indexOf(oldBrick);
+    const newPos = so.indexOf(newBrick);
+    if (oldPos < 0 || newPos < 0) return;
+    update("sectionOrder", arrayMove(so, oldPos, newPos) as typeof so);
   };
 
   const upgradeAndActivate = (key: SectionKey) => {
@@ -205,17 +238,17 @@ export function BuilderSections({ step, data, setData, update, plan, setPlan, co
 
   const activeTheme = THEMES_BY_ID[data.accent] ?? THEMES_BY_ID.gold;
 
-  // L'aperçu reflète toujours exactement `data` — ce que l'utilisateur voit
-  // dans le builder est ce qui s'affichera sur son lien public.
-  const previewData: CardData = data;
+  const ESSENTIAL_BRICKS: BrickId[] = ["identity", "actions", "socials", "vcard", "about"];
+  const previewData: CardData = isEssentials
+    ? { ...data, sectionOrder: data.sectionOrder.filter((b) => ESSENTIAL_BRICKS.includes(b as BrickId)) as typeof data.sectionOrder }
+    : data;
 
-  // Compteur : sections actives / sections incluses dans le plan
   const allDefs = [...ESSENTIALS, ...EXTRAS];
   const allowedDefs = allDefs.filter((d) => sectionAllowed(plan, d.key));
   const activeAllowed = allowedDefs.filter((d) => isEnabled(data, d.key)).length;
   const totalAllowed = allowedDefs.length;
 
-  const stepNum: 2 | 3 = isEssentials ? 2 : 3;
+  const stepNum: 4 | 5 = isEssentials ? 4 : 5;
   const heading = isEssentials ? "Remplissez les sections essentielles" : "Ajoutez des sections complémentaires";
   const intro = isEssentials
     ? "Ce que toute carte de visite digitale doit contenir. Activez et remplissez les champs — l'aperçu se met à jour en direct."
@@ -253,101 +286,54 @@ export function BuilderSections({ step, data, setData, update, plan, setPlan, co
 
 
 
-          <div className="space-y-3 mt-4">
-            {defs.map((d) => {
-              const checked = isEnabled(data, d.key);
-              const locked = d.key === "identity";
-              const allowed = sectionAllowed(plan, d.key);
-              const tier = sectionTier(d.key);
-              const open = openSet.has(d.key) && checked && allowed;
-              const upgrading = pendingUpgrade === d.key;
+          <DndContext collisionDetection={closestCenter} onDragEnd={handleDragEnd}>
+            <SortableContext items={defs.map((d) => d.key)} strategy={verticalListSortingStrategy}>
+              <div className="space-y-3 mt-4">
+                {defs.map((d) => {
+                  const checked = isEnabled(data, d.key);
+                  const locked = d.key === "identity";
+                  const allowed = sectionAllowed(plan, d.key);
+                  const tier = sectionTier(d.key);
+                  const open = openSet.has(d.key) && checked && allowed;
+                  const upgrading = pendingUpgrade === d.key;
 
-              if (!allowed) {
-                return (
-                  <LockedSection
-                    key={d.key}
-                    def={d}
-                    requiredPlan={tier}
-                    expanded={upgrading}
-                    onAskUpgrade={() => setPendingUpgrade(upgrading ? null : d.key)}
-                    onConfirmUpgrade={() => upgradeAndActivate(d.key)}
-                  />
-                );
-              }
+                  if (!allowed) {
+                    return (
+                      <LockedSection
+                        key={d.key}
+                        def={d}
+                        requiredPlan={tier}
+                        expanded={upgrading}
+                        onAskUpgrade={() => setPendingUpgrade(upgrading ? null : d.key)}
+                        onConfirmUpgrade={() => upgradeAndActivate(d.key)}
+                      />
+                    );
+                  }
 
-              return (
-                <div
-                  key={d.key}
-                  className={`rounded-2xl border bg-card overflow-hidden transition ${
-                    checked ? "border-primary/40" : "border-border"
-                  }`}
-                >
-                  <div className="flex items-start gap-3 p-4">
-                    <button
-                      type="button"
-                      onClick={() => checked && toggleOpen(d.key)}
-                      className="flex-1 min-w-0 text-left disabled:cursor-default"
-                      disabled={!checked}
-                      aria-expanded={open}
+                  return (
+                    <SortableRow
+                      key={d.key}
+                      id={d.key}
+                      isDraggable={!isEssentials}
+                      rowRef={(el) => { rowRefs.current[d.key] = el; }}
+                      checked={checked}
+                      locked={locked}
+                      open={open}
+                      def={d}
+                      onToggleOpen={() => toggleOpen(d.key)}
+                      onToggleEnabled={(v) => toggleEnabled(d.key, v)}
                     >
-                      <div className="flex items-center gap-2 mb-0.5">
-                        <span className="text-sm font-medium">{d.label}</span>
-                        {d.recommended && (
-                          <span className="text-[9px] uppercase tracking-wider text-primary bg-primary/10 px-1.5 py-0.5 rounded">
-                            Recommandé
-                          </span>
-                        )}
-                        {d.popular && (
-                          <span className="inline-flex items-center gap-1 text-[9px] uppercase tracking-wider text-amber-600 dark:text-amber-400 bg-amber-500/10 border border-amber-500/30 px-1.5 py-0.5 rounded">
-                            <Flame className="h-2.5 w-2.5" /> Populaire
-                          </span>
-                        )}
-                        {locked && (
-                          <span className="text-[9px] uppercase tracking-wider text-muted-foreground bg-muted px-1.5 py-0.5 rounded">
-                            Obligatoire
-                          </span>
-                        )}
-                      </div>
-                      <p className="text-xs text-muted-foreground">{d.description}</p>
-                    </button>
-
-                    <div className="shrink-0 flex items-center gap-2 pt-0.5">
-                      {checked && (
-                        <button
-                          type="button"
-                          onClick={() => toggleOpen(d.key)}
-                          aria-label={open ? "Replier" : "Déplier"}
-                          className="h-8 w-8 grid place-items-center rounded-md text-muted-foreground hover:text-foreground hover:bg-muted/60 transition"
-                        >
-                          <ChevronDown
-                            className={`h-4 w-4 transition-transform ${open ? "rotate-180" : ""}`}
-                            aria-hidden
-                          />
-                        </button>
+                      {open && (
+                        <div className="px-4 pb-5 pt-1 border-t border-border/60">
+                          {renderBrickBody(d.brick, { data, update })}
+                        </div>
                       )}
-                      {locked ? (
-                        <span className="h-7 w-7 rounded-full bg-primary text-primary-foreground grid place-items-center">
-                          <Check className="h-4 w-4" strokeWidth={3} />
-                        </span>
-                      ) : (
-                        <Switch
-                          checked={checked}
-                          onCheckedChange={(v) => toggleEnabled(d.key, v)}
-                          aria-label={`Activer ${d.label}`}
-                        />
-                      )}
-                    </div>
-                  </div>
-
-                  {open && (
-                    <div className="px-4 pb-5 pt-1 border-t border-border/60">
-                      {renderBrickBody(d.brick, { data, update })}
-                    </div>
-                  )}
-                </div>
-              );
-            })}
-          </div>
+                    </SortableRow>
+                  );
+                })}
+              </div>
+            </SortableContext>
+          </DndContext>
 
           <div className="mt-6" />
 
@@ -385,6 +371,110 @@ export function BuilderSections({ step, data, setData, update, plan, setPlan, co
         centerInfo={`Plan ${PLAN_LABEL[plan]} — ${activeAllowed} / ${totalAllowed} sections actives`}
       />
     </main>
+  );
+}
+
+/* ---------------- Sortable row ---------------- */
+
+function SortableRow({
+  id, isDraggable, rowRef, checked, locked, open, def, onToggleOpen, onToggleEnabled, children,
+}: {
+  id: string;
+  isDraggable: boolean;
+  rowRef: (el: HTMLDivElement | null) => void;
+  checked: boolean;
+  locked: boolean;
+  open: boolean;
+  def: SectionDef;
+  onToggleOpen: () => void;
+  onToggleEnabled: (v: boolean) => void;
+  children?: React.ReactNode;
+}) {
+  const { attributes, listeners, setNodeRef, transform, transition, isDragging } = useSortable({ id });
+
+  const style = {
+    transform: CSS.Transform.toString(transform),
+    transition,
+    opacity: isDragging ? 0.5 : 1,
+  };
+
+  return (
+    <div
+      ref={(el) => { setNodeRef(el); rowRef(el); }}
+      style={style}
+      className={`rounded-2xl border bg-card overflow-hidden transition ${
+        checked ? "border-primary/40" : "border-border"
+      }`}
+    >
+      <div className="flex items-start gap-3 p-4">
+        {isDraggable && (
+          <button
+            type="button"
+            {...attributes}
+            {...listeners}
+            className="shrink-0 mt-1 cursor-grab active:cursor-grabbing text-muted-foreground hover:text-foreground transition touch-none"
+            aria-label="Réordonner"
+          >
+            <GripVertical className="h-4 w-4" />
+          </button>
+        )}
+        <button
+          type="button"
+          onClick={() => checked && onToggleOpen()}
+          className="flex-1 min-w-0 text-left disabled:cursor-default"
+          disabled={!checked}
+          aria-expanded={open}
+        >
+          <div className="flex items-center gap-2 mb-0.5">
+            <span className="text-sm font-medium">{def.label}</span>
+            {def.recommended && (
+              <span className="text-[9px] uppercase tracking-wider text-primary bg-primary/10 px-1.5 py-0.5 rounded">
+                Recommandé
+              </span>
+            )}
+            {def.popular && (
+              <span className="inline-flex items-center gap-1 text-[9px] uppercase tracking-wider text-amber-600 dark:text-amber-400 bg-amber-500/10 border border-amber-500/30 px-1.5 py-0.5 rounded">
+                <Flame className="h-2.5 w-2.5" /> Populaire
+              </span>
+            )}
+            {locked && (
+              <span className="text-[9px] uppercase tracking-wider text-muted-foreground bg-muted px-1.5 py-0.5 rounded">
+                Obligatoire
+              </span>
+            )}
+          </div>
+          <p className="text-xs text-muted-foreground">{def.description}</p>
+        </button>
+
+        <div className="shrink-0 flex items-center gap-2 pt-0.5">
+          {checked && (
+            <button
+              type="button"
+              onClick={onToggleOpen}
+              aria-label={open ? "Replier" : "Déplier"}
+              className="h-8 w-8 grid place-items-center rounded-md text-muted-foreground hover:text-foreground hover:bg-muted/60 transition"
+            >
+              <ChevronDown
+                className={`h-4 w-4 transition-transform ${open ? "rotate-180" : ""}`}
+                aria-hidden
+              />
+            </button>
+          )}
+          {locked ? (
+            <span className="h-7 w-7 rounded-full bg-primary text-primary-foreground grid place-items-center">
+              <Check className="h-4 w-4" strokeWidth={3} />
+            </span>
+          ) : (
+            <Switch
+              checked={checked}
+              onCheckedChange={onToggleEnabled}
+              aria-label={`Activer ${def.label}`}
+            />
+          )}
+        </div>
+      </div>
+      {children}
+    </div>
   );
 }
 

@@ -10,19 +10,21 @@ import { BusinessCard } from "@/components/card/BusinessCard";
 import { PhoneFrame } from "@/components/card/PhoneFrame";
 import { useCardStore } from "@/lib/card-store";
 import type { CardData } from "@/lib/card-types";
+import { BuilderIntro } from "@/components/builder/BuilderIntro";
 import { BuilderWelcome } from "@/components/builder/BuilderWelcome";
+import { BuilderTheme } from "@/components/builder/BuilderTheme";
 import { BuilderSections } from "@/components/builder/BuilderSections";
 import { StepHeader, type StepNum } from "@/components/builder/StepHeader";
 import { buildPreviewCard, buildPreviewFromTheme, type VariantId } from "@/lib/profession-personas";
 
 
-type Step = "welcome" | "essentials" | "extras" | "edit";
+type Step = "intro" | "welcome" | "theme" | "essentials" | "extras" | "edit";
 
 const STEP_NUM: Record<Step, StepNum> = {
-  welcome: 1, essentials: 2, extras: 3, edit: 4,
+  intro: 1, welcome: 2, theme: 3, essentials: 4, extras: 5, edit: 6,
 };
 const NUM_STEP: Record<StepNum, Step> = {
-  1: "welcome", 2: "essentials", 3: "extras", 4: "edit",
+  1: "intro", 2: "welcome", 3: "theme", 4: "essentials", 5: "extras", 6: "edit",
 };
 
 export const Route = createFileRoute("/builder")({
@@ -37,7 +39,7 @@ export const Route = createFileRoute("/builder")({
 
 function BuilderPage() {
   const { data, setData, update, hydrated } = useCardStore();
-  const [step, setStep] = useState<Step>("welcome");
+  const [step, setStep] = useState<Step>("intro");
   const [plan, setPlan] = useState<VariantId>("vitrine");
   const [completedThrough, setCompletedThrough] = useState<StepNum>(1);
 
@@ -49,16 +51,25 @@ function BuilderPage() {
 
   const goToStep = (n: StepNum) => {
     if (n > completedThrough) return;
-    // L'étape 2 (compare) n'a de sens que si un métier a été choisi.
-    if (n === 2 && !data.profession) {
-      setStep("welcome");
-      return;
-    }
     setStep(NUM_STEP[n]);
   };
 
   if (!hydrated) {
     return <div className="min-h-screen bg-background grid place-items-center text-muted-foreground">Chargement…</div>;
+  }
+
+  if (step === "intro") {
+    return (
+      <BuilderIntro
+        completedThrough={completedThrough}
+        onGoToStep={goToStep}
+        onTemplate={() => advanceTo("welcome")}
+        onDirect={() => {
+          setCompletedThrough((c) => Math.max(c, 3) as StepNum);
+          setStep("theme");
+        }}
+      />
+    );
   }
 
   if (step === "welcome") {
@@ -73,16 +84,28 @@ function BuilderPage() {
           update("accent", p.themeId as CardData["accent"]);
           setData(buildPreviewCard(p, "essentielle"));
           setPlan("essentielle");
-          advanceTo("essentials");
+          advanceTo("theme");
         }}
         onChooseTheme={(themeId) => {
           setData(buildPreviewFromTheme(themeId));
-          advanceTo("essentials");
+          advanceTo("theme");
         }}
       />
     );
   }
 
+  if (step === "theme") {
+    return (
+      <BuilderTheme
+        data={data}
+        update={update}
+        completedThrough={completedThrough}
+        onGoToStep={goToStep}
+        onBack={() => setStep(data.profession ? "welcome" : "intro")}
+        onNext={() => advanceTo("essentials")}
+      />
+    );
+  }
 
   if (step === "essentials") {
     return (
@@ -95,7 +118,7 @@ function BuilderPage() {
         setPlan={setPlan}
         completedThrough={completedThrough}
         onGoToStep={goToStep}
-        onBack={() => setStep("welcome")}
+        onBack={() => setStep("theme")}
         onNext={() => advanceTo("extras")}
       />
     );
@@ -183,7 +206,7 @@ function SuccessStep({
       {showConfetti && <Confetti />}
 
       <StepHeader
-        step={4}
+        step={6}
         title="Félicitations, votre carte est prête !"
         subtitle="Activez-la maintenant pour obtenir votre lien public, votre QR code et l'accès à votre dashboard."
         completedThrough={completedThrough}

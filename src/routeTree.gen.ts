@@ -10,6 +10,7 @@
 
 import { Route as rootRouteImport } from './routes/__root'
 import { Route as TemplatesRouteImport } from './routes/templates'
+import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as OffresRouteImport } from './routes/offres'
@@ -51,6 +52,11 @@ import { Route as InscriptionOffrePlanRouteImport } from './routes/inscription.o
 const TemplatesRoute = TemplatesRouteImport.update({
   id: '/templates',
   path: '/templates',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ResetPasswordRoute = ResetPasswordRouteImport.update({
+  id: '/reset-password',
+  path: '/reset-password',
   getParentRoute: () => rootRouteImport,
 } as any)
 const PricingRoute = PricingRouteImport.update({
@@ -253,6 +259,7 @@ export interface FileRoutesByFullPath {
   '/offres': typeof OffresRoute
   '/onboarding': typeof OnboardingRoute
   '/pricing': typeof PricingRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/templates': typeof TemplatesRoute
   '/dashboard/account': typeof DashboardAccountRoute
   '/dashboard/analytics': typeof DashboardAnalyticsRoute
@@ -291,6 +298,7 @@ export interface FileRoutesByTo {
   '/offres': typeof OffresRoute
   '/onboarding': typeof OnboardingRoute
   '/pricing': typeof PricingRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/templates': typeof TemplatesRoute
   '/dashboard/account': typeof DashboardAccountRoute
   '/dashboard/analytics': typeof DashboardAnalyticsRoute
@@ -332,6 +340,7 @@ export interface FileRoutesById {
   '/offres': typeof OffresRoute
   '/onboarding': typeof OnboardingRoute
   '/pricing': typeof PricingRoute
+  '/reset-password': typeof ResetPasswordRoute
   '/templates': typeof TemplatesRoute
   '/dashboard/account': typeof DashboardAccountRoute
   '/dashboard/analytics': typeof DashboardAnalyticsRoute
@@ -374,6 +383,7 @@ export interface FileRouteTypes {
     | '/offres'
     | '/onboarding'
     | '/pricing'
+    | '/reset-password'
     | '/templates'
     | '/dashboard/account'
     | '/dashboard/analytics'
@@ -412,6 +422,7 @@ export interface FileRouteTypes {
     | '/offres'
     | '/onboarding'
     | '/pricing'
+    | '/reset-password'
     | '/templates'
     | '/dashboard/account'
     | '/dashboard/analytics'
@@ -452,6 +463,7 @@ export interface FileRouteTypes {
     | '/offres'
     | '/onboarding'
     | '/pricing'
+    | '/reset-password'
     | '/templates'
     | '/dashboard/account'
     | '/dashboard/analytics'
@@ -493,6 +505,7 @@ export interface RootRouteChildren {
   OffresRoute: typeof OffresRoute
   OnboardingRoute: typeof OnboardingRoute
   PricingRoute: typeof PricingRoute
+  ResetPasswordRoute: typeof ResetPasswordRoute
   TemplatesRoute: typeof TemplatesRoute
   AdminIndexRoute: typeof AdminIndexRoute
 }
@@ -504,6 +517,13 @@ declare module '@tanstack/react-router' {
       path: '/templates'
       fullPath: '/templates'
       preLoaderRoute: typeof TemplatesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/reset-password': {
+      id: '/reset-password'
+      path: '/reset-password'
+      fullPath: '/reset-password'
+      preLoaderRoute: typeof ResetPasswordRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/pricing': {
@@ -850,6 +870,7 @@ const rootRouteChildren: RootRouteChildren = {
   OffresRoute: OffresRoute,
   OnboardingRoute: OnboardingRoute,
   PricingRoute: PricingRoute,
+  ResetPasswordRoute: ResetPasswordRoute,
   TemplatesRoute: TemplatesRoute,
   AdminIndexRoute: AdminIndexRoute,
 }
