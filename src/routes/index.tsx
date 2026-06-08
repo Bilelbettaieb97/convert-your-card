@@ -19,14 +19,22 @@ import { CardPreview, type Template } from "@/components/TemplateCardPreview";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "CVD · Carte de visite digitale à 19,80€ — Partagez vos contacts en 1 tap" },
-      { name: "description", content: "Créez votre carte de visite digitale professionnelle en 3 minutes. Partagez vos coordonnées, réseaux et site en un seul tap. À partir de 19,80€. Sans abonnement." },
+      { title: "CVD · Carte de visite digitale — Partagez vos contacts en 1 tap" },
+      { name: "description", content: "Créez votre carte de visite digitale professionnelle en 3 minutes. Partagez vos coordonnées, réseaux et prise de RDV en 1 tap. Compatible iPhone & Android sans application. 2 400+ pros nous font confiance." },
       { property: "og:title", content: "CVD · La carte de visite digitale qui convertit" },
-      { property: "og:description", content: "Partagez vos contacts en 1 tap. À partir de 19,80€. Sans abonnement, mises à jour illimitées." },
-      { property: "og:type", content: "product" },
-      { property: "og:url", content: "/" },
+      { property: "og:description", content: "Créez votre carte de visite digitale en 3 minutes. Compatible iPhone & Android sans application. 2 400+ pros · 4,9★ · 487 avis vérifiés." },
+      { property: "og:type", content: "website" },
+      { property: "og:url", content: "https://cartevisitedigitale.fr" },
+      { property: "og:site_name", content: "CVD — Carte de visite digitale" },
+      { property: "og:locale", content: "fr_FR" },
+      { property: "og:image", content: "https://cartevisitedigitale.fr/og-image.jpg" },
+      { property: "og:image:alt", content: "CVD — Carte de visite digitale professionnelle NFC" },
+      { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "CVD · Carte de visite digitale — 1 tap pour partager vos contacts" },
+      { name: "twitter:description", content: "Créez votre carte de visite digitale en 3 minutes. 2 400+ pros · 4,9★." },
+      { name: "twitter:image", content: "https://cartevisitedigitale.fr/og-image.jpg" },
     ],
-    links: [{ rel: "canonical", href: "/" }],
+    links: [{ rel: "canonical", href: "https://cartevisitedigitale.fr" }],
   }),
   component: Landing,
 });

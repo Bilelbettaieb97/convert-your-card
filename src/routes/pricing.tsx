@@ -20,9 +20,20 @@ import { toast } from "sonner";
 export const Route = createFileRoute("/pricing")({
   head: () => ({
     meta: [
-      { title: "Activer ma carte — Choisissez votre plan" },
-      { name: "description", content: "Activez votre carte de visite digitale dès aujourd'hui. Essai gratuit 7 jours sur le plan Vitrine. Sans engagement." },
+      { title: "Tarifs — Carte de visite digitale | CVD" },
+      { name: "description", content: "Choisissez votre plan CVD : Essentielle à 8,16€/mois ou Vitrine à 13,16€/mois. Carte NFC physique à 29€. Essai gratuit 7 jours. Sans engagement, annulable à tout moment." },
+      { property: "og:title", content: "Tarifs & Plans — Carte de visite digitale CVD" },
+      { property: "og:description", content: "Essentielle 8,16€/mois · Vitrine 13,16€/mois · Carte NFC 29€. Essai gratuit 7 jours. Sans engagement." },
+      { property: "og:type", content: "website" },
+      { property: "og:url", content: "https://cartevisitedigitale.fr/pricing" },
+      { property: "og:site_name", content: "CVD — Carte de visite digitale" },
+      { property: "og:locale", content: "fr_FR" },
+      { property: "og:image", content: "https://cartevisitedigitale.fr/og-image.jpg" },
+      { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "Tarifs CVD — Carte de visite digitale" },
+      { name: "twitter:description", content: "Essentielle 8,16€/mois · Vitrine 13,16€/mois · Carte NFC 29€. Essai gratuit 7 jours." },
     ],
+    links: [{ rel: "canonical", href: "https://cartevisitedigitale.fr/pricing" }],
   }),
   component: PricingPage,
 });

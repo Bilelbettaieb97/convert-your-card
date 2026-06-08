@@ -12,12 +12,18 @@ export const Route = createFileRoute("/carte-physique")({
         content:
           "Personnalise ta carte de visite NFC physique : couleur, finition, logo et nom. Une commande unique, livrée chez toi.",
       },
-      { property: "og:title", content: "Ajoute ta carte NFC physique — CVD" },
-      {
-        property: "og:description",
-        content: "Carte NFC personnalisable, livrée chez toi. Paiement unique, en complément de ton abonnement.",
-      },
+      { property: "og:title", content: "Carte NFC physique personnalisée — CVD" },
+      { property: "og:description", content: "Commandez votre carte NFC physique personnalisée à 29€. Plusieurs coloris et finitions. Livraison express. Compatible iPhone & Android sans application." },
+      { property: "og:type", content: "website" },
+      { property: "og:url", content: "https://cartevisitedigitale.fr/carte-physique" },
+      { property: "og:site_name", content: "CVD — Carte de visite digitale" },
+      { property: "og:locale", content: "fr_FR" },
+      { property: "og:image", content: "https://cartevisitedigitale.fr/og-image.jpg" },
+      { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "Carte NFC physique personnalisée à 29€ — CVD" },
+      { name: "twitter:description", content: "Carte NFC personnalisable, livrée chez toi. Plusieurs coloris et finitions disponibles." },
     ],
+    links: [{ rel: "canonical", href: "https://cartevisitedigitale.fr/carte-physique" }],
   }),
   component: CartePhysiqueUpsellPage,
 });

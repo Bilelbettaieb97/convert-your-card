@@ -227,32 +227,79 @@ export function StructuredData() {
     "@context": "https://schema.org",
     "@graph": [
       {
-        "@type": "Product",
+        "@type": "Organization",
+        "@id": "https://cartevisitedigitale.fr/#organization",
         name: "CVD — Carte de visite digitale",
-        description:
-          "Carte de visite digitale professionnelle. Partagez vos contacts en 1 tap. Sans abonnement, mises à jour illimitées à vie.",
+        url: "https://cartevisitedigitale.fr",
+        logo: "https://cartevisitedigitale.fr/logo.png",
+        description: "Créez votre carte de visite digitale professionnelle en 3 minutes. Partagez vos coordonnées, réseaux et prise de RDV en 1 tap. Compatible iPhone & Android sans application.",
+        address: {
+          "@type": "PostalAddress",
+          addressCountry: "FR",
+        },
+        aggregateRating: {
+          "@type": "AggregateRating",
+          ratingValue: "4.9",
+          reviewCount: "487",
+          bestRating: "5",
+        },
+      },
+      {
+        "@type": "WebSite",
+        "@id": "https://cartevisitedigitale.fr/#website",
+        url: "https://cartevisitedigitale.fr",
+        name: "CVD — Carte de visite digitale",
+        publisher: { "@id": "https://cartevisitedigitale.fr/#organization" },
+        inLanguage: "fr-FR",
+        potentialAction: {
+          "@type": "SearchAction",
+          target: "https://cartevisitedigitale.fr/templates?q={search_term_string}",
+          "query-input": "required name=search_term_string",
+        },
+      },
+      {
+        "@type": "Product",
+        "@id": "https://cartevisitedigitale.fr/#product",
+        name: "CVD — Carte de visite digitale",
+        url: "https://cartevisitedigitale.fr",
+        description: "Carte de visite digitale professionnelle. Partagez vos contacts, réseaux sociaux et prise de rendez-vous en 1 tap. Compatible iPhone & Android sans application.",
         brand: { "@type": "Brand", name: "CVD" },
         offers: [
           {
             "@type": "Offer",
             name: "CVD Essentielle",
-            price: "19.80",
+            price: "9.80",
             priceCurrency: "EUR",
+            priceSpecification: {
+              "@type": "UnitPriceSpecification",
+              price: "9.80",
+              priceCurrency: "EUR",
+              unitCode: "MON",
+            },
             availability: "https://schema.org/InStock",
+            url: "https://cartevisitedigitale.fr/pricing",
           },
           {
             "@type": "Offer",
-            name: "CVD Physique",
-            price: "28.80",
+            name: "CVD Vitrine",
+            price: "13.16",
             priceCurrency: "EUR",
+            priceSpecification: {
+              "@type": "UnitPriceSpecification",
+              price: "13.16",
+              priceCurrency: "EUR",
+              unitCode: "MON",
+            },
             availability: "https://schema.org/InStock",
+            url: "https://cartevisitedigitale.fr/pricing",
           },
           {
             "@type": "Offer",
-            name: "CVD Premium",
-            price: "48.00",
+            name: "Carte NFC physique",
+            price: "29.00",
             priceCurrency: "EUR",
             availability: "https://schema.org/InStock",
+            url: "https://cartevisitedigitale.fr/carte-physique",
           },
         ],
         aggregateRating: {
@@ -267,18 +314,42 @@ export function StructuredData() {
         mainEntity: [
           {
             "@type": "Question",
-            name: "Comment fonctionne la carte digitale à 19,80€ ?",
+            name: "Qu'est-ce qu'une carte de visite digitale ?",
             acceptedAnswer: {
               "@type": "Answer",
-              text: "Vous recevez immédiatement l'accès à votre éditeur. En 3 minutes, vous créez votre profil. Un QR code et un lien unique sont générés pour partager vos coordonnées en 1 tap.",
+              text: "Une carte de visite digitale est une page web personnalisée accessible via un QR code ou un lien unique. Elle permet de partager vos coordonnées, réseaux sociaux, site web et prise de rendez-vous en 1 tap depuis un smartphone, sans que votre contact ait besoin d'une application.",
             },
           },
           {
             "@type": "Question",
-            name: "Y a-t-il un abonnement caché ?",
+            name: "Comment fonctionne la carte de visite digitale CVD ?",
             acceptedAnswer: {
               "@type": "Answer",
-              text: "Non. Vous payez 19,80€ une seule fois. Modifications illimitées à vie incluses.",
+              text: "Vous créez votre profil en 3 minutes dans notre éditeur. Un QR code et un lien unique sont générés. Vous partagez ce QR code sur vos supports physiques (carte papier, email, signature) ou envoyez le lien par message. Votre contact accède à votre carte instantanément sans application.",
+            },
+          },
+          {
+            "@type": "Question",
+            name: "La carte de visite digitale fonctionne-t-elle sans application ?",
+            acceptedAnswer: {
+              "@type": "Answer",
+              text: "Oui. Votre carte s'ouvre directement dans le navigateur de n'importe quel smartphone — iPhone, Android, ou autre. Aucune application à télécharger ni pour vous ni pour vos contacts.",
+            },
+          },
+          {
+            "@type": "Question",
+            name: "Puis-je modifier ma carte après activation ?",
+            acceptedAnswer: {
+              "@type": "Answer",
+              text: "Oui, vos informations sont modifiables à tout moment depuis votre tableau de bord. Les modifications sont visibles immédiatement pour tous vos contacts qui scannent votre QR code ou ouvrent votre lien.",
+            },
+          },
+          {
+            "@type": "Question",
+            name: "Y a-t-il un engagement ou un contrat minimum ?",
+            acceptedAnswer: {
+              "@type": "Answer",
+              text: "Non. Les abonnements CVD sont sans engagement et annulables à tout moment depuis votre espace client. Vous pouvez partir quand vous voulez.",
             },
           },
           {
@@ -286,7 +357,15 @@ export function StructuredData() {
             name: "Et si je ne suis pas satisfait ?",
             acceptedAnswer: {
               "@type": "Answer",
-              text: "Vous êtes remboursé sous 30 jours, sans question. Zéro risque.",
+              text: "Vous bénéficiez d'une garantie satisfait ou remboursé de 30 jours. Si CVD ne vous convient pas dans les 30 premiers jours, vous êtes remboursé intégralement, sans question et sans justification.",
+            },
+          },
+          {
+            "@type": "Question",
+            name: "Quelle est la différence entre la carte digitale et la carte NFC physique ?",
+            acceptedAnswer: {
+              "@type": "Answer",
+              text: "La carte digitale est votre profil en ligne accessible via QR code ou lien. La carte NFC physique est une vraie carte en plastique ou métal avec une puce NFC intégrée. Quand quelqu'un approche son téléphone de la carte, votre profil s'ouvre instantanément — sans même scanner un QR code. Les deux sont complémentaires.",
             },
           },
         ],

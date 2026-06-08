@@ -74,14 +74,21 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
       { title: "CVD — Carte de visite digitale NFC" },
-      { name: "description", content: "Crée ta carte de visite digitale et partage tes contacts en 1 tap. Gratuit, sans application." },
+      { name: "description", content: "Créez votre carte de visite digitale en 3 minutes. Partagez vos coordonnées, réseaux et prise de RDV en 1 tap. Compatible iPhone & Android sans application." },
       { property: "og:title", content: "CVD — Carte de visite digitale NFC" },
-      { property: "og:description", content: "Crée ta carte de visite digitale et partage tes contacts en 1 tap. Gratuit, sans application." },
+      { property: "og:description", content: "Créez votre carte de visite digitale en 3 minutes. Partagez vos coordonnées, réseaux et prise de RDV en 1 tap." },
       { property: "og:type", content: "website" },
-      { property: "og:url", content: "https://www.cartevisitedigitale.fr" },
+      { property: "og:url", content: "https://cartevisitedigitale.fr" },
+      { property: "og:site_name", content: "CVD — Carte de visite digitale" },
+      { property: "og:locale", content: "fr_FR" },
+      { property: "og:image", content: "https://cartevisitedigitale.fr/og-image.jpg" },
+      { property: "og:image:width", content: "1200" },
+      { property: "og:image:height", content: "630" },
+      { property: "og:image:alt", content: "CVD — Carte de visite digitale professionnelle" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: "CVD — Carte de visite digitale NFC" },
-      { name: "twitter:description", content: "Crée ta carte de visite digitale et partage tes contacts en 1 tap. Gratuit, sans application." },
+      { name: "twitter:description", content: "Créez votre carte de visite digitale en 3 minutes. Partagez vos coordonnées en 1 tap." },
+      { name: "twitter:image", content: "https://cartevisitedigitale.fr/og-image.jpg" },
     ],
     links: [
       { rel: "stylesheet", href: appCss },
@@ -102,7 +109,7 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
 
 function RootShell({ children }: { children: ReactNode }) {
   return (
-    <html lang="en">
+    <html lang="fr">
       <head>
         <HeadContent />
       </head>
