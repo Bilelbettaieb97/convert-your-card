@@ -273,6 +273,21 @@ export function BuilderSections({ step, data, setData, update, plan, setPlan, co
         {/* LEFT — sections list */}
         <section className="flex flex-col min-h-0">
 
+          {/* Mobile preview */}
+          <div className="lg:hidden flex flex-col items-center mb-4">
+            <p className="text-[10px] uppercase tracking-wider text-primary/80 flex items-center gap-1 mb-2">
+              <Sparkles className="h-3 w-3" /> Aperçu live
+            </p>
+            <div className="relative overflow-hidden mx-auto" style={{ width: 234, height: 370 }}>
+              <div className="absolute top-0 left-0" style={{ transform: "scale(0.65)", transformOrigin: "top left" }}>
+                <PhoneFrame>
+                  <BusinessCard data={previewData} />
+                </PhoneFrame>
+              </div>
+              <div className="absolute bottom-0 left-0 right-0 h-14 bg-gradient-to-t from-background to-transparent pointer-events-none z-10" />
+            </div>
+          </div>
+
           {/* Bandeau plan actuel — visible uniquement à l'étape 3 (extras) */}
           {!isEssentials && (
             <PlanBanner

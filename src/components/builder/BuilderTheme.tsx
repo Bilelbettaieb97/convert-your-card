@@ -45,6 +45,23 @@ export function BuilderTheme({ data, update, completedThrough, onGoToStep, onBac
       <div className="mx-auto w-full max-w-7xl px-5 pb-8 grid grid-cols-1 lg:grid-cols-[1fr_440px] gap-10 flex-1 min-h-0">
         {/* LEFT — theme grid */}
         <section className="flex flex-col min-h-0">
+
+          {/* Mobile preview */}
+          <div className="lg:hidden flex flex-col items-center mb-4">
+            <p className="text-[10px] uppercase tracking-wider text-primary/80 flex items-center gap-1 mb-2">
+              <Sparkles className="h-3 w-3" /> Aperçu live
+            </p>
+            <div className="relative overflow-hidden mx-auto" style={{ width: 234, height: 370 }}>
+              <div className="absolute top-0 left-0" style={{ transform: "scale(0.65)", transformOrigin: "top left" }}>
+                <PhoneFrame>
+                  <BusinessCard data={previewData} />
+                </PhoneFrame>
+              </div>
+              <div className="absolute bottom-0 left-0 right-0 h-14 bg-gradient-to-t from-background to-transparent pointer-events-none z-10" />
+            </div>
+            <p className="text-[10px] text-muted-foreground mt-1">Thème : {activeTheme.label}</p>
+          </div>
+
           <div className="flex-1 min-h-0 overflow-y-auto pr-1">
             <div className="grid grid-cols-2 gap-2">
               {CARD_THEMES.map((t) => {
@@ -55,7 +72,12 @@ export function BuilderTheme({ data, update, completedThrough, onGoToStep, onBac
                   <button
                     key={t.id}
                     type="button"
-                    onClick={() => setSelectedThemeId(t.id)}
+                    onClick={() => {
+                      setSelectedThemeId(t.id);
+                      if (window.innerWidth < 1024) {
+                        window.scrollTo({ top: 0, behavior: "smooth" });
+                      }
+                    }}
                     className={`relative flex items-center gap-2.5 rounded-xl border p-2.5 text-left transition ${
                       active
                         ? "border-primary bg-primary/5 ring-2 ring-primary ring-offset-2 ring-offset-background"
