@@ -130,7 +130,7 @@ export default defineEventHandler(async (event) => {
   if (stripeEvent.type === "checkout.session.completed") {
     const session = stripeEvent.data.object;
     const email: string = session.metadata?.email || session.customer_email;
-    const plan: string = session.metadata?.plan || "starter";
+    const plan: string = session.metadata?.plan || "essentielle";
     const stripeCustomerId: string = session.customer;
     const stripeSubscriptionId: string = session.subscription;
 
@@ -203,7 +203,7 @@ export default defineEventHandler(async (event) => {
   } else if (stripeEvent.type === "customer.subscription.updated") {
     const sub = stripeEvent.data.object;
     await adminSupabase.from("subscriptions")
-      .update({ plan: sub.metadata?.plan ?? "starter", status: sub.status, current_period_end: sub.current_period_end ? new Date(sub.current_period_end * 1000).toISOString() : null, updated_at: new Date().toISOString() })
+      .update({ plan: sub.metadata?.plan ?? "essentielle", status: sub.status, current_period_end: sub.current_period_end ? new Date(sub.current_period_end * 1000).toISOString() : null, updated_at: new Date().toISOString() })
       .eq("stripe_subscription_id", sub.id);
 
   } else if (stripeEvent.type === "customer.subscription.trial_will_end") {

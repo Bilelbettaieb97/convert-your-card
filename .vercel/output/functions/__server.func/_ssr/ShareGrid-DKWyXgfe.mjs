@@ -2,7 +2,7 @@ import { r as reactExports, j as jsxRuntimeExports } from "../_libs/react.mjs";
 import { Q as QRCode } from "../_libs/qrcode.mjs";
 import { B as Button } from "./button-DjOZMqFS.mjs";
 import { t as toast } from "../_libs/sonner.mjs";
-import { aG as Link2, m as Check, M as MessageCircle, aH as MessageSquare, a0 as Mail, ah as Linkedin, aI as Twitter, al as Facebook, s as Copy, ak as Share2, Q as QrCode, t as Download } from "../_libs/lucide-react.mjs";
+import { aG as Link2, m as Check, ad as MessageCircle, aH as MessageSquare, _ as Mail, ag as Linkedin, aI as Twitter, ak as Facebook, as as Copy, aj as Share2, Q as QrCode, O as Download } from "../_libs/lucide-react.mjs";
 function ShareGrid({ data, url, compact = false }) {
   const [copied, setCopied] = reactExports.useState(false);
   const shareText = `${data.name || "Ma carte"}${data.title ? " — " + data.title : ""}`;

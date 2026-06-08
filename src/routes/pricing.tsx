@@ -12,8 +12,9 @@ import {
 } from "lucide-react";
 import { UpsellSection } from "@/components/dashboard/UpsellSection";
 import { useCardStore } from "@/lib/card-store";
-import { createCard } from "@/lib/card-actions";
-import { CelebrationModal } from "@/components/CelebrationModal";
+import { createCard, loadMyCard } from "@/lib/card-actions";
+import { createCheckoutSession } from "@/fns/checkout";
+import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/pricing")({
@@ -96,22 +97,32 @@ function PricingPage() {
   const [billing, setBilling] = useState<Billing>("yearly");
   const [selected, setSelected] = useState<Plan["id"]>("vitrine");
   const [creating, setCreating] = useState(false);
-  const [celebrationSlug, setCelebrationSlug] = useState<string | null>(null);
   const { data: cardData } = useCardStore();
   const navigate = useNavigate();
 
   async function handleActivate() {
     setCreating(true);
     try {
-      const { slug } = await createCard(cardData);
-      setCelebrationSlug(slug);
-    } catch (err) {
-      const msg = err instanceof Error ? err.message : "Erreur inconnue";
-      if (msg.includes("Non connecté")) {
+      // 1. Check auth
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) {
         navigate({ to: "/inscription", search: { redirect: "/pricing" } });
-      } else {
-        toast.error(`Erreur lors de l'activation : ${msg}`);
+        return;
       }
+
+      // 2. Save card as draft if no profile yet
+      const existing = await loadMyCard();
+      if (!existing) {
+        await createCard(cardData);
+      }
+
+      // 3. Create Stripe checkout session → redirect
+      const { url } = await createCheckoutSession({
+        data: { plan: selected, billing, email: user.email! },
+      });
+      if (url) window.location.href = url;
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Erreur lors du paiement");
     } finally {
       setCreating(false);
     }
@@ -461,18 +472,6 @@ function PricingPage() {
         </div>
       </div>
 
-      {/* Celebration modal après activation */}
-      {celebrationSlug && (
-        <CelebrationModal
-          cardUrl={`${typeof window !== "undefined" ? window.location.origin : ""}/${celebrationSlug}`}
-          nom={cardData.name || "vous"}
-          onClose={() => setCelebrationSlug(null)}
-          onDashboard={() => {
-            setCelebrationSlug(null);
-            navigate({ to: "/dashboard" });
-          }}
-        />
-      )}
     </main>
   );
 }

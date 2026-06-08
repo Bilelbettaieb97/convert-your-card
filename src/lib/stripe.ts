@@ -28,16 +28,15 @@ export async function ensureUniqueSlug(
 }
 
 export const PRICE_IDS = {
-  starter: {
-    monthly: process.env.STRIPE_PRICE_STARTER_MONTHLY ?? "",
-    annual: process.env.STRIPE_PRICE_STARTER_ANNUAL ?? "",
+  essentielle: {
+    monthly: process.env.STRIPE_PRICE_ESSENTIELLE_MONTHLY ?? "",
+    yearly: process.env.STRIPE_PRICE_ESSENTIELLE_YEARLY ?? "",
   },
-  pro: {
-    monthly: process.env.STRIPE_PRICE_PRO_MONTHLY ?? "",
-    annual: process.env.STRIPE_PRICE_PRO_ANNUAL ?? "",
-  },
-  premium: {
-    monthly: process.env.STRIPE_PRICE_PREMIUM_MONTHLY ?? "",
-    annual: process.env.STRIPE_PRICE_PREMIUM_ANNUAL ?? "",
+  vitrine: {
+    monthly: process.env.STRIPE_PRICE_VITRINE_MONTHLY ?? "",
+    yearly: process.env.STRIPE_PRICE_VITRINE_YEARLY ?? "",
   },
 } as const;
+
+export type PlanId = keyof typeof PRICE_IDS;
+export type BillingPeriod = "monthly" | "yearly";

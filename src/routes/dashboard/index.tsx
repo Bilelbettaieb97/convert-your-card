@@ -150,7 +150,7 @@ function DashboardHome() {
     vcardEnabled: profile?.vcard_enabled ?? true,
   } as CardData;
 
-  const planLabel = { free: "Gratuit", starter: "Starter", pro: "Pro", premium: "Premium" }[subscription?.plan ?? "free"] ?? "Gratuit";
+  const planLabel = { free: "Gratuit", essentielle: "Essentielle", vitrine: "Vitrine", starter: "Starter", pro: "Pro", premium: "Premium" }[subscription?.plan ?? "free"] ?? "Gratuit";
   const firstName = profile?.nom?.split(" ")[0] ?? "";
 
   return (

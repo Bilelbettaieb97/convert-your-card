@@ -1,7 +1,7 @@
 import { j as jsxRuntimeExports } from "../_libs/react.mjs";
 import { L as Link } from "../_libs/tanstack__react-router.mjs";
 import { B as Button } from "./button-DjOZMqFS.mjs";
-import { au as Nfc, $ as Globe, S as Sparkles, m as Check, A as ArrowRight, v as CreditCard, Z as Zap } from "../_libs/lucide-react.mjs";
+import { au as Nfc, Y as Globe, S as Sparkles, m as Check, A as ArrowRight, s as CreditCard, Z as Zap } from "../_libs/lucide-react.mjs";
 function UpsellSection({
   variant = "full",
   title = "Allez plus loin",

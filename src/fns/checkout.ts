@@ -3,16 +3,18 @@ import { z } from "zod";
 import { stripe, PRICE_IDS } from "@/lib/stripe";
 
 const schema = z.object({
-  plan: z.enum(["starter", "pro", "premium"]),
-  billing: z.enum(["monthly", "annual"]),
+  plan: z.enum(["essentielle", "vitrine"]),
+  billing: z.enum(["monthly", "yearly"]),
   email: z.string().email(),
 });
 
 export const createCheckoutSession = createServerFn({ method: "POST" })
   .validator(schema)
   .handler(async ({ data }) => {
-    const appUrl = process.env.VITE_APP_URL ?? "https://convert-your-card.vercel.app";
+    const appUrl = process.env.VITE_APP_URL ?? "https://www.cartevisitedigitale.fr";
     const priceId = PRICE_IDS[data.plan][data.billing];
+
+    if (!priceId) throw new Error(`Prix introuvable pour ${data.plan}/${data.billing}`);
 
     const session = await stripe.checkout.sessions.create({
       mode: "subscription",
@@ -21,11 +23,11 @@ export const createCheckoutSession = createServerFn({ method: "POST" })
       line_items: [{ price: priceId, quantity: 1 }],
       metadata: { plan: data.plan, billing: data.billing, email: data.email },
       success_url: `${appUrl}/bienvenue?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${appUrl}/inscription/selection-de-plan`,
+      cancel_url: `${appUrl}/pricing`,
       allow_promotion_codes: true,
       subscription_data: {
         metadata: { plan: data.plan, email: data.email },
-        ...( ["pro", "premium"].includes(data.plan) ? { trial_period_days: 7 } : {} ),
+        ...(data.plan === "vitrine" ? { trial_period_days: 7 } : {}),
       },
     });
 

@@ -22,7 +22,7 @@ function BienvenePage() {
       await new Promise((r) => setTimeout(r, 1500));
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) { navigate({ to: "/connexion" }); return; }
-      navigate({ to: "/onboarding", replace: true });
+      navigate({ to: "/dashboard", replace: true });
     }
     redirect();
   }, [navigate]);

@@ -194,7 +194,7 @@ const _NgMPCx = defineEventHandler(async (event) => {
   if (stripeEvent.type === "checkout.session.completed") {
     const session = stripeEvent.data.object;
     const email = session.metadata?.email || session.customer_email;
-    const plan = session.metadata?.plan || "starter";
+    const plan = session.metadata?.plan || "essentielle";
     const stripeCustomerId = session.customer;
     const stripeSubscriptionId = session.subscription;
     if (!email) {
@@ -247,7 +247,7 @@ const _NgMPCx = defineEventHandler(async (event) => {
     }
   } else if (stripeEvent.type === "customer.subscription.updated") {
     const sub = stripeEvent.data.object;
-    await adminSupabase.from("subscriptions").update({ plan: sub.metadata?.plan ?? "starter", status: sub.status, current_period_end: sub.current_period_end ? new Date(sub.current_period_end * 1e3).toISOString() : null, updated_at: (/* @__PURE__ */ new Date()).toISOString() }).eq("stripe_subscription_id", sub.id);
+    await adminSupabase.from("subscriptions").update({ plan: sub.metadata?.plan ?? "essentielle", status: sub.status, current_period_end: sub.current_period_end ? new Date(sub.current_period_end * 1e3).toISOString() : null, updated_at: (/* @__PURE__ */ new Date()).toISOString() }).eq("stripe_subscription_id", sub.id);
   } else if (stripeEvent.type === "customer.subscription.trial_will_end") {
     const sub = stripeEvent.data.object;
     const trialEnd = new Date(sub.trial_end * 1e3);
