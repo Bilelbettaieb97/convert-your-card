@@ -96,12 +96,13 @@ const FAQ = [
 function PricingPage() {
   const [billing, setBilling] = useState<Billing>("yearly");
   const [selected, setSelected] = useState<Plan["id"]>("vitrine");
-  const [creating, setCreating] = useState(false);
+  const [creating, setCreating] = useState<Plan["id"] | null>(null);
   const { data: cardData } = useCardStore();
   const navigate = useNavigate();
 
-  async function handleActivate() {
-    setCreating(true);
+  async function handleActivate(planOverride?: Plan["id"]) {
+    const planToUse = planOverride ?? selected;
+    setCreating(planToUse);
     try {
       // 1. Check auth
       const { data: { user } } = await supabase.auth.getUser();
@@ -118,14 +119,14 @@ function PricingPage() {
 
       // 3. Create Stripe checkout session → redirect
       const { url } = await createCheckoutSession({
-        data: { plan: selected, billing, email: user.email! },
+        data: { plan: planToUse, billing, email: user.email! },
       });
       if (url) window.location.href = url;
     } catch (err) {
       console.error("[handleActivate]", err);
       toast.error(err instanceof Error ? err.message : "Erreur lors du paiement");
     } finally {
-      setCreating(false);
+      setCreating(null);
     }
   }
 
@@ -313,13 +314,15 @@ function PricingPage() {
                   className="w-full h-11 text-base"
                   variant={isHighlight ? "default" : "outline"}
                   size={isHighlight ? "lg" : "default"}
+                  disabled={creating !== null}
                   onClick={(e) => {
                     e.stopPropagation();
                     setSelected(p.id);
+                    handleActivate(p.id);
                   }}
                 >
-                  {isHighlight && <Rocket className="h-4 w-4 mr-2" />}
-                  {p.ctaLabel(billing)}
+                  {isHighlight && creating !== "vitrine" && <Rocket className="h-4 w-4 mr-2" />}
+                  {creating === p.id ? "Activation…" : p.ctaLabel(billing)}
                 </Button>
               </Card>
             </button>
@@ -456,10 +459,10 @@ function PricingPage() {
           <Button
             size="lg"
             className="h-12 shadow-[var(--shadow-elegant)] shrink-0"
-            onClick={handleActivate}
-            disabled={creating}
+            onClick={() => handleActivate()}
+            disabled={creating !== null}
           >
-            {creating ? (
+            {creating !== null ? (
               <>Activation en cours…</>
             ) : selected === "vitrine" ? (
               <>
