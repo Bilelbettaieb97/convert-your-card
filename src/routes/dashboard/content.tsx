@@ -9,11 +9,11 @@ import { getProfileMeta } from "@/lib/profile-store";
 import type { CardData } from "@/lib/card-types";
 import { ArrowLeft } from "lucide-react";
 
-export const Route = createFileRoute("/dashboard/style")({
-  component: StylePage,
+export const Route = createFileRoute("/dashboard/content")({
+  component: ContentPage,
 });
 
-function StylePage() {
+function ContentPage() {
   const { data, setData, update, hydrated } = useCardStore();
   const profile = getProfileMeta();
   const [supabaseReady, setSupabaseReady] = useState(false);
@@ -51,11 +51,11 @@ function StylePage() {
             <ArrowLeft className="h-4 w-4" />
           </Link>
           <div>
-            <h2 className="font-display text-2xl font-medium">Style par brique</h2>
-            <p className="text-sm text-muted-foreground">Choisissez la variante visuelle de chaque section.</p>
+            <h2 className="font-display text-2xl font-medium">Contenu de la carte</h2>
+            <p className="text-sm text-muted-foreground">Activez, modifiez et réordonnez chaque section.</p>
           </div>
         </div>
-        <BrickList data={data} update={update} setData={setData} styleOnly />
+        <BrickList data={data} update={update} setData={setData} />
       </section>
 
       <aside className="hidden xl:block">

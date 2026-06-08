@@ -26,6 +26,7 @@ import { Route as DashboardIndexRouteImport } from './routes/dashboard/index'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as InscriptionSelectionDePlanRouteImport } from './routes/inscription.selection-de-plan'
 import { Route as InscriptionCartePhysiqueRouteImport } from './routes/inscription.carte-physique'
+import { Route as DashboardThemeRouteImport } from './routes/dashboard/theme'
 import { Route as DashboardTeamRouteImport } from './routes/dashboard/team'
 import { Route as DashboardStyleRouteImport } from './routes/dashboard/style'
 import { Route as DashboardStatistiquesRouteImport } from './routes/dashboard/statistiques'
@@ -39,6 +40,7 @@ import { Route as DashboardLinksRouteImport } from './routes/dashboard/links'
 import { Route as DashboardLeadsRouteImport } from './routes/dashboard/leads'
 import { Route as DashboardIntegrationsRouteImport } from './routes/dashboard/integrations'
 import { Route as DashboardHelpRouteImport } from './routes/dashboard/help'
+import { Route as DashboardContentRouteImport } from './routes/dashboard/content'
 import { Route as DashboardContactsRouteImport } from './routes/dashboard/contacts'
 import { Route as DashboardCarteRouteImport } from './routes/dashboard/carte'
 import { Route as DashboardCardRouteImport } from './routes/dashboard/card'
@@ -135,6 +137,11 @@ const InscriptionCartePhysiqueRoute =
     path: '/carte-physique',
     getParentRoute: () => InscriptionRoute,
   } as any)
+const DashboardThemeRoute = DashboardThemeRouteImport.update({
+  id: '/theme',
+  path: '/theme',
+  getParentRoute: () => DashboardRoute,
+} as any)
 const DashboardTeamRoute = DashboardTeamRouteImport.update({
   id: '/team',
   path: '/team',
@@ -200,6 +207,11 @@ const DashboardHelpRoute = DashboardHelpRouteImport.update({
   path: '/help',
   getParentRoute: () => DashboardRoute,
 } as any)
+const DashboardContentRoute = DashboardContentRouteImport.update({
+  id: '/content',
+  path: '/content',
+  getParentRoute: () => DashboardRoute,
+} as any)
 const DashboardContactsRoute = DashboardContactsRouteImport.update({
   id: '/contacts',
   path: '/contacts',
@@ -261,6 +273,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/card': typeof DashboardCardRoute
   '/dashboard/carte': typeof DashboardCarteRoute
   '/dashboard/contacts': typeof DashboardContactsRoute
+  '/dashboard/content': typeof DashboardContentRoute
   '/dashboard/help': typeof DashboardHelpRoute
   '/dashboard/integrations': typeof DashboardIntegrationsRoute
   '/dashboard/leads': typeof DashboardLeadsRoute
@@ -274,6 +287,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/statistiques': typeof DashboardStatistiquesRoute
   '/dashboard/style': typeof DashboardStyleRoute
   '/dashboard/team': typeof DashboardTeamRoute
+  '/dashboard/theme': typeof DashboardThemeRoute
   '/inscription/carte-physique': typeof InscriptionCartePhysiqueRoute
   '/inscription/selection-de-plan': typeof InscriptionSelectionDePlanRoute
   '/admin/': typeof AdminIndexRoute
@@ -299,6 +313,7 @@ export interface FileRoutesByTo {
   '/dashboard/card': typeof DashboardCardRoute
   '/dashboard/carte': typeof DashboardCarteRoute
   '/dashboard/contacts': typeof DashboardContactsRoute
+  '/dashboard/content': typeof DashboardContentRoute
   '/dashboard/help': typeof DashboardHelpRoute
   '/dashboard/integrations': typeof DashboardIntegrationsRoute
   '/dashboard/leads': typeof DashboardLeadsRoute
@@ -312,6 +327,7 @@ export interface FileRoutesByTo {
   '/dashboard/statistiques': typeof DashboardStatistiquesRoute
   '/dashboard/style': typeof DashboardStyleRoute
   '/dashboard/team': typeof DashboardTeamRoute
+  '/dashboard/theme': typeof DashboardThemeRoute
   '/inscription/carte-physique': typeof InscriptionCartePhysiqueRoute
   '/inscription/selection-de-plan': typeof InscriptionSelectionDePlanRoute
   '/admin': typeof AdminIndexRoute
@@ -340,6 +356,7 @@ export interface FileRoutesById {
   '/dashboard/card': typeof DashboardCardRoute
   '/dashboard/carte': typeof DashboardCarteRoute
   '/dashboard/contacts': typeof DashboardContactsRoute
+  '/dashboard/content': typeof DashboardContentRoute
   '/dashboard/help': typeof DashboardHelpRoute
   '/dashboard/integrations': typeof DashboardIntegrationsRoute
   '/dashboard/leads': typeof DashboardLeadsRoute
@@ -353,6 +370,7 @@ export interface FileRoutesById {
   '/dashboard/statistiques': typeof DashboardStatistiquesRoute
   '/dashboard/style': typeof DashboardStyleRoute
   '/dashboard/team': typeof DashboardTeamRoute
+  '/dashboard/theme': typeof DashboardThemeRoute
   '/inscription/carte-physique': typeof InscriptionCartePhysiqueRoute
   '/inscription/selection-de-plan': typeof InscriptionSelectionDePlanRoute
   '/admin/': typeof AdminIndexRoute
@@ -382,6 +400,7 @@ export interface FileRouteTypes {
     | '/dashboard/card'
     | '/dashboard/carte'
     | '/dashboard/contacts'
+    | '/dashboard/content'
     | '/dashboard/help'
     | '/dashboard/integrations'
     | '/dashboard/leads'
@@ -395,6 +414,7 @@ export interface FileRouteTypes {
     | '/dashboard/statistiques'
     | '/dashboard/style'
     | '/dashboard/team'
+    | '/dashboard/theme'
     | '/inscription/carte-physique'
     | '/inscription/selection-de-plan'
     | '/admin/'
@@ -420,6 +440,7 @@ export interface FileRouteTypes {
     | '/dashboard/card'
     | '/dashboard/carte'
     | '/dashboard/contacts'
+    | '/dashboard/content'
     | '/dashboard/help'
     | '/dashboard/integrations'
     | '/dashboard/leads'
@@ -433,6 +454,7 @@ export interface FileRouteTypes {
     | '/dashboard/statistiques'
     | '/dashboard/style'
     | '/dashboard/team'
+    | '/dashboard/theme'
     | '/inscription/carte-physique'
     | '/inscription/selection-de-plan'
     | '/admin'
@@ -460,6 +482,7 @@ export interface FileRouteTypes {
     | '/dashboard/card'
     | '/dashboard/carte'
     | '/dashboard/contacts'
+    | '/dashboard/content'
     | '/dashboard/help'
     | '/dashboard/integrations'
     | '/dashboard/leads'
@@ -473,6 +496,7 @@ export interface FileRouteTypes {
     | '/dashboard/statistiques'
     | '/dashboard/style'
     | '/dashboard/team'
+    | '/dashboard/theme'
     | '/inscription/carte-physique'
     | '/inscription/selection-de-plan'
     | '/admin/'
@@ -618,6 +642,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof InscriptionCartePhysiqueRouteImport
       parentRoute: typeof InscriptionRoute
     }
+    '/dashboard/theme': {
+      id: '/dashboard/theme'
+      path: '/theme'
+      fullPath: '/dashboard/theme'
+      preLoaderRoute: typeof DashboardThemeRouteImport
+      parentRoute: typeof DashboardRoute
+    }
     '/dashboard/team': {
       id: '/dashboard/team'
       path: '/team'
@@ -709,6 +740,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardHelpRouteImport
       parentRoute: typeof DashboardRoute
     }
+    '/dashboard/content': {
+      id: '/dashboard/content'
+      path: '/content'
+      fullPath: '/dashboard/content'
+      preLoaderRoute: typeof DashboardContentRouteImport
+      parentRoute: typeof DashboardRoute
+    }
     '/dashboard/contacts': {
       id: '/dashboard/contacts'
       path: '/contacts'
@@ -776,6 +814,7 @@ interface DashboardRouteChildren {
   DashboardCardRoute: typeof DashboardCardRoute
   DashboardCarteRoute: typeof DashboardCarteRoute
   DashboardContactsRoute: typeof DashboardContactsRoute
+  DashboardContentRoute: typeof DashboardContentRoute
   DashboardHelpRoute: typeof DashboardHelpRoute
   DashboardIntegrationsRoute: typeof DashboardIntegrationsRoute
   DashboardLeadsRoute: typeof DashboardLeadsRoute
@@ -789,6 +828,7 @@ interface DashboardRouteChildren {
   DashboardStatistiquesRoute: typeof DashboardStatistiquesRoute
   DashboardStyleRoute: typeof DashboardStyleRoute
   DashboardTeamRoute: typeof DashboardTeamRoute
+  DashboardThemeRoute: typeof DashboardThemeRoute
   DashboardIndexRoute: typeof DashboardIndexRoute
 }
 
@@ -800,6 +840,7 @@ const DashboardRouteChildren: DashboardRouteChildren = {
   DashboardCardRoute: DashboardCardRoute,
   DashboardCarteRoute: DashboardCarteRoute,
   DashboardContactsRoute: DashboardContactsRoute,
+  DashboardContentRoute: DashboardContentRoute,
   DashboardHelpRoute: DashboardHelpRoute,
   DashboardIntegrationsRoute: DashboardIntegrationsRoute,
   DashboardLeadsRoute: DashboardLeadsRoute,
@@ -813,6 +854,7 @@ const DashboardRouteChildren: DashboardRouteChildren = {
   DashboardStatistiquesRoute: DashboardStatistiquesRoute,
   DashboardStyleRoute: DashboardStyleRoute,
   DashboardTeamRoute: DashboardTeamRoute,
+  DashboardThemeRoute: DashboardThemeRoute,
   DashboardIndexRoute: DashboardIndexRoute,
 }
 

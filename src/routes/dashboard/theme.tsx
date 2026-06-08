@@ -1,19 +1,19 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
-import { BrickList } from "@/components/builder/BrickList";
 import { BusinessCard } from "@/components/card/BusinessCard";
 import { PhoneFrame } from "@/components/card/PhoneFrame";
 import { useCardStore } from "@/lib/card-store";
+import { CARD_THEMES } from "@/lib/card-themes";
 import { loadMyCard, updateCard } from "@/lib/card-actions";
 import { getProfileMeta } from "@/lib/profile-store";
 import type { CardData } from "@/lib/card-types";
-import { ArrowLeft } from "lucide-react";
+import { Check, ArrowLeft } from "lucide-react";
 
-export const Route = createFileRoute("/dashboard/style")({
-  component: StylePage,
+export const Route = createFileRoute("/dashboard/theme")({
+  component: ThemePage,
 });
 
-function StylePage() {
+function ThemePage() {
   const { data, setData, update, hydrated } = useCardStore();
   const profile = getProfileMeta();
   const [supabaseReady, setSupabaseReady] = useState(false);
@@ -51,11 +51,45 @@ function StylePage() {
             <ArrowLeft className="h-4 w-4" />
           </Link>
           <div>
-            <h2 className="font-display text-2xl font-medium">Style par brique</h2>
-            <p className="text-sm text-muted-foreground">Choisissez la variante visuelle de chaque section.</p>
+            <h2 className="font-display text-2xl font-medium">Apparence</h2>
+            <p className="text-sm text-muted-foreground">Choisissez la palette qui correspond à votre métier.</p>
           </div>
         </div>
-        <BrickList data={data} update={update} setData={setData} styleOnly />
+
+        <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+          {CARD_THEMES.map((t) => {
+            const active = data.accent === t.id;
+            return (
+              <button
+                key={t.id}
+                type="button"
+                onClick={() => update("accent", t.id as CardData["accent"])}
+                className={`group relative text-left rounded-2xl border p-3 transition-all hover:-translate-y-0.5 ${
+                  active
+                    ? "border-primary ring-2 ring-primary/40 shadow-[0_0_24px_-4px] shadow-primary/30"
+                    : "border-border hover:border-foreground/30"
+                }`}
+              >
+                <div
+                  className="h-20 w-full rounded-xl mb-3 border border-border/60 overflow-hidden"
+                  style={{ background: t.palette.gradient }}
+                  aria-hidden
+                />
+                <div className="flex items-center justify-between gap-2">
+                  <div className="min-w-0">
+                    <div className="text-sm font-medium truncate">{t.label}</div>
+                    <div className="text-[11px] text-muted-foreground truncate">{t.sector}</div>
+                  </div>
+                  {active && (
+                    <span className="h-5 w-5 shrink-0 rounded-full bg-primary text-primary-foreground grid place-items-center">
+                      <Check className="h-3 w-3" strokeWidth={3} />
+                    </span>
+                  )}
+                </div>
+              </button>
+            );
+          })}
+        </div>
       </section>
 
       <aside className="hidden xl:block">

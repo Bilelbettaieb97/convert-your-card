@@ -1,170 +1,114 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useRef, useState } from "react";
-import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
-import { BrickList } from "@/components/builder/BrickList";
 import { BusinessCard } from "@/components/card/BusinessCard";
 import { PhoneFrame } from "@/components/card/PhoneFrame";
 import { ShareGrid, QrCard, PublicLinkBar } from "@/components/dashboard/ShareGrid";
 import { useCardStore } from "@/lib/card-store";
-import { CARD_THEMES } from "@/lib/card-themes";
-import type { CardData } from "@/lib/card-types";
-import { Sparkles, Check, ArrowRight, Layers, Palette, Share2, Smartphone } from "lucide-react";
-import { updateCard, loadMyCard } from "@/lib/card-actions";
+import { loadMyCard } from "@/lib/card-actions";
 import { getProfileMeta } from "@/lib/profile-store";
+import type { CardData } from "@/lib/card-types";
+import { Layers, Palette, Sparkles, ArrowRight, ExternalLink } from "lucide-react";
 
 export const Route = createFileRoute("/dashboard/card")({
-  component: MyCardPage,
+  component: CardOverviewPage,
 });
 
-function MyCardPage() {
-  const { data, setData, update, hydrated } = useCardStore();
+function CardOverviewPage() {
+  const { data, setData, hydrated } = useCardStore();
   const profile = getProfileMeta();
   const origin = typeof window !== "undefined" ? window.location.origin : "https://www.cartevisitedigitale.fr";
   const publicUrl = profile ? `${origin}/${profile.slug}` : `${origin}/`;
   const [supabaseReady, setSupabaseReady] = useState(false);
-  const skipNextSave = useRef(false);
+  const skipInit = useRef(false);
 
-  // Hydrate from Supabase once on first load — source of truth is the DB
   useEffect(() => {
     if (!hydrated) return;
     if (!profile) { setSupabaseReady(true); return; }
     loadMyCard().then((row) => {
       if (row?.card_data) {
-        skipNextSave.current = true;
+        skipInit.current = true;
         setData(row.card_data as CardData);
       }
     }).catch(console.error).finally(() => setSupabaseReady(true));
   }, [hydrated]); // eslint-disable-line react-hooks/exhaustive-deps
-
-  // Auto-save to Supabase on every change (1.5s debounce)
-  useEffect(() => {
-    if (!hydrated || !supabaseReady || !profile) return;
-    if (skipNextSave.current) { skipNextSave.current = false; return; }
-    const timer = setTimeout(() => {
-      updateCard(profile.id, data).catch(console.error);
-    }, 1500);
-    return () => clearTimeout(timer);
-  }, [data, hydrated, supabaseReady]);
 
   if (!hydrated || !supabaseReady) {
     return <div className="p-8 text-muted-foreground">Chargement…</div>;
   }
 
   return (
-    <div className="mx-auto max-w-[1500px] px-5 sm:px-8 py-8 grid grid-cols-1 xl:grid-cols-[420px_1fr] gap-6">
-      {/* LEFT — sticky preview + QR + share */}
-      <aside className="space-y-4">
-        <div className="xl:sticky xl:top-20 space-y-4">
-          <div className="rounded-2xl border border-border bg-gradient-to-br from-card to-card/30 p-4">
-            <div className="flex items-center justify-between mb-3">
-              <p className="text-xs uppercase tracking-[0.16em] text-primary flex items-center gap-1.5">
-                <Sparkles className="h-3 w-3" /> Aperçu live
-              </p>
-              <span className="text-[10px] uppercase tracking-wider text-muted-foreground flex items-center gap-1">
-                <Smartphone className="h-3 w-3" /> Mobile
-              </span>
-            </div>
-            <div className="flex justify-center">
-              <PhoneFrame><BusinessCard data={data} /></PhoneFrame>
-            </div>
-          </div>
+    <div className="mx-auto max-w-6xl px-5 sm:px-8 py-8">
+      <div className="grid grid-cols-1 xl:grid-cols-[380px_1fr] gap-8 items-start">
 
-          <div className="rounded-2xl border border-border bg-card/30 p-4 space-y-3">
+        {/* LEFT — sticky phone preview */}
+        <div className="flex justify-center xl:sticky xl:top-20">
+          <PhoneFrame><BusinessCard data={data} /></PhoneFrame>
+        </div>
+
+        {/* RIGHT — link, QR, share, edit buttons */}
+        <div className="space-y-5">
+
+          {/* Public link */}
+          <div className="rounded-2xl border border-border bg-card/40 p-4 space-y-3">
             <div className="flex items-center justify-between">
               <span className="text-xs uppercase tracking-wider text-muted-foreground">Lien public</span>
-              <Link to="/dashboard/account" className="text-[11px] text-primary hover:underline">Personnaliser →</Link>
+              <a href={publicUrl} target="_blank" rel="noopener noreferrer"
+                className="text-[11px] text-primary hover:underline flex items-center gap-1">
+                Ouvrir <ExternalLink className="h-3 w-3" />
+              </a>
             </div>
             <PublicLinkBar url={publicUrl} />
           </div>
 
-          <div id="qr">
+          {/* QR + share side by side */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <QrCard url={publicUrl} name={data.name} />
+            <div className="rounded-2xl border border-border bg-card/30 p-4">
+              <p className="text-xs uppercase tracking-wider text-muted-foreground mb-3">Partager</p>
+              <ShareGrid data={data} url={publicUrl} />
+            </div>
           </div>
 
-          <div className="rounded-2xl border border-border bg-card/30 p-4">
-            <div className="flex items-center gap-2 mb-3">
-              <Share2 className="h-3.5 w-3.5 text-primary" />
-              <span className="text-sm font-medium">Partager ma carte</span>
-            </div>
-            <ShareGrid data={data} url={publicUrl} />
+          {/* 3 edit buttons */}
+          <div className="space-y-2">
+            <p className="text-xs uppercase tracking-wider text-muted-foreground px-1">Modifier ma carte</p>
+
+            <EditButton
+              to="/dashboard/content"
+              icon={<Layers className="h-6 w-6" />}
+              label="Modifier le contenu"
+              hint="Sections, textes, boutons d'action"
+            />
+            <EditButton
+              to="/dashboard/theme"
+              icon={<Palette className="h-6 w-6" />}
+              label="Modifier l'apparence"
+              hint="Thème, couleurs, palette globale"
+            />
+            <EditButton
+              to="/dashboard/style"
+              icon={<Sparkles className="h-6 w-6" />}
+              label="Modifier le style"
+              hint="Variantes visuelles par brique"
+            />
           </div>
         </div>
-      </aside>
-
-      {/* RIGHT — Tabs */}
-      <section>
-        <Tabs defaultValue="content" className="w-full">
-          <TabsList className="bg-muted/30 border border-border h-11 p-1 mb-5">
-            <TabsTrigger value="content" className="data-[state=active]:bg-background data-[state=active]:shadow-sm gap-1.5">
-              <Layers className="h-3.5 w-3.5" /> Contenu
-            </TabsTrigger>
-            <TabsTrigger value="theme" className="data-[state=active]:bg-background data-[state=active]:shadow-sm gap-1.5">
-              <Palette className="h-3.5 w-3.5" /> Apparence
-            </TabsTrigger>
-            <TabsTrigger value="style" className="data-[state=active]:bg-background data-[state=active]:shadow-sm gap-1.5">
-              <Sparkles className="h-3.5 w-3.5" /> Style
-            </TabsTrigger>
-          </TabsList>
-
-          <TabsContent value="content" className="mt-0 space-y-4">
-            <Header title="Briques de la carte" subtitle="Activez, modifiez ou réordonnez chaque section. L'aperçu se met à jour en direct." />
-            <BrickList data={data} update={update} setData={setData} />
-          </TabsContent>
-
-          <TabsContent value="theme" className="mt-0 space-y-4">
-            <Header title="Thème global" subtitle="Une palette s'applique à toute la carte. Choisissez l'ambiance qui correspond à votre métier." />
-            <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
-              {CARD_THEMES.map((t) => {
-                const active = data.accent === t.id;
-                return (
-                  <button
-                    key={t.id}
-                    type="button"
-                    onClick={() => update("accent", t.id as CardData["accent"])}
-                    className={`group relative text-left rounded-2xl border p-3 transition hover:-translate-y-0.5 ${
-                      active ? "border-primary ring-2 ring-primary/40 shadow-[var(--shadow-glow)]" : "border-border hover:border-foreground/30"
-                    }`}
-                  >
-                    <div className="h-20 w-full rounded-lg mb-3 border border-border/60 overflow-hidden relative" style={{ background: t.palette.gradient }} aria-hidden>
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/30 to-transparent" />
-                    </div>
-                    <div className="flex items-center justify-between gap-2">
-                      <div className="min-w-0">
-                        <div className="text-sm font-medium truncate">{t.label}</div>
-                        <div className="text-[11px] text-muted-foreground truncate">{t.sector}</div>
-                      </div>
-                      {active && (
-                        <span className="h-5 w-5 shrink-0 rounded-full bg-primary text-primary-foreground grid place-items-center">
-                          <Check className="h-3 w-3" strokeWidth={3} />
-                        </span>
-                      )}
-                    </div>
-                  </button>
-                );
-              })}
-            </div>
-          </TabsContent>
-
-          <TabsContent value="style" className="mt-0 space-y-4">
-            <Header title="Style par brique" subtitle="Chaque brique propose plusieurs variantes visuelles. Déroulez une brique pour choisir son style." />
-            <BrickList data={data} update={update} setData={setData} styleOnly />
-          </TabsContent>
-        </Tabs>
-      </section>
+      </div>
     </div>
   );
 }
 
-function Header({ title, subtitle }: { title: string; subtitle: string }) {
+function EditButton({ to, icon, label, hint }: { to: string; icon: React.ReactNode; label: string; hint: string }) {
   return (
-    <div className="flex items-end justify-between gap-3">
-      <div>
-        <h2 className="font-display text-2xl font-medium">{title}</h2>
-        <p className="text-sm text-muted-foreground mt-1">{subtitle}</p>
+    <Link to={to} className="group flex items-center gap-4 rounded-2xl border border-border bg-card/40 hover:border-primary/50 hover:bg-card p-4 transition-all hover:-translate-y-0.5">
+      <span className="h-12 w-12 rounded-xl bg-primary/10 text-primary grid place-items-center shrink-0 group-hover:bg-primary/15 transition-colors">
+        {icon}
+      </span>
+      <div className="flex-1 text-left min-w-0">
+        <div className="font-medium">{label}</div>
+        <div className="text-xs text-muted-foreground">{hint}</div>
       </div>
-      <Link to="/builder" className="hidden sm:inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-primary transition">
-        Ouvrir le builder <ArrowRight className="h-3 w-3" />
-      </Link>
-    </div>
+      <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:text-primary group-hover:translate-x-0.5 transition-all shrink-0" />
+    </Link>
   );
 }
