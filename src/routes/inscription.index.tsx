@@ -46,6 +46,9 @@ function InscriptionPage() {
 
       if (error) throw error;
       setSent(true);
+      if (typeof window !== "undefined" && (window as any).fbq) {
+        (window as any).fbq("track", "Lead");
+      }
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Une erreur est survenue");
     } finally {
