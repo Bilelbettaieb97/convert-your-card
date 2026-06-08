@@ -40,7 +40,7 @@ export function CommandPalette({ publicUrl }: Props) {
         <CommandGroup heading="Navigation">
           <CommandItem onSelect={() => go("/dashboard")}><LayoutGrid className="mr-2 h-4 w-4" /> Vue d'ensemble</CommandItem>
           <CommandItem onSelect={() => go("/dashboard/card")}><CreditCard className="mr-2 h-4 w-4" /> Ma carte</CommandItem>
-          <CommandItem onSelect={() => go("/dashboard/share")}><BarChart3 className="mr-2 h-4 w-4" /> Statistiques</CommandItem>
+          <CommandItem onSelect={() => go("/dashboard/statistiques")}><BarChart3 className="mr-2 h-4 w-4" /> Statistiques</CommandItem>
           <CommandItem onSelect={() => go("/dashboard/account")}><User className="mr-2 h-4 w-4" /> Plan & compte</CommandItem>
         </CommandGroup>
         <CommandSeparator />

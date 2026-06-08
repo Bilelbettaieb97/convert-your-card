@@ -5,7 +5,7 @@ import {
   SidebarMenuSub, SidebarMenuSubButton, SidebarMenuSubItem,
 } from "@/components/ui/sidebar";
 import {
-  LayoutDashboard, CreditCard, Layers, Palette, Sparkles, Link2, Image, Share2,
+  LayoutDashboard, CreditCard, Layers, Palette, Sparkles, Link2, Image,
   Users, TrendingUp, BarChart2, Bell, UserCog, Package, Plug, Receipt,
   Settings, HelpCircle, LogOut, Zap,
 } from "lucide-react";
@@ -24,7 +24,7 @@ const NAV_EXTRAS = [
 ];
 
 const NAV_DATA = [
-  { to: "/dashboard/share",         label: "Statistiques",     icon: Share2   },
+  { to: "/dashboard/statistiques",   label: "Statistiques",     icon: BarChart2 },
   { to: "/dashboard/contacts",      label: "Contacts",         icon: Users    },
   { to: "/dashboard/leads",         label: "Pipeline",         icon: TrendingUp },
   { to: "/dashboard/analytics",     label: "Analytics avancé", icon: BarChart2 },

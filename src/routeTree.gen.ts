@@ -30,7 +30,6 @@ import { Route as DashboardThemeRouteImport } from './routes/dashboard/theme'
 import { Route as DashboardTeamRouteImport } from './routes/dashboard/team'
 import { Route as DashboardStyleRouteImport } from './routes/dashboard/style'
 import { Route as DashboardStatistiquesRouteImport } from './routes/dashboard/statistiques'
-import { Route as DashboardShareRouteImport } from './routes/dashboard/share'
 import { Route as DashboardSettingsRouteImport } from './routes/dashboard/settings'
 import { Route as DashboardOrdersRouteImport } from './routes/dashboard/orders'
 import { Route as DashboardNotificationsRouteImport } from './routes/dashboard/notifications'
@@ -157,11 +156,6 @@ const DashboardStatistiquesRoute = DashboardStatistiquesRouteImport.update({
   path: '/statistiques',
   getParentRoute: () => DashboardRoute,
 } as any)
-const DashboardShareRoute = DashboardShareRouteImport.update({
-  id: '/share',
-  path: '/share',
-  getParentRoute: () => DashboardRoute,
-} as any)
 const DashboardSettingsRoute = DashboardSettingsRouteImport.update({
   id: '/settings',
   path: '/settings',
@@ -283,7 +277,6 @@ export interface FileRoutesByFullPath {
   '/dashboard/notifications': typeof DashboardNotificationsRoute
   '/dashboard/orders': typeof DashboardOrdersRoute
   '/dashboard/settings': typeof DashboardSettingsRoute
-  '/dashboard/share': typeof DashboardShareRoute
   '/dashboard/statistiques': typeof DashboardStatistiquesRoute
   '/dashboard/style': typeof DashboardStyleRoute
   '/dashboard/team': typeof DashboardTeamRoute
@@ -323,7 +316,6 @@ export interface FileRoutesByTo {
   '/dashboard/notifications': typeof DashboardNotificationsRoute
   '/dashboard/orders': typeof DashboardOrdersRoute
   '/dashboard/settings': typeof DashboardSettingsRoute
-  '/dashboard/share': typeof DashboardShareRoute
   '/dashboard/statistiques': typeof DashboardStatistiquesRoute
   '/dashboard/style': typeof DashboardStyleRoute
   '/dashboard/team': typeof DashboardTeamRoute
@@ -366,7 +358,6 @@ export interface FileRoutesById {
   '/dashboard/notifications': typeof DashboardNotificationsRoute
   '/dashboard/orders': typeof DashboardOrdersRoute
   '/dashboard/settings': typeof DashboardSettingsRoute
-  '/dashboard/share': typeof DashboardShareRoute
   '/dashboard/statistiques': typeof DashboardStatistiquesRoute
   '/dashboard/style': typeof DashboardStyleRoute
   '/dashboard/team': typeof DashboardTeamRoute
@@ -410,7 +401,6 @@ export interface FileRouteTypes {
     | '/dashboard/notifications'
     | '/dashboard/orders'
     | '/dashboard/settings'
-    | '/dashboard/share'
     | '/dashboard/statistiques'
     | '/dashboard/style'
     | '/dashboard/team'
@@ -450,7 +440,6 @@ export interface FileRouteTypes {
     | '/dashboard/notifications'
     | '/dashboard/orders'
     | '/dashboard/settings'
-    | '/dashboard/share'
     | '/dashboard/statistiques'
     | '/dashboard/style'
     | '/dashboard/team'
@@ -492,7 +481,6 @@ export interface FileRouteTypes {
     | '/dashboard/notifications'
     | '/dashboard/orders'
     | '/dashboard/settings'
-    | '/dashboard/share'
     | '/dashboard/statistiques'
     | '/dashboard/style'
     | '/dashboard/team'
@@ -670,13 +658,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardStatistiquesRouteImport
       parentRoute: typeof DashboardRoute
     }
-    '/dashboard/share': {
-      id: '/dashboard/share'
-      path: '/share'
-      fullPath: '/dashboard/share'
-      preLoaderRoute: typeof DashboardShareRouteImport
-      parentRoute: typeof DashboardRoute
-    }
     '/dashboard/settings': {
       id: '/dashboard/settings'
       path: '/settings'
@@ -824,7 +805,6 @@ interface DashboardRouteChildren {
   DashboardNotificationsRoute: typeof DashboardNotificationsRoute
   DashboardOrdersRoute: typeof DashboardOrdersRoute
   DashboardSettingsRoute: typeof DashboardSettingsRoute
-  DashboardShareRoute: typeof DashboardShareRoute
   DashboardStatistiquesRoute: typeof DashboardStatistiquesRoute
   DashboardStyleRoute: typeof DashboardStyleRoute
   DashboardTeamRoute: typeof DashboardTeamRoute
@@ -850,7 +830,6 @@ const DashboardRouteChildren: DashboardRouteChildren = {
   DashboardNotificationsRoute: DashboardNotificationsRoute,
   DashboardOrdersRoute: DashboardOrdersRoute,
   DashboardSettingsRoute: DashboardSettingsRoute,
-  DashboardShareRoute: DashboardShareRoute,
   DashboardStatistiquesRoute: DashboardStatistiquesRoute,
   DashboardStyleRoute: DashboardStyleRoute,
   DashboardTeamRoute: DashboardTeamRoute,
