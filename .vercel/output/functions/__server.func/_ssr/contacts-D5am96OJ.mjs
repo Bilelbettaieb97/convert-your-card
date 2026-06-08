@@ -1,5 +1,5 @@
 import { j as jsxRuntimeExports } from "../_libs/react.mjs";
-import { U as Users, av as Phone, M as Mail, a3 as Star, a$ as Tag, t as MapPin, i as MessageCircle, D as Download, k as Bell, n as CalendarCheck } from "../_libs/lucide-react.mjs";
+import { U as Users, au as Phone, o as Mail, a4 as Star, a_ as Tag, l as MapPin, M as MessageCircle, D as Download, n as Bell, h as CalendarCheck } from "../_libs/lucide-react.mjs";
 function ContactsPage() {
   return /* @__PURE__ */ jsxRuntimeExports.jsx(ComingSoon, {});
 }

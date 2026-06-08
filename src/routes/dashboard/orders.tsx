@@ -1,111 +1,74 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
-import { Button } from "@/components/ui/button";
-import { Badge } from "@/components/ui/badge";
-import { Package, Truck, CheckCircle2, FileText, ShoppingBag } from "lucide-react";
-import { supabase } from "@/integrations/supabase/client";
+import { Package, Truck, Zap, CreditCard, QrCode, RefreshCw, CalendarCheck, ShieldCheck, MapPin } from "lucide-react";
 
 export const Route = createFileRoute("/dashboard/orders")({
-  head: () => ({ meta: [{ title: "Commandes — Dashboard" }] }),
+  head: () => ({ meta: [{ title: "Commandes NFC — Dashboard" }] }),
   component: OrdersPage,
 });
 
-type Order = {
-  id: string; created_at: string; model: string; qty: number; total: number;
-  status: "preparing" | "shipped" | "delivered" | "pending";
-  tracking?: string; invoice_url?: string;
-};
-
-const STATUS: Record<Order["status"], { l: string; color: string; icon: typeof Package }> = {
-  pending:    { l: "En attente",       color: "border-border text-muted-foreground",            icon: Package },
-  preparing:  { l: "En préparation",   color: "border-amber-500/40 bg-amber-500/10 text-amber-400",    icon: Package },
-  shipped:    { l: "Expédié",          color: "border-blue-500/40 bg-blue-500/10 text-blue-400",       icon: Truck },
-  delivered:  { l: "Livré",            color: "border-emerald-500/40 bg-emerald-500/10 text-emerald-400", icon: CheckCircle2 },
-};
-
-function fmt(iso: string) {
-  return new Date(iso).toLocaleDateString("fr-FR", { day: "numeric", month: "long", year: "numeric" });
+function OrdersPage() {
+  return <ComingSoon />;
 }
 
-function OrdersPage() {
-  const [orders, setOrders] = useState<Order[]>([]);
-  const [loading, setLoading] = useState(true);
-
-  useEffect(() => {
-    supabase.auth.getUser().then(async ({ data: { user } }) => {
-      if (!user) { setLoading(false); return; }
-      const { data } = await supabase.from("nfc_orders").select("*").eq("user_id", user.id).order("created_at", { ascending: false });
-      if (data) setOrders(data as Order[]);
-      setLoading(false);
-    });
-  }, []);
-
-  const total = orders.reduce((s, o) => s + (o.total || 0), 0);
-  const qty = orders.reduce((s, o) => s + (o.qty || 0), 0);
-
-  if (loading) return <div className="p-8 text-sm text-muted-foreground text-center">Chargement…</div>;
-
+function ComingSoon() {
   return (
-    <div className="p-6 md:p-8 space-y-6">
-      <div className="grid grid-cols-3 gap-3">
-        {[
-          { l: "Commandes totales", v: orders.length },
-          { l: "Cartes commandées",  v: qty },
-          { l: "Total dépensé",      v: `${total} €` },
-        ].map(s => (
-          <div key={s.l} className="rounded-2xl border border-border bg-card/40 p-4">
-            <div className="text-[10px] uppercase tracking-wider text-muted-foreground">{s.l}</div>
-            <div className="font-display text-2xl mt-1">{s.v}</div>
-          </div>
-        ))}
-      </div>
-
-      <div className="rounded-2xl border border-border bg-card/40 overflow-hidden">
-        <div className="px-5 py-3 border-b border-border">
-          <h3 className="font-display">Historique des commandes</h3>
+    <div className="min-h-[70vh] flex flex-col items-center justify-center px-6 text-center">
+      <div className="max-w-lg">
+        {/* Icon */}
+        <div className="w-16 h-16 rounded-2xl flex items-center justify-center mx-auto mb-6"
+          style={{ background: "linear-gradient(135deg,rgba(245,158,11,0.15),rgba(239,68,68,0.1))" }}>
+          <Package className="w-8 h-8 text-amber-400" />
         </div>
 
-        {orders.length === 0 ? (
-          <div className="p-16 text-center">
-            <ShoppingBag className="h-12 w-12 mx-auto opacity-20 mb-4" />
-            <p className="text-sm text-muted-foreground font-medium">Aucune commande pour l'instant</p>
-            <p className="text-xs text-muted-foreground mt-1 opacity-70 max-w-xs mx-auto">
-              Commandez votre carte NFC physique pour la partager en un tap. Disponible dès 29 €.
-            </p>
-            <Button className="mt-5">Commander ma carte</Button>
-          </div>
-        ) : orders.map(o => {
-          const st = STATUS[o.status] ?? STATUS.pending;
-          return (
-            <div key={o.id} className="px-5 py-4 border-b border-border/50 last:border-b-0">
-              <div className="flex flex-wrap items-center gap-4">
-                <div className="flex-1 min-w-[200px]">
-                  <div className="text-sm font-medium font-mono">{o.id}</div>
-                  <div className="text-xs text-muted-foreground">{fmt(o.created_at)} · {o.qty} × {o.model || "Carte NFC"}</div>
-                </div>
-                <div className="font-display text-lg">{o.total} €</div>
-                <Badge variant="outline" className={`${st.color} text-[10px] gap-1`}>
-                  <st.icon className="h-3 w-3" /> {st.l}
-                </Badge>
-                <div className="flex gap-2">
-                  {o.tracking && (
-                    <Button variant="outline" size="sm"><Truck className="h-3.5 w-3.5 mr-1.5" /> Suivre</Button>
-                  )}
-                  {o.invoice_url ? (
-                    <a href={o.invoice_url} target="_blank" rel="noopener noreferrer">
-                      <Button variant="ghost" size="sm"><FileText className="h-3.5 w-3.5 mr-1.5" /> Facture</Button>
-                    </a>
-                  ) : (
-                    <Button variant="ghost" size="sm" disabled><FileText className="h-3.5 w-3.5 mr-1.5" /> Facture</Button>
-                  )}
-                </div>
+        {/* Badge */}
+        <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full text-xs font-semibold mb-4 border"
+          style={{ background: "rgba(245,158,11,0.08)", borderColor: "rgba(245,158,11,0.2)", color: "#fbbf24" }}>
+          <span className="w-1.5 h-1.5 rounded-full bg-amber-400 animate-pulse" />
+          En développement
+        </div>
+
+        <h1 className="text-2xl font-bold text-foreground mb-3">Commandes NFC</h1>
+        <p className="text-muted-foreground text-sm leading-relaxed mb-8">
+          Votre carte digitale, maintenant aussi en physique. Commandez votre carte NFC préprogrammée — un tap suffit pour partager votre profil. Suivi de livraison, historique et renouvellement gérés ici.
+        </p>
+
+        {/* Feature grid */}
+        <div className="grid grid-cols-2 gap-3 text-left mb-8">
+          {[
+            { icon: <Zap className="w-4 h-4 text-amber-400" />,       label: "Tap & partage instantané", detail: "Un seul tap NFC ouvre votre carte sur n'importe quel smartphone" },
+            { icon: <QrCode className="w-4 h-4 text-violet-400" />,   label: "QR code gravé au dos", detail: "Compatible iPhone et appareils sans NFC" },
+            { icon: <RefreshCw className="w-4 h-4 text-sky-400" />,   label: "Carte toujours à jour", detail: "Modifiez votre profil sans racheter de carte" },
+            { icon: <Truck className="w-4 h-4 text-emerald-400" />,   label: "Suivi de livraison", detail: "Colissimo avec numéro de suivi en temps réel" },
+            { icon: <CreditCard className="w-4 h-4 text-rose-400" />, label: "Plusieurs modèles", detail: "Noire mat, transparente, bambou — choisissez votre style" },
+            { icon: <MapPin className="w-4 h-4 text-teal-400" />,     label: "Livraison partout en France", detail: "Expédition sous 5 jours ouvrés, offerte dès 2 cartes" },
+            { icon: <ShieldCheck className="w-4 h-4 text-indigo-400" />, label: "Facturation intégrée", detail: "Facture téléchargeable directement depuis le dashboard" },
+            { icon: <Package className="w-4 h-4 text-orange-400" />,  label: "Commandes équipe", detail: "Commandez en lot pour toute votre équipe à prix réduit" },
+          ].map((f) => (
+            <div key={f.label} className="flex items-start gap-2.5 p-3 rounded-xl bg-muted/50 border border-border">
+              <div className="shrink-0 mt-0.5">{f.icon}</div>
+              <div>
+                <p className="text-xs font-medium text-foreground">{f.label}</p>
+                <p className="text-[10px] text-muted-foreground mt-0.5">{f.detail}</p>
               </div>
-              {o.status === "shipped" && o.tracking && (
-                <div className="mt-3 text-xs text-muted-foreground">Colissimo · n° {o.tracking}</div>
-              )}
             </div>
-          );
-        })}
+          ))}
+        </div>
+
+        {/* Demo CTA */}
+        <a
+          href="https://calendly.com/convertilab-5bsc/30min"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="inline-flex items-center gap-2 px-5 py-2.5 rounded-full text-sm font-semibold text-white mb-4 transition hover:opacity-90"
+          style={{ background: "linear-gradient(135deg,#f59e0b,#ef4444)" }}
+        >
+          <CalendarCheck className="w-4 h-4" />
+          Réserver une démo
+        </a>
+
+        <p className="text-xs text-muted-foreground">
+          Disponible très prochainement — restez connecté.
+        </p>
       </div>
     </div>
   );
