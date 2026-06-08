@@ -9,6 +9,7 @@ export default defineConfig(async ({ command }) => {
     tsconfigPaths({ projects: ["./tsconfig.json"] }),
     tanstackStart({
       server: { entry: "server" },
+      client: { entry: "./client" },
     }),
   ];
 
