@@ -109,10 +109,7 @@ function DashboardLayout() {
                 <span>Rechercher</span>
                 <kbd className="hidden lg:inline-flex h-5 items-center px-1.5 rounded bg-background border border-border text-[10px] font-mono">⌘K</kbd>
               </button>
-              <Link to="/builder" className="hidden sm:inline-flex">
-                <Button variant="ghost" size="sm" className="h-8 text-xs">Builder</Button>
-              </Link>
-              <Button
+<Button
                 variant="ghost"
                 size="sm"
                 onClick={() => window.open(publicUrl, "_blank")}
