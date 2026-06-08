@@ -60,8 +60,8 @@ function ThemePage() {
           </div>
         </div>
 
-        {/* Dark + Light side by side */}
-        <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
+        {/* Dark + Light side by side on desktop */}
+        <div className="grid grid-cols-1 lg:grid-cols-2 gap-6">
           <ThemeGroup
             label="Thèmes sombres"
             themes={darkThemes}
