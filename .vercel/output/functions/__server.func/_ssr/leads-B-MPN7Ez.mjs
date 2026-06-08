@@ -1,5 +1,5 @@
 import { j as jsxRuntimeExports } from "../_libs/react.mjs";
-import { w as TrendingUp, b1 as Kanban, b2 as Euro, U as Users, i as Repeat2, j as ChartColumn, q as Bell, b0 as Tag, l as CalendarCheck } from "../_libs/lucide-react.mjs";
+import { w as TrendingUp, b2 as Kanban, b3 as Euro, U as Users, i as Repeat2, j as ChartColumn, q as Bell, b1 as Tag, l as CalendarCheck } from "../_libs/lucide-react.mjs";
 function LeadsPage() {
   return /* @__PURE__ */ jsxRuntimeExports.jsx(ComingSoon, {});
 }

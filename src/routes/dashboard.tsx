@@ -8,7 +8,7 @@ import { PasswordGate } from "@/components/dashboard/PasswordGate";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useCardStore } from "@/lib/card-store";
-import { ExternalLink, Share2, Command, Circle } from "lucide-react";
+import { ExternalLink, Share2, Command, Circle, QrCode, HeadphonesIcon } from "lucide-react";
 import { useAuthStore } from "@/lib/auth-store";
 import { getProfileMeta } from "@/lib/profile-store";
 
@@ -86,17 +86,17 @@ function DashboardLayout() {
 
         <div className="flex-1 flex flex-col min-w-0">
           {/* Header */}
-          <header className="h-16 flex items-center gap-3 border-b border-border bg-background/80 backdrop-blur-xl px-4 sm:px-6 sticky top-0 z-30">
+          <header className="h-16 flex items-center gap-2 border-b border-border bg-background/80 backdrop-blur-xl px-4 sm:px-6 sticky top-0 z-30">
             <SidebarTrigger className="-ml-1" />
             <div className="h-6 w-px bg-border" aria-hidden />
 
             <div className="min-w-0 flex-1">
               <div className="flex items-center gap-2.5">
-                <h1 className="font-display text-base sm:text-lg font-medium truncate">{meta.title}</h1>
+                <h1 className="font-display text-lg sm:text-xl font-semibold truncate">{meta.title}</h1>
                 <StatusBadge published={isPublished} />
               </div>
               {meta.subtitle && (
-                <p className="text-[11px] text-muted-foreground truncate hidden sm:block">{meta.subtitle}</p>
+                <p className="text-xs text-muted-foreground truncate">{meta.subtitle}</p>
               )}
             </div>
 
@@ -106,29 +106,51 @@ function DashboardLayout() {
                   const ev = new KeyboardEvent("keydown", { key: "k", metaKey: true });
                   document.dispatchEvent(ev);
                 }}
-                className="hidden md:inline-flex items-center gap-2 h-8 px-2.5 rounded-md border border-border bg-muted/40 hover:bg-muted text-muted-foreground hover:text-foreground transition text-xs"
+                className="hidden lg:inline-flex items-center gap-2 h-9 px-3 rounded-md border border-border bg-muted/40 hover:bg-muted text-muted-foreground hover:text-foreground transition text-sm"
                 aria-label="Ouvrir la palette de commandes"
               >
-                <Command className="h-3 w-3" />
+                <Command className="h-3.5 w-3.5" />
                 <span>Rechercher</span>
-                <kbd className="hidden lg:inline-flex h-5 items-center px-1.5 rounded bg-background border border-border text-[10px] font-mono">⌘K</kbd>
+                <kbd className="hidden xl:inline-flex h-5 items-center px-1.5 rounded bg-background border border-border text-[10px] font-mono">⌘K</kbd>
               </button>
-<Button
-                variant="ghost"
+
+              <Button
+                variant="outline"
                 size="sm"
                 onClick={() => window.open(publicUrl, "_blank")}
-                className="h-8"
+                className="h-9 gap-1.5 text-sm font-medium"
               >
-                <ExternalLink className="h-3.5 w-3.5 sm:mr-1.5" />
-                <span className="hidden sm:inline text-xs">Voir en ligne</span>
+                <ExternalLink className="h-4 w-4" />
+                <span className="hidden sm:inline">Voir en ligne</span>
               </Button>
+
+              <Button
+                asChild
+                variant="outline"
+                size="sm"
+                className="h-9 gap-1.5 text-sm font-medium"
+              >
+                <Link to="/dashboard/card">
+                  <QrCode className="h-4 w-4" />
+                  <span className="hidden md:inline">QR Code</span>
+                </Link>
+              </Button>
+
+              <a
+                href="mailto:convertilab@gmail.com?subject=Support%20%E2%80%94%20Carte%20Visite%20Digitale"
+                className="inline-flex items-center gap-1.5 h-9 px-3 rounded-md border border-border bg-background text-sm font-medium text-muted-foreground hover:text-foreground hover:border-foreground/30 transition"
+              >
+                <HeadphonesIcon className="h-4 w-4" />
+                <span className="hidden md:inline">Support</span>
+              </a>
+
               <Button
                 size="sm"
                 onClick={() => setShareOpen(true)}
-                className="h-8 bg-gradient-to-br from-primary to-primary/80 text-primary-foreground shadow-[0_4px_20px_-4px] shadow-primary/40"
+                className="h-9 gap-1.5 text-sm font-semibold bg-gradient-to-br from-primary to-primary/80 text-primary-foreground shadow-[0_4px_20px_-4px] shadow-primary/40"
               >
-                <Share2 className="h-3.5 w-3.5 sm:mr-1.5" />
-                <span className="hidden sm:inline text-xs font-medium">Partager</span>
+                <Share2 className="h-4 w-4" />
+                <span className="hidden sm:inline">Partager</span>
               </Button>
             </div>
           </header>

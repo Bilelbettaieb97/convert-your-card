@@ -1,5 +1,5 @@
 import React from "react";
-import { CreditCard, Globe, Nfc, Sparkles, ArrowRight, Check, Zap } from "lucide-react";
+import { CreditCard, Globe, Nfc, Sparkles, ArrowRight, Check, Zap, Printer } from "lucide-react";
 import { Link } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 
@@ -16,22 +16,48 @@ export function UpsellSection({
 }: Props) {
   if (variant === "compact") {
     return (
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-3">
-        <CompactCard
-          to="/carte-nfc"
-          icon={Nfc}
-          tag="Carte physique NFC"
-          title="Votre carte digitale dans votre poche"
-          price="dès 29 €"
-          gradient="from-amber-500/15 via-amber-500/5 to-transparent"
-        />
-        <CompactCard
-          icon={Globe}
-          tag="Site web pro"
-          title="Un vrai site vitrine connecté à votre carte"
-          price="dès 490 €"
-          gradient="from-sky-500/15 via-sky-500/5 to-transparent"
-        />
+      <div className="space-y-4">
+        {/* Bannière principale — carte physique */}
+        <Link
+          to="/carte-physique"
+          className="group flex flex-col sm:flex-row sm:items-center gap-4 rounded-2xl border-2 border-amber-500/40 bg-gradient-to-r from-amber-500/10 via-amber-500/5 to-transparent p-5 transition hover:border-amber-500/70 hover:shadow-[0_0_24px_-4px] hover:shadow-amber-500/20"
+        >
+          <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-amber-400 to-amber-600 shadow-lg">
+            <Printer className="h-7 w-7 text-white" />
+          </span>
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-2 mb-0.5">
+              <span className="text-[10px] uppercase tracking-wider font-semibold text-amber-600 dark:text-amber-400">Dernière étape recommandée</span>
+            </div>
+            <div className="font-display text-lg font-semibold leading-snug">Commander la carte physique pour impressionner vos leads</div>
+            <p className="text-sm text-muted-foreground mt-0.5">Métal noir gravé à votre nom · NFC + QR Code · livraison 48h · dès 29 €</p>
+          </div>
+          <span className="shrink-0 inline-flex items-center gap-1.5 rounded-full bg-amber-500 text-white font-semibold text-sm px-4 py-2 shadow-md group-hover:bg-amber-600 transition">
+            Commander <ArrowRight className="h-4 w-4" />
+          </span>
+        </Link>
+
+        {/* Ligne secondaire — site web */}
+        <a
+          href="https://www.convertilab.com/"
+          target="_blank"
+          rel="noopener noreferrer"
+          className="group flex flex-col sm:flex-row sm:items-center gap-4 rounded-2xl border border-sky-500/30 bg-gradient-to-r from-sky-500/10 via-sky-500/5 to-transparent p-5 transition hover:border-sky-500/60 hover:shadow-[0_0_24px_-4px] hover:shadow-sky-500/20"
+        >
+          <span className="flex h-14 w-14 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-sky-400 to-sky-600 shadow-lg">
+            <Globe className="h-7 w-7 text-white" />
+          </span>
+          <div className="flex-1 min-w-0">
+            <div className="flex items-center gap-2 mb-0.5">
+              <span className="text-[10px] uppercase tracking-wider font-semibold text-sky-500">Création de site web</span>
+            </div>
+            <div className="font-display text-lg font-semibold leading-snug">Un vrai site vitrine pour votre entreprise</div>
+            <p className="text-sm text-muted-foreground mt-0.5">Design sur-mesure · SEO local · livré en 7 jours · dès 490 €</p>
+          </div>
+          <span className="shrink-0 inline-flex items-center gap-1.5 rounded-full border border-sky-500/50 text-sky-600 dark:text-sky-400 font-semibold text-sm px-4 py-2 group-hover:bg-sky-500/10 transition">
+            Découvrir <ArrowRight className="h-4 w-4" />
+          </span>
+        </a>
       </div>
     );
   }
@@ -66,8 +92,8 @@ export function UpsellSection({
           ]}
           cta="Commander ma carte"
           ctaSecondary="Voir les modèles"
-          ctaTo="/carte-nfc"
-          ctaSecondaryTo="/carte-nfc"
+          ctaTo="/carte-physique"
+          ctaSecondaryTo="/carte-physique"
           highlight="🔥 +84% de prospects sauvegardent un contact reçu via NFC vs carte papier."
           visual={<NFCVisual />}
         />
@@ -93,6 +119,8 @@ export function UpsellSection({
           ]}
           cta="Réserver un appel découverte"
           ctaSecondary="Voir des exemples"
+          ctaHref="https://www.convertilab.com/"
+          ctaSecondaryHref="https://www.convertilab.com/"
           highlight="💎 Un site + une carte digitale = la stack complète des indépendants à 100k€+ /an."
           visual={<WebVisual />}
         />
@@ -111,12 +139,13 @@ export function UpsellSection({
 
 function UpsellCard({
   tag, tagIcon: TagIcon, gradient, glowColor, title, subtitle,
-  price, priceSuffix, features, cta, ctaSecondary, ctaTo, ctaSecondaryTo, highlight, visual,
+  price, priceSuffix, features, cta, ctaSecondary, ctaTo, ctaSecondaryTo, ctaHref, ctaSecondaryHref, highlight, visual,
 }: {
   tag: string; tagIcon: any; gradient: string; glowColor: string;
   title: string; subtitle: string; price: string; priceSuffix: string;
   features: string[]; cta: string; ctaSecondary: string;
   ctaTo?: string; ctaSecondaryTo?: string;
+  ctaHref?: string; ctaSecondaryHref?: string;
   highlight: string; visual: React.ReactNode;
 }) {
   return (
@@ -176,6 +205,10 @@ function UpsellCard({
           <Button asChild className="flex-1 h-11 bg-gradient-to-br from-primary to-primary/80 text-primary-foreground shadow-[0_4px_20px_-4px] shadow-primary/40">
             <Link to={ctaTo}>{cta} <ArrowRight className="h-4 w-4 ml-1.5" /></Link>
           </Button>
+        ) : ctaHref ? (
+          <Button asChild className="flex-1 h-11 bg-gradient-to-br from-primary to-primary/80 text-primary-foreground shadow-[0_4px_20px_-4px] shadow-primary/40">
+            <a href={ctaHref} target="_blank" rel="noopener noreferrer">{cta} <ArrowRight className="h-4 w-4 ml-1.5" /></a>
+          </Button>
         ) : (
           <Button className="flex-1 h-11 bg-gradient-to-br from-primary to-primary/80 text-primary-foreground shadow-[0_4px_20px_-4px] shadow-primary/40">
             {cta} <ArrowRight className="h-4 w-4 ml-1.5" />
@@ -184,6 +217,10 @@ function UpsellCard({
         {ctaSecondaryTo ? (
           <Button asChild variant="outline" className="h-11 sm:flex-none">
             <Link to={ctaSecondaryTo}>{ctaSecondary}</Link>
+          </Button>
+        ) : ctaSecondaryHref ? (
+          <Button asChild variant="outline" className="h-11 sm:flex-none">
+            <a href={ctaSecondaryHref} target="_blank" rel="noopener noreferrer">{ctaSecondary}</a>
           </Button>
         ) : (
           <Button variant="outline" className="h-11 sm:flex-none">

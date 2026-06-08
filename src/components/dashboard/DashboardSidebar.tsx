@@ -62,10 +62,10 @@ export function DashboardSidebar() {
     <Sidebar>
       <SidebarHeader className="p-4">
         <Link to="/" className="flex items-center gap-2.5">
-          <div className="w-8 h-8 rounded-xl bg-gradient-brand flex items-center justify-center shadow-card shrink-0">
-            <Zap className="w-4 h-4 text-white" />
+          <div className="w-9 h-9 rounded-xl bg-gradient-brand flex items-center justify-center shadow-card shrink-0">
+            <Zap className="w-5 h-5 text-white" />
           </div>
-          <span className="font-display font-bold text-sm leading-tight">Carte Visite Digitale</span>
+          <span className="font-display font-bold text-base leading-tight">Carte Visite Digitale</span>
         </Link>
       </SidebarHeader>
 
@@ -76,20 +76,20 @@ export function DashboardSidebar() {
             <SidebarMenu>
               {/* Vue d'ensemble */}
               <SidebarMenuItem>
-                <SidebarMenuButton asChild isActive={pathname === "/dashboard"}>
+                <SidebarMenuButton asChild isActive={pathname === "/dashboard"} size="lg">
                   <Link to="/dashboard">
-                    <LayoutDashboard className="h-4 w-4" />
-                    <span>Vue d'ensemble</span>
+                    <LayoutDashboard className="h-5 w-5" />
+                    <span className="text-sm font-medium">Vue d'ensemble</span>
                   </Link>
                 </SidebarMenuButton>
               </SidebarMenuItem>
 
               {/* Ma carte + 3 sous-pages */}
               <SidebarMenuItem>
-                <SidebarMenuButton asChild isActive={isCardSection}>
+                <SidebarMenuButton asChild isActive={isCardSection} size="lg">
                   <Link to="/dashboard/card">
-                    <CreditCard className="h-4 w-4" />
-                    <span>Ma carte</span>
+                    <CreditCard className="h-5 w-5" />
+                    <span className="text-sm font-medium">Ma carte</span>
                   </Link>
                 </SidebarMenuButton>
                 <SidebarMenuSub>
@@ -97,8 +97,8 @@ export function DashboardSidebar() {
                     <SidebarMenuSubItem key={item.to}>
                       <SidebarMenuSubButton asChild isActive={pathname === item.to}>
                         <Link to={item.to}>
-                          <item.icon className="h-3.5 w-3.5" />
-                          <span>{item.label}</span>
+                          <item.icon className="h-4 w-4" />
+                          <span className="text-sm">{item.label}</span>
                         </Link>
                       </SidebarMenuSubButton>
                     </SidebarMenuSubItem>
@@ -109,10 +109,10 @@ export function DashboardSidebar() {
               {/* Liens & réseaux + Médias */}
               {NAV_EXTRAS.map((item) => (
                 <SidebarMenuItem key={item.to}>
-                  <SidebarMenuButton asChild isActive={isActive(item.to)}>
+                  <SidebarMenuButton asChild isActive={isActive(item.to)} size="lg">
                     <Link to={item.to}>
-                      <item.icon className="h-4 w-4" />
-                      <span>{item.label}</span>
+                      <item.icon className="h-5 w-5" />
+                      <span className="text-sm font-medium">{item.label}</span>
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -127,10 +127,10 @@ export function DashboardSidebar() {
             <SidebarMenu>
               {NAV_DATA.map((item) => (
                 <SidebarMenuItem key={item.to}>
-                  <SidebarMenuButton asChild isActive={isActive(item.to)}>
+                  <SidebarMenuButton asChild isActive={isActive(item.to)} size="lg">
                     <Link to={item.to}>
-                      <item.icon className="h-4 w-4" />
-                      <span>{item.label}</span>
+                      <item.icon className="h-5 w-5" />
+                      <span className="text-sm font-medium">{item.label}</span>
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -145,10 +145,10 @@ export function DashboardSidebar() {
             <SidebarMenu>
               {NAV_ACCOUNT.map((item) => (
                 <SidebarMenuItem key={item.to}>
-                  <SidebarMenuButton asChild isActive={isActive(item.to)}>
+                  <SidebarMenuButton asChild isActive={isActive(item.to)} size="lg">
                     <Link to={item.to}>
-                      <item.icon className="h-4 w-4" />
-                      <span>{item.label}</span>
+                      <item.icon className="h-5 w-5" />
+                      <span className="text-sm font-medium">{item.label}</span>
                     </Link>
                   </SidebarMenuButton>
                 </SidebarMenuItem>
@@ -159,10 +159,10 @@ export function DashboardSidebar() {
       </SidebarContent>
 
       <SidebarFooter className="p-3">
-        <div className="text-xs text-muted-foreground truncate px-2 pb-1">{user?.email}</div>
-        <SidebarMenuButton onClick={handleSignOut} className="text-muted-foreground hover:text-destructive">
-          <LogOut className="h-4 w-4" />
-          <span>Se déconnecter</span>
+        <div className="text-sm text-muted-foreground truncate px-2 pb-1 font-medium">{user?.email}</div>
+        <SidebarMenuButton onClick={handleSignOut} className="text-muted-foreground hover:text-destructive" size="lg">
+          <LogOut className="h-5 w-5" />
+          <span className="text-sm">Se déconnecter</span>
         </SidebarMenuButton>
       </SidebarFooter>
     </Sidebar>
