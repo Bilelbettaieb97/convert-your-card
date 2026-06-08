@@ -83,6 +83,7 @@ export async function updateCard(profileId: string, cardData: CardData): Promise
       site_web: cardData.website || "",
       bio: cardData.bio || "",
       photo_url: cardData.photo || "",
+      cover_url: cardData.coverPhoto || "",
       couleur_accent: cardData.accent || "gold",
       boutons: toBoutons(cardData) as unknown as Record<string, unknown>[],
       reseaux: toReseaux(cardData) as unknown as Record<string, unknown>[],
