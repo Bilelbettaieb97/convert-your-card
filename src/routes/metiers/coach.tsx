@@ -1,6 +1,7 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { Nav, Footer } from "../index";
-import { CardPreview, type Template } from "@/components/TemplateCardPreview";
+import { CardPreview } from "@/components/TemplateCardPreview";
+import { TEMPLATES } from "../templates";
 import {
   CheckCircle2, Star, ArrowRight, Smartphone, QrCode,
   RefreshCw, Calendar, Users, BarChart3, ChevronDown, ChevronUp,
@@ -44,25 +45,7 @@ export const Route = createFileRoute("/metiers/coach")({
   component: CoachPage,
 });
 
-const COACH_TEMPLATE: Template = {
-  id: "con-3",
-  name: "Coach Business",
-  sector: "Coaching",
-  job: "Coach business & développement personnel",
-  company: "Coaching Pro",
-  person: "Aïcha Benali",
-  initials: "AB",
-  tagline: "Faites passer un cap à votre activité",
-  bio: "Coach certifiée ICF. J'accompagne les entrepreneurs à dépasser leurs blocages et doubler leur chiffre d'affaires en 90 jours.",
-  location: "Paris, France",
-  website: "aichabenali.com",
-  phone: "+33 6 12 34 56 78",
-  email: "aicha@aichabenali.com",
-  avatar: "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=200&h=200&fit=crop&crop=face",
-  socials: ["linkedin", "instagram"],
-  style: "elegant",
-  palette: { bg: "#1a3c2a", fg: "#ffffff", accent: "#c9a84c" },
-};
+const COACH_TEMPLATE = TEMPLATES.find((t) => t.id === "con-3")!;
 
 const BENEFITS = [
   {

@@ -58,7 +58,7 @@ function MetiersPage() {
           {METIERS.map(({ slug, label, desc }) => (
             <Link
               key={slug}
-              to={`/metiers/${slug}`}
+              to={`/metiers/${slug}` as any}
               className="group flex items-center justify-between bg-card border border-border rounded-2xl p-6 shadow-card hover:border-magenta/40 hover:shadow-lg transition-all"
             >
               <div>

@@ -247,7 +247,7 @@ const COMPANIES: Record<string, string[]> = {
   formation: ["SG Formation", "Sellam Career", "Tessier Maths"],
 };
 
-const TEMPLATES: Template[] = RAW_TEMPLATES.map((t, idx) => {
+export const TEMPLATES: Template[] = RAW_TEMPLATES.map((t, idx) => {
   const firstName = t.person.replace(/^(Dr\.|Maître)\s+/, "").split(" ")[0];
   const female = isFemale(firstName);
   const initialsSlug = t.initials.toLowerCase();
