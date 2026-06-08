@@ -150,7 +150,9 @@ function BillingPage() {
     }
   }
 
-  const plan = sub?.plan ?? profilePlan ?? "free";
+  // subscriptions.plan can be "free" even when the user is on a paid plan (plan column not set by webhook)
+  // nfc_profiles.plan is the source of truth — use it when sub.plan is missing or "free"
+  const plan = (sub?.plan && sub.plan !== "free") ? sub.plan : (profilePlan ?? sub?.plan ?? "free");
   const meta = PLAN_META[plan] ?? PLAN_META.free;
   const hasSub = !!(sub?.stripe_customer_id || card?.customerId);
 
