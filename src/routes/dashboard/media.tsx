@@ -41,8 +41,16 @@ function MediaPage() {
     if (!profile) { setSupabaseReady(true); return; }
     loadMyCard().then((row) => {
       if ((row as any)?.card_data) {
-        skipNextSave.current = true;
-        setData((row as any).card_data as CardData);
+        const supaData = (row as any).card_data as CardData;
+        // Don't overwrite store if it has more data than Supabase
+        // (prevents race condition when navigating from Content before auto-save fires)
+        const storeIsNewer =
+          data.listings.length > supaData.listings.length ||
+          data.testimonials.length > supaData.testimonials.length;
+        if (!storeIsNewer) {
+          skipNextSave.current = true;
+          setData(supaData);
+        }
       }
     }).catch(console.error).finally(() => setSupabaseReady(true));
   }, [hydrated]); // eslint-disable-line react-hooks/exhaustive-deps
@@ -328,10 +336,14 @@ function MediaPage() {
                   <Star className="h-3 w-3" /> Témoignages
                 </p>
                 {data.testimonials.length === 0 ? (
-                  <Link to="/dashboard/content" className="flex items-center gap-2 text-xs text-muted-foreground hover:text-foreground transition py-3 px-4 rounded-xl border border-dashed border-border hover:border-primary/40">
-                    <PlusCircle className="h-4 w-4 shrink-0" />
-                    Ajoutez des témoignages dans Contenu pour gérer leurs photos ici
-                  </Link>
+                  <div className="rounded-xl border border-dashed border-border bg-card/20 px-4 py-5 text-center">
+                    <p className="text-xs text-muted-foreground mb-3">Aucun témoignage ajouté. Créez vos témoignages dans Contenu, puis revenez ici pour ajouter leurs photos.</p>
+                    <Link to="/dashboard/content">
+                      <Button size="sm" variant="outline" className="h-8 text-xs">
+                        <PlusCircle className="h-3.5 w-3.5 mr-1.5" /> Aller dans Contenu
+                      </Button>
+                    </Link>
+                  </div>
                 ) : (
                   <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
                     {data.testimonials.map((t, i) => (
@@ -361,10 +373,14 @@ function MediaPage() {
                   <Tag className="h-3 w-3" /> Sélection de biens
                 </p>
                 {data.listings.length === 0 ? (
-                  <Link to="/dashboard/content" className="flex items-center gap-2 text-xs text-muted-foreground hover:text-foreground transition py-3 px-4 rounded-xl border border-dashed border-border hover:border-primary/40">
-                    <PlusCircle className="h-4 w-4 shrink-0" />
-                    Ajoutez des biens dans Contenu pour gérer leurs photos ici
-                  </Link>
+                  <div className="rounded-xl border border-dashed border-border bg-card/20 px-4 py-5 text-center">
+                    <p className="text-xs text-muted-foreground mb-3">Aucun bien ajouté pour l'instant. Créez vos biens dans Contenu, puis revenez ici pour ajouter leurs photos.</p>
+                    <Link to="/dashboard/content">
+                      <Button size="sm" variant="outline" className="h-8 text-xs">
+                        <PlusCircle className="h-3.5 w-3.5 mr-1.5" /> Aller dans Contenu
+                      </Button>
+                    </Link>
+                  </div>
                 ) : (
                   <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
                     {data.listings.map((l, i) => (
