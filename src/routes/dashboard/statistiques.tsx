@@ -31,6 +31,12 @@ const CLICK_TYPE_LABELS: Record<string, string> = {
   website: "Site web",
   calendar: "Calendrier",
   cta: "CTA",
+  linkedin: "LinkedIn",
+  instagram: "Instagram",
+  facebook: "Facebook",
+  twitter: "Twitter / X",
+  tiktok: "TikTok",
+  youtube: "YouTube",
 };
 
 function StatistiquesPage() {
@@ -72,7 +78,7 @@ function StatistiquesPage() {
   const from = daysBack(days);
   const filtered = analytics.filter((e) => e.created_at && new Date(e.created_at) >= from);
   const scans = filtered.filter((e) => e.event_type === "scan");
-  const clicks = filtered.filter((e) => e.event_type === "click_button");
+  const clicks = filtered.filter((e) => e.event_type === "click_button" || e.event_type === "click_social");
   const contacts = filtered.filter((e) => e.event_type === "vcard_download");
   const convRate = scans.length > 0 ? Math.round((contacts.length / scans.length) * 100) : 0;
   const clickRate = scans.length > 0 ? Math.round((clicks.length / scans.length) * 100) : 0;
