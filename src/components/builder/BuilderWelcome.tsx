@@ -162,6 +162,9 @@ export function BuilderWelcome({
                             onClick={() => {
                               setSelectedProfession(p);
                               setSelectedThemeId(p.themeId);
+                              if (window.innerWidth < 1024) {
+                                window.scrollTo({ top: 0, behavior: "smooth" });
+                              }
                             }}
                             className={`relative flex items-center gap-2.5 rounded-lg border p-2.5 text-left transition ${
                               active
