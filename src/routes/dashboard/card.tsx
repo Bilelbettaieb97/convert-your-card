@@ -25,9 +25,9 @@ function CardOverviewPage() {
     if (!hydrated) return;
     if (!profile) { setSupabaseReady(true); return; }
     loadMyCard().then((row) => {
-      if (row?.card_data) {
+      if ((row as any)?.card_data) {
         skipInit.current = true;
-        setData(row.card_data as CardData);
+        setData((row as any).card_data as CardData);
       }
     }).catch(console.error).finally(() => setSupabaseReady(true));
   }, [hydrated]); // eslint-disable-line react-hooks/exhaustive-deps
