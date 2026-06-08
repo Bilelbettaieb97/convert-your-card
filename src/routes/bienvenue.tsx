@@ -33,11 +33,11 @@ function BienvenePage() {
       }
     });
 
-    // Hard fallback after 8s — if still no session, send to login
+    // Hard fallback after 3s — if still no session, send to login
     const fallback = setTimeout(() => {
       subscription.unsubscribe();
       navigate({ to: "/connexion" });
-    }, 8000);
+    }, 3000);
 
     return () => {
       subscription.unsubscribe();
