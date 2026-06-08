@@ -3,6 +3,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { createPortalSession } from "@/fns/billing-portal";
 import { getStripeInvoices } from "@/fns/stripe-invoices";
+import { getStripeCard, type CardInfo } from "@/fns/stripe-card";
 import {
   CreditCard, Download, ExternalLink, ChevronRight,
   Clock, CheckCircle2, AlertCircle, RefreshCw, Receipt,
@@ -70,6 +71,7 @@ function InvoiceStatus({ status }: { status: string | null }) {
 function BillingPage() {
   const [sub, setSub] = useState<Sub | null>(null);
   const [profilePlan, setProfilePlan] = useState<string | null>(null);
+  const [card, setCard] = useState<CardInfo | null>(null);
   const [invoices, setInvoices] = useState<Invoice[]>([]);
   const [loadingSub, setLoadingSub] = useState(true);
   const [loadingInvoices, setLoadingInvoices] = useState(false);
@@ -97,10 +99,36 @@ function BillingPage() {
       setProfilePlan((profileData as { plan?: string } | null)?.plan ?? null);
       setLoadingSub(false);
 
-      if (s?.stripe_customer_id) {
+      // Fetch card info — use stored customer ID if available, otherwise look up by email
+      try {
+        const cardInfo = await getStripeCard({
+          data: {
+            email: user.email!,
+            customerId: s?.stripe_customer_id ?? undefined,
+          },
+        });
+        if (cardInfo) {
+          setCard(cardInfo as CardInfo);
+          // Backfill customerId so portal works even without a subscriptions row
+          if (!s?.stripe_customer_id && cardInfo.customerId) {
+            setSub((prev) => ({
+              plan: prev?.plan ?? null,
+              status: prev?.status ?? null,
+              current_period_end: prev?.current_period_end ?? null,
+              stripe_subscription_id: prev?.stripe_subscription_id ?? null,
+              stripe_customer_id: cardInfo.customerId,
+            }));
+          }
+        }
+      } catch {
+        // Stripe unreachable or no card yet
+      }
+
+      const resolvedCustomerId = s?.stripe_customer_id ?? (cardInfo as CardInfo | null)?.customerId;
+      if (resolvedCustomerId) {
         setLoadingInvoices(true);
         try {
-          const list = await getStripeInvoices({ data: { customerId: s.stripe_customer_id } });
+          const list = await getStripeInvoices({ data: { customerId: resolvedCustomerId } });
           setInvoices(list as Invoice[]);
         } catch {
           // Stripe not reachable or no invoices yet
@@ -124,7 +152,13 @@ function BillingPage() {
 
   const plan = sub?.plan ?? profilePlan ?? "free";
   const meta = PLAN_META[plan] ?? PLAN_META.free;
-  const hasSub = !!sub?.stripe_customer_id;
+  const hasSub = !!(sub?.stripe_customer_id || card?.customerId);
+
+  const cardBrand = card ? card.brand.charAt(0).toUpperCase() + card.brand.slice(1) : null;
+  const cardLabel = card ? `${cardBrand} •••• ${card.last4}` : hasSub ? "Carte enregistrée" : "Aucune";
+  const cardSub = card
+    ? `Expire ${String(card.exp_month).padStart(2, "0")}/${card.exp_year}`
+    : hasSub ? "Gérable via Stripe" : "Abonnement gratuit";
 
   if (loadingSub) return (
     <div className="flex items-center justify-center min-h-[60vh]">
@@ -177,8 +211,8 @@ function BillingPage() {
       <div className="grid sm:grid-cols-3 gap-3">
         <InfoCard
           label="Méthode de paiement"
-          value={hasSub ? "Carte enregistrée" : "Aucune"}
-          sub={hasSub ? "Gérable via Stripe" : "Abonnement gratuit"}
+          value={cardLabel}
+          sub={cardSub}
           icon={<CreditCard className="w-4 h-4" />}
           action={hasSub ? { label: "Modifier", onClick: openPortal, loading: openingPortal } : undefined}
         />
