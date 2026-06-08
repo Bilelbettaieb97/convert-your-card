@@ -48,6 +48,9 @@ function StatistiquesPage() {
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {
+    let profileId: string | null = null;
+    let channel: ReturnType<typeof supabase.channel> | null = null;
+
     async function load() {
       const { data: { user } } = await supabase.auth.getUser();
       if (!user) return;
@@ -56,19 +59,30 @@ function StatistiquesPage() {
         supabase.from("subscriptions").select("plan").eq("user_id", user.id).maybeSingle(),
       ]);
       setPlan(subRes.data?.plan ?? "free");
-      if (profileRes.data?.slug) {
-        setCardUrl(`${window.location.origin}/${profileRes.data.slug}`);
-      }
+      if (profileRes.data?.slug) setCardUrl(`${window.location.origin}/${profileRes.data.slug}`);
       if (profileRes.data?.id) {
+        profileId = profileRes.data.id;
         const { data: events } = await supabase
           .from("nfc_analytics").select("event_type, created_at, event_data")
-          .eq("profile_id", profileRes.data.id)
+          .eq("profile_id", profileId)
           .order("created_at", { ascending: true });
         setAnalytics((events ?? []) as AnalyticsRow[]);
+
+        // Real-time: append new events as they arrive
+        channel = supabase
+          .channel(`analytics-${profileId}`)
+          .on("postgres_changes", {
+            event: "INSERT", schema: "public", table: "nfc_analytics",
+            filter: `profile_id=eq.${profileId}`,
+          }, (payload) => {
+            setAnalytics((prev) => [...prev, payload.new as AnalyticsRow]);
+          })
+          .subscribe();
       }
       setLoading(false);
     }
     load();
+    return () => { if (channel) supabase.removeChannel(channel); };
   }, []);
 
   const PERIOD_DAYS: Record<Period, number> = { "7j": 7, "30j": 30, "90j": 90 };

@@ -119,8 +119,8 @@ export function BusinessCard({ data, profileId }: { data: CardData; profileId?: 
                 case "calendar":     return <CalendarSection data={data} profileId={profileId} />;
                 case "languages":    return <LanguagesSection data={data} />;
                 case "cta":          return <CtaSection data={data} profileId={profileId} />;
-                case "contact":      return <ContactSection data={data} />;
-                case "socials":      return <SocialsSection data={data} />;
+                case "contact":      return <ContactSection data={data} profileId={profileId} />;
+                case "socials":      return <SocialsSection data={data} profileId={profileId} />;
                 default:             return null;
               }
             })();
@@ -1004,9 +1004,14 @@ function CtaSection({ data, profileId }: { data: CardData; profileId?: string })
    CONTACT
    ============================================================ */
 
-function ContactSection({ data }: { data: CardData }) {
+function ContactSection({ data, profileId }: { data: CardData; profileId?: string }) {
   if (!data.contactEnabled) return null;
   const v = data.variants.contact;
+  const typeMap: Record<string, string> = { "Téléphone": "call", "Email": "email", "Site web": "website" };
+  const track = (label: string) => {
+    const type = typeMap[label];
+    if (profileId && type) logEvent(profileId, "click_button", { type });
+  };
   const rows = [
     { icon: Phone, label: "Téléphone", value: data.phoneDisplay || data.phone, href: data.phone ? `tel:${data.phone}` : undefined },
     { icon: Mail,  label: "Email",     value: data.email,                       href: data.email ? `mailto:${data.email}` : undefined },
@@ -1030,7 +1035,7 @@ function ContactSection({ data }: { data: CardData }) {
               </div>
             );
             return r.href
-              ? <a key={i} href={r.href} className="active:scale-[0.99] transition">{Inner}</a>
+              ? <a key={i} href={r.href} onClick={() => track(r.label)} className="active:scale-[0.99] transition">{Inner}</a>
               : <div key={i}>{Inner}</div>;
           })}
         </div>
@@ -1050,7 +1055,7 @@ function ContactSection({ data }: { data: CardData }) {
                 <span className="text-sm truncate">{r.value}</span>
               </div>
             );
-            return <li key={i}>{r.href ? <a href={r.href} className="block">{Inner}</a> : Inner}</li>;
+            return <li key={i}>{r.href ? <a href={r.href} onClick={() => track(r.label)} className="block">{Inner}</a> : Inner}</li>;
           })}
         </ul>
       </section>
@@ -1061,16 +1066,16 @@ function ContactSection({ data }: { data: CardData }) {
     <section className="px-5">
       <SectionTitle>Coordonnées</SectionTitle>
       <ul className="mt-3 rounded-2xl bg-card-surface border border-card-border divide-y divide-card-border overflow-hidden">
-        <ContactRow icon={Phone}  label="Téléphone" value={data.phoneDisplay || data.phone} href={`tel:${data.phone}`} />
-        <ContactRow icon={Mail}   label="Email"     value={data.email}   href={`mailto:${data.email}`} />
-        <ContactRow icon={Globe}  label="Site web"  value={data.website} href={`https://${data.website}`} />
+        <ContactRow icon={Phone}  label="Téléphone" value={data.phoneDisplay || data.phone} href={`tel:${data.phone}`}   onTrack={() => track("Téléphone")} />
+        <ContactRow icon={Mail}   label="Email"     value={data.email}   href={`mailto:${data.email}`}                   onTrack={() => track("Email")} />
+        <ContactRow icon={Globe}  label="Site web"  value={data.website} href={`https://${data.website}`}                onTrack={() => track("Site web")} />
         <ContactRow icon={MapPin} label="Secteur"   value={data.area} />
       </ul>
     </section>
   );
 }
 
-function ContactRow({ icon: Icon, label, value, href }: { icon: any; label: string; value: string; href?: string }) {
+function ContactRow({ icon: Icon, label, value, href, onTrack }: { icon: any; label: string; value: string; href?: string; onTrack?: () => void }) {
   if (!value) return null;
   const Inner = (
     <div className="flex items-center gap-3 px-4 py-3">
@@ -1084,7 +1089,7 @@ function ContactRow({ icon: Icon, label, value, href }: { icon: any; label: stri
       {href && <ChevronRight className="h-4 w-4 text-card-muted" />}
     </div>
   );
-  return <li>{href ? <a href={href} className="block active:bg-card-surface-alt/60 transition">{Inner}</a> : Inner}</li>;
+  return <li>{href ? <a href={href} onClick={onTrack} className="block active:bg-card-surface-alt/60 transition">{Inner}</a> : Inner}</li>;
 }
 
 /* ============================================================
@@ -1097,7 +1102,7 @@ const SOCIAL_BRAND: Record<string, string> = {
   WhatsApp:  "oklch(0.7 0.17 150)",
 };
 
-function SocialsSection({ data }: { data: CardData }) {
+function SocialsSection({ data, profileId }: { data: CardData; profileId?: string }) {
   if (!data.socialsEnabled) return null;
   const v = data.variants.socials;
   const items = [
@@ -1107,11 +1112,14 @@ function SocialsSection({ data }: { data: CardData }) {
   ].filter(Boolean) as Array<{ icon: any; label: string; href: string }>;
   if (items.length === 0) return null;
 
+  const track = (label: string) => profileId && logEvent(profileId, "click_social", { type: label.toLowerCase() });
+
   if (v === "pills") {
     return (
       <section className="px-5 space-y-2">
         {items.map((it, i) => (
           <a key={i} href={it.href} target="_blank" rel="noopener noreferrer"
+            onClick={() => track(it.label)}
             className="flex items-center gap-3 rounded-2xl bg-card-surface border border-card-border px-4 py-3 active:scale-[0.99] transition">
             <it.icon className="h-4 w-4" style={{ color: "var(--card-accent)" }} />
             <span className="text-sm font-medium flex-1">{it.label}</span>
@@ -1127,6 +1135,7 @@ function SocialsSection({ data }: { data: CardData }) {
       <section className="px-5 flex justify-center gap-3">
         {items.map((it, i) => (
           <a key={i} href={it.href} target="_blank" rel="noopener noreferrer" aria-label={it.label}
+            onClick={() => track(it.label)}
             className="h-12 w-12 grid place-items-center rounded-2xl active:scale-95 transition"
             style={{ background: SOCIAL_BRAND[it.label] }}>
             <it.icon className="h-5 w-5 text-white" />
@@ -1140,6 +1149,7 @@ function SocialsSection({ data }: { data: CardData }) {
     <section className="px-5 flex justify-center gap-3">
       {items.map((it, i) => (
         <a key={i} href={it.href} target="_blank" rel="noopener noreferrer" aria-label={it.label}
+          onClick={() => track(it.label)}
           className="h-11 w-11 grid place-items-center rounded-full bg-card-surface border border-card-border active:scale-95 transition">
           <it.icon className="h-5 w-5" style={{ color: "var(--card-accent)" }} />
         </a>
