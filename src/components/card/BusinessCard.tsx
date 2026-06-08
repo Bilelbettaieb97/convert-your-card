@@ -11,10 +11,10 @@ import { downloadVCard } from "@/lib/vcard";
 
 function logEvent(profileId: string, eventType: string, eventData?: Record<string, string>) {
   import("@/integrations/supabase/client").then(({ supabase }) => {
-    supabase.from("nfc_analytics").insert({
-      profile_id: profileId,
-      event_type: eventType,
-      event_data: (eventData ?? null) as import("@/integrations/supabase/types").Json,
+    supabase.rpc("log_card_event", {
+      p_profile_id: profileId,
+      p_event_type: eventType,
+      p_event_data: (eventData ?? null) as import("@/integrations/supabase/types").Json,
     }).then(() => {});
   }).catch(() => {});
 }
