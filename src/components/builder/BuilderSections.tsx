@@ -62,7 +62,6 @@ const ESSENTIALS: SectionDef[] = [
 ];
 
 const EXTRAS_RAW: SectionDef[] = [
-  { key: "contactEnabled",      brick: "contact",      label: "Contact",                      description: "Téléphone, email et site web — l'essentiel pour être joignable.",  popular: true },
   { key: "servicesEnabled",     brick: "services",     label: "Services",                     description: "Liste de vos prestations ou spécialités.",             popular: true },
   { key: "testimonialsEnabled", brick: "testimonials", label: "Témoignages",                  description: "Avis clients pour rassurer.",                          popular: true },
   { key: "statsEnabled",        brick: "stats",        label: "Chiffres clés",                description: "Années d'expérience, projets, note clients." },
