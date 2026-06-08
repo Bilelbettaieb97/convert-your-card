@@ -11,7 +11,6 @@ import {
 import { DigitalCardVisual } from "@/components/landing/DigitalCardVisual";
 import { HeroCards } from "@/components/landing/HeroCards";
 import { Countdown } from "@/components/landing/Countdown";
-import { VideoTestimonials } from "@/components/landing/VideoTestimonials";
 import { LiveActivity, ExitIntent, GuaranteeBlock, StructuredData } from "@/components/landing/CroEnhancements";
 import { CheckoutFlow, onCheckoutClick, triggerCheckout } from "@/components/landing/CheckoutFlow";
 import { CardPreview, type Template } from "@/components/TemplateCardPreview";
@@ -49,8 +48,6 @@ function Landing() {
       <Problem />
       <HowItWorks />
       <SocialProofBand />
-      <VideoTestimonials />
-      
       <GuaranteeBlock />
       <Features />
       <Testimonials />
