@@ -201,14 +201,39 @@ export function ActionsBrick({ data, update }: BrickProps) {
   const toggle = (k: keyof CardData["actions"]) => (v: boolean) =>
     update("actions", { ...data.actions, [k]: v });
   return (
-    <div className="space-y-3">
-      <Row label="Appel"><Switch checked={data.actions.call} onCheckedChange={toggle("call")} /></Row>
-      <Row label="WhatsApp"><Switch checked={data.actions.whatsapp} onCheckedChange={toggle("whatsapp")} /></Row>
-      <Row label="Email"><Switch checked={data.actions.email} onCheckedChange={toggle("email")} /></Row>
-      <Row label="Site web"><Switch checked={data.actions.website} onCheckedChange={toggle("website")} /></Row>
-      <p className="text-xs text-muted-foreground pt-1">
-        Les valeurs (numéro, email…) se règlent dans la brique « Coordonnées ».
-      </p>
+    <div className="space-y-4">
+      <div className="rounded-xl border border-border p-3 space-y-3">
+        <Row label="Bouton Appel"><Switch checked={data.actions.call} onCheckedChange={toggle("call")} /></Row>
+        {data.actions.call && (
+          <Field label="Numéro (format E.164 ex: +33612345678)">
+            <Input value={data.phone} onChange={(e) => update("phone", e.target.value)} placeholder="+33612345678" />
+          </Field>
+        )}
+      </div>
+      <div className="rounded-xl border border-border p-3 space-y-3">
+        <Row label="Bouton WhatsApp"><Switch checked={data.actions.whatsapp} onCheckedChange={toggle("whatsapp")} /></Row>
+        {data.actions.whatsapp && (
+          <Field label="Numéro WhatsApp (sans +, ex: 33612345678)">
+            <Input value={data.whatsapp} onChange={(e) => update("whatsapp", e.target.value)} placeholder="33612345678" />
+          </Field>
+        )}
+      </div>
+      <div className="rounded-xl border border-border p-3 space-y-3">
+        <Row label="Bouton Email"><Switch checked={data.actions.email} onCheckedChange={toggle("email")} /></Row>
+        {data.actions.email && (
+          <Field label="Adresse email">
+            <Input type="email" value={data.email} onChange={(e) => update("email", e.target.value)} placeholder="vous@exemple.fr" />
+          </Field>
+        )}
+      </div>
+      <div className="rounded-xl border border-border p-3 space-y-3">
+        <Row label="Bouton Site web"><Switch checked={data.actions.website} onCheckedChange={toggle("website")} /></Row>
+        {data.actions.website && (
+          <Field label="URL (sans https://)">
+            <Input value={data.website} onChange={(e) => update("website", e.target.value)} placeholder="monsite.fr" />
+          </Field>
+        )}
+      </div>
     </div>
   );
 }
