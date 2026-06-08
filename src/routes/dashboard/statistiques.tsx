@@ -1,9 +1,7 @@
 import * as React from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { createServerFn } from "@tanstack/react-start";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { adminSupabase } from "@/lib/supabase-admin";
 import { getProfileMeta } from "@/lib/profile-store";
 import {
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend,
@@ -21,21 +19,6 @@ const SCAN_GOAL = 10;
 
 export const Route = createFileRoute("/dashboard/statistiques")({ component: StatistiquesPage });
 
-// Server function: adminSupabase bypasses RLS entirely — no ownership check needed
-// (dashboard is already auth-protected; profileId comes from the user's own localStorage)
-const fetchProfileAnalytics = createServerFn({ method: "POST" })
-  .validator((input: { profileId: string }) => input)
-  .handler(async ({ data }) => {
-    if (!data.profileId) return [] as AnalyticsRow[];
-
-    const { data: rows } = await adminSupabase
-      .from("nfc_analytics")
-      .select("event_type, created_at, event_data")
-      .eq("profile_id", data.profileId)
-      .order("created_at", { ascending: true });
-
-    return (rows ?? []) as AnalyticsRow[];
-  });
 
 function daysBack(n: number) { return new Date(Date.now() - n * 86400000); }
 function fmtDate(iso: string, days: number): string {
@@ -69,8 +52,10 @@ function StatistiquesPage() {
   const [profileId, setProfileId] = useState<string | null>(null);
 
   const loadData = React.useCallback(async (pid: string) => {
-    const rows = await fetchProfileAnalytics({ data: { profileId: pid } });
-    setAnalytics(rows as AnalyticsRow[]);
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const { data, error } = await (supabase as any).rpc("get_card_analytics", { p_profile_id: pid });
+    if (error) console.error("[stats]", error);
+    setAnalytics((data ?? []) as AnalyticsRow[]);
     setLoading(false);
     setRefreshing(false);
   }, []);
