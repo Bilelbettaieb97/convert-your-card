@@ -1,5 +1,5 @@
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { BrickList } from "@/components/builder/BrickList";
 import { BusinessCard } from "@/components/card/BusinessCard";
@@ -9,7 +9,7 @@ import { useCardStore } from "@/lib/card-store";
 import { CARD_THEMES } from "@/lib/card-themes";
 import type { CardData } from "@/lib/card-types";
 import { Sparkles, Check, ArrowRight, Layers, Palette, Share2, Smartphone } from "lucide-react";
-import { updateCard } from "@/lib/card-actions";
+import { updateCard, loadMyCard } from "@/lib/card-actions";
 import { getProfileMeta } from "@/lib/profile-store";
 
 export const Route = createFileRoute("/dashboard/card")({
@@ -21,16 +21,32 @@ function MyCardPage() {
   const profile = getProfileMeta();
   const origin = typeof window !== "undefined" ? window.location.origin : "https://www.cartevisitedigitale.fr";
   const publicUrl = profile ? `${origin}/${profile.slug}` : `${origin}/`;
+  const [supabaseReady, setSupabaseReady] = useState(false);
+  const skipNextSave = useRef(false);
 
+  // Hydrate from Supabase once on first load — source of truth is the DB
   useEffect(() => {
-    if (!hydrated || !profile) return;
+    if (!hydrated) return;
+    if (!profile) { setSupabaseReady(true); return; }
+    loadMyCard().then((row) => {
+      if (row?.card_data) {
+        skipNextSave.current = true;
+        setData(row.card_data as CardData);
+      }
+    }).catch(console.error).finally(() => setSupabaseReady(true));
+  }, [hydrated]); // eslint-disable-line react-hooks/exhaustive-deps
+
+  // Auto-save to Supabase on every change (1.5s debounce)
+  useEffect(() => {
+    if (!hydrated || !supabaseReady || !profile) return;
+    if (skipNextSave.current) { skipNextSave.current = false; return; }
     const timer = setTimeout(() => {
       updateCard(profile.id, data).catch(console.error);
     }, 1500);
     return () => clearTimeout(timer);
-  }, [data, hydrated]);
+  }, [data, hydrated, supabaseReady]);
 
-  if (!hydrated) {
+  if (!hydrated || !supabaseReady) {
     return <div className="p-8 text-muted-foreground">Chargement…</div>;
   }
 
