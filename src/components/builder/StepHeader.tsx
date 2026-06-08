@@ -1,3 +1,4 @@
+import React from "react";
 import { Check, ArrowRight } from "lucide-react";
 
 export type StepNum = 1 | 2 | 3 | 4;
