@@ -40,12 +40,12 @@ async function sendTrialEndingEmail(email: string, nom: string, trialEndDate: Da
     method: "POST",
     headers: { Authorization: `Bearer ${resendKey}`, "Content-Type": "application/json" },
     body: JSON.stringify({
-      from: "Bilel · OneTap <bilel@convertilab.com>",
+      from: "Bilel · Carte Visite Digitale <bilel@convertilab.com>",
       to: email,
-      subject: `⏰ Ton essai gratuit OneTap se termine demain`,
+      subject: `⏰ Ton essai gratuit Carte Visite Digitale se termine demain`,
       html: `<div style="font-family:sans-serif;max-width:600px;margin:0 auto;padding:40px 20px">
         <h1 style="color:#1a1a2e">Ton essai se termine demain 🕐</h1>
-        <p style="color:#6b7280">Salut ${firstName}, ton essai gratuit OneTap se termine le <strong>${dateStr}</strong>.</p>
+        <p style="color:#6b7280">Salut ${firstName}, ton essai gratuit Carte Visite Digitale se termine le <strong>${dateStr}</strong>.</p>
         <p style="color:#6b7280">À partir de là, ton abonnement sera automatiquement activé et ta carte bancaire sera débitée.</p>
         <div style="background:#fef3c7;border:1px solid #fcd34d;border-radius:12px;padding:20px;margin:24px 0">
           <p style="margin:0;color:#92400e;font-weight:600">Tu veux annuler ?</p>
@@ -81,8 +81,8 @@ async function sendWelcomeEmail(
     body: JSON.stringify({
       from: "Bilel · ConvertiLab <bilel@convertilab.com>",
       to: email,
-      subject: `🎉 Ta carte OneTap est prête, ${firstName} !`,
-      html: `<div style="font-family:sans-serif;max-width:600px;margin:0 auto;padding:40px 20px"><h1 style="color:#1a1a2e">Ta carte est prête ! 🚀</h1><p style="color:#6b7280">Salut ${firstName}, bienvenue sur OneTap. Ton plan <strong>${planLabel}</strong> est actif.</p><div style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:12px;padding:24px;margin-bottom:24px"><p style="font-weight:600;margin:0 0 8px;color:#1a1a2e">Ta carte de visite digitale :</p><a href="${cardUrl}" style="color:#c026d3">${cardUrl}</a></div><a href="${dashboardUrl}" style="display:inline-block;background:linear-gradient(135deg,#c026d3,#7c3aed);color:white;padding:14px 28px;border-radius:50px;text-decoration:none;font-weight:600">Accéder à mon dashboard →</a></div>`,
+      subject: `🎉 Ta carte Carte Visite Digitale est prête, ${firstName} !`,
+      html: `<div style="font-family:sans-serif;max-width:600px;margin:0 auto;padding:40px 20px"><h1 style="color:#1a1a2e">Ta carte est prête ! 🚀</h1><p style="color:#6b7280">Salut ${firstName}, bienvenue sur Carte Visite Digitale. Ton plan <strong>${planLabel}</strong> est actif.</p><div style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:12px;padding:24px;margin-bottom:24px"><p style="font-weight:600;margin:0 0 8px;color:#1a1a2e">Ta carte de visite digitale :</p><a href="${cardUrl}" style="color:#c026d3">${cardUrl}</a></div><a href="${dashboardUrl}" style="display:inline-block;background:linear-gradient(135deg,#c026d3,#7c3aed);color:white;padding:14px 28px;border-radius:50px;text-decoration:none;font-weight:600">Accéder à mon dashboard →</a></div>`,
     }),
   });
 }

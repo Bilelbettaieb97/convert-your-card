@@ -61,7 +61,7 @@ export function LiveActivity() {
 
 /* ─────────────  EXIT-INTENT MODAL  ───────────── */
 
-const EXIT_KEY = "onetap_exit_intent_seen";
+const EXIT_KEY = "cvd_exit_intent_seen";
 
 export function ExitIntent() {
   const [open, setOpen] = useState(false);

@@ -92,7 +92,7 @@ export function Nav() {
 
   async function handleSignOut() {
     await supabase.auth.signOut();
-    sessionStorage.removeItem("onetap_email");
+    sessionStorage.removeItem("cvd_email");
     setUserEmail(null);
     navigate({ to: "/" });
   }
@@ -159,7 +159,7 @@ function HeroCTA() {
 
   const handleStart = () => {
     if (slug.trim() && typeof window !== "undefined") {
-      sessionStorage.setItem("onetap_desired_slug", slug.trim());
+      sessionStorage.setItem("cvd_desired_slug", slug.trim());
     }
     navigate({ to: "/inscription" });
   };

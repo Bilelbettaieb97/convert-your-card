@@ -117,13 +117,13 @@ function OffrePage() {
   useEffect(() => {
     setMounted(true);
     // Read email from sessionStorage (instant) or Supabase fallback
-    const cached = sessionStorage.getItem("onetap_email");
+    const cached = sessionStorage.getItem("cvd_email");
     if (cached) {
       setUserEmail(cached);
     } else {
       supabase.auth.getUser().then(({ data: { user } }) => {
         if (user?.email) {
-          sessionStorage.setItem("onetap_email", user.email);
+          sessionStorage.setItem("cvd_email", user.email);
           setUserEmail(user.email);
         }
       });

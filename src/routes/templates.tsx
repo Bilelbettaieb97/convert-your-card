@@ -253,7 +253,7 @@ const TEMPLATES: Template[] = RAW_TEMPLATES.map((t, idx) => {
     location: CITIES[idx % CITIES.length],
     website: `cartevisitedigitale.fr/${initialsSlug}`,
     phone: `+33 6 ${10 + (idx % 80)} ${20 + (idx % 70)} ${30 + (idx % 60)} ${40 + (idx % 50)}`.replace(/\s+/g, " "),
-    email: `${initialsSlug}@${(COMPANIES[t.sector]?.[idx % (COMPANIES[t.sector]?.length || 1)] || "onetap").toLowerCase().replace(/[^a-z]/g, "")}.fr`,
+    email: `${initialsSlug}@${(COMPANIES[t.sector]?.[idx % (COMPANIES[t.sector]?.length || 1)] || "cvd").toLowerCase().replace(/[^a-z]/g, "")}.fr`,
     avatar: avatarFor(t.id, female),
     socials: SECTOR_SOCIALS[t.sector] ?? ["linkedin", "instagram"],
   };
