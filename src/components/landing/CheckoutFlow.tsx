@@ -1,3 +1,4 @@
+import * as React from "react";
 import { useEffect, useRef, useState, useCallback } from "react";
 import { Loader2, Check, Shield, X } from "lucide-react";
 

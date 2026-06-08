@@ -1,3 +1,4 @@
+import * as React from "react";
 import { createFileRoute, notFound } from "@tanstack/react-router";
 import { createServerFn } from "@tanstack/react-start";
 import { adminSupabase } from "@/lib/supabase-admin";

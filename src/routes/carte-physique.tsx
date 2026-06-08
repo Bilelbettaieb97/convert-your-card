@@ -1,3 +1,4 @@
+import * as React from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useRef, useState } from "react";
 import { Check, CreditCard, Sparkles, Upload, X, Wifi, ArrowRight } from "lucide-react";
