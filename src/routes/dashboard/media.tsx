@@ -227,114 +227,6 @@ function MediaPage() {
           </div>
         </div>
 
-        {/* Bibliothèque */}
-        <div>
-          <div className="flex items-center justify-between mb-3">
-            <p className="text-xs uppercase tracking-wider text-muted-foreground">Bibliothèque ({photos.length})</p>
-            <div>
-              <input ref={libraryRef} type="file" accept="image/*" multiple className="hidden" onChange={(e) => handleLibraryUpload(e.target.files)} />
-              <Button size="sm" variant="outline" className="h-7 text-xs" onClick={() => libraryRef.current?.click()} disabled={uploading === "library"}>
-                {uploading === "library" ? <Loader2 className="h-3 w-3 mr-1.5 animate-spin" /> : <Upload className="h-3 w-3 mr-1.5" />}
-                Ajouter
-              </Button>
-            </div>
-          </div>
-
-          <div
-            onDragOver={(e) => e.preventDefault()}
-            onDrop={(e) => { e.preventDefault(); handleLibraryUpload(e.dataTransfer.files); }}
-            className="min-h-[4px]"
-          >
-            {loading ? (
-              <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-5 gap-2">
-                {Array.from({ length: 8 }).map((_, i) => <div key={i} className="aspect-square rounded-xl bg-muted/30 animate-pulse" />)}
-              </div>
-            ) : photos.length === 0 ? (
-              <div
-                onClick={() => libraryRef.current?.click()}
-                className="text-center py-12 border-2 border-dashed border-border rounded-2xl bg-card/20 cursor-pointer hover:border-primary/40 transition"
-              >
-                <ImageIcon className="h-8 w-8 mx-auto text-muted-foreground mb-2" />
-                <p className="text-sm text-muted-foreground">Glissez vos photos ici ou cliquez pour en ajouter</p>
-              </div>
-            ) : (
-              <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-5 gap-2">
-                {photos.map((p) => {
-                  const targets = [
-                    {
-                      id: "photo",
-                      label: "Photo de profil",
-                      apply: () => { update("photo", p.url); toast.success("Photo de profil appliquée"); },
-                    },
-                    {
-                      id: "cover",
-                      label: "Photo de cover",
-                      apply: () => { update("coverPhoto", p.url); toast.success("Cover appliquée"); },
-                    },
-                    ...data.testimonials.map((t, i) => ({
-                      id: `t-${t.id}`,
-                      label: t.name || `Témoin ${i + 1}`,
-                      prefix: "Témoin",
-                      apply: () => {
-                        setData({ ...data, testimonials: data.testimonials.map((x) => x.id === t.id ? { ...x, photo: p.url } : x) });
-                        toast.success(`Photo appliquée à ${t.name || `témoin ${i + 1}`}`);
-                      },
-                    })),
-                    ...data.listings.map((l, i) => ({
-                      id: `l-${l.id}`,
-                      label: l.title || `Annonce ${i + 1}`,
-                      prefix: "Annonce",
-                      apply: () => {
-                        setData({ ...data, listings: data.listings.map((x) => x.id === l.id ? { ...x, img: p.url } : x) });
-                        toast.success(`Image appliquée à ${l.title || `annonce ${i + 1}`}`);
-                      },
-                    })),
-                    ...(data.gallery ?? []).map((g, i) => ({
-                      id: `g-${g.id}`,
-                      label: g.caption || `Photo ${i + 1}`,
-                      prefix: "Galerie",
-                      apply: () => {
-                        setData({ ...data, gallery: (data.gallery ?? []).map((x) => x.id === g.id ? { ...x, img: p.url } : x) });
-                        toast.success(`Photo appliquée à la galerie`);
-                      },
-                    })),
-                  ];
-
-                  return (
-                    <div key={p.path} className="group relative rounded-xl overflow-hidden border border-border bg-muted/20 aspect-square">
-                      <img src={p.url} alt={p.name} className="h-full w-full object-cover" />
-                      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition flex flex-col justify-end p-1.5 gap-1">
-                        <div className="flex flex-col gap-0.5 overflow-y-auto scrollbar-none" style={{ maxHeight: "calc(100% - 30px)" }}>
-                          {targets.map((t) => (
-                            <button
-                              key={t.id}
-                              className="text-[10px] text-left font-medium text-white bg-white/15 hover:bg-primary rounded-md py-1 px-1.5 transition truncate shrink-0"
-                              onClick={t.apply}
-                            >
-                              {"prefix" in t && t.prefix && (
-                                <span className="opacity-50 mr-1">{t.prefix} ·</span>
-                              )}
-                              {t.label}
-                            </button>
-                          ))}
-                        </div>
-                        <div className="flex gap-1 shrink-0">
-                          <Button size="sm" variant="secondary" className="h-6 flex-1 text-[10px] px-1" onClick={() => copyUrl(p.url)}>
-                            {copied === p.url ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />}
-                          </Button>
-                          <Button size="sm" variant="destructive" className="h-6 px-2" onClick={() => remove(p.path)}>
-                            <Trash2 className="h-3 w-3" />
-                          </Button>
-                        </div>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-            )}
-          </div>
-        </div>
-
         {/* Sections de la carte */}
         {(hasTestimonials || hasListings || hasGallery) && (
           <div>
@@ -450,6 +342,113 @@ function MediaPage() {
             )}
           </div>
         )}
+        {/* Bibliothèque */}
+        <div>
+          <div className="flex items-center justify-between mb-3">
+            <p className="text-xs uppercase tracking-wider text-muted-foreground">Bibliothèque ({photos.length})</p>
+            <div>
+              <input ref={libraryRef} type="file" accept="image/*" multiple className="hidden" onChange={(e) => handleLibraryUpload(e.target.files)} />
+              <Button size="sm" variant="outline" className="h-7 text-xs" onClick={() => libraryRef.current?.click()} disabled={uploading === "library"}>
+                {uploading === "library" ? <Loader2 className="h-3 w-3 mr-1.5 animate-spin" /> : <Upload className="h-3 w-3 mr-1.5" />}
+                Ajouter
+              </Button>
+            </div>
+          </div>
+
+          <div
+            onDragOver={(e) => e.preventDefault()}
+            onDrop={(e) => { e.preventDefault(); handleLibraryUpload(e.dataTransfer.files); }}
+            className="min-h-[4px]"
+          >
+            {loading ? (
+              <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-5 gap-2">
+                {Array.from({ length: 8 }).map((_, i) => <div key={i} className="aspect-square rounded-xl bg-muted/30 animate-pulse" />)}
+              </div>
+            ) : photos.length === 0 ? (
+              <div
+                onClick={() => libraryRef.current?.click()}
+                className="text-center py-12 border-2 border-dashed border-border rounded-2xl bg-card/20 cursor-pointer hover:border-primary/40 transition"
+              >
+                <ImageIcon className="h-8 w-8 mx-auto text-muted-foreground mb-2" />
+                <p className="text-sm text-muted-foreground">Glissez vos photos ici ou cliquez pour en ajouter</p>
+              </div>
+            ) : (
+              <div className="grid grid-cols-3 sm:grid-cols-4 lg:grid-cols-5 gap-2">
+                {photos.map((p) => {
+                  const targets = [
+                    {
+                      id: "photo",
+                      label: "Photo de profil",
+                      apply: () => { update("photo", p.url); toast.success("Photo de profil appliquée"); },
+                    },
+                    {
+                      id: "cover",
+                      label: "Photo de cover",
+                      apply: () => { update("coverPhoto", p.url); toast.success("Cover appliquée"); },
+                    },
+                    ...data.testimonials.map((t, i) => ({
+                      id: `t-${t.id}`,
+                      label: t.name || `Témoin ${i + 1}`,
+                      prefix: "Témoin",
+                      apply: () => {
+                        setData({ ...data, testimonials: data.testimonials.map((x) => x.id === t.id ? { ...x, photo: p.url } : x) });
+                        toast.success(`Photo appliquée à ${t.name || `témoin ${i + 1}`}`);
+                      },
+                    })),
+                    ...data.listings.map((l, i) => ({
+                      id: `l-${l.id}`,
+                      label: l.title || `Annonce ${i + 1}`,
+                      prefix: "Annonce",
+                      apply: () => {
+                        setData({ ...data, listings: data.listings.map((x) => x.id === l.id ? { ...x, img: p.url } : x) });
+                        toast.success(`Image appliquée à ${l.title || `annonce ${i + 1}`}`);
+                      },
+                    })),
+                    ...(data.gallery ?? []).map((g, i) => ({
+                      id: `g-${g.id}`,
+                      label: g.caption || `Photo ${i + 1}`,
+                      prefix: "Galerie",
+                      apply: () => {
+                        setData({ ...data, gallery: (data.gallery ?? []).map((x) => x.id === g.id ? { ...x, img: p.url } : x) });
+                        toast.success(`Photo appliquée à la galerie`);
+                      },
+                    })),
+                  ];
+
+                  return (
+                    <div key={p.path} className="group relative rounded-xl overflow-hidden border border-border bg-muted/20 aspect-square">
+                      <img src={p.url} alt={p.name} className="h-full w-full object-cover" />
+                      <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/40 to-transparent opacity-0 group-hover:opacity-100 transition flex flex-col justify-end p-1.5 gap-1">
+                        <div className="flex flex-col gap-0.5 overflow-y-auto scrollbar-none" style={{ maxHeight: "calc(100% - 30px)" }}>
+                          {targets.map((t) => (
+                            <button
+                              key={t.id}
+                              className="text-[10px] text-left font-medium text-white bg-white/15 hover:bg-primary rounded-md py-1 px-1.5 transition truncate shrink-0"
+                              onClick={t.apply}
+                            >
+                              {"prefix" in t && t.prefix && (
+                                <span className="opacity-50 mr-1">{t.prefix} ·</span>
+                              )}
+                              {t.label}
+                            </button>
+                          ))}
+                        </div>
+                        <div className="flex gap-1 shrink-0">
+                          <Button size="sm" variant="secondary" className="h-6 flex-1 text-[10px] px-1" onClick={() => copyUrl(p.url)}>
+                            {copied === p.url ? <Check className="h-3 w-3" /> : <Copy className="h-3 w-3" />}
+                          </Button>
+                          <Button size="sm" variant="destructive" className="h-6 px-2" onClick={() => remove(p.path)}>
+                            <Trash2 className="h-3 w-3" />
+                          </Button>
+                        </div>
+                      </div>
+                    </div>
+                  );
+                })}
+              </div>
+            )}
+          </div>
+        </div>
       </section>
 
       <aside className="hidden xl:block">
