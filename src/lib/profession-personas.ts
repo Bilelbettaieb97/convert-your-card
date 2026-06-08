@@ -1020,7 +1020,7 @@ export const SECTION_TIER: Record<GatedSectionKey, VariantId> = {
   testimonialsEnabled: "vitrine",
   calendarEnabled: "vitrine",
   languagesEnabled: "vitrine",
-  socialsEnabled: "vitrine",
+  socialsEnabled: "essentielle",
   statsEnabled: "vitrine",
   listingsEnabled: "vitrine",
   galleryEnabled: "vitrine",
