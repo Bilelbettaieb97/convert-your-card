@@ -1,143 +1,159 @@
-import { createFileRoute, Outlet, Link, useNavigate, useRouterState } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
-import { supabase } from "@/integrations/supabase/client";
-import {
-  Zap, LayoutDashboard, CreditCard, BarChart2, LogOut, CreditCard as CardIcon, Wand2,
-} from "lucide-react";
+import { createFileRoute, Outlet, useRouterState, Link, useNavigate } from "@tanstack/react-router";
+import { useState, useEffect } from "react";
+import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
+import { DashboardSidebar } from "@/components/dashboard/DashboardSidebar";
+import { CommandPalette } from "@/components/dashboard/CommandPalette";
+import { ShareDialog } from "@/components/card/ShareDialog";
+import { Button } from "@/components/ui/button";
+import { Badge } from "@/components/ui/badge";
+import { useCardStore } from "@/lib/card-store";
+import { ExternalLink, Share2, Command, Circle } from "lucide-react";
+import { useAuthStore } from "@/lib/auth-store";
+import { getProfileMeta } from "@/lib/profile-store";
 
 export const Route = createFileRoute("/dashboard")({
+  head: () => ({
+    meta: [
+      { title: "Dashboard — Ma carte digitale" },
+      { name: "description", content: "Personnalisez, partagez et suivez votre carte de visite digitale." },
+    ],
+  }),
   component: DashboardLayout,
 });
 
-const NAV = [
-  { to: "/dashboard",               label: "Vue d'ensemble", icon: LayoutDashboard, exact: true },
-  { to: "/dashboard/carte",         label: "Ma Carte",       icon: CardIcon },
-  { to: "/builder",                 label: "Builder",        icon: Wand2 },
-  { to: "/dashboard/statistiques",  label: "Statistiques",   icon: BarChart2 },
-  { to: "/dashboard/abonnement",    label: "Abonnement",     icon: CreditCard },
-];
+const META: Record<string, { title: string; subtitle?: string }> = {
+  "/dashboard":               { title: "Vue d'ensemble",        subtitle: "Pilotage de votre carte digitale" },
+  "/dashboard/card":          { title: "Ma carte",              subtitle: "Aperçu, QR code et partage" },
+  "/dashboard/carte":         { title: "Ma carte",              subtitle: "Aperçu, QR code et partage" },
+  "/dashboard/style":         { title: "Apparence & style",     subtitle: "Thème global et variantes par brique" },
+  "/dashboard/links":         { title: "Liens & réseaux",       subtitle: "Ordre, activation et clics" },
+  "/dashboard/media":         { title: "Médias",                subtitle: "Logo, photos et bibliothèque" },
+  "/dashboard/share":         { title: "Statistiques",          subtitle: "Vues, clics et engagement" },
+  "/dashboard/statistiques":  { title: "Statistiques",          subtitle: "Vues, clics et engagement" },
+  "/dashboard/contacts":      { title: "Contacts",              subtitle: "CRM des personnes qui vous ont scanné" },
+  "/dashboard/leads":         { title: "Pipeline commercial",   subtitle: "Suivi des leads en kanban" },
+  "/dashboard/analytics":     { title: "Statistiques avancées", subtitle: "Tendances, heatmap, sources, villes" },
+  "/dashboard/notifications": { title: "Notifications",         subtitle: "Feed temps réel & préférences" },
+  "/dashboard/team":          { title: "Équipe",                subtitle: "Membres, rôles, multi-cartes" },
+  "/dashboard/orders":        { title: "Commandes",             subtitle: "Historique cartes NFC et livraisons" },
+  "/dashboard/integrations":  { title: "Intégrations",          subtitle: "HubSpot, Zapier, Calendly, Slack…" },
+  "/dashboard/billing":       { title: "Facturation",           subtitle: "Plan, méthode de paiement, factures" },
+  "/dashboard/abonnement":    { title: "Abonnement",            subtitle: "Plan, méthode de paiement, factures" },
+  "/dashboard/settings":      { title: "Paramètres",            subtitle: "Profil, sécurité, RGPD" },
+  "/dashboard/help":          { title: "Aide & onboarding",     subtitle: "Checklist activation, tutos, support" },
+  "/dashboard/account":       { title: "Plan & compte",         subtitle: "Abonnement, facturation et préférences" },
+};
 
 function DashboardLayout() {
+  const pathname = useRouterState({ select: (r) => r.location.pathname });
+  const meta = META[pathname] ?? { title: "Dashboard" };
+  const { data } = useCardStore();
+  const [shareOpen, setShareOpen] = useState(false);
+  const { user, loading } = useAuthStore();
   const navigate = useNavigate();
-  const [loading, setLoading] = useState(true);
-  const [userEmail, setUserEmail] = useState<string | null>(null);
-  const routerState = useRouterState();
-  const currentPath = routerState.location.pathname;
 
   useEffect(() => {
-    supabase.auth.getSession().then(async ({ data: { session } }) => {
-      if (!session) { navigate({ to: "/connexion", replace: true }); return; }
-      setUserEmail(session.user.email ?? null);
-      const { data: profile } = await supabase
-        .from("nfc_profiles")
-        .select("id")
-        .eq("user_id", session.user.id)
-        .maybeSingle();
-      if (!profile) { navigate({ to: "/onboarding", replace: true }); return; }
-      setLoading(false);
-    });
-  }, [navigate]);
+    if (!loading && !user) {
+      navigate({ to: "/connexion" });
+    }
+  }, [user, loading, navigate]);
 
-  async function handleSignOut() {
-    await supabase.auth.signOut();
-    navigate({ to: "/", replace: true });
-  }
+  const profile = getProfileMeta();
+  const origin = typeof window !== "undefined" ? window.location.origin : "https://www.cartevisitedigitale.fr";
+  const publicUrl = profile ? `${origin}/${profile.slug}` : `${origin}/`;
+  const isPublished = profile?.actif ?? false;
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-background flex items-center justify-center">
-        <div className="w-8 h-8 rounded-full border-2 border-magenta border-t-transparent animate-spin" />
+      <div className="min-h-screen bg-background grid place-items-center">
+        <div className="animate-pulse text-muted-foreground text-sm">Chargement…</div>
       </div>
     );
   }
 
+  if (!user) return null;
+
   return (
-    <div className="min-h-screen flex" style={{ background: "var(--color-background)" }}>
-      {/* ── Sidebar desktop ── */}
-      <aside
-        className="hidden lg:flex flex-col w-60 flex-shrink-0 fixed top-0 left-0 h-full z-30"
-        style={{ background: "#0f0f14", borderRight: "1px solid rgba(255,255,255,0.06)" }}
-      >
-        {/* Logo */}
-        <div className="p-6 pb-5">
-          <Link to="/" className="flex items-center gap-2.5">
-            <div className="w-9 h-9 rounded-xl bg-gradient-brand flex items-center justify-center shadow-card">
-              <Zap className="w-5 h-5 text-white" />
+    <SidebarProvider>
+      <div className="min-h-screen flex w-full bg-gradient-to-br from-background via-background to-muted/10">
+        <DashboardSidebar />
+
+        <div className="flex-1 flex flex-col min-w-0">
+          {/* Header */}
+          <header className="h-16 flex items-center gap-3 border-b border-border bg-background/80 backdrop-blur-xl px-4 sm:px-6 sticky top-0 z-30">
+            <SidebarTrigger className="-ml-1" />
+            <div className="h-6 w-px bg-border" aria-hidden />
+
+            <div className="min-w-0 flex-1">
+              <div className="flex items-center gap-2.5">
+                <h1 className="font-display text-base sm:text-lg font-medium truncate">{meta.title}</h1>
+                <StatusBadge published={isPublished} />
+              </div>
+              {meta.subtitle && (
+                <p className="text-[11px] text-muted-foreground truncate hidden sm:block">{meta.subtitle}</p>
+              )}
             </div>
-            <span className="font-display font-bold text-lg text-white">OneTap</span>
-          </Link>
-        </div>
 
-        {/* Nav */}
-        <nav className="flex-1 px-3 space-y-0.5">
-          {NAV.map((item) => {
-            const Icon = item.icon;
-            const isActive = item.exact ? currentPath === item.to : currentPath.startsWith(item.to);
-            return (
-              <Link
-                key={item.to}
-                to={item.to}
-                className="flex items-center gap-3 px-3 py-2.5 rounded-xl text-sm font-medium transition-all"
-                style={{
-                  background: isActive ? "linear-gradient(135deg,rgba(139,92,246,0.25),rgba(236,72,153,0.15))" : "transparent",
-                  color: isActive ? "#c084fc" : "rgba(255,255,255,0.5)",
-                  borderLeft: isActive ? "2px solid #8B5CF6" : "2px solid transparent",
+            <div className="flex items-center gap-1.5">
+              <button
+                onClick={() => {
+                  const ev = new KeyboardEvent("keydown", { key: "k", metaKey: true });
+                  document.dispatchEvent(ev);
                 }}
+                className="hidden md:inline-flex items-center gap-2 h-8 px-2.5 rounded-md border border-border bg-muted/40 hover:bg-muted text-muted-foreground hover:text-foreground transition text-xs"
+                aria-label="Ouvrir la palette de commandes"
               >
-                <Icon className="w-4 h-4 flex-shrink-0" />
-                {item.label}
+                <Command className="h-3 w-3" />
+                <span>Rechercher</span>
+                <kbd className="hidden lg:inline-flex h-5 items-center px-1.5 rounded bg-background border border-border text-[10px] font-mono">⌘K</kbd>
+              </button>
+              <Link to="/builder" className="hidden sm:inline-flex">
+                <Button variant="ghost" size="sm" className="h-8 text-xs">Builder</Button>
               </Link>
-            );
-          })}
-        </nav>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => window.open(publicUrl, "_blank")}
+                className="h-8"
+              >
+                <ExternalLink className="h-3.5 w-3.5 sm:mr-1.5" />
+                <span className="hidden sm:inline text-xs">Voir en ligne</span>
+              </Button>
+              <Button
+                size="sm"
+                onClick={() => setShareOpen(true)}
+                className="h-8 bg-gradient-to-br from-primary to-primary/80 text-primary-foreground shadow-[0_4px_20px_-4px] shadow-primary/40"
+              >
+                <Share2 className="h-3.5 w-3.5 sm:mr-1.5" />
+                <span className="hidden sm:inline text-xs font-medium">Partager</span>
+              </Button>
+            </div>
+          </header>
 
-        {/* User + logout */}
-        <div className="p-3 pt-0">
-          <div
-            className="rounded-xl p-3 mb-1"
-            style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.06)" }}
-          >
-            <p className="text-xs font-medium truncate" style={{ color: "rgba(255,255,255,0.4)" }}>
-              {userEmail}
-            </p>
-          </div>
-          <button
-            onClick={handleSignOut}
-            className="flex items-center gap-3 w-full px-3 py-2.5 rounded-xl text-sm font-medium transition"
-            style={{ color: "rgba(255,255,255,0.35)" }}
-          >
-            <LogOut className="w-4 h-4" />
-            Se déconnecter
-          </button>
+          <main className="flex-1 min-w-0">
+            <Outlet />
+          </main>
         </div>
-      </aside>
 
-      {/* ── Mobile bottom nav ── */}
-      <div
-        className="lg:hidden fixed bottom-0 left-0 right-0 z-50 flex items-center justify-around px-2 py-2 safe-area-pb"
-        style={{ background: "#0f0f14", borderTop: "1px solid rgba(255,255,255,0.06)" }}
-      >
-        {NAV.map((item) => {
-          const Icon = item.icon;
-          const isActive = item.exact ? currentPath === item.to : currentPath.startsWith(item.to);
-          return (
-            <Link
-              key={item.to}
-              to={item.to}
-              className="flex flex-col items-center gap-1 px-3 py-1.5 rounded-xl transition-all"
-              style={{ color: isActive ? "#c084fc" : "rgba(255,255,255,0.4)" }}
-            >
-              <Icon className="w-5 h-5" />
-              <span className="text-[10px] font-medium leading-none">{item.label.split(" ")[0]}</span>
-            </Link>
-          );
-        })}
+        <CommandPalette publicUrl={publicUrl} />
+        <ShareDialog data={data} open={shareOpen} onOpenChange={setShareOpen} />
       </div>
+    </SidebarProvider>
+  );
+}
 
-      {/* ── Main content ── */}
-      <main className="flex-1 lg:ml-60 pb-20 lg:pb-0 min-h-screen">
-        <Outlet />
-      </main>
-    </div>
+function StatusBadge({ published }: { published: boolean }) {
+  return (
+    <Badge
+      variant="outline"
+      className={`h-5 px-1.5 gap-1 text-[10px] uppercase tracking-wider font-medium ${
+        published
+          ? "border-emerald-500/40 bg-emerald-500/10 text-emerald-400"
+          : "border-amber-500/40 bg-amber-500/10 text-amber-400"
+      }`}
+    >
+      <Circle className={`h-1.5 w-1.5 fill-current ${published ? "animate-pulse" : ""}`} />
+      {published ? "Publié" : "Brouillon"}
+    </Badge>
   );
 }

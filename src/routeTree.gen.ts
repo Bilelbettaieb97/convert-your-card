@@ -26,9 +26,25 @@ import { Route as DashboardIndexRouteImport } from './routes/dashboard/index'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as InscriptionSelectionDePlanRouteImport } from './routes/inscription.selection-de-plan'
 import { Route as InscriptionCartePhysiqueRouteImport } from './routes/inscription.carte-physique'
+import { Route as DashboardTeamRouteImport } from './routes/dashboard/team'
+import { Route as DashboardStyleRouteImport } from './routes/dashboard/style'
 import { Route as DashboardStatistiquesRouteImport } from './routes/dashboard/statistiques'
+import { Route as DashboardShareRouteImport } from './routes/dashboard/share'
+import { Route as DashboardSettingsRouteImport } from './routes/dashboard/settings'
+import { Route as DashboardOrdersRouteImport } from './routes/dashboard/orders'
+import { Route as DashboardNotificationsRouteImport } from './routes/dashboard/notifications'
 import { Route as DashboardModelesRouteImport } from './routes/dashboard/modeles'
+import { Route as DashboardMediaRouteImport } from './routes/dashboard/media'
+import { Route as DashboardLinksRouteImport } from './routes/dashboard/links'
+import { Route as DashboardLeadsRouteImport } from './routes/dashboard/leads'
+import { Route as DashboardIntegrationsRouteImport } from './routes/dashboard/integrations'
+import { Route as DashboardHelpRouteImport } from './routes/dashboard/help'
+import { Route as DashboardContactsRouteImport } from './routes/dashboard/contacts'
 import { Route as DashboardCarteRouteImport } from './routes/dashboard/carte'
+import { Route as DashboardCardRouteImport } from './routes/dashboard/card'
+import { Route as DashboardBillingRouteImport } from './routes/dashboard/billing'
+import { Route as DashboardAnalyticsRouteImport } from './routes/dashboard/analytics'
+import { Route as DashboardAccountRouteImport } from './routes/dashboard/account'
 import { Route as DashboardAbonnementRouteImport } from './routes/dashboard/abonnement'
 import { Route as InscriptionOffrePlanRouteImport } from './routes/inscription.offre.$plan'
 
@@ -119,9 +135,39 @@ const InscriptionCartePhysiqueRoute =
     path: '/carte-physique',
     getParentRoute: () => InscriptionRoute,
   } as any)
+const DashboardTeamRoute = DashboardTeamRouteImport.update({
+  id: '/team',
+  path: '/team',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardStyleRoute = DashboardStyleRouteImport.update({
+  id: '/style',
+  path: '/style',
+  getParentRoute: () => DashboardRoute,
+} as any)
 const DashboardStatistiquesRoute = DashboardStatistiquesRouteImport.update({
   id: '/statistiques',
   path: '/statistiques',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardShareRoute = DashboardShareRouteImport.update({
+  id: '/share',
+  path: '/share',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardSettingsRoute = DashboardSettingsRouteImport.update({
+  id: '/settings',
+  path: '/settings',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardOrdersRoute = DashboardOrdersRouteImport.update({
+  id: '/orders',
+  path: '/orders',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardNotificationsRoute = DashboardNotificationsRouteImport.update({
+  id: '/notifications',
+  path: '/notifications',
   getParentRoute: () => DashboardRoute,
 } as any)
 const DashboardModelesRoute = DashboardModelesRouteImport.update({
@@ -129,9 +175,59 @@ const DashboardModelesRoute = DashboardModelesRouteImport.update({
   path: '/modeles',
   getParentRoute: () => DashboardRoute,
 } as any)
+const DashboardMediaRoute = DashboardMediaRouteImport.update({
+  id: '/media',
+  path: '/media',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardLinksRoute = DashboardLinksRouteImport.update({
+  id: '/links',
+  path: '/links',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardLeadsRoute = DashboardLeadsRouteImport.update({
+  id: '/leads',
+  path: '/leads',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardIntegrationsRoute = DashboardIntegrationsRouteImport.update({
+  id: '/integrations',
+  path: '/integrations',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardHelpRoute = DashboardHelpRouteImport.update({
+  id: '/help',
+  path: '/help',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardContactsRoute = DashboardContactsRouteImport.update({
+  id: '/contacts',
+  path: '/contacts',
+  getParentRoute: () => DashboardRoute,
+} as any)
 const DashboardCarteRoute = DashboardCarteRouteImport.update({
   id: '/carte',
   path: '/carte',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardCardRoute = DashboardCardRouteImport.update({
+  id: '/card',
+  path: '/card',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardBillingRoute = DashboardBillingRouteImport.update({
+  id: '/billing',
+  path: '/billing',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardAnalyticsRoute = DashboardAnalyticsRouteImport.update({
+  id: '/analytics',
+  path: '/analytics',
+  getParentRoute: () => DashboardRoute,
+} as any)
+const DashboardAccountRoute = DashboardAccountRouteImport.update({
+  id: '/account',
+  path: '/account',
   getParentRoute: () => DashboardRoute,
 } as any)
 const DashboardAbonnementRoute = DashboardAbonnementRouteImport.update({
@@ -159,9 +255,25 @@ export interface FileRoutesByFullPath {
   '/pricing': typeof PricingRoute
   '/templates': typeof TemplatesRoute
   '/dashboard/abonnement': typeof DashboardAbonnementRoute
+  '/dashboard/account': typeof DashboardAccountRoute
+  '/dashboard/analytics': typeof DashboardAnalyticsRoute
+  '/dashboard/billing': typeof DashboardBillingRoute
+  '/dashboard/card': typeof DashboardCardRoute
   '/dashboard/carte': typeof DashboardCarteRoute
+  '/dashboard/contacts': typeof DashboardContactsRoute
+  '/dashboard/help': typeof DashboardHelpRoute
+  '/dashboard/integrations': typeof DashboardIntegrationsRoute
+  '/dashboard/leads': typeof DashboardLeadsRoute
+  '/dashboard/links': typeof DashboardLinksRoute
+  '/dashboard/media': typeof DashboardMediaRoute
   '/dashboard/modeles': typeof DashboardModelesRoute
+  '/dashboard/notifications': typeof DashboardNotificationsRoute
+  '/dashboard/orders': typeof DashboardOrdersRoute
+  '/dashboard/settings': typeof DashboardSettingsRoute
+  '/dashboard/share': typeof DashboardShareRoute
   '/dashboard/statistiques': typeof DashboardStatistiquesRoute
+  '/dashboard/style': typeof DashboardStyleRoute
+  '/dashboard/team': typeof DashboardTeamRoute
   '/inscription/carte-physique': typeof InscriptionCartePhysiqueRoute
   '/inscription/selection-de-plan': typeof InscriptionSelectionDePlanRoute
   '/admin/': typeof AdminIndexRoute
@@ -181,9 +293,25 @@ export interface FileRoutesByTo {
   '/pricing': typeof PricingRoute
   '/templates': typeof TemplatesRoute
   '/dashboard/abonnement': typeof DashboardAbonnementRoute
+  '/dashboard/account': typeof DashboardAccountRoute
+  '/dashboard/analytics': typeof DashboardAnalyticsRoute
+  '/dashboard/billing': typeof DashboardBillingRoute
+  '/dashboard/card': typeof DashboardCardRoute
   '/dashboard/carte': typeof DashboardCarteRoute
+  '/dashboard/contacts': typeof DashboardContactsRoute
+  '/dashboard/help': typeof DashboardHelpRoute
+  '/dashboard/integrations': typeof DashboardIntegrationsRoute
+  '/dashboard/leads': typeof DashboardLeadsRoute
+  '/dashboard/links': typeof DashboardLinksRoute
+  '/dashboard/media': typeof DashboardMediaRoute
   '/dashboard/modeles': typeof DashboardModelesRoute
+  '/dashboard/notifications': typeof DashboardNotificationsRoute
+  '/dashboard/orders': typeof DashboardOrdersRoute
+  '/dashboard/settings': typeof DashboardSettingsRoute
+  '/dashboard/share': typeof DashboardShareRoute
   '/dashboard/statistiques': typeof DashboardStatistiquesRoute
+  '/dashboard/style': typeof DashboardStyleRoute
+  '/dashboard/team': typeof DashboardTeamRoute
   '/inscription/carte-physique': typeof InscriptionCartePhysiqueRoute
   '/inscription/selection-de-plan': typeof InscriptionSelectionDePlanRoute
   '/admin': typeof AdminIndexRoute
@@ -206,9 +334,25 @@ export interface FileRoutesById {
   '/pricing': typeof PricingRoute
   '/templates': typeof TemplatesRoute
   '/dashboard/abonnement': typeof DashboardAbonnementRoute
+  '/dashboard/account': typeof DashboardAccountRoute
+  '/dashboard/analytics': typeof DashboardAnalyticsRoute
+  '/dashboard/billing': typeof DashboardBillingRoute
+  '/dashboard/card': typeof DashboardCardRoute
   '/dashboard/carte': typeof DashboardCarteRoute
+  '/dashboard/contacts': typeof DashboardContactsRoute
+  '/dashboard/help': typeof DashboardHelpRoute
+  '/dashboard/integrations': typeof DashboardIntegrationsRoute
+  '/dashboard/leads': typeof DashboardLeadsRoute
+  '/dashboard/links': typeof DashboardLinksRoute
+  '/dashboard/media': typeof DashboardMediaRoute
   '/dashboard/modeles': typeof DashboardModelesRoute
+  '/dashboard/notifications': typeof DashboardNotificationsRoute
+  '/dashboard/orders': typeof DashboardOrdersRoute
+  '/dashboard/settings': typeof DashboardSettingsRoute
+  '/dashboard/share': typeof DashboardShareRoute
   '/dashboard/statistiques': typeof DashboardStatistiquesRoute
+  '/dashboard/style': typeof DashboardStyleRoute
+  '/dashboard/team': typeof DashboardTeamRoute
   '/inscription/carte-physique': typeof InscriptionCartePhysiqueRoute
   '/inscription/selection-de-plan': typeof InscriptionSelectionDePlanRoute
   '/admin/': typeof AdminIndexRoute
@@ -232,9 +376,25 @@ export interface FileRouteTypes {
     | '/pricing'
     | '/templates'
     | '/dashboard/abonnement'
+    | '/dashboard/account'
+    | '/dashboard/analytics'
+    | '/dashboard/billing'
+    | '/dashboard/card'
     | '/dashboard/carte'
+    | '/dashboard/contacts'
+    | '/dashboard/help'
+    | '/dashboard/integrations'
+    | '/dashboard/leads'
+    | '/dashboard/links'
+    | '/dashboard/media'
     | '/dashboard/modeles'
+    | '/dashboard/notifications'
+    | '/dashboard/orders'
+    | '/dashboard/settings'
+    | '/dashboard/share'
     | '/dashboard/statistiques'
+    | '/dashboard/style'
+    | '/dashboard/team'
     | '/inscription/carte-physique'
     | '/inscription/selection-de-plan'
     | '/admin/'
@@ -254,9 +414,25 @@ export interface FileRouteTypes {
     | '/pricing'
     | '/templates'
     | '/dashboard/abonnement'
+    | '/dashboard/account'
+    | '/dashboard/analytics'
+    | '/dashboard/billing'
+    | '/dashboard/card'
     | '/dashboard/carte'
+    | '/dashboard/contacts'
+    | '/dashboard/help'
+    | '/dashboard/integrations'
+    | '/dashboard/leads'
+    | '/dashboard/links'
+    | '/dashboard/media'
     | '/dashboard/modeles'
+    | '/dashboard/notifications'
+    | '/dashboard/orders'
+    | '/dashboard/settings'
+    | '/dashboard/share'
     | '/dashboard/statistiques'
+    | '/dashboard/style'
+    | '/dashboard/team'
     | '/inscription/carte-physique'
     | '/inscription/selection-de-plan'
     | '/admin'
@@ -278,9 +454,25 @@ export interface FileRouteTypes {
     | '/pricing'
     | '/templates'
     | '/dashboard/abonnement'
+    | '/dashboard/account'
+    | '/dashboard/analytics'
+    | '/dashboard/billing'
+    | '/dashboard/card'
     | '/dashboard/carte'
+    | '/dashboard/contacts'
+    | '/dashboard/help'
+    | '/dashboard/integrations'
+    | '/dashboard/leads'
+    | '/dashboard/links'
+    | '/dashboard/media'
     | '/dashboard/modeles'
+    | '/dashboard/notifications'
+    | '/dashboard/orders'
+    | '/dashboard/settings'
+    | '/dashboard/share'
     | '/dashboard/statistiques'
+    | '/dashboard/style'
+    | '/dashboard/team'
     | '/inscription/carte-physique'
     | '/inscription/selection-de-plan'
     | '/admin/'
@@ -426,11 +618,53 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof InscriptionCartePhysiqueRouteImport
       parentRoute: typeof InscriptionRoute
     }
+    '/dashboard/team': {
+      id: '/dashboard/team'
+      path: '/team'
+      fullPath: '/dashboard/team'
+      preLoaderRoute: typeof DashboardTeamRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/style': {
+      id: '/dashboard/style'
+      path: '/style'
+      fullPath: '/dashboard/style'
+      preLoaderRoute: typeof DashboardStyleRouteImport
+      parentRoute: typeof DashboardRoute
+    }
     '/dashboard/statistiques': {
       id: '/dashboard/statistiques'
       path: '/statistiques'
       fullPath: '/dashboard/statistiques'
       preLoaderRoute: typeof DashboardStatistiquesRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/share': {
+      id: '/dashboard/share'
+      path: '/share'
+      fullPath: '/dashboard/share'
+      preLoaderRoute: typeof DashboardShareRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/settings': {
+      id: '/dashboard/settings'
+      path: '/settings'
+      fullPath: '/dashboard/settings'
+      preLoaderRoute: typeof DashboardSettingsRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/orders': {
+      id: '/dashboard/orders'
+      path: '/orders'
+      fullPath: '/dashboard/orders'
+      preLoaderRoute: typeof DashboardOrdersRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/notifications': {
+      id: '/dashboard/notifications'
+      path: '/notifications'
+      fullPath: '/dashboard/notifications'
+      preLoaderRoute: typeof DashboardNotificationsRouteImport
       parentRoute: typeof DashboardRoute
     }
     '/dashboard/modeles': {
@@ -440,11 +674,81 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardModelesRouteImport
       parentRoute: typeof DashboardRoute
     }
+    '/dashboard/media': {
+      id: '/dashboard/media'
+      path: '/media'
+      fullPath: '/dashboard/media'
+      preLoaderRoute: typeof DashboardMediaRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/links': {
+      id: '/dashboard/links'
+      path: '/links'
+      fullPath: '/dashboard/links'
+      preLoaderRoute: typeof DashboardLinksRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/leads': {
+      id: '/dashboard/leads'
+      path: '/leads'
+      fullPath: '/dashboard/leads'
+      preLoaderRoute: typeof DashboardLeadsRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/integrations': {
+      id: '/dashboard/integrations'
+      path: '/integrations'
+      fullPath: '/dashboard/integrations'
+      preLoaderRoute: typeof DashboardIntegrationsRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/help': {
+      id: '/dashboard/help'
+      path: '/help'
+      fullPath: '/dashboard/help'
+      preLoaderRoute: typeof DashboardHelpRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/contacts': {
+      id: '/dashboard/contacts'
+      path: '/contacts'
+      fullPath: '/dashboard/contacts'
+      preLoaderRoute: typeof DashboardContactsRouteImport
+      parentRoute: typeof DashboardRoute
+    }
     '/dashboard/carte': {
       id: '/dashboard/carte'
       path: '/carte'
       fullPath: '/dashboard/carte'
       preLoaderRoute: typeof DashboardCarteRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/card': {
+      id: '/dashboard/card'
+      path: '/card'
+      fullPath: '/dashboard/card'
+      preLoaderRoute: typeof DashboardCardRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/billing': {
+      id: '/dashboard/billing'
+      path: '/billing'
+      fullPath: '/dashboard/billing'
+      preLoaderRoute: typeof DashboardBillingRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/analytics': {
+      id: '/dashboard/analytics'
+      path: '/analytics'
+      fullPath: '/dashboard/analytics'
+      preLoaderRoute: typeof DashboardAnalyticsRouteImport
+      parentRoute: typeof DashboardRoute
+    }
+    '/dashboard/account': {
+      id: '/dashboard/account'
+      path: '/account'
+      fullPath: '/dashboard/account'
+      preLoaderRoute: typeof DashboardAccountRouteImport
       parentRoute: typeof DashboardRoute
     }
     '/dashboard/abonnement': {
@@ -466,17 +770,49 @@ declare module '@tanstack/react-router' {
 
 interface DashboardRouteChildren {
   DashboardAbonnementRoute: typeof DashboardAbonnementRoute
+  DashboardAccountRoute: typeof DashboardAccountRoute
+  DashboardAnalyticsRoute: typeof DashboardAnalyticsRoute
+  DashboardBillingRoute: typeof DashboardBillingRoute
+  DashboardCardRoute: typeof DashboardCardRoute
   DashboardCarteRoute: typeof DashboardCarteRoute
+  DashboardContactsRoute: typeof DashboardContactsRoute
+  DashboardHelpRoute: typeof DashboardHelpRoute
+  DashboardIntegrationsRoute: typeof DashboardIntegrationsRoute
+  DashboardLeadsRoute: typeof DashboardLeadsRoute
+  DashboardLinksRoute: typeof DashboardLinksRoute
+  DashboardMediaRoute: typeof DashboardMediaRoute
   DashboardModelesRoute: typeof DashboardModelesRoute
+  DashboardNotificationsRoute: typeof DashboardNotificationsRoute
+  DashboardOrdersRoute: typeof DashboardOrdersRoute
+  DashboardSettingsRoute: typeof DashboardSettingsRoute
+  DashboardShareRoute: typeof DashboardShareRoute
   DashboardStatistiquesRoute: typeof DashboardStatistiquesRoute
+  DashboardStyleRoute: typeof DashboardStyleRoute
+  DashboardTeamRoute: typeof DashboardTeamRoute
   DashboardIndexRoute: typeof DashboardIndexRoute
 }
 
 const DashboardRouteChildren: DashboardRouteChildren = {
   DashboardAbonnementRoute: DashboardAbonnementRoute,
+  DashboardAccountRoute: DashboardAccountRoute,
+  DashboardAnalyticsRoute: DashboardAnalyticsRoute,
+  DashboardBillingRoute: DashboardBillingRoute,
+  DashboardCardRoute: DashboardCardRoute,
   DashboardCarteRoute: DashboardCarteRoute,
+  DashboardContactsRoute: DashboardContactsRoute,
+  DashboardHelpRoute: DashboardHelpRoute,
+  DashboardIntegrationsRoute: DashboardIntegrationsRoute,
+  DashboardLeadsRoute: DashboardLeadsRoute,
+  DashboardLinksRoute: DashboardLinksRoute,
+  DashboardMediaRoute: DashboardMediaRoute,
   DashboardModelesRoute: DashboardModelesRoute,
+  DashboardNotificationsRoute: DashboardNotificationsRoute,
+  DashboardOrdersRoute: DashboardOrdersRoute,
+  DashboardSettingsRoute: DashboardSettingsRoute,
+  DashboardShareRoute: DashboardShareRoute,
   DashboardStatistiquesRoute: DashboardStatistiquesRoute,
+  DashboardStyleRoute: DashboardStyleRoute,
+  DashboardTeamRoute: DashboardTeamRoute,
   DashboardIndexRoute: DashboardIndexRoute,
 }
 

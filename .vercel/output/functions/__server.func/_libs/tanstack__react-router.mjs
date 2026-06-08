@@ -781,11 +781,11 @@ function RouterProvider({ router, ...rest }) {
   });
 }
 function useRouterState(opts) {
-  const contextRouter = useRouter();
-  const router = contextRouter;
+  const contextRouter = useRouter({ warn: opts?.router === void 0 });
+  const router = opts?.router || contextRouter;
   {
     const state = router.stores.__store.get();
-    return state;
+    return opts?.select ? opts.select(state) : state;
   }
 }
 var noopScriptHandler = () => {

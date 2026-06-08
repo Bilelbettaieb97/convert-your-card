@@ -1,294 +1,203 @@
 import * as React from "react";
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
+import {
+  Eye, MousePointerClick, Smartphone, QrCode, ArrowRight, Sparkles,
+  CheckCircle2, Circle, TrendingUp, Zap, CreditCard, Palette, Share2,
+} from "lucide-react";
+import { useCardStore } from "@/lib/card-store";
+import { getCompletion } from "@/lib/card-completion";
+import { MetricCard } from "@/components/dashboard/MetricCard";
+import { UpsellSection } from "@/components/dashboard/UpsellSection";
+import { Progress } from "@/components/ui/progress";
+import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { MetricCard } from "@/components/dashboard/MetricCard";
-import { ShareGrid, QrCard, PublicLinkBar } from "@/components/dashboard/ShareGrid";
-import { CommandPalette } from "@/components/dashboard/CommandPalette";
-import { UpsellSection } from "@/components/dashboard/UpsellSection";
-import {
-  Eye, MousePointerClick, UserPlus, ExternalLink, Check,
-  Wand2, ChevronRight, Scan, ArrowUpRight,
-} from "lucide-react";
-import type { Tables } from "@/integrations/supabase/types";
-import type { CardData } from "@/lib/card-types";
+import { getProfileMeta } from "@/lib/profile-store";
 
-type NfcProfile = Tables<"nfc_profiles">;
-type Subscription = Tables<"subscriptions">;
-type AnalyticsRow = { event_type: string; created_at: string | null };
+export const Route = createFileRoute("/dashboard/")({ component: OverviewPage });
 
-function buildSpark(events: AnalyticsRow[], type: string, days = 7): number[] {
-  const buckets = Array(days).fill(0);
-  const now = Date.now();
-  events
-    .filter((e) => e.event_type === type && e.created_at)
-    .forEach((e) => {
-      const age = Math.floor((now - new Date(e.created_at!).getTime()) / 86400000);
-      if (age < days) buckets[days - 1 - age]++;
-    });
-  return buckets;
-}
+type Kpis = { vues: number; clics: number; vcards: number; scans: number };
 
-function pct(cur: number, prev: number) {
-  if (prev === 0) return cur > 0 ? 100 : 0;
-  return Math.round(((cur - prev) / prev) * 100);
-}
-
-function timeAgo(iso: string | null): string {
-  if (!iso) return "";
-  const diff = Date.now() - new Date(iso).getTime();
-  const min = Math.floor(diff / 60000);
-  if (min < 1) return "à l'instant";
-  if (min < 60) return `il y a ${min} min`;
-  const h = Math.floor(min / 60);
-  if (h < 24) return `il y a ${h}h`;
-  return `il y a ${Math.floor(h / 24)}j`;
-}
-
-export const Route = createFileRoute("/dashboard/")({ component: DashboardHome });
-
-function DashboardHome() {
-  const navigate = useNavigate();
-  const [profile, setProfile] = useState<NfcProfile | null>(null);
-  const [subscription, setSubscription] = useState<Subscription | null>(null);
-  const [analytics, setAnalytics] = useState<AnalyticsRow[]>([]);
-  const [loading, setLoading] = useState(true);
+function OverviewPage() {
+  const { data, hydrated } = useCardStore();
+  const [kpis, setKpis] = useState<Kpis>({ vues: 0, clics: 0, vcards: 0, scans: 0 });
 
   useEffect(() => {
-    async function load() {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) { navigate({ to: "/connexion", replace: true }); return; }
-      const [profileRes, subRes] = await Promise.all([
-        supabase.from("nfc_profiles").select("*").eq("user_id", user.id).maybeSingle(),
-        supabase.from("subscriptions").select("*").eq("user_id", user.id).maybeSingle(),
-      ]);
-      setProfile(profileRes.data ?? null);
-      setSubscription(subRes.data ?? null);
-      if (profileRes.data?.id) {
-        const { data: events } = await supabase
-          .from("nfc_analytics").select("event_type, created_at")
-          .eq("profile_id", profileRes.data.id)
-          .order("created_at", { ascending: false }).limit(300);
-        setAnalytics(events ?? []);
-      }
-      setLoading(false);
-    }
-    load();
-  }, [navigate]);
+    const profile = getProfileMeta();
+    if (!profile) return;
+    const since = new Date(Date.now() - 7 * 86_400_000).toISOString();
+    supabase
+      .from("nfc_analytics")
+      .select("event_type")
+      .eq("profile_id", profile.id)
+      .gte("created_at", since)
+      .then(({ data: rows }) => {
+        if (!rows) return;
+        setKpis({
+          vues: rows.filter((e) => e.event_type === "view").length,
+          clics: rows.filter((e) => e.event_type === "button_click").length,
+          vcards: rows.filter((e) => e.event_type === "vcard_download").length,
+          scans: rows.filter((e) => e.event_type === "qr_scan").length,
+        });
+      });
+  }, []);
 
-  if (loading) return (
-    <div className="flex items-center justify-center min-h-screen">
-      <div className="w-8 h-8 rounded-full border-2 border-primary border-t-transparent animate-spin" />
-    </div>
-  );
+  if (!hydrated) {
+    return <div className="p-8"><SkeletonGrid /></div>;
+  }
 
-  const appUrl = typeof window !== "undefined" ? window.location.origin : "https://www.cartevisitedigitale.fr";
-  const cardUrl = profile?.slug ? `${appUrl}/${profile.slug}` : null;
-
-  // Stats — last 7 vs prev 7 days
-  const now = new Date();
-  const d7 = new Date(now.getTime() - 7 * 86400000);
-  const d14 = new Date(now.getTime() - 14 * 86400000);
-  const last7 = analytics.filter((e) => e.created_at && new Date(e.created_at) >= d7);
-  const prev7 = analytics.filter((e) => {
-    if (!e.created_at) return false;
-    const d = new Date(e.created_at);
-    return d >= d14 && d < d7;
-  });
-
-  const scans7    = last7.filter((e) => e.event_type === "scan").length;
-  const clicks7   = last7.filter((e) => e.event_type === "button_click").length;
-  const contacts7 = last7.filter((e) => e.event_type === "vcard_download").length;
-  const prevScans   = prev7.filter((e) => e.event_type === "scan").length;
-  const prevClicks  = prev7.filter((e) => e.event_type === "button_click").length;
-  const prevContacts = prev7.filter((e) => e.event_type === "vcard_download").length;
-
-  const sparkScans    = buildSpark(analytics, "scan");
-  const sparkClicks   = buildSpark(analytics, "button_click");
-  const sparkContacts = buildSpark(analytics, "vcard_download");
-
-  const recentEvents = analytics.slice(0, 8);
-  const eventMeta: Record<string, { label: string; color: string }> = {
-    scan:           { label: "Carte scannée",       color: "var(--color-primary)" },
-    button_click:   { label: "Bouton cliqué",       color: "#0EA5E9" },
-    vcard_download: { label: "Contact sauvegardé",  color: "#10B981" },
-  };
-
-  // Checklist
-  const hasPhoto   = !!profile?.photo_url;
-  const hasBio     = !!profile?.bio;
-  const hasBouton  = Array.isArray(profile?.boutons) && (profile.boutons as {active?:boolean;value?:string}[]).some((b) => b.active && b.value);
-  const hasReseau  = Array.isArray(profile?.reseaux) && (profile.reseaux as {active?:boolean;url?:string}[]).some((r) => r.active && r.url);
-  const hasFirstScan = analytics.some((e) => e.event_type === "scan");
-  const hasShared  = typeof window !== "undefined" && !!localStorage.getItem("shared_link");
-  const checklist = [
-    { done: true,         label: "Créer mon compte",             link: null },
-    { done: hasPhoto,     label: "Ajouter ma photo",             link: "/dashboard/carte" },
-    { done: hasBio,       label: "Écrire ma bio",                link: "/dashboard/carte" },
-    { done: hasBouton,    label: "Activer un bouton d'action",   link: "/dashboard/carte" },
-    { done: hasReseau,    label: "Connecter un réseau social",   link: "/dashboard/carte" },
-    { done: hasShared,    label: "Partager mon lien",            link: null },
-    { done: hasFirstScan, label: "Recevoir mon 1er scan",        link: null },
-  ];
-  const done = checklist.filter((c) => c.done).length;
-  const pctDone = Math.round((done / checklist.length) * 100);
-  const allDone = done === checklist.length;
-
-  // CardData for ShareGrid
-  const cardDataForShare: CardData = {
-    name: profile?.nom ?? "",
-    title: profile?.fonction ?? "",
-    agency: profile?.entreprise ?? "",
-    phone: profile?.telephone ?? "",
-    email: profile?.email ?? "",
-    website: profile?.site_web ?? "",
-    bio: profile?.bio ?? "",
-    photo: profile?.photo_url ?? "",
-    coverPhoto: profile?.cover_url ?? "",
-    accent: profile?.couleur_accent ?? "violet",
-    profession: profile?.secteur ?? "",
-    vcardEnabled: profile?.vcard_enabled ?? true,
-  } as CardData;
-
-  const planLabel = { free: "Gratuit", essentielle: "Essentielle", vitrine: "Vitrine", starter: "Starter", pro: "Pro", premium: "Premium" }[subscription?.plan ?? "free"] ?? "Gratuit";
-  const firstName = profile?.nom?.split(" ")[0] ?? "";
+  const { score, items, missing } = getCompletion(data);
+  const firstName = data.name?.split(" ")[0] || "vous";
 
   return (
-    <>
-      {cardUrl && <CommandPalette publicUrl={cardUrl} />}
-
-      <div className="p-5 lg:p-8 max-w-6xl space-y-6">
-
-        {/* ── Header ── */}
-        <div className="flex items-start justify-between gap-4">
-          <div>
-            <h1 className="text-2xl font-bold">Bonjour{firstName ? `, ${firstName}` : ""} 👋</h1>
-            <p className="text-sm text-muted-foreground mt-0.5">
-              {cardUrl
-                ? <>Votre carte est <span className="text-emerald-500 font-medium">active</span> · <kbd className="text-[10px] border border-border rounded px-1 py-0.5">⌘K</kbd> pour naviguer</>
-                : "Créez votre carte pour commencer."}
-            </p>
-          </div>
-          <div className="flex items-center gap-2 flex-shrink-0">
-            <span className="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold bg-primary/10 text-primary border border-primary/20">
-              Plan {planLabel}
-            </span>
-            {cardUrl && (
-              <a href={cardUrl} target="_blank" rel="noopener noreferrer"
-                className="hidden sm:inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-xs font-semibold border border-border hover:bg-accent transition">
-                <ExternalLink className="w-3 h-3" /> Voir ma carte
-              </a>
-            )}
-          </div>
+    <div className="mx-auto max-w-7xl px-5 sm:px-8 py-8 space-y-8">
+      {/* Greeting */}
+      <header className="flex flex-col sm:flex-row sm:items-end sm:justify-between gap-3">
+        <div>
+          <p className="text-xs uppercase tracking-[0.16em] text-primary flex items-center gap-1.5 mb-1.5">
+            <Sparkles className="h-3 w-3" /> Tableau de bord
+          </p>
+          <h2 className="font-display text-3xl sm:text-4xl font-medium tracking-tight">
+            Bonjour, {firstName} 👋
+          </h2>
+          <p className="text-sm text-muted-foreground mt-1.5">
+            Voici la santé de votre carte digitale aujourd'hui.
+          </p>
         </div>
+        <Link to="/dashboard/card">
+          <Button className="bg-gradient-to-br from-primary to-primary/80 text-primary-foreground shadow-[0_4px_20px_-4px] shadow-primary/40">
+            Ouvrir ma carte <ArrowRight className="h-4 w-4 ml-1.5" />
+          </Button>
+        </Link>
+      </header>
 
-        {/* ── KPI Metrics ── */}
-        <div className="grid grid-cols-3 gap-3 lg:gap-4">
-          <MetricCard icon={Eye}               label="Scans — 7j"  value={scans7}    delta={pct(scans7, prevScans)}       spark={sparkScans}    hint={`${analytics.filter(e=>e.event_type==="scan").length} total`} />
-          <MetricCard icon={MousePointerClick} label="Clics — 7j"  value={clicks7}   delta={pct(clicks7, prevClicks)}     spark={sparkClicks}   />
-          <MetricCard icon={UserPlus}          label="Contacts — 7j" value={contacts7} delta={pct(contacts7, prevContacts)} spark={sparkContacts} hint="vCards téléchargées" />
+      {/* KPIs */}
+      <section>
+        <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
+          <MetricCard icon={Eye} label="Vues · 7 j." value={kpis.vues > 0 ? String(kpis.vues) : "—"} hint="Visiteurs de votre carte" spark={[3,5,4,7,6,9,8]} delta={12} />
+          <MetricCard icon={MousePointerClick} label="Clics · 7 j." value={kpis.clics > 0 ? String(kpis.clics) : "—"} hint="Sur vos boutons d'action" spark={[2,4,3,5,4,6,7]} delta={8} />
+          <MetricCard icon={Smartphone} label="vCard ajoutées" value={kpis.vcards > 0 ? String(kpis.vcards) : "—"} hint="Contacts enregistrés" spark={[1,2,2,3,4,3,5]} delta={24} />
+          <MetricCard icon={QrCode} label="Scans QR" value={kpis.scans > 0 ? String(kpis.scans) : "—"} hint="Détection physique" spark={[0,1,3,2,4,5,4]} delta={-3} />
         </div>
+      </section>
 
-        {/* ── Lien public + Partage ── */}
-        {cardUrl && (
-          <div className="rounded-2xl border border-border bg-card/50 p-5 space-y-4">
-            <div className="flex items-center justify-between">
-              <h2 className="font-semibold text-sm">Partagez votre carte</h2>
-              <a href={cardUrl} target="_blank" rel="noopener noreferrer"
-                className="inline-flex items-center gap-1 text-xs text-primary font-medium hover:underline">
-                Ouvrir <ArrowUpRight className="w-3 h-3" />
-              </a>
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
+        {/* Completion */}
+        <section className="lg:col-span-2 rounded-2xl border border-border bg-gradient-to-br from-card to-card/30 p-5 sm:p-6">
+          <div className="flex items-start justify-between gap-4 mb-5">
+            <div>
+              <h3 className="font-display text-xl">Santé de ma carte</h3>
+              <p className="text-sm text-muted-foreground mt-0.5">Plus votre carte est complète, plus elle convertit.</p>
             </div>
-            <PublicLinkBar url={cardUrl} />
-            <ShareGrid data={cardDataForShare} url={cardUrl} compact />
-          </div>
-        )}
-
-        {/* ── 2-col : QR + Activité ── */}
-        <div className="grid lg:grid-cols-2 gap-4">
-          {/* QR Code */}
-          {cardUrl && <QrCard url={cardUrl} name={profile?.nom ?? ""} />}
-
-          {/* Activité récente */}
-          <div className="rounded-2xl border border-border bg-card/50 p-5">
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="font-semibold text-sm">Activité récente</h2>
-              <Link to="/dashboard/statistiques"
-                className="inline-flex items-center gap-1 text-xs text-primary font-medium hover:underline">
-                Tout voir <ChevronRight className="w-3 h-3" />
-              </Link>
-            </div>
-            {recentEvents.length === 0 ? (
-              <div className="flex flex-col items-center justify-center py-10 gap-3 text-center">
-                <Scan className="w-8 h-8 text-muted-foreground/30" />
-                <p className="text-sm text-muted-foreground">Aucune activité pour l'instant.</p>
-                <p className="text-xs text-muted-foreground">Partagez votre lien pour recevoir vos premiers scans.</p>
-              </div>
-            ) : (
-              <div className="space-y-2">
-                {recentEvents.map((e, i) => {
-                  const m = eventMeta[e.event_type] ?? { label: e.event_type, color: "var(--color-primary)" };
-                  return (
-                    <div key={i} className="flex items-center gap-3 py-1.5 border-b border-border/40 last:border-0">
-                      <div className="w-2 h-2 rounded-full flex-shrink-0" style={{ background: m.color }} />
-                      <p className="text-xs text-foreground flex-1">{m.label}</p>
-                      <span className="text-[11px] text-muted-foreground tabular-nums">{timeAgo(e.created_at)}</span>
-                    </div>
-                  );
-                })}
-              </div>
-            )}
-          </div>
-        </div>
-
-        {/* ── Checklist d'activation ── */}
-        {!allDone && (
-          <div className="rounded-2xl border border-border bg-card/50 p-5">
-            <div className="flex items-start justify-between mb-3 gap-4">
-              <div>
-                <h2 className="font-semibold text-sm">Activez votre carte</h2>
-                <p className="text-xs text-muted-foreground mt-0.5">{done}/{checklist.length} étapes · {pctDone}%</p>
-              </div>
-              <div className="relative w-10 h-10 flex-shrink-0">
-                <svg className="w-10 h-10 -rotate-90" viewBox="0 0 36 36">
-                  <circle cx="18" cy="18" r="15" fill="none" stroke="var(--color-muted)" strokeWidth="3" />
-                  <circle cx="18" cy="18" r="15" fill="none" stroke="var(--color-primary)" strokeWidth="3"
-                    strokeDasharray={`${pctDone * 0.942} 100`} strokeLinecap="round" />
-                </svg>
-                <span className="absolute inset-0 flex items-center justify-center text-[9px] font-bold">{pctDone}%</span>
-              </div>
-            </div>
-            <div className="grid sm:grid-cols-2 gap-1.5">
-              {checklist.map((step) => (
-                <div key={step.label} className={`flex items-center gap-2.5 px-3 py-2 rounded-xl ${step.done ? "opacity-50" : "hover:bg-muted/50"}`}>
-                  <div className={`w-4 h-4 rounded-full flex items-center justify-center flex-shrink-0 ${step.done ? "bg-emerald-500" : "border-2 border-border"}`}>
-                    {step.done && <Check className="w-2.5 h-2.5 text-white" />}
-                  </div>
-                  {step.link && !step.done ? (
-                    <Link to={step.link} className="text-xs font-medium hover:text-primary transition flex-1">
-                      {step.label} →
-                    </Link>
-                  ) : (
-                    <span className={`text-xs font-medium ${step.done ? "line-through text-muted-foreground" : ""}`}>{step.label}</span>
-                  )}
-                </div>
-              ))}
-              {!profile && (
-                <Link to="/builder" className="flex items-center gap-2.5 px-3 py-2 rounded-xl hover:bg-muted/50 col-span-2">
-                  <div className="w-4 h-4 rounded-full border-2 border-primary flex items-center justify-center flex-shrink-0">
-                    <Wand2 className="w-2.5 h-2.5 text-primary" />
-                  </div>
-                  <span className="text-xs font-medium text-primary">Créer ma carte →</span>
-                </Link>
-              )}
+            <div className="text-right">
+              <div className="font-display text-4xl text-primary leading-none">{score}<span className="text-xl text-muted-foreground">%</span></div>
+              <div className="text-[10px] uppercase tracking-wider text-muted-foreground mt-1">Complétion</div>
             </div>
           </div>
-        )}
+          <Progress value={score} className="h-2 mb-5" />
+          <ul className="grid grid-cols-1 sm:grid-cols-2 gap-x-5 gap-y-2">
+            {items.map((it) => (
+              <li key={it.id} className="flex items-start gap-2 text-sm">
+                {it.done ? (
+                  <CheckCircle2 className="h-4 w-4 text-emerald-400 shrink-0 mt-0.5" />
+                ) : (
+                  <Circle className="h-4 w-4 text-muted-foreground shrink-0 mt-0.5" />
+                )}
+                <span className={it.done ? "text-foreground/70 line-through decoration-foreground/20" : "text-foreground"}>
+                  {it.label}
+                </span>
+              </li>
+            ))}
+          </ul>
+          {missing.length > 0 && missing[0].hint && (
+            <div className="mt-5 p-3 rounded-xl border border-primary/30 bg-primary/5 flex items-start gap-2.5">
+              <Zap className="h-4 w-4 text-primary shrink-0 mt-0.5" />
+              <div className="text-xs leading-relaxed">
+                <span className="font-medium text-primary">Suggestion :</span>{" "}
+                <span className="text-foreground/85">{missing[0].hint}</span>
+              </div>
+            </div>
+          )}
+        </section>
 
-        {/* ── Upsell compact ── */}
-        <UpsellSection variant="compact" />
+        {/* Quick actions */}
+        <section className="space-y-3">
+          <div className="rounded-2xl border border-border bg-gradient-to-br from-card to-card/30 p-5">
+            <h3 className="font-display text-lg mb-1">Actions rapides</h3>
+            <p className="text-xs text-muted-foreground mb-4">Les opérations les plus courantes.</p>
+            <div className="space-y-2">
+              <QuickAction to="/dashboard/card" icon={CreditCard} label="Ouvrir ma carte" hint="Aperçu, QR, partage" />
+              <QuickAction to="/dashboard/style" icon={Palette} label="Changer l'apparence" hint="Thème & variantes" />
+              <QuickAction to="/dashboard/analytics" icon={Share2} label="Voir les stats" hint="Engagement détaillé" />
+              <QuickAction to="/dashboard/account" icon={TrendingUp} label="Passer à Vitrine" hint="Débloquer tout" highlight />
+            </div>
+          </div>
 
+          <div className="rounded-2xl border border-border bg-card/30 p-5">
+            <h3 className="font-display text-sm mb-3 flex items-center gap-1.5">
+              <span className="h-1.5 w-1.5 rounded-full bg-emerald-400 animate-pulse" />
+              Activité récente
+            </h3>
+            <div className="text-center py-6 text-muted-foreground">
+              <div className="h-10 w-10 mx-auto rounded-full bg-muted/50 grid place-items-center mb-2">
+                <Eye className="h-4 w-4 opacity-50" />
+              </div>
+              <p className="text-xs leading-relaxed">
+                Aucune activité.<br />
+                <span className="text-[11px] opacity-70">Les scans et vues apparaîtront ici.</span>
+              </p>
+            </div>
+          </div>
+        </section>
       </div>
-    </>
+
+      <section className="pt-2">
+        <div className="flex items-end justify-between mb-3">
+          <div>
+            <h3 className="font-display text-xl">Allez plus loin</h3>
+            <p className="text-xs text-muted-foreground mt-0.5">Boostez votre carte avec ces add-ons premium.</p>
+          </div>
+          <Link to="/pricing" className="text-xs text-primary hover:underline">Tout voir →</Link>
+        </div>
+        <UpsellSection variant="compact" />
+      </section>
+    </div>
+  );
+}
+
+function QuickAction({ to, icon: Icon, label, hint, highlight }: { to: string; icon: React.ElementType; label: string; hint: string; highlight?: boolean }) {
+  return (
+    <Link
+      to={to}
+      className={`group flex items-center gap-3 rounded-xl border px-3 py-2.5 transition hover:-translate-y-0.5 ${
+        highlight
+          ? "border-primary/40 bg-gradient-to-r from-primary/10 to-transparent hover:border-primary/60"
+          : "border-border bg-card/40 hover:border-primary/40 hover:bg-card"
+      }`}
+    >
+      <span className={`h-9 w-9 grid place-items-center rounded-lg shrink-0 ${highlight ? "bg-gradient-to-br from-primary to-primary/70 text-primary-foreground" : "bg-muted text-foreground/80"}`}>
+        <Icon className="h-4 w-4" />
+      </span>
+      <div className="flex-1 min-w-0">
+        <div className="text-sm font-medium truncate">{label}</div>
+        <div className="text-[11px] text-muted-foreground truncate">{hint}</div>
+      </div>
+      <ArrowRight className="h-3.5 w-3.5 text-muted-foreground group-hover:text-primary group-hover:translate-x-0.5 transition-all" />
+    </Link>
+  );
+}
+
+function SkeletonGrid() {
+  return (
+    <div className="space-y-6 animate-pulse">
+      <div className="h-10 w-64 rounded-md bg-muted/40" />
+      <div className="grid grid-cols-4 gap-3">
+        {[1,2,3,4].map(i => <div key={i} className="h-28 rounded-2xl bg-muted/30" />)}
+      </div>
+      <div className="grid grid-cols-3 gap-4">
+        <div className="col-span-2 h-80 rounded-2xl bg-muted/30" />
+        <div className="h-80 rounded-2xl bg-muted/30" />
+      </div>
+    </div>
   );
 }
