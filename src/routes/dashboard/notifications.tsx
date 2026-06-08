@@ -13,6 +13,11 @@ export const Route = createFileRoute("/dashboard/notifications")({
 });
 
 type NotifItem = { id: string; icon: typeof Eye; color: string; title: string; sub: string; unread: boolean };
+
+const CLICK_TYPE_LABELS: Record<string, string> = {
+  call: "Appeler", whatsapp: "WhatsApp", email: "Email",
+  website: "Site web", calendar: "Calendrier", cta: "CTA",
+};
 type Prefs = { scan_email: boolean; scan_push: boolean; save_email: boolean; save_push: boolean; click_email: boolean; click_push: boolean; order_email: boolean; order_push: boolean; tips_email: boolean; tips_push: boolean };
 
 const DEFAULT_PREFS: Prefs = { scan_email: true, scan_push: true, save_email: true, save_push: true, click_email: false, click_push: true, order_email: true, order_push: false, tips_email: true, tips_push: false };
@@ -28,13 +33,18 @@ function timeAgo(iso: string): string {
   return days === 1 ? "hier" : `il y a ${days}j`;
 }
 
-function eventToNotif(row: { id: string; event_type: string; created_at: string }): NotifItem {
+function eventToNotif(row: { id: string; event_type: string; created_at: string; event_data?: Record<string, string> | null }): NotifItem {
+  const clickType = row.event_data?.type;
+  const clickLabel = clickType ? (CLICK_TYPE_LABELS[clickType] ?? clickType) : null;
+
   const MAP: Record<string, { icon: typeof Eye; color: string; title: string }> = {
-    view:           { icon: Eye,               color: "text-blue-400 bg-blue-500/10",     title: "Quelqu'un a consulté votre carte" },
-    scan:           { icon: QrCode,            color: "text-violet-400 bg-violet-500/10", title: "Nouveau scan de votre carte" },
-    qr_scan:        { icon: QrCode,            color: "text-violet-400 bg-violet-500/10", title: "Scan via QR code" },
-    button_click:   { icon: MousePointerClick, color: "text-amber-400 bg-amber-500/10",   title: "Clic sur un bouton d'action" },
+    view:           { icon: Eye,               color: "text-blue-400 bg-blue-500/10",       title: "Quelqu'un a consulté votre carte" },
+    scan:           { icon: QrCode,            color: "text-violet-400 bg-violet-500/10",   title: "Nouveau scan de votre carte" },
+    qr_scan:        { icon: QrCode,            color: "text-violet-400 bg-violet-500/10",   title: "Scan via QR code" },
+    click_button:   { icon: MousePointerClick, color: "text-amber-400 bg-amber-500/10",     title: clickLabel ? `Clic sur « ${clickLabel} »` : "Clic sur un bouton d'action" },
+    click_social:   { icon: MousePointerClick, color: "text-sky-400 bg-sky-500/10",         title: clickLabel ? `Clic réseau social — ${clickLabel}` : "Clic sur un réseau social" },
     vcard_download: { icon: UserPlus,          color: "text-emerald-400 bg-emerald-500/10", title: "Contact enregistré dans un téléphone" },
+    save_contact:   { icon: UserPlus,          color: "text-emerald-400 bg-emerald-500/10", title: "Contact enregistré dans un téléphone" },
   };
   const m = MAP[row.event_type] ?? { icon: Eye, color: "text-muted-foreground bg-muted", title: row.event_type };
   return { id: row.id, icon: m.icon, color: m.color, title: m.title, sub: timeAgo(row.created_at), unread: true };
@@ -57,9 +67,9 @@ function NotificationsPage() {
   useEffect(() => {
     const profile = getProfileMeta();
     if (profile) {
-      supabase.from("nfc_analytics").select("id, event_type, created_at")
+      supabase.from("nfc_analytics").select("id, event_type, created_at, event_data")
         .eq("profile_id", profile.id).order("created_at", { ascending: false }).limit(30)
-        .then(({ data }) => { if (data) setFeed(data.map(eventToNotif)); });
+        .then(({ data }) => { if (data) setFeed((data as any[]).map(eventToNotif)); });
     }
     supabase.auth.getUser().then(async ({ data: { user } }) => {
       if (!user) { setLoading(false); return; }
