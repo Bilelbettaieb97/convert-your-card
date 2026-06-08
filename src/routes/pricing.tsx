@@ -448,21 +448,22 @@ function PricingPage() {
             <div className="truncate">
               <span className="text-muted-foreground">Plan : </span>
               <span className="font-medium">{selectedPlan.label}</span>
-              <span className="text-muted-foreground"> · {billing === "yearly" ? "annuel" : "mensuel"}</span>
+              <span className="hidden sm:inline text-muted-foreground"> · {billing === "yearly" ? "annuel" : "mensuel"}</span>
             </div>
             <div className="text-xs text-muted-foreground inline-flex items-center gap-1.5 mt-0.5">
               {selected === "vitrine" ? (
                 <>
                   <ShieldCheck className="h-3 w-3 text-primary" />
                   <span className="text-emerald-700 dark:text-emerald-400 font-medium">0 € aujourd'hui</span>
-                  <span>·</span>
-                  <Calendar className="h-3 w-3" />
-                  <span>1er prélèvement le {trialEndLabel}</span>
+                  <span className="hidden sm:inline">·</span>
+                  <Calendar className="hidden sm:inline h-3 w-3" />
+                  <span className="hidden sm:inline">1er prélèvement le {trialEndLabel}</span>
                 </>
               ) : (
                 <>
                   <ShieldCheck className="h-3 w-3 text-primary" />
-                  Paiement immédiat sécurisé
+                  <span className="hidden sm:inline">Paiement immédiat sécurisé</span>
+                  <span className="sm:hidden">Paiement sécurisé</span>
                 </>
               )}
             </div>
