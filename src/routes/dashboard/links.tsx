@@ -1,153 +1,237 @@
-import { createFileRoute, Link } from "@tanstack/react-router";
-import { useEffect, useState } from "react";
-import { Linkedin, Instagram, Globe, Calendar, MessageCircle, Mail, Phone, ExternalLink } from "lucide-react";
-import { Button } from "@/components/ui/button";
-import { supabase } from "@/integrations/supabase/client";
+import { createFileRoute } from "@tanstack/react-router";
+import { useEffect, useRef, useState } from "react";
+import { BusinessCard } from "@/components/card/BusinessCard";
+import { PhoneFrame } from "@/components/card/PhoneFrame";
+import { useCardStore } from "@/lib/card-store";
+import { loadMyCard, updateCard } from "@/lib/card-actions";
 import { getProfileMeta } from "@/lib/profile-store";
+import type { CardData } from "@/lib/card-types";
+import { Phone, MessageCircle, Mail, Globe, Linkedin, Instagram, Download } from "lucide-react";
+import { Switch } from "@/components/ui/switch";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 
 export const Route = createFileRoute("/dashboard/links")({
-  head: () => ({ meta: [{ title: "Liens & Réseaux — Dashboard" }] }),
   component: LinksPage,
 });
 
-type LinkItem = { id: string; label: string; url: string; icon: typeof Globe; active: boolean; clicks: number };
-
-const ICON_MAP: Record<string, typeof Globe> = {
-  call: Phone, whatsapp: MessageCircle, email: Mail, website: Globe,
-  linkedin: Linkedin, instagram: Instagram,
-};
-
-const LABELS: Record<string, string> = {
-  call: "Appel téléphonique", whatsapp: "WhatsApp", email: "Email", website: "Site web",
-  linkedin: "LinkedIn", instagram: "Instagram",
-};
-
-function buildUrl(type: string, value: string): string {
-  if (type === "call") return `tel:${value}`;
-  if (type === "whatsapp") return `https://wa.me/${value.replace(/[^0-9]/g, "")}`;
-  if (type === "email") return `mailto:${value}`;
-  if (!value.startsWith("http")) return `https://${value}`;
-  return value;
-}
-
 function LinksPage() {
-  const [links, setLinks] = useState<LinkItem[]>([]);
-  const [loading, setLoading] = useState(true);
-  const [slug, setSlug] = useState<string | null>(null);
+  const { data, setData, update, hydrated } = useCardStore();
+  const profile = getProfileMeta();
+  const [supabaseReady, setSupabaseReady] = useState(false);
+  const skipNextSave = useRef(false);
 
   useEffect(() => {
-    const profile = getProfileMeta();
-    if (!profile) { setLoading(false); return; }
-    setSlug(profile.slug ?? null);
-
-    Promise.all([
-      supabase.from("nfc_profiles").select("boutons, reseaux").eq("id", profile.id).maybeSingle(),
-      supabase.from("nfc_analytics").select("event_type, event_data")
-        .eq("profile_id", profile.id).eq("event_type", "button_click"),
-    ]).then(([{ data: profile_data }, { data: events }]) => {
-      const clickMap: Record<string, number> = {};
-      for (const ev of events ?? []) {
-        const btnType = (ev.event_data as Record<string, string>)?.button_type ?? "unknown";
-        clickMap[btnType] = (clickMap[btnType] ?? 0) + 1;
+    if (!hydrated) return;
+    if (!profile) { setSupabaseReady(true); return; }
+    loadMyCard().then((row) => {
+      if (row?.card_data) {
+        skipNextSave.current = true;
+        setData(row.card_data as CardData);
       }
+    }).catch(console.error).finally(() => setSupabaseReady(true));
+  }, [hydrated]); // eslint-disable-line react-hooks/exhaustive-deps
 
-      const all: LinkItem[] = [];
-      for (const btn of (profile_data?.boutons ?? []) as { type: string; label: string; value: string; active: boolean }[]) {
-        all.push({
-          id: `btn-${btn.type}`,
-          label: btn.label || LABELS[btn.type] || btn.type,
-          url: buildUrl(btn.type, btn.value),
-          icon: ICON_MAP[btn.type] ?? Globe,
-          active: btn.active,
-          clicks: clickMap[btn.type] ?? 0,
-        });
-      }
-      for (const r of (profile_data?.reseaux ?? []) as { type: string; label: string; url: string; active: boolean }[]) {
-        all.push({
-          id: `rseau-${r.type}`,
-          label: r.label || LABELS[r.type] || r.type,
-          url: r.url,
-          icon: ICON_MAP[r.type] ?? Globe,
-          active: r.active,
-          clicks: clickMap[r.type] ?? 0,
-        });
-      }
-      setLinks(all);
-      setLoading(false);
-    });
-  }, []);
+  useEffect(() => {
+    if (!hydrated || !supabaseReady || !profile) return;
+    if (skipNextSave.current) { skipNextSave.current = false; return; }
+    const timer = setTimeout(() => {
+      updateCard(profile.id, data).catch(console.error);
+    }, 1500);
+    return () => clearTimeout(timer);
+  }, [data, hydrated, supabaseReady]); // eslint-disable-line react-hooks/exhaustive-deps
 
-  const origin = typeof window !== "undefined" ? window.location.origin : "";
-  const publicUrl = slug ? `${origin}/${slug}` : null;
+  if (!hydrated || !supabaseReady) {
+    return <div className="p-8 text-muted-foreground">Chargement…</div>;
+  }
+
+  const toggleAction = (key: keyof CardData["actions"]) => {
+    setData({ ...data, actions: { ...data.actions, [key]: !data.actions[key] } });
+  };
 
   return (
-    <div className="p-6 md:p-8 grid md:grid-cols-3 gap-6">
-      <div className="md:col-span-2 space-y-4">
-        <div className="flex justify-between items-center">
-          <div>
-            <h2 className="font-display text-xl">Mes liens actifs</h2>
-            <p className="text-xs text-muted-foreground">Configurez vos liens depuis le builder de carte</p>
-          </div>
-          <Link to="/dashboard/card">
-            <Button variant="outline">Modifier dans le builder</Button>
-          </Link>
+    <div className="mx-auto max-w-[1400px] px-5 sm:px-8 py-8 grid grid-cols-1 xl:grid-cols-[1fr_380px] gap-8 items-start">
+      <section className="space-y-8">
+        <div>
+          <h2 className="font-display text-2xl font-medium">Liens & réseaux</h2>
+          <p className="text-sm text-muted-foreground mt-1">Modifiez vos coordonnées et réseaux. Sauvegarde automatique.</p>
         </div>
 
-        {loading ? (
-          <div className="text-sm text-muted-foreground p-8 text-center">Chargement…</div>
-        ) : links.length === 0 ? (
-          <div className="rounded-2xl border border-dashed border-border p-12 text-center">
-            <Globe className="h-10 w-10 mx-auto opacity-20 mb-3" />
-            <p className="text-sm text-muted-foreground">Aucun lien configuré.</p>
-            <p className="text-xs text-muted-foreground opacity-70 mt-1">Ajoutez vos coordonnées et réseaux depuis le builder.</p>
-            <Link to="/dashboard/card"><Button className="mt-4" size="sm">Ouvrir le builder</Button></Link>
-          </div>
-        ) : (
+        {/* Boutons d'action */}
+        <div>
+          <p className="text-xs uppercase tracking-wider text-muted-foreground mb-3">Boutons d'action</p>
           <div className="space-y-2">
-            {links.map(l => (
-              <div key={l.id} className={`flex items-center gap-3 p-3 rounded-xl border border-border bg-card/40 ${l.active ? "" : "opacity-40"}`}>
-                <div className="h-10 w-10 rounded-lg bg-primary/10 text-primary grid place-items-center shrink-0"><l.icon className="h-5 w-5" /></div>
-                <div className="flex-1 min-w-0">
-                  <div className="text-sm font-medium">{l.label}</div>
-                  <div className="text-xs text-muted-foreground truncate">{l.url}</div>
-                </div>
-                <div className="text-xs text-muted-foreground hidden md:block">{l.clicks} clic{l.clicks !== 1 ? "s" : ""}</div>
-                <div className={`text-[10px] px-2 py-0.5 rounded-full border ${l.active ? "border-emerald-500/40 bg-emerald-500/10 text-emerald-400" : "border-border text-muted-foreground"}`}>
-                  {l.active ? "Actif" : "Inactif"}
-                </div>
-              </div>
-            ))}
+            <LinkRow
+              icon={<Phone className="h-4 w-4" />}
+              label="Téléphone"
+              active={data.actions.call}
+              onToggle={() => toggleAction("call")}
+              value={data.phone}
+              onChange={(v) => update("phone", v)}
+              placeholder="+33 6 12 34 56 78"
+              type="tel"
+            />
+            <LinkRow
+              icon={<MessageCircle className="h-4 w-4" />}
+              label="WhatsApp"
+              active={data.actions.whatsapp}
+              onToggle={() => toggleAction("whatsapp")}
+              value={data.whatsapp}
+              onChange={(v) => update("whatsapp", v)}
+              placeholder="33612345678"
+              type="tel"
+              hint="Numéro sans + ni espaces (ex : 33612345678)"
+            />
+            <LinkRow
+              icon={<Mail className="h-4 w-4" />}
+              label="Email"
+              active={data.actions.email}
+              onToggle={() => toggleAction("email")}
+              value={data.email}
+              onChange={(v) => update("email", v)}
+              placeholder="vous@exemple.fr"
+              type="email"
+            />
+            <LinkRow
+              icon={<Globe className="h-4 w-4" />}
+              label="Site web"
+              active={data.actions.website}
+              onToggle={() => toggleAction("website")}
+              value={data.website}
+              onChange={(v) => update("website", v)}
+              placeholder="https://monsite.fr"
+              type="url"
+            />
           </div>
-        )}
-      </div>
+        </div>
 
-      <div className="space-y-4">
-        <h3 className="font-display text-lg">Aperçu</h3>
-        <div className="rounded-xl border border-primary/30 bg-primary/5 p-4 space-y-3">
-          <div className="text-xs uppercase tracking-wider text-primary">Total clics (30j)</div>
-          <div className="font-display text-3xl">{links.reduce((s, l) => s + l.clicks, 0)}</div>
-          <div className="text-xs text-muted-foreground">Répartis sur {links.filter(l => l.active).length} lien{links.filter(l => l.active).length !== 1 ? "s" : ""} actif{links.filter(l => l.active).length !== 1 ? "s" : ""}</div>
+        {/* Réseaux sociaux */}
+        <div>
+          <p className="text-xs uppercase tracking-wider text-muted-foreground mb-3">Réseaux sociaux</p>
+          <div className="space-y-2">
+            <SocialRow
+              icon={<Linkedin className="h-4 w-4" />}
+              label="LinkedIn"
+              value={data.linkedin}
+              onChange={(v) => update("linkedin", v)}
+              placeholder="https://linkedin.com/in/votre-profil"
+            />
+            <SocialRow
+              icon={<Instagram className="h-4 w-4" />}
+              label="Instagram"
+              value={data.instagram}
+              onChange={(v) => update("instagram", v)}
+              placeholder="https://instagram.com/votre-compte"
+            />
+            <SocialRow
+              icon={<MessageCircle className="h-4 w-4" />}
+              label="WhatsApp social"
+              value={data.whatsappSocial}
+              onChange={(v) => update("whatsappSocial", v)}
+              placeholder="33612345678"
+              hint="Numéro sans + ni espaces"
+            />
+          </div>
         </div>
-        {publicUrl && (
-          <a href={publicUrl} target="_blank" rel="noopener noreferrer">
-            <Button variant="outline" className="w-full"><ExternalLink className="h-3.5 w-3.5 mr-2" /> Voir ma carte publique</Button>
-          </a>
-        )}
-        <div className="rounded-xl border border-border bg-card/30 p-4 text-xs text-muted-foreground">
-          Les clics sont mesurés sur les 30 derniers jours depuis la page publique de votre carte.
-        </div>
-        {/* Quick type icons — informational only */}
-        <div className="grid grid-cols-3 gap-2">
-          {[{ icon: Phone, l: "Appel" }, { icon: MessageCircle, l: "WhatsApp" }, { icon: Mail, l: "Email" }, { icon: Globe, l: "Site web" }, { icon: Linkedin, l: "LinkedIn" }, { icon: Calendar, l: "Calendly" }].map(t => (
-            <div key={t.l} className="flex flex-col items-center gap-1.5 p-3 rounded-xl border border-border text-xs text-muted-foreground">
-              <t.icon className="h-5 w-5 text-primary/60" />
-              <span>{t.l}</span>
+
+        {/* vCard */}
+        <div>
+          <p className="text-xs uppercase tracking-wider text-muted-foreground mb-3">Options</p>
+          <div className="flex items-center justify-between rounded-2xl border border-border bg-card/40 px-4 py-3.5">
+            <div className="flex items-center gap-3">
+              <span className="h-9 w-9 rounded-lg bg-primary/10 text-primary grid place-items-center shrink-0">
+                <Download className="h-4 w-4" />
+              </span>
+              <div>
+                <Label className="text-sm font-medium cursor-pointer" htmlFor="vcard-toggle">
+                  Enregistrer le contact (vCard)
+                </Label>
+                <p className="text-xs text-muted-foreground">Permet aux visiteurs d'ajouter votre contact</p>
+              </div>
             </div>
-          ))}
+            <Switch
+              id="vcard-toggle"
+              checked={data.vcardEnabled}
+              onCheckedChange={(v) => update("vcardEnabled", v)}
+            />
+          </div>
         </div>
-      </div>
+      </section>
+
+      <aside className="hidden xl:block">
+        <div className="sticky top-20">
+          <p className="text-xs uppercase tracking-[0.18em] text-primary flex items-center gap-1.5 mb-3">
+            <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" /> Aperçu live
+          </p>
+          <PhoneFrame><BusinessCard data={data} /></PhoneFrame>
+        </div>
+      </aside>
     </div>
   );
 }
 
-export default LinksPage;
+function LinkRow({
+  icon, label, active, onToggle, value, onChange, placeholder, type, hint,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  active: boolean;
+  onToggle: () => void;
+  value: string;
+  onChange: (v: string) => void;
+  placeholder: string;
+  type?: string;
+  hint?: string;
+}) {
+  return (
+    <div className={`rounded-2xl border border-border bg-card/40 p-4 transition-opacity ${active ? "" : "opacity-50"}`}>
+      <div className="flex items-center gap-3 mb-3">
+        <span className="h-9 w-9 rounded-lg bg-primary/10 text-primary grid place-items-center shrink-0">
+          {icon}
+        </span>
+        <span className="flex-1 text-sm font-medium">{label}</span>
+        <Switch checked={active} onCheckedChange={onToggle} />
+      </div>
+      <Input
+        type={type ?? "text"}
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        placeholder={placeholder}
+        className="h-9 text-sm"
+        disabled={!active}
+      />
+      {hint && <p className="text-[11px] text-muted-foreground mt-1.5">{hint}</p>}
+    </div>
+  );
+}
+
+function SocialRow({
+  icon, label, value, onChange, placeholder, hint,
+}: {
+  icon: React.ReactNode;
+  label: string;
+  value: string;
+  onChange: (v: string) => void;
+  placeholder: string;
+  hint?: string;
+}) {
+  return (
+    <div className={`rounded-2xl border border-border bg-card/40 p-4 transition-opacity ${value ? "" : "opacity-60"}`}>
+      <div className="flex items-center gap-3 mb-3">
+        <span className="h-9 w-9 rounded-lg bg-primary/10 text-primary grid place-items-center shrink-0">
+          {icon}
+        </span>
+        <span className="flex-1 text-sm font-medium">{label}</span>
+        {value && <span className="text-[10px] px-2 py-0.5 rounded-full border border-emerald-500/40 bg-emerald-500/10 text-emerald-400">Actif</span>}
+      </div>
+      <Input
+        type="url"
+        value={value}
+        onChange={(e) => onChange(e.target.value)}
+        placeholder={placeholder}
+        className="h-9 text-sm"
+      />
+      {hint && <p className="text-[11px] text-muted-foreground mt-1.5">{hint}</p>}
+    </div>
+  );
+}
