@@ -35,7 +35,6 @@ function Landing() {
   return (
     <div className="min-h-screen bg-background text-foreground font-body">
       <StructuredData />
-      <PromoBar />
       <Nav />
       <Hero />
       <Logos />
