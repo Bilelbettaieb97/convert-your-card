@@ -231,7 +231,7 @@ function CoachPage() {
         <ol className="flex items-center gap-1.5 text-xs text-muted-foreground">
           <li><Link to="/" className="hover:text-foreground transition">Accueil</Link></li>
           <li>/</li>
-          <li><span className="text-muted-foreground/60">Métiers</span></li>
+          <li><Link to="/metiers" className="hover:text-foreground transition">Métiers</Link></li>
           <li>/</li>
           <li className="text-foreground font-medium">Coach</li>
         </ol>

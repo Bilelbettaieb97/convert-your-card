@@ -23,6 +23,7 @@ import { Route as BuilderRouteImport } from './routes/builder'
 import { Route as BienvenueRouteImport } from './routes/bienvenue'
 import { Route as SlugRouteImport } from './routes/$slug'
 import { Route as IndexRouteImport } from './routes/index'
+import { Route as MetiersIndexRouteImport } from './routes/metiers/index'
 import { Route as InscriptionIndexRouteImport } from './routes/inscription.index'
 import { Route as DashboardIndexRouteImport } from './routes/dashboard/index'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
@@ -120,6 +121,11 @@ const IndexRoute = IndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => rootRouteImport,
+} as any)
+const MetiersIndexRoute = MetiersIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => MetiersRoute,
 } as any)
 const InscriptionIndexRoute = InscriptionIndexRouteImport.update({
   id: '/',
@@ -300,6 +306,7 @@ export interface FileRoutesByFullPath {
   '/admin/': typeof AdminIndexRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/inscription/': typeof InscriptionIndexRoute
+  '/metiers/': typeof MetiersIndexRoute
   '/inscription/offre/$plan': typeof InscriptionOffrePlanRoute
 }
 export interface FileRoutesByTo {
@@ -309,7 +316,6 @@ export interface FileRoutesByTo {
   '/builder': typeof BuilderRoute
   '/carte-physique': typeof CartePhysiqueRoute
   '/connexion': typeof ConnexionRoute
-  '/metiers': typeof MetiersRouteWithChildren
   '/offres': typeof OffresRoute
   '/onboarding': typeof OnboardingRoute
   '/pricing': typeof PricingRoute
@@ -341,6 +347,7 @@ export interface FileRoutesByTo {
   '/admin': typeof AdminIndexRoute
   '/dashboard': typeof DashboardIndexRoute
   '/inscription': typeof InscriptionIndexRoute
+  '/metiers': typeof MetiersIndexRoute
   '/inscription/offre/$plan': typeof InscriptionOffrePlanRoute
 }
 export interface FileRoutesById {
@@ -385,6 +392,7 @@ export interface FileRoutesById {
   '/admin/': typeof AdminIndexRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/inscription/': typeof InscriptionIndexRoute
+  '/metiers/': typeof MetiersIndexRoute
   '/inscription/offre/$plan': typeof InscriptionOffrePlanRoute
 }
 export interface FileRouteTypes {
@@ -430,6 +438,7 @@ export interface FileRouteTypes {
     | '/admin/'
     | '/dashboard/'
     | '/inscription/'
+    | '/metiers/'
     | '/inscription/offre/$plan'
   fileRoutesByTo: FileRoutesByTo
   to:
@@ -439,7 +448,6 @@ export interface FileRouteTypes {
     | '/builder'
     | '/carte-physique'
     | '/connexion'
-    | '/metiers'
     | '/offres'
     | '/onboarding'
     | '/pricing'
@@ -471,6 +479,7 @@ export interface FileRouteTypes {
     | '/admin'
     | '/dashboard'
     | '/inscription'
+    | '/metiers'
     | '/inscription/offre/$plan'
   id:
     | '__root__'
@@ -514,6 +523,7 @@ export interface FileRouteTypes {
     | '/admin/'
     | '/dashboard/'
     | '/inscription/'
+    | '/metiers/'
     | '/inscription/offre/$plan'
   fileRoutesById: FileRoutesById
 }
@@ -634,6 +644,13 @@ declare module '@tanstack/react-router' {
       fullPath: '/'
       preLoaderRoute: typeof IndexRouteImport
       parentRoute: typeof rootRouteImport
+    }
+    '/metiers/': {
+      id: '/metiers/'
+      path: '/'
+      fullPath: '/metiers/'
+      preLoaderRoute: typeof MetiersIndexRouteImport
+      parentRoute: typeof MetiersRoute
     }
     '/inscription/': {
       id: '/inscription/'
@@ -899,10 +916,12 @@ const InscriptionRouteWithChildren = InscriptionRoute._addFileChildren(
 
 interface MetiersRouteChildren {
   MetiersCoachRoute: typeof MetiersCoachRoute
+  MetiersIndexRoute: typeof MetiersIndexRoute
 }
 
 const MetiersRouteChildren: MetiersRouteChildren = {
   MetiersCoachRoute: MetiersCoachRoute,
+  MetiersIndexRoute: MetiersIndexRoute,
 }
 
 const MetiersRouteWithChildren =
