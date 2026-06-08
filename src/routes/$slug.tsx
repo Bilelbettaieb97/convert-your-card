@@ -151,7 +151,7 @@ function ProfilePage() {
             <p className="text-xs font-semibold uppercase tracking-wider mb-3" style={{ color: subTextColor }}>Réseaux</p>
             <div className="flex flex-wrap gap-3">
               {reseaux.map((r, i) => (
-                <a key={i} href={r.url} target="_blank" rel="noopener noreferrer" onClick={() => logEvent(profile.id, "social_click", { type: r.type })} className="flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition hover:opacity-80" style={{ backgroundColor: "rgba(255,255,255,0.12)", color: "#fff" }}>
+                <a key={i} href={r.url} target="_blank" rel="noopener noreferrer" onClick={() => logEvent(profile.id, "click_social", { type: r.type })} className="flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition hover:opacity-80" style={{ backgroundColor: "rgba(255,255,255,0.12)", color: "#fff" }}>
                   <ExternalLink className="w-3.5 h-3.5" style={{ color: "rgba(255,255,255,0.6)" }} />
                   {r.label || (r.type.charAt(0).toUpperCase() + r.type.slice(1))}
                 </a>
