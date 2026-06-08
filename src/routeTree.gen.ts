@@ -14,6 +14,7 @@ import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as OffresRouteImport } from './routes/offres'
+import { Route as MetiersRouteImport } from './routes/metiers'
 import { Route as InscriptionRouteImport } from './routes/inscription'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as ConnexionRouteImport } from './routes/connexion'
@@ -75,6 +76,11 @@ const OffresRoute = OffresRouteImport.update({
   path: '/offres',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MetiersRoute = MetiersRouteImport.update({
+  id: '/metiers',
+  path: '/metiers',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const InscriptionRoute = InscriptionRouteImport.update({
   id: '/inscription',
   path: '/inscription',
@@ -131,9 +137,9 @@ const AdminIndexRoute = AdminIndexRouteImport.update({
   getParentRoute: () => rootRouteImport,
 } as any)
 const MetiersCoachRoute = MetiersCoachRouteImport.update({
-  id: '/metiers/coach',
-  path: '/metiers/coach',
-  getParentRoute: () => rootRouteImport,
+  id: '/coach',
+  path: '/coach',
+  getParentRoute: () => MetiersRoute,
 } as any)
 const InscriptionSelectionDePlanRoute =
   InscriptionSelectionDePlanRouteImport.update({
@@ -262,6 +268,7 @@ export interface FileRoutesByFullPath {
   '/connexion': typeof ConnexionRoute
   '/dashboard': typeof DashboardRouteWithChildren
   '/inscription': typeof InscriptionRouteWithChildren
+  '/metiers': typeof MetiersRouteWithChildren
   '/offres': typeof OffresRoute
   '/onboarding': typeof OnboardingRoute
   '/pricing': typeof PricingRoute
@@ -302,6 +309,7 @@ export interface FileRoutesByTo {
   '/builder': typeof BuilderRoute
   '/carte-physique': typeof CartePhysiqueRoute
   '/connexion': typeof ConnexionRoute
+  '/metiers': typeof MetiersRouteWithChildren
   '/offres': typeof OffresRoute
   '/onboarding': typeof OnboardingRoute
   '/pricing': typeof PricingRoute
@@ -345,6 +353,7 @@ export interface FileRoutesById {
   '/connexion': typeof ConnexionRoute
   '/dashboard': typeof DashboardRouteWithChildren
   '/inscription': typeof InscriptionRouteWithChildren
+  '/metiers': typeof MetiersRouteWithChildren
   '/offres': typeof OffresRoute
   '/onboarding': typeof OnboardingRoute
   '/pricing': typeof PricingRoute
@@ -389,6 +398,7 @@ export interface FileRouteTypes {
     | '/connexion'
     | '/dashboard'
     | '/inscription'
+    | '/metiers'
     | '/offres'
     | '/onboarding'
     | '/pricing'
@@ -429,6 +439,7 @@ export interface FileRouteTypes {
     | '/builder'
     | '/carte-physique'
     | '/connexion'
+    | '/metiers'
     | '/offres'
     | '/onboarding'
     | '/pricing'
@@ -471,6 +482,7 @@ export interface FileRouteTypes {
     | '/connexion'
     | '/dashboard'
     | '/inscription'
+    | '/metiers'
     | '/offres'
     | '/onboarding'
     | '/pricing'
@@ -514,12 +526,12 @@ export interface RootRouteChildren {
   ConnexionRoute: typeof ConnexionRoute
   DashboardRoute: typeof DashboardRouteWithChildren
   InscriptionRoute: typeof InscriptionRouteWithChildren
+  MetiersRoute: typeof MetiersRouteWithChildren
   OffresRoute: typeof OffresRoute
   OnboardingRoute: typeof OnboardingRoute
   PricingRoute: typeof PricingRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   TemplatesRoute: typeof TemplatesRoute
-  MetiersCoachRoute: typeof MetiersCoachRoute
   AdminIndexRoute: typeof AdminIndexRoute
 }
 
@@ -558,6 +570,13 @@ declare module '@tanstack/react-router' {
       path: '/offres'
       fullPath: '/offres'
       preLoaderRoute: typeof OffresRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/metiers': {
+      id: '/metiers'
+      path: '/metiers'
+      fullPath: '/metiers'
+      preLoaderRoute: typeof MetiersRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/inscription': {
@@ -639,10 +658,10 @@ declare module '@tanstack/react-router' {
     }
     '/metiers/coach': {
       id: '/metiers/coach'
-      path: '/metiers/coach'
+      path: '/coach'
       fullPath: '/metiers/coach'
       preLoaderRoute: typeof MetiersCoachRouteImport
-      parentRoute: typeof rootRouteImport
+      parentRoute: typeof MetiersRoute
     }
     '/inscription/selection-de-plan': {
       id: '/inscription/selection-de-plan'
@@ -878,6 +897,17 @@ const InscriptionRouteWithChildren = InscriptionRoute._addFileChildren(
   InscriptionRouteChildren,
 )
 
+interface MetiersRouteChildren {
+  MetiersCoachRoute: typeof MetiersCoachRoute
+}
+
+const MetiersRouteChildren: MetiersRouteChildren = {
+  MetiersCoachRoute: MetiersCoachRoute,
+}
+
+const MetiersRouteWithChildren =
+  MetiersRoute._addFileChildren(MetiersRouteChildren)
+
 const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   SlugRoute: SlugRoute,
@@ -887,12 +917,12 @@ const rootRouteChildren: RootRouteChildren = {
   ConnexionRoute: ConnexionRoute,
   DashboardRoute: DashboardRouteWithChildren,
   InscriptionRoute: InscriptionRouteWithChildren,
+  MetiersRoute: MetiersRouteWithChildren,
   OffresRoute: OffresRoute,
   OnboardingRoute: OnboardingRoute,
   PricingRoute: PricingRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   TemplatesRoute: TemplatesRoute,
-  MetiersCoachRoute: MetiersCoachRoute,
   AdminIndexRoute: AdminIndexRoute,
 }
 export const routeTree = rootRouteImport
