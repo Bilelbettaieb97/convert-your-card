@@ -25,6 +25,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as InscriptionIndexRouteImport } from './routes/inscription.index'
 import { Route as DashboardIndexRouteImport } from './routes/dashboard/index'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
+import { Route as MetiersCoachRouteImport } from './routes/metiers/coach'
 import { Route as InscriptionSelectionDePlanRouteImport } from './routes/inscription.selection-de-plan'
 import { Route as InscriptionCartePhysiqueRouteImport } from './routes/inscription.carte-physique'
 import { Route as DashboardThemeRouteImport } from './routes/dashboard/theme'
@@ -127,6 +128,11 @@ const DashboardIndexRoute = DashboardIndexRouteImport.update({
 const AdminIndexRoute = AdminIndexRouteImport.update({
   id: '/admin/',
   path: '/admin/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const MetiersCoachRoute = MetiersCoachRouteImport.update({
+  id: '/metiers/coach',
+  path: '/metiers/coach',
   getParentRoute: () => rootRouteImport,
 } as any)
 const InscriptionSelectionDePlanRoute =
@@ -283,6 +289,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/theme': typeof DashboardThemeRoute
   '/inscription/carte-physique': typeof InscriptionCartePhysiqueRoute
   '/inscription/selection-de-plan': typeof InscriptionSelectionDePlanRoute
+  '/metiers/coach': typeof MetiersCoachRoute
   '/admin/': typeof AdminIndexRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/inscription/': typeof InscriptionIndexRoute
@@ -322,6 +329,7 @@ export interface FileRoutesByTo {
   '/dashboard/theme': typeof DashboardThemeRoute
   '/inscription/carte-physique': typeof InscriptionCartePhysiqueRoute
   '/inscription/selection-de-plan': typeof InscriptionSelectionDePlanRoute
+  '/metiers/coach': typeof MetiersCoachRoute
   '/admin': typeof AdminIndexRoute
   '/dashboard': typeof DashboardIndexRoute
   '/inscription': typeof InscriptionIndexRoute
@@ -364,6 +372,7 @@ export interface FileRoutesById {
   '/dashboard/theme': typeof DashboardThemeRoute
   '/inscription/carte-physique': typeof InscriptionCartePhysiqueRoute
   '/inscription/selection-de-plan': typeof InscriptionSelectionDePlanRoute
+  '/metiers/coach': typeof MetiersCoachRoute
   '/admin/': typeof AdminIndexRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/inscription/': typeof InscriptionIndexRoute
@@ -407,6 +416,7 @@ export interface FileRouteTypes {
     | '/dashboard/theme'
     | '/inscription/carte-physique'
     | '/inscription/selection-de-plan'
+    | '/metiers/coach'
     | '/admin/'
     | '/dashboard/'
     | '/inscription/'
@@ -446,6 +456,7 @@ export interface FileRouteTypes {
     | '/dashboard/theme'
     | '/inscription/carte-physique'
     | '/inscription/selection-de-plan'
+    | '/metiers/coach'
     | '/admin'
     | '/dashboard'
     | '/inscription'
@@ -487,6 +498,7 @@ export interface FileRouteTypes {
     | '/dashboard/theme'
     | '/inscription/carte-physique'
     | '/inscription/selection-de-plan'
+    | '/metiers/coach'
     | '/admin/'
     | '/dashboard/'
     | '/inscription/'
@@ -507,6 +519,7 @@ export interface RootRouteChildren {
   PricingRoute: typeof PricingRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   TemplatesRoute: typeof TemplatesRoute
+  MetiersCoachRoute: typeof MetiersCoachRoute
   AdminIndexRoute: typeof AdminIndexRoute
 }
 
@@ -622,6 +635,13 @@ declare module '@tanstack/react-router' {
       path: '/admin'
       fullPath: '/admin/'
       preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/metiers/coach': {
+      id: '/metiers/coach'
+      path: '/metiers/coach'
+      fullPath: '/metiers/coach'
+      preLoaderRoute: typeof MetiersCoachRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/inscription/selection-de-plan': {
@@ -872,6 +892,7 @@ const rootRouteChildren: RootRouteChildren = {
   PricingRoute: PricingRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   TemplatesRoute: TemplatesRoute,
+  MetiersCoachRoute: MetiersCoachRoute,
   AdminIndexRoute: AdminIndexRoute,
 }
 export const routeTree = rootRouteImport
