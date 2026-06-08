@@ -79,22 +79,22 @@ function PhoneFrame({ t, size = "lg" }: { t: Template; size?: "sm" | "lg" }) {
 
 export function HeroCards() {
   return (
-    <div className="relative w-full flex items-end justify-center min-h-[420px] sm:min-h-[480px]">
+    <div className="relative w-full flex items-end justify-center min-h-[380px] sm:min-h-[480px] overflow-hidden">
       {/* Glow */}
       <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[500px] bg-gradient-brand opacity-20 blur-[100px] rounded-full pointer-events-none" />
 
-      {/* Left card */}
-      <div className="absolute left-[-40px] sm:left-[-20px] bottom-0 z-10 transform scale-[0.72] sm:scale-[0.78] origin-bottom-right -rotate-[8deg] opacity-95">
+      {/* Left card — hidden on mobile */}
+      <div className="hidden sm:block absolute left-[-20px] bottom-0 z-10 transform scale-[0.78] origin-bottom-right -rotate-[8deg] opacity-95">
         <PhoneFrame t={LEFT} />
       </div>
 
-      {/* Right card */}
-      <div className="absolute right-[-40px] sm:right-[-20px] bottom-0 z-10 transform scale-[0.72] sm:scale-[0.78] origin-bottom-left rotate-[8deg] opacity-95">
+      {/* Right card — hidden on mobile */}
+      <div className="hidden sm:block absolute right-[-20px] bottom-0 z-10 transform scale-[0.78] origin-bottom-left rotate-[8deg] opacity-95">
         <PhoneFrame t={RIGHT} />
       </div>
 
       {/* Center card */}
-      <div className="relative z-20 transform scale-[0.92] sm:scale-100">
+      <div className="relative z-20 transform scale-[0.85] sm:scale-100">
         <PhoneFrame t={CENTER} size="lg" />
       </div>
     </div>

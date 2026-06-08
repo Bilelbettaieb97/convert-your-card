@@ -204,7 +204,7 @@ function Hero() {
     <section className="relative bg-gradient-soft">
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_color-mix(in_oklab,var(--magenta)_25%,transparent),transparent_60%)]" />
       <div className="relative max-w-7xl mx-auto px-4 pt-4 sm:pt-12 pb-12 lg:pt-20 lg:pb-28 grid lg:grid-cols-2 gap-12 items-center">
-        <div>
+        <div className="text-center sm:text-left">
           <div className="inline-flex items-center gap-2 bg-card border border-border rounded-full px-3 py-1.5 text-xs font-semibold shadow-sm">
             <span className="flex -space-x-1.5">
               {[1, 2, 3].map((i) => (
@@ -223,6 +223,12 @@ function Hero() {
             Une carte de visite digitale, <span className="text-gradient">conçue pour vous.</span>
           </h1>
 
+          {/* Sous-titre court visible sur mobile */}
+          <p className="mt-3 sm:hidden text-base text-muted-foreground">
+            Partagez vos coordonnées, réseaux et prise de RDV en 1 tap. Activée en 3 minutes.
+          </p>
+
+          {/* Sous-titre complet sur desktop */}
           <p className="hidden sm:block mt-5 text-lg text-muted-foreground max-w-xl">
             Rejoignez les pros qui ne distribuent plus de papier. Une seule carte pour partager tout ce que vous êtes — réseaux, site, contact, prise de rendez-vous — d'un simple contact avec un téléphone. Designée et gérée par notre équipe.
           </p>
