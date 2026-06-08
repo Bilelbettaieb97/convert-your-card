@@ -64,8 +64,14 @@ function ConnexionPage() {
       if (error) throw error;
       setView("forgot-sent");
     } catch (err) {
-      const msg = err instanceof Error ? err.message : "";
-      toast.error(msg || "Impossible d'envoyer l'email, réessaie");
+      const msg = (err instanceof Error ? err.message : "").toLowerCase();
+      if (msg.includes("rate limit") || msg.includes("email rate")) {
+        toast.error("Trop d'emails envoyés — attends quelques minutes avant de réessayer");
+      } else if (msg.includes("seconds") || msg.includes("minute")) {
+        toast.error("Attends encore un moment avant de renvoyer un email");
+      } else {
+        toast.error("Impossible d'envoyer l'email, réessaie dans quelques minutes");
+      }
     } finally {
       setLoading(false);
     }
