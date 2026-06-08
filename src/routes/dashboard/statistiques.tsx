@@ -50,11 +50,17 @@ function StatistiquesPage() {
   const [period, setPeriod] = useState<Period>("7j");
   const [copied, setCopied] = useState(false);
   const [profileId, setProfileId] = useState<string | null>(null);
+  const [dbg, setDbg] = useState<string>("init");
 
   const loadData = React.useCallback(async (pid: string) => {
+    setDbg(`calling rpc with ${pid.slice(0,8)}`);
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     const { data, error } = await (supabase as any).rpc("get_card_analytics", { p_profile_id: pid });
-    if (error) console.error("[stats]", error);
+    if (error) {
+      setDbg(`ERROR: ${error.message}`);
+    } else {
+      setDbg(`OK: ${data?.length ?? 0} rows, clicks=${(data ?? []).filter((r: any) => r.event_type === "click_button" || r.event_type === "click_social").length}`);
+    }
     setAnalytics((data ?? []) as AnalyticsRow[]);
     setLoading(false);
     setRefreshing(false);
@@ -141,6 +147,10 @@ function StatistiquesPage() {
 
   return (
     <div className="p-5 lg:p-8 max-w-5xl space-y-6">
+      {/* DEBUG TEMP — à supprimer */}
+      <div className="text-xs font-mono bg-yellow-100 text-yellow-900 rounded px-3 py-2 border border-yellow-300">
+        🔍 DEBUG: pid={profileId?.slice(0,8) ?? "null"} | {dbg}
+      </div>
       {/* Header + period selector */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div className="flex items-center gap-3">
