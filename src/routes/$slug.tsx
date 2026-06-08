@@ -106,7 +106,7 @@ function ProfilePage() {
     return (
       <div className="min-h-screen pb-8" style={{ background: themePalette.bg }}>
         <div className="mx-auto max-w-sm">
-          <BusinessCard data={cardData} />
+          <BusinessCard data={cardData} profileId={profile.id} />
         </div>
       </div>
     );

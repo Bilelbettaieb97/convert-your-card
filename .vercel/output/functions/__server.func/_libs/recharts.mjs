@@ -1600,20 +1600,20 @@ function _extends$m() {
   return _extends$m.apply(this, arguments);
 }
 function _slicedToArray$8(arr, i) {
-  return _arrayWithHoles$8(arr) || _iterableToArrayLimit$8(arr, i) || _unsupportedIterableToArray$d(arr, i) || _nonIterableRest$8();
+  return _arrayWithHoles$8(arr) || _iterableToArrayLimit$8(arr, i) || _unsupportedIterableToArray$c(arr, i) || _nonIterableRest$8();
 }
 function _nonIterableRest$8() {
   throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
 }
-function _unsupportedIterableToArray$d(o, minLen) {
+function _unsupportedIterableToArray$c(o, minLen) {
   if (!o) return;
-  if (typeof o === "string") return _arrayLikeToArray$d(o, minLen);
+  if (typeof o === "string") return _arrayLikeToArray$c(o, minLen);
   var n = Object.prototype.toString.call(o).slice(8, -1);
   if (n === "Object" && o.constructor) n = o.constructor.name;
   if (n === "Map" || n === "Set") return Array.from(o);
-  if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray$d(o, minLen);
+  if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray$c(o, minLen);
 }
-function _arrayLikeToArray$d(arr, len) {
+function _arrayLikeToArray$c(arr, len) {
   if (len == null || len > arr.length) len = arr.length;
   for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i];
   return arr2;
@@ -2389,20 +2389,20 @@ function _toPrimitive$v(t, r) {
   return ("string" === r ? String : Number)(t);
 }
 function _slicedToArray$7(arr, i) {
-  return _arrayWithHoles$7(arr) || _iterableToArrayLimit$7(arr, i) || _unsupportedIterableToArray$c(arr, i) || _nonIterableRest$7();
+  return _arrayWithHoles$7(arr) || _iterableToArrayLimit$7(arr, i) || _unsupportedIterableToArray$b(arr, i) || _nonIterableRest$7();
 }
 function _nonIterableRest$7() {
   throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
 }
-function _unsupportedIterableToArray$c(o, minLen) {
+function _unsupportedIterableToArray$b(o, minLen) {
   if (!o) return;
-  if (typeof o === "string") return _arrayLikeToArray$c(o, minLen);
+  if (typeof o === "string") return _arrayLikeToArray$b(o, minLen);
   var n = Object.prototype.toString.call(o).slice(8, -1);
   if (n === "Object" && o.constructor) n = o.constructor.name;
   if (n === "Map" || n === "Set") return Array.from(o);
-  if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray$c(o, minLen);
+  if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray$b(o, minLen);
 }
-function _arrayLikeToArray$c(arr, len) {
+function _arrayLikeToArray$b(arr, len) {
   if (len == null || len > arr.length) len = arr.length;
   for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i];
   return arr2;
@@ -2675,20 +2675,20 @@ function _typeof$t(o) {
   }, _typeof$t(o);
 }
 function _slicedToArray$6(arr, i) {
-  return _arrayWithHoles$6(arr) || _iterableToArrayLimit$6(arr, i) || _unsupportedIterableToArray$b(arr, i) || _nonIterableRest$6();
+  return _arrayWithHoles$6(arr) || _iterableToArrayLimit$6(arr, i) || _unsupportedIterableToArray$a(arr, i) || _nonIterableRest$6();
 }
 function _nonIterableRest$6() {
   throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
 }
-function _unsupportedIterableToArray$b(o, minLen) {
+function _unsupportedIterableToArray$a(o, minLen) {
   if (!o) return;
-  if (typeof o === "string") return _arrayLikeToArray$b(o, minLen);
+  if (typeof o === "string") return _arrayLikeToArray$a(o, minLen);
   var n = Object.prototype.toString.call(o).slice(8, -1);
   if (n === "Object" && o.constructor) n = o.constructor.name;
   if (n === "Map" || n === "Set") return Array.from(o);
-  if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray$b(o, minLen);
+  if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray$a(o, minLen);
 }
-function _arrayLikeToArray$b(arr, len) {
+function _arrayLikeToArray$a(arr, len) {
   if (len == null || len > arr.length) len = arr.length;
   for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i];
   return arr2;
@@ -2939,20 +2939,20 @@ function _objectWithoutPropertiesLoose$b(source, excluded) {
   return target;
 }
 function _slicedToArray$5(arr, i) {
-  return _arrayWithHoles$5(arr) || _iterableToArrayLimit$5(arr, i) || _unsupportedIterableToArray$a(arr, i) || _nonIterableRest$5();
+  return _arrayWithHoles$5(arr) || _iterableToArrayLimit$5(arr, i) || _unsupportedIterableToArray$9(arr, i) || _nonIterableRest$5();
 }
 function _nonIterableRest$5() {
   throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
 }
-function _unsupportedIterableToArray$a(o, minLen) {
+function _unsupportedIterableToArray$9(o, minLen) {
   if (!o) return;
-  if (typeof o === "string") return _arrayLikeToArray$a(o, minLen);
+  if (typeof o === "string") return _arrayLikeToArray$9(o, minLen);
   var n = Object.prototype.toString.call(o).slice(8, -1);
   if (n === "Object" && o.constructor) n = o.constructor.name;
   if (n === "Map" || n === "Set") return Array.from(o);
-  if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray$a(o, minLen);
+  if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray$9(o, minLen);
 }
-function _arrayLikeToArray$a(arr, len) {
+function _arrayLikeToArray$9(arr, len) {
   if (len == null || len > arr.length) len = arr.length;
   for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i];
   return arr2;
@@ -3191,20 +3191,20 @@ function _extends$k() {
   return _extends$k.apply(this, arguments);
 }
 function _slicedToArray$4(arr, i) {
-  return _arrayWithHoles$4(arr) || _iterableToArrayLimit$4(arr, i) || _unsupportedIterableToArray$9(arr, i) || _nonIterableRest$4();
+  return _arrayWithHoles$4(arr) || _iterableToArrayLimit$4(arr, i) || _unsupportedIterableToArray$8(arr, i) || _nonIterableRest$4();
 }
 function _nonIterableRest$4() {
   throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
 }
-function _unsupportedIterableToArray$9(o, minLen) {
+function _unsupportedIterableToArray$8(o, minLen) {
   if (!o) return;
-  if (typeof o === "string") return _arrayLikeToArray$9(o, minLen);
+  if (typeof o === "string") return _arrayLikeToArray$8(o, minLen);
   var n = Object.prototype.toString.call(o).slice(8, -1);
   if (n === "Object" && o.constructor) n = o.constructor.name;
   if (n === "Map" || n === "Set") return Array.from(o);
-  if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray$9(o, minLen);
+  if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray$8(o, minLen);
 }
-function _arrayLikeToArray$9(arr, len) {
+function _arrayLikeToArray$8(arr, len) {
   if (len == null || len > arr.length) len = arr.length;
   for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i];
   return arr2;
@@ -3555,27 +3555,27 @@ function _typeof$q(o) {
     return o2 && "function" == typeof Symbol && o2.constructor === Symbol && o2 !== Symbol.prototype ? "symbol" : typeof o2;
   }, _typeof$q(o);
 }
-function _toConsumableArray$5(arr) {
-  return _arrayWithoutHoles$5(arr) || _iterableToArray$5(arr) || _unsupportedIterableToArray$8(arr) || _nonIterableSpread$5();
+function _toConsumableArray$4(arr) {
+  return _arrayWithoutHoles$4(arr) || _iterableToArray$4(arr) || _unsupportedIterableToArray$7(arr) || _nonIterableSpread$4();
 }
-function _nonIterableSpread$5() {
+function _nonIterableSpread$4() {
   throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
 }
-function _unsupportedIterableToArray$8(o, minLen) {
+function _unsupportedIterableToArray$7(o, minLen) {
   if (!o) return;
-  if (typeof o === "string") return _arrayLikeToArray$8(o, minLen);
+  if (typeof o === "string") return _arrayLikeToArray$7(o, minLen);
   var n = Object.prototype.toString.call(o).slice(8, -1);
   if (n === "Object" && o.constructor) n = o.constructor.name;
   if (n === "Map" || n === "Set") return Array.from(o);
-  if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray$8(o, minLen);
+  if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray$7(o, minLen);
 }
-function _iterableToArray$5(iter) {
+function _iterableToArray$4(iter) {
   if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter);
 }
-function _arrayWithoutHoles$5(arr) {
-  if (Array.isArray(arr)) return _arrayLikeToArray$8(arr);
+function _arrayWithoutHoles$4(arr) {
+  if (Array.isArray(arr)) return _arrayLikeToArray$7(arr);
 }
-function _arrayLikeToArray$8(arr, len) {
+function _arrayLikeToArray$7(arr, len) {
   if (len == null || len > arr.length) len = arr.length;
   for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i];
   return arr2;
@@ -3798,7 +3798,7 @@ var getBarPosition = function getBarPosition2(_ref3) {
           size: useFull ? fullBarSize : entry.barSize
         }
       };
-      var newRes = [].concat(_toConsumableArray$5(res), [newPosition]);
+      var newRes = [].concat(_toConsumableArray$4(res), [newPosition]);
       prev = newRes[newRes.length - 1].position;
       if (entry.stackList && entry.stackList.length) {
         entry.stackList.forEach(function(item) {
@@ -3821,7 +3821,7 @@ var getBarPosition = function getBarPosition2(_ref3) {
     }
     var size = maxBarSize === +maxBarSize ? Math.min(originalSize, maxBarSize) : originalSize;
     result = sizeList.reduce(function(res, entry, i) {
-      var newRes = [].concat(_toConsumableArray$5(res), [{
+      var newRes = [].concat(_toConsumableArray$4(res), [{
         item: entry.item,
         position: {
           offset: _offset + (originalSize + realBarGap) * i + (originalSize - size) / 2,
@@ -4585,27 +4585,27 @@ function _typeof$o(o) {
   }, _typeof$o(o);
 }
 var _excluded$9 = ["offset"];
-function _toConsumableArray$4(arr) {
-  return _arrayWithoutHoles$4(arr) || _iterableToArray$4(arr) || _unsupportedIterableToArray$7(arr) || _nonIterableSpread$4();
+function _toConsumableArray$3(arr) {
+  return _arrayWithoutHoles$3(arr) || _iterableToArray$3(arr) || _unsupportedIterableToArray$6(arr) || _nonIterableSpread$3();
 }
-function _nonIterableSpread$4() {
+function _nonIterableSpread$3() {
   throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
 }
-function _unsupportedIterableToArray$7(o, minLen) {
+function _unsupportedIterableToArray$6(o, minLen) {
   if (!o) return;
-  if (typeof o === "string") return _arrayLikeToArray$7(o, minLen);
+  if (typeof o === "string") return _arrayLikeToArray$6(o, minLen);
   var n = Object.prototype.toString.call(o).slice(8, -1);
   if (n === "Object" && o.constructor) n = o.constructor.name;
   if (n === "Map" || n === "Set") return Array.from(o);
-  if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray$7(o, minLen);
+  if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray$6(o, minLen);
 }
-function _iterableToArray$4(iter) {
+function _iterableToArray$3(iter) {
   if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter);
 }
-function _arrayWithoutHoles$4(arr) {
-  if (Array.isArray(arr)) return _arrayLikeToArray$7(arr);
+function _arrayWithoutHoles$3(arr) {
+  if (Array.isArray(arr)) return _arrayLikeToArray$6(arr);
 }
-function _arrayLikeToArray$7(arr, len) {
+function _arrayLikeToArray$6(arr, len) {
   if (len == null || len > arr.length) len = arr.length;
   for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i];
   return arr2;
@@ -5075,7 +5075,7 @@ var renderCallByParent$1 = function renderCallByParent(parentProps, viewBox) {
     return explicitChildren;
   }
   var implicitLabel = parseLabel(parentProps.label, viewBox || parentViewBox);
-  return [implicitLabel].concat(_toConsumableArray$4(explicitChildren));
+  return [implicitLabel].concat(_toConsumableArray$3(explicitChildren));
 };
 Label.parseViewBox = parseViewBox;
 Label.renderCallByParent = renderCallByParent$1;
@@ -5088,27 +5088,27 @@ function _typeof$n(o) {
   }, _typeof$n(o);
 }
 var _excluded$8 = ["valueAccessor"], _excluded2$4 = ["data", "dataKey", "clockWise", "id", "textBreakAll"];
-function _toConsumableArray$3(arr) {
-  return _arrayWithoutHoles$3(arr) || _iterableToArray$3(arr) || _unsupportedIterableToArray$6(arr) || _nonIterableSpread$3();
+function _toConsumableArray$2(arr) {
+  return _arrayWithoutHoles$2(arr) || _iterableToArray$2(arr) || _unsupportedIterableToArray$5(arr) || _nonIterableSpread$2();
 }
-function _nonIterableSpread$3() {
+function _nonIterableSpread$2() {
   throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
 }
-function _unsupportedIterableToArray$6(o, minLen) {
+function _unsupportedIterableToArray$5(o, minLen) {
   if (!o) return;
-  if (typeof o === "string") return _arrayLikeToArray$6(o, minLen);
+  if (typeof o === "string") return _arrayLikeToArray$5(o, minLen);
   var n = Object.prototype.toString.call(o).slice(8, -1);
   if (n === "Object" && o.constructor) n = o.constructor.name;
   if (n === "Map" || n === "Set") return Array.from(o);
-  if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray$6(o, minLen);
+  if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray$5(o, minLen);
 }
-function _iterableToArray$3(iter) {
+function _iterableToArray$2(iter) {
   if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter);
 }
-function _arrayWithoutHoles$3(arr) {
-  if (Array.isArray(arr)) return _arrayLikeToArray$6(arr);
+function _arrayWithoutHoles$2(arr) {
+  if (Array.isArray(arr)) return _arrayLikeToArray$5(arr);
 }
-function _arrayLikeToArray$6(arr, len) {
+function _arrayLikeToArray$5(arr, len) {
   if (len == null || len > arr.length) len = arr.length;
   for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i];
   return arr2;
@@ -5269,7 +5269,7 @@ function renderCallByParent2(parentProps, data) {
     return explicitChildren;
   }
   var implicitLabelList = parseLabelList(parentProps.label, data);
-  return [implicitLabelList].concat(_toConsumableArray$3(explicitChildren));
+  return [implicitLabelList].concat(_toConsumableArray$2(explicitChildren));
 }
 LabelList.renderCallByParent = renderCallByParent2;
 function _typeof$m(o) {
@@ -5664,20 +5664,20 @@ function _extends$f() {
   return _extends$f.apply(this, arguments);
 }
 function _slicedToArray$3(arr, i) {
-  return _arrayWithHoles$3(arr) || _iterableToArrayLimit$3(arr, i) || _unsupportedIterableToArray$5(arr, i) || _nonIterableRest$3();
+  return _arrayWithHoles$3(arr) || _iterableToArrayLimit$3(arr, i) || _unsupportedIterableToArray$4(arr, i) || _nonIterableRest$3();
 }
 function _nonIterableRest$3() {
   throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
 }
-function _unsupportedIterableToArray$5(o, minLen) {
+function _unsupportedIterableToArray$4(o, minLen) {
   if (!o) return;
-  if (typeof o === "string") return _arrayLikeToArray$5(o, minLen);
+  if (typeof o === "string") return _arrayLikeToArray$4(o, minLen);
   var n = Object.prototype.toString.call(o).slice(8, -1);
   if (n === "Object" && o.constructor) n = o.constructor.name;
   if (n === "Map" || n === "Set") return Array.from(o);
-  if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray$5(o, minLen);
+  if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray$4(o, minLen);
 }
-function _arrayLikeToArray$5(arr, len) {
+function _arrayLikeToArray$4(arr, len) {
   if (len == null || len > arr.length) len = arr.length;
   for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i];
   return arr2;
@@ -6040,20 +6040,20 @@ function _extends$c() {
   return _extends$c.apply(this, arguments);
 }
 function _slicedToArray$2(arr, i) {
-  return _arrayWithHoles$2(arr) || _iterableToArrayLimit$2(arr, i) || _unsupportedIterableToArray$4(arr, i) || _nonIterableRest$2();
+  return _arrayWithHoles$2(arr) || _iterableToArrayLimit$2(arr, i) || _unsupportedIterableToArray$3(arr, i) || _nonIterableRest$2();
 }
 function _nonIterableRest$2() {
   throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
 }
-function _unsupportedIterableToArray$4(o, minLen) {
+function _unsupportedIterableToArray$3(o, minLen) {
   if (!o) return;
-  if (typeof o === "string") return _arrayLikeToArray$4(o, minLen);
+  if (typeof o === "string") return _arrayLikeToArray$3(o, minLen);
   var n = Object.prototype.toString.call(o).slice(8, -1);
   if (n === "Object" && o.constructor) n = o.constructor.name;
   if (n === "Map" || n === "Set") return Array.from(o);
-  if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray$4(o, minLen);
+  if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray$3(o, minLen);
 }
-function _arrayLikeToArray$4(arr, len) {
+function _arrayLikeToArray$3(arr, len) {
   if (len == null || len > arr.length) len = arr.length;
   for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i];
   return arr2;
@@ -8241,20 +8241,20 @@ function _toPrimitive$b(t, r) {
   return String(t);
 }
 function _slicedToArray$1(arr, i) {
-  return _arrayWithHoles$1(arr) || _iterableToArrayLimit$1(arr, i) || _unsupportedIterableToArray$3(arr, i) || _nonIterableRest$1();
+  return _arrayWithHoles$1(arr) || _iterableToArrayLimit$1(arr, i) || _unsupportedIterableToArray$2(arr, i) || _nonIterableRest$1();
 }
 function _nonIterableRest$1() {
   throw new TypeError("Invalid attempt to destructure non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
 }
-function _unsupportedIterableToArray$3(o, minLen) {
+function _unsupportedIterableToArray$2(o, minLen) {
   if (!o) return;
-  if (typeof o === "string") return _arrayLikeToArray$3(o, minLen);
+  if (typeof o === "string") return _arrayLikeToArray$2(o, minLen);
   var n = Object.prototype.toString.call(o).slice(8, -1);
   if (n === "Object" && o.constructor) n = o.constructor.name;
   if (n === "Map" || n === "Set") return Array.from(o);
-  if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray$3(o, minLen);
+  if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray$2(o, minLen);
 }
-function _arrayLikeToArray$3(arr, len) {
+function _arrayLikeToArray$2(arr, len) {
   if (len == null || len > arr.length) len = arr.length;
   for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i];
   return arr2;
@@ -9926,7 +9926,8 @@ function CartesianGrid(props) {
   })));
 }
 CartesianGrid.displayName = "CartesianGrid";
-var _excluded$1 = ["type", "layout", "connectNulls", "ref"], _excluded2$1 = ["key"];
+var _excluded$1 = ["layout", "type", "stroke", "connectNulls", "isRange", "ref"], _excluded2$1 = ["key"];
+var _Area;
 function _typeof$5(o) {
   "@babel/helpers - typeof";
   return _typeof$5 = "function" == typeof Symbol && "symbol" == typeof Symbol.iterator ? function(o2) {
@@ -9995,31 +9996,6 @@ function _objectSpread$2(e) {
     });
   }
   return e;
-}
-function _toConsumableArray$2(arr) {
-  return _arrayWithoutHoles$2(arr) || _iterableToArray$2(arr) || _unsupportedIterableToArray$2(arr) || _nonIterableSpread$2();
-}
-function _nonIterableSpread$2() {
-  throw new TypeError("Invalid attempt to spread non-iterable instance.\nIn order to be iterable, non-array objects must have a [Symbol.iterator]() method.");
-}
-function _unsupportedIterableToArray$2(o, minLen) {
-  if (!o) return;
-  if (typeof o === "string") return _arrayLikeToArray$2(o, minLen);
-  var n = Object.prototype.toString.call(o).slice(8, -1);
-  if (n === "Object" && o.constructor) n = o.constructor.name;
-  if (n === "Map" || n === "Set") return Array.from(o);
-  if (n === "Arguments" || /^(?:Ui|I)nt(?:8|16|32)(?:Clamped)?Array$/.test(n)) return _arrayLikeToArray$2(o, minLen);
-}
-function _iterableToArray$2(iter) {
-  if (typeof Symbol !== "undefined" && iter[Symbol.iterator] != null || iter["@@iterator"] != null) return Array.from(iter);
-}
-function _arrayWithoutHoles$2(arr) {
-  if (Array.isArray(arr)) return _arrayLikeToArray$2(arr);
-}
-function _arrayLikeToArray$2(arr, len) {
-  if (len == null || len > arr.length) len = arr.length;
-  for (var i = 0, arr2 = new Array(len); i < len; i++) arr2[i] = arr[i];
-  return arr2;
 }
 function _classCallCheck$4(instance, Constructor) {
   if (!(instance instanceof Constructor)) {
@@ -10112,192 +10088,173 @@ function _toPrimitive$5(t, r) {
   }
   return String(t);
 }
-var Line = /* @__PURE__ */ (function(_PureComponent) {
-  function Line2() {
+var Area = /* @__PURE__ */ (function(_PureComponent) {
+  function Area2() {
     var _this;
-    _classCallCheck$4(this, Line2);
+    _classCallCheck$4(this, Area2);
     for (var _len = arguments.length, args = new Array(_len), _key = 0; _key < _len; _key++) {
       args[_key] = arguments[_key];
     }
-    _this = _callSuper$3(this, Line2, [].concat(args));
+    _this = _callSuper$3(this, Area2, [].concat(args));
     _defineProperty$5(_this, "state", {
-      isAnimationFinished: true,
-      totalLength: 0
+      isAnimationFinished: true
     });
-    _defineProperty$5(_this, "generateSimpleStrokeDasharray", function(totalLength, length) {
-      return "".concat(length, "px ").concat(totalLength - length, "px");
-    });
-    _defineProperty$5(_this, "getStrokeDasharray", function(length, totalLength, lines) {
-      var lineLength = lines.reduce(function(pre, next) {
-        return pre + next;
-      });
-      if (!lineLength) {
-        return _this.generateSimpleStrokeDasharray(totalLength, length);
-      }
-      var count = Math.floor(length / lineLength);
-      var remainLength = length % lineLength;
-      var restLength = totalLength - length;
-      var remainLines = [];
-      for (var i = 0, sum = 0; i < lines.length; sum += lines[i], ++i) {
-        if (sum + lines[i] > remainLength) {
-          remainLines = [].concat(_toConsumableArray$2(lines.slice(0, i)), [remainLength - sum]);
-          break;
-        }
-      }
-      var emptyLines = remainLines.length % 2 === 0 ? [0, restLength] : [restLength];
-      return [].concat(_toConsumableArray$2(Line2.repeat(lines, count)), _toConsumableArray$2(remainLines), emptyLines).map(function(line) {
-        return "".concat(line, "px");
-      }).join(", ");
-    });
-    _defineProperty$5(_this, "id", uniqueId("recharts-line-"));
-    _defineProperty$5(_this, "pathRef", function(node) {
-      _this.mainCurve = node;
-    });
+    _defineProperty$5(_this, "id", uniqueId("recharts-area-"));
     _defineProperty$5(_this, "handleAnimationEnd", function() {
+      var onAnimationEnd = _this.props.onAnimationEnd;
       _this.setState({
         isAnimationFinished: true
       });
-      if (_this.props.onAnimationEnd) {
-        _this.props.onAnimationEnd();
+      if (isFunction(onAnimationEnd)) {
+        onAnimationEnd();
       }
     });
     _defineProperty$5(_this, "handleAnimationStart", function() {
+      var onAnimationStart = _this.props.onAnimationStart;
       _this.setState({
         isAnimationFinished: false
       });
-      if (_this.props.onAnimationStart) {
-        _this.props.onAnimationStart();
+      if (isFunction(onAnimationStart)) {
+        onAnimationStart();
       }
     });
     return _this;
   }
-  _inherits$3(Line2, _PureComponent);
-  return _createClass$4(Line2, [{
-    key: "componentDidMount",
-    value: function componentDidMount() {
-      if (!this.props.isAnimationActive) {
-        return;
-      }
-      var totalLength = this.getTotalLength();
-      this.setState({
-        totalLength
-      });
-    }
-  }, {
-    key: "componentDidUpdate",
-    value: function componentDidUpdate() {
-      if (!this.props.isAnimationActive) {
-        return;
-      }
-      var totalLength = this.getTotalLength();
-      if (totalLength !== this.state.totalLength) {
-        this.setState({
-          totalLength
-        });
-      }
-    }
-  }, {
-    key: "getTotalLength",
-    value: function getTotalLength() {
-      var curveDom = this.mainCurve;
-      try {
-        return curveDom && curveDom.getTotalLength && curveDom.getTotalLength() || 0;
-      } catch (err) {
-        return 0;
-      }
-    }
-  }, {
-    key: "renderErrorBar",
-    value: function renderErrorBar(needClip, clipPathId) {
-      if (this.props.isAnimationActive && !this.state.isAnimationFinished) {
-        return null;
-      }
-      var _this$props = this.props, points = _this$props.points, xAxis = _this$props.xAxis, yAxis = _this$props.yAxis, layout = _this$props.layout, children = _this$props.children;
-      var errorBarItems = findAllByType(children, ErrorBar);
-      if (!errorBarItems) {
-        return null;
-      }
-      var dataPointFormatter = function dataPointFormatter2(dataPoint, dataKey) {
-        return {
-          x: dataPoint.x,
-          y: dataPoint.y,
-          value: dataPoint.value,
-          errorVal: getValueByDataKey(dataPoint.payload, dataKey)
-        };
-      };
-      var errorBarProps = {
-        clipPath: needClip ? "url(#clipPath-".concat(clipPathId, ")") : null
-      };
-      return /* @__PURE__ */ React.createElement(Layer, errorBarProps, errorBarItems.map(function(item) {
-        return /* @__PURE__ */ React.cloneElement(item, {
-          key: "bar-".concat(item.props.dataKey),
-          data: points,
-          xAxis,
-          yAxis,
-          layout,
-          dataPointFormatter
-        });
-      }));
-    }
-  }, {
+  _inherits$3(Area2, _PureComponent);
+  return _createClass$4(Area2, [{
     key: "renderDots",
     value: function renderDots(needClip, clipDot, clipPathId) {
       var isAnimationActive = this.props.isAnimationActive;
-      if (isAnimationActive && !this.state.isAnimationFinished) {
+      var isAnimationFinished = this.state.isAnimationFinished;
+      if (isAnimationActive && !isAnimationFinished) {
         return null;
       }
-      var _this$props2 = this.props, dot = _this$props2.dot, points = _this$props2.points, dataKey = _this$props2.dataKey;
-      var lineProps = filterProps(this.props, false);
+      var _this$props = this.props, dot = _this$props.dot, points = _this$props.points, dataKey = _this$props.dataKey;
+      var areaProps = filterProps(this.props, false);
       var customDotProps = filterProps(dot, true);
       var dots = points.map(function(entry, i) {
         var dotProps = _objectSpread$2(_objectSpread$2(_objectSpread$2({
           key: "dot-".concat(i),
           r: 3
-        }, lineProps), customDotProps), {}, {
+        }, areaProps), customDotProps), {}, {
           index: i,
           cx: entry.x,
           cy: entry.y,
-          value: entry.value,
           dataKey,
+          value: entry.value,
           payload: entry.payload,
           points
         });
-        return Line2.renderDotItem(dot, dotProps);
+        return Area2.renderDotItem(dot, dotProps);
       });
       var dotsProps = {
         clipPath: needClip ? "url(#clipPath-".concat(clipDot ? "" : "dots-").concat(clipPathId, ")") : null
       };
       return /* @__PURE__ */ React.createElement(Layer, _extends$3({
-        className: "recharts-line-dots",
-        key: "dots"
+        className: "recharts-area-dots"
       }, dotsProps), dots);
     }
   }, {
-    key: "renderCurveStatically",
-    value: function renderCurveStatically(points, needClip, clipPathId, props) {
-      var _this$props3 = this.props, type = _this$props3.type, layout = _this$props3.layout, connectNulls = _this$props3.connectNulls;
-      _this$props3.ref;
-      var others = _objectWithoutProperties$1(_this$props3, _excluded$1);
-      var curveProps = _objectSpread$2(_objectSpread$2(_objectSpread$2({}, filterProps(others, true)), {}, {
-        fill: "none",
-        className: "recharts-line-curve",
-        clipPath: needClip ? "url(#clipPath-".concat(clipPathId, ")") : null,
-        points
-      }, props), {}, {
-        type,
-        layout,
-        connectNulls
-      });
-      return /* @__PURE__ */ React.createElement(Curve, _extends$3({}, curveProps, {
-        pathRef: this.pathRef
+    key: "renderHorizontalRect",
+    value: function renderHorizontalRect(alpha) {
+      var _this$props2 = this.props, baseLine = _this$props2.baseLine, points = _this$props2.points, strokeWidth = _this$props2.strokeWidth;
+      var startX = points[0].x;
+      var endX = points[points.length - 1].x;
+      var width = alpha * Math.abs(startX - endX);
+      var maxY = max(points.map(function(entry) {
+        return entry.y || 0;
       }));
+      if (isNumber(baseLine) && typeof baseLine === "number") {
+        maxY = Math.max(baseLine, maxY);
+      } else if (baseLine && Array.isArray(baseLine) && baseLine.length) {
+        maxY = Math.max(max(baseLine.map(function(entry) {
+          return entry.y || 0;
+        })), maxY);
+      }
+      if (isNumber(maxY)) {
+        return /* @__PURE__ */ React.createElement("rect", {
+          x: startX < endX ? startX : startX - width,
+          y: 0,
+          width,
+          height: Math.floor(maxY + (strokeWidth ? parseInt("".concat(strokeWidth), 10) : 1))
+        });
+      }
+      return null;
     }
   }, {
-    key: "renderCurveWithAnimation",
-    value: function renderCurveWithAnimation(needClip, clipPathId) {
+    key: "renderVerticalRect",
+    value: function renderVerticalRect(alpha) {
+      var _this$props3 = this.props, baseLine = _this$props3.baseLine, points = _this$props3.points, strokeWidth = _this$props3.strokeWidth;
+      var startY = points[0].y;
+      var endY = points[points.length - 1].y;
+      var height = alpha * Math.abs(startY - endY);
+      var maxX = max(points.map(function(entry) {
+        return entry.x || 0;
+      }));
+      if (isNumber(baseLine) && typeof baseLine === "number") {
+        maxX = Math.max(baseLine, maxX);
+      } else if (baseLine && Array.isArray(baseLine) && baseLine.length) {
+        maxX = Math.max(max(baseLine.map(function(entry) {
+          return entry.x || 0;
+        })), maxX);
+      }
+      if (isNumber(maxX)) {
+        return /* @__PURE__ */ React.createElement("rect", {
+          x: 0,
+          y: startY < endY ? startY : startY - height,
+          width: maxX + (strokeWidth ? parseInt("".concat(strokeWidth), 10) : 1),
+          height: Math.floor(height)
+        });
+      }
+      return null;
+    }
+  }, {
+    key: "renderClipRect",
+    value: function renderClipRect(alpha) {
+      var layout = this.props.layout;
+      if (layout === "vertical") {
+        return this.renderVerticalRect(alpha);
+      }
+      return this.renderHorizontalRect(alpha);
+    }
+  }, {
+    key: "renderAreaStatically",
+    value: function renderAreaStatically(points, baseLine, needClip, clipPathId) {
+      var _this$props4 = this.props, layout = _this$props4.layout, type = _this$props4.type, stroke = _this$props4.stroke, connectNulls = _this$props4.connectNulls, isRange = _this$props4.isRange;
+      _this$props4.ref;
+      var others = _objectWithoutProperties$1(_this$props4, _excluded$1);
+      return /* @__PURE__ */ React.createElement(Layer, {
+        clipPath: needClip ? "url(#clipPath-".concat(clipPathId, ")") : null
+      }, /* @__PURE__ */ React.createElement(Curve, _extends$3({}, filterProps(others, true), {
+        points,
+        connectNulls,
+        type,
+        baseLine,
+        layout,
+        stroke: "none",
+        className: "recharts-area-area"
+      })), stroke !== "none" && /* @__PURE__ */ React.createElement(Curve, _extends$3({}, filterProps(this.props, false), {
+        className: "recharts-area-curve",
+        layout,
+        type,
+        connectNulls,
+        fill: "none",
+        points
+      })), stroke !== "none" && isRange && /* @__PURE__ */ React.createElement(Curve, _extends$3({}, filterProps(this.props, false), {
+        className: "recharts-area-curve",
+        layout,
+        type,
+        connectNulls,
+        fill: "none",
+        points: baseLine
+      })));
+    }
+  }, {
+    key: "renderAreaWithAnimation",
+    value: function renderAreaWithAnimation(needClip, clipPathId) {
       var _this2 = this;
-      var _this$props4 = this.props, points = _this$props4.points, strokeDasharray = _this$props4.strokeDasharray, isAnimationActive = _this$props4.isAnimationActive, animationBegin = _this$props4.animationBegin, animationDuration = _this$props4.animationDuration, animationEasing = _this$props4.animationEasing, animationId = _this$props4.animationId, animateNewValues = _this$props4.animateNewValues, width = _this$props4.width, height = _this$props4.height;
-      var _this$state = this.state, prevPoints = _this$state.prevPoints, totalLength = _this$state.totalLength;
+      var _this$props5 = this.props, points = _this$props5.points, baseLine = _this$props5.baseLine, isAnimationActive = _this$props5.isAnimationActive, animationBegin = _this$props5.animationBegin, animationDuration = _this$props5.animationDuration, animationEasing = _this$props5.animationEasing, animationId = _this$props5.animationId;
+      var _this$state = this.state, prevPoints = _this$state.prevPoints, prevBaseLine = _this$state.prevBaseLine;
       return /* @__PURE__ */ React.createElement(Animate, {
         begin: animationBegin,
         duration: animationDuration,
@@ -10309,14 +10266,14 @@ var Line = /* @__PURE__ */ (function(_PureComponent) {
         to: {
           t: 1
         },
-        key: "line-".concat(animationId),
+        key: "area-".concat(animationId),
         onAnimationEnd: this.handleAnimationEnd,
         onAnimationStart: this.handleAnimationStart
       }, function(_ref) {
         var t = _ref.t;
         if (prevPoints) {
           var prevPointsDiffFactor = prevPoints.length / points.length;
-          var stepData = points.map(function(entry, index) {
+          var stepPoints = points.map(function(entry, index) {
             var prevPointIndex = Math.floor(index * prevPointsDiffFactor);
             if (prevPoints[prevPointIndex]) {
               var prev = prevPoints[prevPointIndex];
@@ -10327,58 +10284,60 @@ var Line = /* @__PURE__ */ (function(_PureComponent) {
                 y: interpolatorY(t)
               });
             }
-            if (animateNewValues) {
-              var _interpolatorX = interpolateNumber(width * 2, entry.x);
-              var _interpolatorY = interpolateNumber(height / 2, entry.y);
-              return _objectSpread$2(_objectSpread$2({}, entry), {}, {
-                x: _interpolatorX(t),
-                y: _interpolatorY(t)
-              });
-            }
-            return _objectSpread$2(_objectSpread$2({}, entry), {}, {
-              x: entry.x,
-              y: entry.y
+            return entry;
+          });
+          var stepBaseLine;
+          if (isNumber(baseLine) && typeof baseLine === "number") {
+            var interpolator = interpolateNumber(prevBaseLine, baseLine);
+            stepBaseLine = interpolator(t);
+          } else if (isNil(baseLine) || isNan(baseLine)) {
+            var _interpolator = interpolateNumber(prevBaseLine, 0);
+            stepBaseLine = _interpolator(t);
+          } else {
+            stepBaseLine = baseLine.map(function(entry, index) {
+              var prevPointIndex = Math.floor(index * prevPointsDiffFactor);
+              if (prevBaseLine[prevPointIndex]) {
+                var prev = prevBaseLine[prevPointIndex];
+                var interpolatorX = interpolateNumber(prev.x, entry.x);
+                var interpolatorY = interpolateNumber(prev.y, entry.y);
+                return _objectSpread$2(_objectSpread$2({}, entry), {}, {
+                  x: interpolatorX(t),
+                  y: interpolatorY(t)
+                });
+              }
+              return entry;
             });
-          });
-          return _this2.renderCurveStatically(stepData, needClip, clipPathId);
+          }
+          return _this2.renderAreaStatically(stepPoints, stepBaseLine, needClip, clipPathId);
         }
-        var interpolator = interpolateNumber(0, totalLength);
-        var curLength = interpolator(t);
-        var currentStrokeDasharray;
-        if (strokeDasharray) {
-          var lines = "".concat(strokeDasharray).split(/[,\s]+/gim).map(function(num) {
-            return parseFloat(num);
-          });
-          currentStrokeDasharray = _this2.getStrokeDasharray(curLength, totalLength, lines);
-        } else {
-          currentStrokeDasharray = _this2.generateSimpleStrokeDasharray(totalLength, curLength);
-        }
-        return _this2.renderCurveStatically(points, needClip, clipPathId, {
-          strokeDasharray: currentStrokeDasharray
-        });
+        return /* @__PURE__ */ React.createElement(Layer, null, /* @__PURE__ */ React.createElement("defs", null, /* @__PURE__ */ React.createElement("clipPath", {
+          id: "animationClipPath-".concat(clipPathId)
+        }, _this2.renderClipRect(t))), /* @__PURE__ */ React.createElement(Layer, {
+          clipPath: "url(#animationClipPath-".concat(clipPathId, ")")
+        }, _this2.renderAreaStatically(points, baseLine, needClip, clipPathId)));
       });
     }
   }, {
-    key: "renderCurve",
-    value: function renderCurve(needClip, clipPathId) {
-      var _this$props5 = this.props, points = _this$props5.points, isAnimationActive = _this$props5.isAnimationActive;
-      var _this$state2 = this.state, prevPoints = _this$state2.prevPoints, totalLength = _this$state2.totalLength;
-      if (isAnimationActive && points && points.length && (!prevPoints && totalLength > 0 || !isEqual(prevPoints, points))) {
-        return this.renderCurveWithAnimation(needClip, clipPathId);
+    key: "renderArea",
+    value: function renderArea(needClip, clipPathId) {
+      var _this$props6 = this.props, points = _this$props6.points, baseLine = _this$props6.baseLine, isAnimationActive = _this$props6.isAnimationActive;
+      var _this$state2 = this.state, prevPoints = _this$state2.prevPoints, prevBaseLine = _this$state2.prevBaseLine, totalLength = _this$state2.totalLength;
+      if (isAnimationActive && points && points.length && (!prevPoints && totalLength > 0 || !isEqual(prevPoints, points) || !isEqual(prevBaseLine, baseLine))) {
+        return this.renderAreaWithAnimation(needClip, clipPathId);
       }
-      return this.renderCurveStatically(points, needClip, clipPathId);
+      return this.renderAreaStatically(points, baseLine, needClip, clipPathId);
     }
   }, {
     key: "render",
     value: function render() {
       var _filterProps;
-      var _this$props6 = this.props, hide = _this$props6.hide, dot = _this$props6.dot, points = _this$props6.points, className = _this$props6.className, xAxis = _this$props6.xAxis, yAxis = _this$props6.yAxis, top = _this$props6.top, left = _this$props6.left, width = _this$props6.width, height = _this$props6.height, isAnimationActive = _this$props6.isAnimationActive, id = _this$props6.id;
+      var _this$props7 = this.props, hide = _this$props7.hide, dot = _this$props7.dot, points = _this$props7.points, className = _this$props7.className, top = _this$props7.top, left = _this$props7.left, xAxis = _this$props7.xAxis, yAxis = _this$props7.yAxis, width = _this$props7.width, height = _this$props7.height, isAnimationActive = _this$props7.isAnimationActive, id = _this$props7.id;
       if (hide || !points || !points.length) {
         return null;
       }
       var isAnimationFinished = this.state.isAnimationFinished;
       var hasSinglePoint = points.length === 1;
-      var layerClass = clsx("recharts-line", className);
+      var layerClass = clsx("recharts-area", className);
       var needClipX = xAxis && xAxis.allowDataOverflow;
       var needClipY = yAxis && yAxis.allowDataOverflow;
       var needClip = needClipX || needClipY;
@@ -10405,7 +10364,7 @@ var Line = /* @__PURE__ */ (function(_PureComponent) {
         y: top - dotSize / 2,
         width: width + dotSize,
         height: height + dotSize
-      }))) : null, !hasSinglePoint && this.renderCurve(needClip, clipPathId), this.renderErrorBar(needClip, clipPathId), (hasSinglePoint || dot) && this.renderDots(needClip, clipDot, clipPathId), (!isAnimationActive || isAnimationFinished) && LabelList.renderCallByParent(this.props, points));
+      }))) : null, !hasSinglePoint ? this.renderArea(needClip, clipPathId) : null, (dot || hasSinglePoint) && this.renderDots(needClip, clipDot, clipPathId), (!isAnimationActive || isAnimationFinished) && LabelList.renderCallByParent(this.props, points));
     }
   }], [{
     key: "getDerivedStateFromProps",
@@ -10414,73 +10373,90 @@ var Line = /* @__PURE__ */ (function(_PureComponent) {
         return {
           prevAnimationId: nextProps.animationId,
           curPoints: nextProps.points,
-          prevPoints: prevState.curPoints
+          curBaseLine: nextProps.baseLine,
+          prevPoints: prevState.curPoints,
+          prevBaseLine: prevState.curBaseLine
         };
       }
-      if (nextProps.points !== prevState.curPoints) {
+      if (nextProps.points !== prevState.curPoints || nextProps.baseLine !== prevState.curBaseLine) {
         return {
-          curPoints: nextProps.points
+          curPoints: nextProps.points,
+          curBaseLine: nextProps.baseLine
         };
       }
       return null;
     }
-  }, {
-    key: "repeat",
-    value: function repeat(lines, count) {
-      var linesUnit = lines.length % 2 !== 0 ? [].concat(_toConsumableArray$2(lines), [0]) : lines;
-      var result = [];
-      for (var i = 0; i < count; ++i) {
-        result = [].concat(_toConsumableArray$2(result), _toConsumableArray$2(linesUnit));
-      }
-      return result;
-    }
-  }, {
-    key: "renderDotItem",
-    value: function renderDotItem(option, props) {
-      var dotItem;
-      if (/* @__PURE__ */ React.isValidElement(option)) {
-        dotItem = /* @__PURE__ */ React.cloneElement(option, props);
-      } else if (isFunction(option)) {
-        dotItem = option(props);
-      } else {
-        var key = props.key, dotProps = _objectWithoutProperties$1(props, _excluded2$1);
-        var className = clsx("recharts-line-dot", typeof option !== "boolean" ? option.className : "");
-        dotItem = /* @__PURE__ */ React.createElement(Dot, _extends$3({
-          key
-        }, dotProps, {
-          className
-        }));
-      }
-      return dotItem;
-    }
   }]);
 })(reactExports.PureComponent);
-_defineProperty$5(Line, "displayName", "Line");
-_defineProperty$5(Line, "defaultProps", {
+_Area = Area;
+_defineProperty$5(Area, "displayName", "Area");
+_defineProperty$5(Area, "defaultProps", {
+  stroke: "#3182bd",
+  fill: "#3182bd",
+  fillOpacity: 0.6,
   xAxisId: 0,
   yAxisId: 0,
-  connectNulls: false,
-  activeDot: true,
-  dot: true,
   legendType: "line",
-  stroke: "#3182bd",
-  strokeWidth: 1,
-  fill: "#fff",
+  connectNulls: false,
+  // points of area
   points: [],
+  dot: false,
+  activeDot: true,
+  hide: false,
   isAnimationActive: !Global.isSsr,
-  animateNewValues: true,
   animationBegin: 0,
   animationDuration: 1500,
-  animationEasing: "ease",
-  hide: false,
-  label: false
+  animationEasing: "ease"
 });
-_defineProperty$5(Line, "getComposedData", function(_ref4) {
-  var props = _ref4.props, xAxis = _ref4.xAxis, yAxis = _ref4.yAxis, xAxisTicks = _ref4.xAxisTicks, yAxisTicks = _ref4.yAxisTicks, dataKey = _ref4.dataKey, bandSize = _ref4.bandSize, displayedData = _ref4.displayedData, offset = _ref4.offset;
+_defineProperty$5(Area, "getBaseValue", function(props, item, xAxis, yAxis) {
+  var layout = props.layout, chartBaseValue = props.baseValue;
+  var itemBaseValue = item.props.baseValue;
+  var baseValue = itemBaseValue !== null && itemBaseValue !== void 0 ? itemBaseValue : chartBaseValue;
+  if (isNumber(baseValue) && typeof baseValue === "number") {
+    return baseValue;
+  }
+  var numericAxis = layout === "horizontal" ? yAxis : xAxis;
+  var domain = numericAxis.scale.domain();
+  if (numericAxis.type === "number") {
+    var domainMax = Math.max(domain[0], domain[1]);
+    var domainMin = Math.min(domain[0], domain[1]);
+    if (baseValue === "dataMin") {
+      return domainMin;
+    }
+    if (baseValue === "dataMax") {
+      return domainMax;
+    }
+    return domainMax < 0 ? domainMax : Math.max(Math.min(domain[0], domain[1]), 0);
+  }
+  if (baseValue === "dataMin") {
+    return domain[0];
+  }
+  if (baseValue === "dataMax") {
+    return domain[1];
+  }
+  return domain[0];
+});
+_defineProperty$5(Area, "getComposedData", function(_ref4) {
+  var props = _ref4.props, item = _ref4.item, xAxis = _ref4.xAxis, yAxis = _ref4.yAxis, xAxisTicks = _ref4.xAxisTicks, yAxisTicks = _ref4.yAxisTicks, bandSize = _ref4.bandSize, dataKey = _ref4.dataKey, stackedData = _ref4.stackedData, dataStartIndex = _ref4.dataStartIndex, displayedData = _ref4.displayedData, offset = _ref4.offset;
   var layout = props.layout;
+  var hasStack = stackedData && stackedData.length;
+  var baseValue = _Area.getBaseValue(props, item, xAxis, yAxis);
+  var isHorizontalLayout = layout === "horizontal";
+  var isRange = false;
   var points = displayedData.map(function(entry, index) {
-    var value = getValueByDataKey(entry, dataKey);
-    if (layout === "horizontal") {
+    var value;
+    if (hasStack) {
+      value = stackedData[dataStartIndex + index];
+    } else {
+      value = getValueByDataKey(entry, dataKey);
+      if (!Array.isArray(value)) {
+        value = [baseValue, value];
+      } else {
+        isRange = true;
+      }
+    }
+    var isBreakPoint = value[1] == null || hasStack && getValueByDataKey(entry, dataKey) == null;
+    if (isHorizontalLayout) {
       return {
         x: getCateCoordinateOfLine({
           axis: xAxis,
@@ -10489,13 +10465,13 @@ _defineProperty$5(Line, "getComposedData", function(_ref4) {
           entry,
           index
         }),
-        y: isNil(value) ? null : yAxis.scale(value),
+        y: isBreakPoint ? null : yAxis.scale(value[1]),
         value,
         payload: entry
       };
     }
     return {
-      x: isNil(value) ? null : xAxis.scale(value),
+      x: isBreakPoint ? null : xAxis.scale(value[1]),
       y: getCateCoordinateOfLine({
         axis: yAxis,
         ticks: yAxisTicks,
@@ -10507,10 +10483,46 @@ _defineProperty$5(Line, "getComposedData", function(_ref4) {
       payload: entry
     };
   });
+  var baseLine;
+  if (hasStack || isRange) {
+    baseLine = points.map(function(entry) {
+      var x = Array.isArray(entry.value) ? entry.value[0] : null;
+      if (isHorizontalLayout) {
+        return {
+          x: entry.x,
+          y: x != null && entry.y != null ? yAxis.scale(x) : null
+        };
+      }
+      return {
+        x: x != null ? xAxis.scale(x) : null,
+        y: entry.y
+      };
+    });
+  } else {
+    baseLine = isHorizontalLayout ? yAxis.scale(baseValue) : xAxis.scale(baseValue);
+  }
   return _objectSpread$2({
     points,
-    layout
+    baseLine,
+    layout,
+    isRange
   }, offset);
+});
+_defineProperty$5(Area, "renderDotItem", function(option, props) {
+  var dotItem;
+  if (/* @__PURE__ */ React.isValidElement(option)) {
+    dotItem = /* @__PURE__ */ React.cloneElement(option, props);
+  } else if (isFunction(option)) {
+    dotItem = option(props);
+  } else {
+    var className = clsx("recharts-area-dot", typeof option !== "boolean" ? option.className : "");
+    var key = props.key, rest = _objectWithoutProperties$1(props, _excluded2$1);
+    dotItem = /* @__PURE__ */ React.createElement(Dot, _extends$3({}, rest, {
+      key,
+      className
+    }));
+  }
+  return dotItem;
 });
 function _typeof$4(o) {
   "@babel/helpers - typeof";
@@ -13025,9 +13037,9 @@ var generateCategoricalChart = function generateCategoricalChart2(_ref6) {
   CategoricalChart.displayName = CategoricalChartWrapper.displayName;
   return CategoricalChart;
 };
-var LineChart = generateCategoricalChart({
-  chartName: "LineChart",
-  GraphicalChild: Line,
+var AreaChart = generateCategoricalChart({
+  chartName: "AreaChart",
+  GraphicalChild: Area,
   axisComponents: [{
     axisType: "xAxis",
     AxisComp: XAxis
@@ -13038,11 +13050,12 @@ var LineChart = generateCategoricalChart({
   formatAxisMap
 });
 export {
+  AreaChart as A,
   CartesianGrid as C,
-  LineChart as L,
+  Legend as L,
   ResponsiveContainer as R,
   Tooltip as T,
   XAxis as X,
   YAxis as Y,
-  Line as a
+  Area as a
 };

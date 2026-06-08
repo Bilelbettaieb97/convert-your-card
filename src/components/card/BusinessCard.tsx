@@ -9,7 +9,17 @@ import type { CardData, Testimonial, TestimonialsStyle, Listing, Service, Langua
 import { THEMES_BY_ID } from "@/lib/card-themes";
 import { downloadVCard } from "@/lib/vcard";
 
-export function BusinessCard({ data }: { data: CardData }) {
+function logEvent(profileId: string, eventType: string, eventData?: Record<string, string>) {
+  import("@/integrations/supabase/client").then(({ supabase }) => {
+    supabase.from("nfc_analytics").insert({
+      profile_id: profileId,
+      event_type: eventType,
+      event_data: (eventData ?? null) as import("@/integrations/supabase/types").Json,
+    }).then(() => {});
+  }).catch(() => {});
+}
+
+export function BusinessCard({ data, profileId }: { data: CardData; profileId?: string }) {
   const [copied, setCopied] = useState(false);
   const theme = (THEMES_BY_ID[data.accent] ?? THEMES_BY_ID.gold).palette;
 
@@ -28,7 +38,10 @@ export function BusinessCard({ data }: { data: CardData }) {
     color:                     theme.text,
   } as React.CSSProperties;
 
-  const handleSave = () => downloadVCard(data);
+  const handleSave = () => {
+    downloadVCard(data);
+    if (profileId) logEvent(profileId, "vcard_download");
+  };
 
 
   const handleShare = async () => {
@@ -94,7 +107,7 @@ export function BusinessCard({ data }: { data: CardData }) {
           .map((id) => {
             const node = (() => {
               switch (id) {
-                case "actions":      return <ActionsSection data={data} />;
+                case "actions":      return <ActionsSection data={data} profileId={profileId} />;
                 case "vcard":        return <VCardSection data={data} onSave={handleSave} copied={copied} />;
                 case "stats":        return <StatsSection data={data} />;
                 case "about":        return <AboutSection data={data} />;
@@ -103,9 +116,9 @@ export function BusinessCard({ data }: { data: CardData }) {
                 case "listings":     return <ListingsSection data={data} />;
                 case "gallery":      return <GallerySection data={data} />;
                 case "testimonials": return <TestimonialsSection data={data} />;
-                case "calendar":     return <CalendarSection data={data} />;
+                case "calendar":     return <CalendarSection data={data} profileId={profileId} />;
                 case "languages":    return <LanguagesSection data={data} />;
-                case "cta":          return <CtaSection data={data} />;
+                case "cta":          return <CtaSection data={data} profileId={profileId} />;
                 case "contact":      return <ContactSection data={data} />;
                 case "socials":      return <SocialsSection data={data} />;
                 default:             return null;
@@ -236,15 +249,15 @@ function IdentitySection({ data }: { data: CardData }) {
    ACTIONS
    ============================================================ */
 
-function ActionsSection({ data }: { data: CardData }) {
+function ActionsSection({ data, profileId }: { data: CardData; profileId?: string }) {
   const any = data.actions.call || data.actions.whatsapp || data.actions.email || data.actions.website;
   if (!any) return null;
   const items = [
-    data.actions.call     && { icon: Phone,         label: "Appeler",  href: `tel:${data.phone}` },
-    data.actions.whatsapp && { icon: MessageCircle, label: "WhatsApp", href: `https://wa.me/${data.whatsapp}` },
-    data.actions.email    && { icon: Mail,          label: "Mail",     href: `mailto:${data.email}` },
-    data.actions.website  && { icon: Globe,         label: "Site",     href: `https://${data.website}` },
-  ].filter(Boolean) as Array<{ icon: any; label: string; href: string }>;
+    data.actions.call     && { icon: Phone,         label: "Appeler",  href: `tel:${data.phone}`,             type: "call" },
+    data.actions.whatsapp && { icon: MessageCircle, label: "WhatsApp", href: `https://wa.me/${data.whatsapp}`, type: "whatsapp" },
+    data.actions.email    && { icon: Mail,          label: "Mail",     href: `mailto:${data.email}`,           type: "email" },
+    data.actions.website  && { icon: Globe,         label: "Site",     href: `https://${data.website}`,        type: "website" },
+  ].filter(Boolean) as Array<{ icon: any; label: string; href: string; type: string }>;
 
   const v = data.variants.actions;
 
@@ -253,6 +266,7 @@ function ActionsSection({ data }: { data: CardData }) {
       <section className="px-5 space-y-2">
         {items.map((it, i) => (
           <a key={i} href={it.href} target={it.href.startsWith("http") ? "_blank" : undefined} rel="noopener noreferrer"
+            onClick={() => profileId && logEvent(profileId, "button_click", { type: it.type })}
             className="flex items-center gap-3 rounded-2xl bg-card-surface border border-card-border px-4 py-3 active:scale-[0.99] transition">
             <span className="h-9 w-9 grid place-items-center rounded-xl" style={{ background: "var(--card-accent-gradient)" }}>
               <it.icon className="h-4 w-4 text-card-on-accent" />
@@ -270,6 +284,7 @@ function ActionsSection({ data }: { data: CardData }) {
       <section className="px-5 grid grid-cols-2 gap-2">
         {items.map((it, i) => (
           <a key={i} href={it.href} target={it.href.startsWith("http") ? "_blank" : undefined} rel="noopener noreferrer"
+            onClick={() => profileId && logEvent(profileId, "button_click", { type: it.type })}
             className="flex flex-col items-center justify-center gap-2 rounded-2xl bg-card-surface border border-card-border py-5 active:scale-[0.99] transition">
             <span className="h-10 w-10 grid place-items-center rounded-xl" style={{ background: "var(--card-accent-gradient)" }}>
               <it.icon className="h-5 w-5 text-card-on-accent" />
@@ -286,16 +301,17 @@ function ActionsSection({ data }: { data: CardData }) {
     <section className="px-5 relative z-10">
       <div className="flex gap-2 justify-center">
         {items.map((it, i) => (
-          <QuickActionIcon key={i} icon={it.icon} label={it.label} href={it.href} primary={it.label === "Appeler"} />
+          <QuickActionIcon key={i} icon={it.icon} label={it.label} href={it.href} primary={it.label === "Appeler"}
+            onTrack={() => profileId && logEvent(profileId, "button_click", { type: it.type })} />
         ))}
       </div>
     </section>
   );
 }
 
-function QuickActionIcon({ icon: Icon, label, href, primary }: { icon: any; label: string; href: string; primary?: boolean }) {
+function QuickActionIcon({ icon: Icon, label, href, primary, onTrack }: { icon: any; label: string; href: string; primary?: boolean; onTrack?: () => void }) {
   return (
-    <a href={href} target={href.startsWith("http") ? "_blank" : undefined} rel="noopener noreferrer" className="flex flex-col items-center gap-1.5">
+    <a href={href} target={href.startsWith("http") ? "_blank" : undefined} rel="noopener noreferrer" onClick={onTrack} className="flex flex-col items-center gap-1.5">
       <span
         className={`h-12 w-12 grid place-items-center rounded-2xl border border-card-border active:scale-95 transition ${primary ? "" : "bg-card-surface"}`}
         style={primary ? { background: "var(--card-accent-gradient)" } : undefined}
@@ -797,15 +813,16 @@ function TestimonialsSection({ data }: { data: CardData }) {
    CALENDAR
    ============================================================ */
 
-function CalendarSection({ data }: { data: CardData }) {
+function CalendarSection({ data, profileId }: { data: CardData; profileId?: string }) {
   if (!data.calendarEnabled || !data.calendarUrl) return null;
   const v = data.variants.calendar;
   const label = data.calendarLabel || "Réserver un rendez-vous";
+  const track = () => profileId && logEvent(profileId, "button_click", { type: "calendar" });
 
   if (v === "cta") {
     return (
       <section className="px-5">
-        <a href={data.calendarUrl} target="_blank" rel="noopener noreferrer"
+        <a href={data.calendarUrl} target="_blank" rel="noopener noreferrer" onClick={track}
           className="w-full flex items-center justify-center gap-2 rounded-2xl py-3.5 font-medium text-card-on-accent active:scale-[0.99] transition"
           style={{ background: "var(--card-accent-gradient)" }}>
           <Calendar className="h-4 w-4" />
@@ -818,7 +835,7 @@ function CalendarSection({ data }: { data: CardData }) {
   if (v === "block") {
     return (
       <section className="px-5">
-        <a href={data.calendarUrl} target="_blank" rel="noopener noreferrer"
+        <a href={data.calendarUrl} target="_blank" rel="noopener noreferrer" onClick={track}
           className="block rounded-2xl bg-card-surface border border-card-border p-5 text-center active:scale-[0.99] transition">
           <span className="mx-auto h-12 w-12 grid place-items-center rounded-2xl" style={{ background: "var(--card-accent-gradient)" }}>
             <Calendar className="h-6 w-6 text-card-on-accent" />
@@ -832,7 +849,7 @@ function CalendarSection({ data }: { data: CardData }) {
 
   return (
     <section className="px-5">
-      <a href={data.calendarUrl} target="_blank" rel="noopener noreferrer"
+      <a href={data.calendarUrl} target="_blank" rel="noopener noreferrer" onClick={track}
         className="flex items-center gap-3 rounded-2xl bg-card-surface border border-card-border p-4 active:scale-[0.99] transition">
         <span className="h-11 w-11 grid place-items-center rounded-xl" style={{ background: "var(--card-accent-gradient)" }}>
           <Calendar className="h-5 w-5 text-card-on-accent" />
@@ -925,10 +942,11 @@ function LanguagesSection({ data }: { data: CardData }) {
    CTA
    ============================================================ */
 
-function CtaSection({ data }: { data: CardData }) {
+function CtaSection({ data, profileId }: { data: CardData; profileId?: string }) {
   if (!data.ctaEnabled) return null;
   const v = data.variants.cta;
   const hasBtn = data.ctaButtonLabel && data.ctaButtonUrl;
+  const track = () => profileId && logEvent(profileId, "button_click", { type: "cta" });
 
   if (v === "outline") {
     return (
@@ -937,7 +955,7 @@ function CtaSection({ data }: { data: CardData }) {
           <h3 className="font-display text-lg leading-tight">{data.ctaTitle}</h3>
           {data.ctaText && <p className="mt-1.5 text-sm text-card-muted">{data.ctaText}</p>}
           {hasBtn && (
-            <a href={data.ctaButtonUrl} target="_blank" rel="noopener noreferrer"
+            <a href={data.ctaButtonUrl} target="_blank" rel="noopener noreferrer" onClick={track}
               className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium" style={{ color: "var(--card-accent)" }}>
               {data.ctaButtonLabel} <ArrowRight className="h-4 w-4" />
             </a>
@@ -954,7 +972,7 @@ function CtaSection({ data }: { data: CardData }) {
           <h3 className="font-display text-xl leading-tight">{data.ctaTitle}</h3>
           {data.ctaText && <p className="mt-1.5 text-sm opacity-90">{data.ctaText}</p>}
           {hasBtn && (
-            <a href={data.ctaButtonUrl} target="_blank" rel="noopener noreferrer"
+            <a href={data.ctaButtonUrl} target="_blank" rel="noopener noreferrer" onClick={track}
               className="mt-4 w-full flex items-center justify-center gap-2 rounded-xl py-3 text-sm font-semibold bg-card-bg  active:scale-[0.99] transition">
               {data.ctaButtonLabel} <ArrowRight className="h-4 w-4" />
             </a>
@@ -971,7 +989,7 @@ function CtaSection({ data }: { data: CardData }) {
         <h3 className="font-display text-lg leading-tight">{data.ctaTitle}</h3>
         {data.ctaText && <p className="mt-1.5 text-sm text-card-muted">{data.ctaText}</p>}
         {hasBtn && (
-          <a href={data.ctaButtonUrl} target="_blank" rel="noopener noreferrer"
+          <a href={data.ctaButtonUrl} target="_blank" rel="noopener noreferrer" onClick={track}
             className="mt-4 w-full flex items-center justify-center gap-2 rounded-xl py-3 text-sm font-medium text-card-on-accent active:scale-[0.99] transition"
             style={{ background: "var(--card-accent-gradient)" }}>
             {data.ctaButtonLabel} <ArrowRight className="h-4 w-4" />
