@@ -286,16 +286,25 @@ function CoachPage() {
             </p>
           </div>
 
-          {/* Right — card preview */}
+          {/* Right — card preview in phone frame */}
           <div className="flex justify-center lg:justify-end">
             <div className="relative">
-              {/* Glow behind card */}
+              {/* Glow */}
               <div className="absolute inset-0 -m-8 rounded-full bg-[#c9a84c]/15 blur-3xl" />
-              <div className="relative bg-card/60 backdrop-blur-sm border border-border/50 rounded-[2rem] p-6 shadow-2xl">
-                <CardPreview t={COACH_TEMPLATE} size="lg" ctaLabel="Réserver une séance" />
-                <div className="mt-4 flex items-center justify-center gap-2 text-xs text-muted-foreground">
+              <div className="relative flex flex-col items-center gap-4">
+                {/* Phone frame — identical to /templates */}
+                <div className="relative w-[270px] aspect-[9/19] rounded-[2.5rem] bg-zinc-900 p-2 shadow-2xl">
+                  <div
+                    className="relative w-full h-full rounded-[2rem] overflow-hidden flex flex-col"
+                    style={{ background: COACH_TEMPLATE.palette.bg, color: COACH_TEMPLATE.palette.fg }}
+                  >
+                    <div className="absolute top-2 left-1/2 -translate-x-1/2 w-20 h-5 rounded-full bg-zinc-900 z-10" />
+                    <CardPreview t={COACH_TEMPLATE} size="lg" ctaLabel="Réserver une séance" />
+                  </div>
+                </div>
+                <div className="flex items-center gap-2 text-xs text-muted-foreground">
                   <CheckCircle2 className="w-3.5 h-3.5 text-emerald-500" />
-                  Aperçu en temps réel — modifiable à tout moment
+                  Aperçu — modifiable à tout moment
                 </div>
               </div>
             </div>
