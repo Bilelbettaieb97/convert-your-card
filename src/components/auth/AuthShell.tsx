@@ -20,7 +20,7 @@ export function AuthShell({
           <div className="w-9 h-9 rounded-xl bg-gradient-brand flex items-center justify-center shadow-card">
             <Zap className="w-5 h-5 text-primary-foreground" />
           </div>
-          <span className="font-display font-bold text-lg">CVD</span>
+          <span className="font-display font-bold text-sm leading-tight">Carte Visite Digitale</span>
         </Link>
       </header>
       <main className="flex-1 flex items-start sm:items-center justify-center px-4 pb-12">

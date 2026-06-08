@@ -84,7 +84,7 @@ function InscriptionPage() {
             <div className="w-9 h-9 rounded-xl bg-gradient-brand flex items-center justify-center shadow-card">
               <Zap className="w-5 h-5 text-primary-foreground" />
             </div>
-            <span className="font-display font-bold text-lg">CVD</span>
+            <span className="font-display font-bold text-sm leading-tight">Carte Visite Digitale</span>
           </Link>
         </header>
 
@@ -96,7 +96,7 @@ function InscriptionPage() {
               <div className="w-10 h-10 rounded-xl bg-gradient-brand flex items-center justify-center shadow-card">
                 <Zap className="w-5 h-5 text-primary-foreground" />
               </div>
-              <span className="font-display font-bold text-xl">CVD</span>
+              <span className="font-display font-bold text-sm leading-tight">Carte Visite Digitale</span>
             </div>
 
             <div className="bg-card border border-border rounded-2xl shadow-card p-6 sm:p-8">

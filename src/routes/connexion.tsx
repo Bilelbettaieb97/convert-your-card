@@ -69,7 +69,7 @@ function ConnexionPage() {
             <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#c026d3] to-[#7c3aed] flex items-center justify-center shadow-lg">
               <Zap className="w-5 h-5 text-white" />
             </div>
-            <span className="font-display font-bold text-xl">CVD</span>
+            <span className="font-display font-bold text-sm leading-tight">Carte Visite Digitale</span>
           </div>
 
           <div className="bg-card border border-border rounded-2xl shadow-card p-7">

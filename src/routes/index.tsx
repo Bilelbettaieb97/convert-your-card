@@ -104,7 +104,7 @@ export function Nav() {
           <div className="w-9 h-9 rounded-xl bg-gradient-brand flex items-center justify-center shadow-card">
             <Zap className="w-5 h-5 text-primary-foreground" />
           </div>
-          <span className="font-display font-bold text-lg">CVD</span>
+          <span className="font-display font-bold text-sm leading-tight">Carte Visite Digitale</span>
         </Link>
         <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-muted-foreground">
           <Link to="/" hash="fonctionnement" className="hover:text-foreground transition">Fonctionnement</Link>
@@ -167,7 +167,7 @@ function HeroCTA() {
   return (
     <div className="flex flex-col sm:flex-row gap-3">
       <div className="relative flex-1">
-        <div className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground font-medium text-sm">
+        <div className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground font-medium text-xs whitespace-nowrap">
           cartevisitedigitale/
         </div>
         <input
@@ -176,7 +176,7 @@ function HeroCTA() {
           onChange={(e) => setSlug(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && handleStart()}
           placeholder="votrenom"
-          className="w-full pl-[4.2rem] pr-4 py-4 rounded-xl border border-border bg-card text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-magenta/30 focus:border-magenta transition font-medium"
+          className="w-full pl-[9.5rem] pr-4 py-4 rounded-xl border border-border bg-card text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-magenta/30 focus:border-magenta transition font-medium"
         />
       </div>
       <button
@@ -1457,7 +1457,7 @@ function Comparison() {
       <div className="max-w-4xl mx-auto px-4">
         <div className="text-center max-w-2xl mx-auto">
           <h2 className="font-display font-bold text-3xl sm:text-4xl">
-            Papier vs. <span className="text-gradient">CVD</span>
+            Papier vs. <span className="text-gradient">Carte Visite Digitale</span>
           </h2>
         </div>
         <div className="mt-10 bg-card border border-border rounded-3xl overflow-hidden shadow-card">
@@ -1562,7 +1562,7 @@ export function Footer() {
           <div className="w-7 h-7 rounded-lg bg-gradient-brand flex items-center justify-center">
             <Zap className="w-4 h-4 text-primary-foreground" />
           </div>
-          <span className="font-display font-bold text-foreground">CVD</span>
+          <span className="font-display font-bold text-sm leading-tight text-foreground">Carte Visite Digitale</span>
           <span>© {new Date().getFullYear()}</span>
         </div>
         <div className="flex gap-6">

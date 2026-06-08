@@ -163,7 +163,7 @@ function ProfilePage() {
           <Download className="w-4 h-4" /> Enregistrer le contact
         </button>
         <p className="text-center text-xs mt-6" style={{ color: subTextColorDim }}>
-          Propulsé par <a href="/" className="font-semibold hover:underline" style={{ color: theme.accent }}>CVD</a>
+          Propulsé par <a href="/" className="font-semibold hover:underline" style={{ color: theme.accent }}>Carte Visite Digitale</a>
         </p>
       </div>
     </div>
