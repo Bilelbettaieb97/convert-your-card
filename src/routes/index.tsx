@@ -166,17 +166,17 @@ function HeroCTA() {
 
   return (
     <div className="flex flex-col sm:flex-row gap-3">
-      <div className="relative flex-1">
-        <div className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground font-medium text-xs whitespace-nowrap">
-          cartevisitedigitale/
-        </div>
+      <div className="flex items-center flex-1 rounded-xl border border-border bg-card focus-within:ring-2 focus-within:ring-magenta/30 focus-within:border-magenta transition overflow-hidden">
+        <span className="pl-4 pr-1 text-xs text-muted-foreground whitespace-nowrap shrink-0 select-none">
+          cartevisitedigitale.fr/
+        </span>
         <input
           type="text"
           value={slug}
           onChange={(e) => setSlug(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && handleStart()}
           placeholder="votrenom"
-          className="w-full pl-[9.5rem] pr-4 py-4 rounded-xl border border-border bg-card text-foreground placeholder:text-muted-foreground/60 focus:outline-none focus:ring-2 focus:ring-magenta/30 focus:border-magenta transition font-medium"
+          className="flex-1 py-4 pr-4 bg-transparent text-foreground placeholder:text-muted-foreground/60 focus:outline-none font-medium min-w-0"
         />
       </div>
       <button
