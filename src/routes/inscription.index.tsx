@@ -71,8 +71,7 @@ function InscriptionPage() {
         }
       }
 
-      sessionStorage.setItem("onetap_email", parsed.data.email);
-      navigate({ to: "/inscription/selection-de-plan" });
+      navigate({ to: "/builder" });
     } catch {
       toast.error("Une erreur est survenue");
     } finally {

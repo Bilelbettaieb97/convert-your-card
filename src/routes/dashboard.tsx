@@ -2,7 +2,7 @@ import { createFileRoute, Outlet, Link, useNavigate, useRouterState } from "@tan
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import {
-  Zap, LayoutDashboard, CreditCard, BarChart2, Layers, LogOut, CreditCard as CardIcon, X,
+  Zap, LayoutDashboard, CreditCard, BarChart2, LogOut, CreditCard as CardIcon, Wand2,
 } from "lucide-react";
 
 export const Route = createFileRoute("/dashboard")({
@@ -12,8 +12,8 @@ export const Route = createFileRoute("/dashboard")({
 const NAV = [
   { to: "/dashboard",               label: "Vue d'ensemble", icon: LayoutDashboard, exact: true },
   { to: "/dashboard/carte",         label: "Ma Carte",       icon: CardIcon },
+  { to: "/builder",                 label: "Builder",        icon: Wand2 },
   { to: "/dashboard/statistiques",  label: "Statistiques",   icon: BarChart2 },
-  { to: "/dashboard/modeles",       label: "Modèles",        icon: Layers },
   { to: "/dashboard/abonnement",    label: "Abonnement",     icon: CreditCard },
 ];
 
