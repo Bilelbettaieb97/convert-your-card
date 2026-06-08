@@ -45,7 +45,7 @@ export default defineEventHandler(async (event) => {
     const stripeSecretKey = process.env.STRIPE_SECRET_KEY ?? "";
     const stripe = new Stripe(stripeSecretKey, { apiVersion: "2024-06-20" });
 
-    const appUrl = process.env.VITE_APP_URL ?? "https://convert-your-card.vercel.app";
+    const appUrl = process.env.VITE_APP_URL ?? "https://www.cartevisitedigitale.fr";
     const hasTrial = TRIAL_PLANS.includes(plan);
 
     const session = await stripe.checkout.sessions.create({

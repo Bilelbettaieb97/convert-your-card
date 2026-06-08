@@ -32,7 +32,7 @@ async function verifyStripeSignature(
 async function sendTrialEndingEmail(email: string, nom: string, trialEndDate: Date) {
   const resendKey = process.env.RESEND_API_KEY;
   if (!resendKey) return;
-  const appUrl = process.env.VITE_APP_URL ?? "https://convert-your-card.vercel.app";
+  const appUrl = process.env.VITE_APP_URL ?? "https://www.cartevisitedigitale.fr";
   const firstName = nom.split(" ")[0];
   const dateStr = trialEndDate.toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long" });
 
@@ -66,7 +66,7 @@ async function sendWelcomeEmail(
 ) {
   const resendKey = process.env.RESEND_API_KEY;
   if (!resendKey) return;
-  const appUrl = process.env.VITE_APP_URL ?? "https://convert-your-card.vercel.app";
+  const appUrl = process.env.VITE_APP_URL ?? "https://www.cartevisitedigitale.fr";
   const cardUrl = `${appUrl}/${slug}`;
   const dashboardUrl = `${appUrl}/dashboard`;
   const planLabel = plan.charAt(0).toUpperCase() + plan.slice(1);

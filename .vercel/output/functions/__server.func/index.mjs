@@ -115,7 +115,7 @@ async function verifyStripeSignature(body, signature, secret) {
 async function sendTrialEndingEmail(email, nom, trialEndDate) {
   const resendKey = process.env.RESEND_API_KEY;
   if (!resendKey) return;
-  const appUrl = process.env.VITE_APP_URL ?? "https://convert-your-card.vercel.app";
+  const appUrl = process.env.VITE_APP_URL ?? "https://www.cartevisitedigitale.fr";
   const firstName = nom.split(" ")[0];
   const dateStr = trialEndDate.toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long" });
   await fetch("https://api.resend.com/emails", {
@@ -142,7 +142,7 @@ async function sendTrialEndingEmail(email, nom, trialEndDate) {
 async function sendWelcomeEmail(email, nom, slug, plan) {
   const resendKey = process.env.RESEND_API_KEY;
   if (!resendKey) return;
-  const appUrl = process.env.VITE_APP_URL ?? "https://convert-your-card.vercel.app";
+  const appUrl = process.env.VITE_APP_URL ?? "https://www.cartevisitedigitale.fr";
   const cardUrl = `${appUrl}/${slug}`;
   const dashboardUrl = `${appUrl}/dashboard`;
   const planLabel = plan.charAt(0).toUpperCase() + plan.slice(1);
@@ -342,7 +342,7 @@ const _OQri8d = defineEventHandler(async (event) => {
     }
     const stripeSecretKey = process.env.STRIPE_SECRET_KEY ?? "";
     const stripe = new Stripe(stripeSecretKey, { apiVersion: "2024-06-20" });
-    const appUrl = process.env.VITE_APP_URL ?? "https://convert-your-card.vercel.app";
+    const appUrl = process.env.VITE_APP_URL ?? "https://www.cartevisitedigitale.fr";
     const hasTrial = TRIAL_PLANS.includes(plan);
     const session = await stripe.checkout.sessions.create({
       ui_mode: "embedded",
