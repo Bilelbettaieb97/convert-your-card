@@ -122,6 +122,7 @@ function PricingPage() {
       });
       if (url) window.location.href = url;
     } catch (err) {
+      console.error("[handleActivate]", err);
       toast.error(err instanceof Error ? err.message : "Erreur lors du paiement");
     } finally {
       setCreating(false);
