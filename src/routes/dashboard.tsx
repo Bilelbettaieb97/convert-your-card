@@ -27,7 +27,7 @@ const META: Record<string, { title: string; subtitle?: string }> = {
   "/dashboard/carte":         { title: "Ma carte",              subtitle: "Aperçu, QR code et partage" },
   "/dashboard/content":       { title: "Contenu",               subtitle: "Sections, textes et boutons d'action" },
   "/dashboard/theme":         { title: "Apparence",             subtitle: "Thème et palette de couleurs" },
-  "/dashboard/style":         { title: "Style par brique",      subtitle: "Variantes visuelles par section" },
+  "/dashboard/style":         { title: "Style des sections",     subtitle: "Variantes visuelles par section" },
   "/dashboard/links":         { title: "Liens & réseaux",       subtitle: "Coordonnées, boutons et réseaux sociaux" },
   "/dashboard/media":         { title: "Médias",                subtitle: "Logo, photos et bibliothèque" },
   "/dashboard/share":         { title: "Statistiques",          subtitle: "Vues, clics et engagement" },

@@ -15,7 +15,7 @@ import { supabase } from "@/integrations/supabase/client";
 const CARD_SUB = [
   { to: "/dashboard/content", label: "Contenu",    icon: Layers   },
   { to: "/dashboard/theme",   label: "Apparence",  icon: Palette  },
-  { to: "/dashboard/style",   label: "Style",      icon: Sparkles },
+  { to: "/dashboard/style",   label: "Style des sections", icon: Sparkles },
 ];
 
 const NAV_EXTRAS = [
