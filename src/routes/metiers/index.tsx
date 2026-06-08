@@ -9,14 +9,19 @@ export const Route = createFileRoute("/metiers/")({
       {
         name: "description",
         content:
-          "Découvrez la carte de visite digitale adaptée à votre métier : coach, consultant, avocat, médecin, architecte… Créez la vôtre en 3 minutes.",
+          "Découvrez la carte de visite digitale adaptée à votre métier : coach, consultant, avocat, médecin, architecte… Créez la vôtre en 3 minutes. Essai gratuit 7 jours.",
       },
       { property: "og:title", content: "Carte de visite digitale par métier — CVD" },
-      { property: "og:description", content: "Carte de visite digitale pensée pour chaque profession. Partagez vos coordonnées en 1 tap." },
+      { property: "og:description", content: "Carte de visite digitale pensée pour chaque profession. Partagez vos coordonnées en 1 tap. Essai gratuit 7 jours." },
+      { property: "og:type", content: "website" },
       { property: "og:url", content: "https://cartevisitedigitale.fr/metiers" },
       { property: "og:site_name", content: "CVD — Carte de visite digitale" },
       { property: "og:locale", content: "fr_FR" },
+      { property: "og:image", content: "https://cartevisitedigitale.fr/og-image.jpg" },
       { name: "twitter:card", content: "summary_large_image" },
+      { name: "twitter:title", content: "Carte de visite digitale par métier — CVD" },
+      { name: "twitter:description", content: "Carte de visite digitale adaptée à chaque profession. Essai gratuit 7 jours." },
+      { name: "twitter:image", content: "https://cartevisitedigitale.fr/og-image.jpg" },
     ],
     links: [{ rel: "canonical", href: "https://cartevisitedigitale.fr/metiers" }],
   }),
@@ -27,9 +32,49 @@ const METIERS = [
   { slug: "coach", label: "Coach", desc: "Coach professionnel, coach de vie, coach business" },
 ];
 
+function MetiersStructuredData() {
+  const data = {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "BreadcrumbList",
+        "@id": "https://cartevisitedigitale.fr/metiers#breadcrumb",
+        itemListElement: [
+          { "@type": "ListItem", position: 1, name: "Accueil", item: "https://cartevisitedigitale.fr" },
+          { "@type": "ListItem", position: 2, name: "Métiers", item: "https://cartevisitedigitale.fr/metiers" },
+        ],
+      },
+      {
+        "@type": "WebPage",
+        "@id": "https://cartevisitedigitale.fr/metiers#webpage",
+        url: "https://cartevisitedigitale.fr/metiers",
+        name: "Carte de visite digitale par métier — CVD",
+        description: "Découvrez la carte de visite digitale adaptée à votre métier : coach, consultant, avocat, médecin… Créez la vôtre en 3 minutes.",
+        inLanguage: "fr-FR",
+        isPartOf: { "@id": "https://cartevisitedigitale.fr/#website" },
+        breadcrumb: { "@id": "https://cartevisitedigitale.fr/metiers#breadcrumb" },
+      },
+      {
+        "@type": "ItemList",
+        "@id": "https://cartevisitedigitale.fr/metiers#list",
+        name: "Carte de visite digitale par métier",
+        description: "Liste des pages métier CVD avec conseils et exemples spécifiques à chaque profession.",
+        itemListElement: METIERS.map((m, i) => ({
+          "@type": "ListItem",
+          position: i + 1,
+          name: `Carte de visite digitale pour ${m.label}`,
+          url: `https://cartevisitedigitale.fr/metiers/${m.slug}`,
+        })),
+      },
+    ],
+  };
+  return <script type="application/ld+json" dangerouslySetInnerHTML={{ __html: JSON.stringify(data) }} />;
+}
+
 function MetiersPage() {
   return (
     <div className="min-h-screen bg-background text-foreground font-body">
+      <MetiersStructuredData />
       <Nav />
 
       <nav aria-label="Fil d'Ariane" className="max-w-7xl mx-auto px-4 pt-4 pb-1">
