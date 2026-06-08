@@ -1006,7 +1006,7 @@ export function planRank(p: VariantId): number {
 export type GatedSectionKey =
   | "identity" | "actions" | "vcardEnabled" | "aboutEnabled" | "contactEnabled"
   | "servicesEnabled" | "testimonialsEnabled" | "calendarEnabled" | "languagesEnabled" | "socialsEnabled"
-  | "statsEnabled" | "listingsEnabled" | "videoEnabled" | "ctaEnabled";
+  | "statsEnabled" | "listingsEnabled" | "galleryEnabled" | "videoEnabled" | "ctaEnabled";
 
 export const SECTION_TIER: Record<GatedSectionKey, VariantId> = {
   // Essentielle
@@ -1023,6 +1023,7 @@ export const SECTION_TIER: Record<GatedSectionKey, VariantId> = {
   socialsEnabled: "vitrine",
   statsEnabled: "vitrine",
   listingsEnabled: "vitrine",
+  galleryEnabled: "vitrine",
   videoEnabled: "vitrine",
   ctaEnabled: "vitrine",
 };
@@ -1033,14 +1034,14 @@ export function isSectionAllowed(plan: VariantId, key: GatedSectionKey): boolean
 
 type SectionFlags = Partial<Pick<CardData,
   | "vcardEnabled" | "statsEnabled" | "aboutEnabled" | "videoEnabled"
-  | "servicesEnabled" | "listingsEnabled" | "testimonialsEnabled"
+  | "servicesEnabled" | "listingsEnabled" | "galleryEnabled" | "testimonialsEnabled"
   | "calendarEnabled" | "languagesEnabled" | "ctaEnabled"
   | "contactEnabled" | "socialsEnabled"
 >>;
 
 const ALL_OFF: Required<SectionFlags> = {
   vcardEnabled: false, statsEnabled: false, aboutEnabled: false, videoEnabled: false,
-  servicesEnabled: false, listingsEnabled: false, testimonialsEnabled: false,
+  servicesEnabled: false, listingsEnabled: false, galleryEnabled: false, testimonialsEnabled: false,
   calendarEnabled: false, languagesEnabled: false, ctaEnabled: false,
   contactEnabled: false, socialsEnabled: false,
 };
@@ -1069,6 +1070,7 @@ const VITRINE_ALL: Required<SectionFlags> = {
   statsEnabled: true,
   servicesEnabled: true,
   listingsEnabled: true,
+  galleryEnabled: true,
   testimonialsEnabled: true,
   videoEnabled: true,
   calendarEnabled: true,
