@@ -9,7 +9,8 @@ import type { CardData } from "@/lib/card-types";
 import { BusinessCard } from "@/components/card/BusinessCard";
 import { PhoneFrame } from "@/components/card/PhoneFrame";
 import { Button } from "@/components/ui/button";
-import { Upload, Trash2, ImageIcon, Loader2, Copy, Check, UserCircle2, LayoutTemplate, Star, Tag } from "lucide-react";
+import { Upload, Trash2, ImageIcon, Loader2, Copy, Check, UserCircle2, LayoutTemplate, Star, Tag, PlusCircle } from "lucide-react";
+import { Link } from "@tanstack/react-router";
 import { toast } from "sonner";
 
 export const Route = createFileRoute("/dashboard/media")({
@@ -136,8 +137,8 @@ function MediaPage() {
     return <div className="p-8 text-muted-foreground">Chargement…</div>;
   }
 
-  const hasTestimonials = data.testimonialsEnabled && data.testimonials.length > 0;
-  const hasListings = data.listingsEnabled && data.listings.length > 0;
+  const hasTestimonials = data.testimonialsEnabled;
+  const hasListings = data.listingsEnabled;
 
   return (
     <div className="mx-auto max-w-[1400px] px-5 sm:px-8 py-8 grid grid-cols-1 xl:grid-cols-[1fr_380px] gap-8 items-start">
@@ -326,49 +327,63 @@ function MediaPage() {
                 <p className="text-[11px] uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-1.5">
                   <Star className="h-3 w-3" /> Témoignages
                 </p>
-                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
-                  {data.testimonials.map((t, i) => (
-                    <SectionSlot
-                      key={t.id}
-                      label={t.name || `Témoin ${i + 1}`}
-                      sublabel={t.role || undefined}
-                      currentUrl={t.photo}
-                      onApply={(url) =>
-                        setData({ ...data, testimonials: data.testimonials.map((x) => x.id === t.id ? { ...x, photo: url } : x) })
-                      }
-                      onUploadFile={async (file) => {
-                        const url = await uploadFile(file, "library");
-                        if (url) loadLibrary();
-                        return url;
-                      }}
-                    />
-                  ))}
-                </div>
+                {data.testimonials.length === 0 ? (
+                  <Link to="/dashboard/content" className="flex items-center gap-2 text-xs text-muted-foreground hover:text-foreground transition py-3 px-4 rounded-xl border border-dashed border-border hover:border-primary/40">
+                    <PlusCircle className="h-4 w-4 shrink-0" />
+                    Ajoutez des témoignages dans Contenu pour gérer leurs photos ici
+                  </Link>
+                ) : (
+                  <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+                    {data.testimonials.map((t, i) => (
+                      <SectionSlot
+                        key={t.id}
+                        label={t.name || `Témoin ${i + 1}`}
+                        sublabel={t.role || undefined}
+                        currentUrl={t.photo}
+                        onApply={(url) =>
+                          setData({ ...data, testimonials: data.testimonials.map((x) => x.id === t.id ? { ...x, photo: url } : x) })
+                        }
+                        onUploadFile={async (file) => {
+                          const url = await uploadFile(file, "library");
+                          if (url) loadLibrary();
+                          return url;
+                        }}
+                      />
+                    ))}
+                  </div>
+                )}
               </div>
             )}
 
             {hasListings && (
               <div>
                 <p className="text-[11px] uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-1.5">
-                  <Tag className="h-3 w-3" /> Annonces
+                  <Tag className="h-3 w-3" /> Sélection de biens
                 </p>
-                <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
-                  {data.listings.map((l, i) => (
-                    <SectionSlot
-                      key={l.id}
-                      label={l.title || `Annonce ${i + 1}`}
-                      currentUrl={l.img}
-                      onApply={(url) =>
-                        setData({ ...data, listings: data.listings.map((x) => x.id === l.id ? { ...x, img: url } : x) })
-                      }
-                      onUploadFile={async (file) => {
-                        const url = await uploadFile(file, "library");
-                        if (url) loadLibrary();
-                        return url;
-                      }}
-                    />
-                  ))}
-                </div>
+                {data.listings.length === 0 ? (
+                  <Link to="/dashboard/content" className="flex items-center gap-2 text-xs text-muted-foreground hover:text-foreground transition py-3 px-4 rounded-xl border border-dashed border-border hover:border-primary/40">
+                    <PlusCircle className="h-4 w-4 shrink-0" />
+                    Ajoutez des biens dans Contenu pour gérer leurs photos ici
+                  </Link>
+                ) : (
+                  <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+                    {data.listings.map((l, i) => (
+                      <SectionSlot
+                        key={l.id}
+                        label={l.title || `Bien ${i + 1}`}
+                        currentUrl={l.img}
+                        onApply={(url) =>
+                          setData({ ...data, listings: data.listings.map((x) => x.id === l.id ? { ...x, img: url } : x) })
+                        }
+                        onUploadFile={async (file) => {
+                          const url = await uploadFile(file, "library");
+                          if (url) loadLibrary();
+                          return url;
+                        }}
+                      />
+                    ))}
+                  </div>
+                )}
               </div>
             )}
           </div>
