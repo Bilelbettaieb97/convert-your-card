@@ -4,6 +4,7 @@ import { SidebarProvider, SidebarTrigger } from "@/components/ui/sidebar";
 import { DashboardSidebar } from "@/components/dashboard/DashboardSidebar";
 import { CommandPalette } from "@/components/dashboard/CommandPalette";
 import { ShareDialog } from "@/components/card/ShareDialog";
+import { PasswordGate } from "@/components/dashboard/PasswordGate";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useCardStore } from "@/lib/card-store";
@@ -49,6 +50,7 @@ function DashboardLayout() {
   const meta = META[pathname] ?? { title: "Dashboard" };
   const { data } = useCardStore();
   const [shareOpen, setShareOpen] = useState(false);
+  const [gateDismissed, setGateDismissed] = useState(false);
   const { user, loading } = useAuthStore();
   const navigate = useNavigate();
 
@@ -72,6 +74,10 @@ function DashboardLayout() {
   }
 
   if (!user) return null;
+
+  if (!gateDismissed && user.user_metadata?.has_password !== true) {
+    return <PasswordGate onUnlock={() => setGateDismissed(true)} />;
+  }
 
   return (
     <SidebarProvider>
