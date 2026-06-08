@@ -5,6 +5,7 @@ import { Check, Crown, Mail, LogOut } from "lucide-react";
 import { UpsellSection } from "@/components/dashboard/UpsellSection";
 import { useAuthStore } from "@/lib/auth-store";
 import { supabase } from "@/integrations/supabase/client";
+import { usePlan } from "@/lib/use-plan";
 
 export const Route = createFileRoute("/dashboard/account")({
   component: AccountPage,
@@ -17,7 +18,6 @@ const PLANS = [
     price: "9,80 €/mois",
     description: "Les briques indispensables pour être joignable.",
     features: ["Identité, contact, vCard", "Boutons d'action", "Bio & badges"],
-    current: true,
   },
   {
     id: "vitrine",
@@ -36,6 +36,7 @@ const PLANS = [
 function AccountPage() {
   const { user } = useAuthStore();
   const navigate = useNavigate();
+  const { plan, loading } = usePlan();
 
   async function handleSignOut() {
     await supabase.auth.signOut();
@@ -50,35 +51,43 @@ function AccountPage() {
           Vous pouvez changer de plan à tout moment, sans engagement.
         </p>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
-          {PLANS.map((p) => (
-            <Card key={p.id} className={`p-5 relative ${p.highlight ? "border-primary/60 shadow-[var(--shadow-elegant)]" : ""}`}>
-              {p.highlight && (
-                <span className="absolute -top-2 right-4 inline-flex items-center gap-1 text-[10px] uppercase tracking-wider bg-primary text-primary-foreground px-2 py-0.5 rounded-full">
-                  <Crown className="h-3 w-3" /> Recommandé
-                </span>
-              )}
-              <div className="flex items-baseline justify-between gap-3 mb-1">
-                <h3 className="font-display text-xl">{p.label}</h3>
-                <span className="text-sm text-muted-foreground">{p.price}</span>
-              </div>
-              <p className="text-sm text-muted-foreground mb-4">{p.description}</p>
-              <ul className="space-y-2 mb-5">
-                {p.features.map((f) => (
-                  <li key={f} className="flex items-start gap-2 text-sm">
-                    <Check className="h-4 w-4 text-primary shrink-0 mt-0.5" />
-                    <span>{f}</span>
-                  </li>
-                ))}
-              </ul>
-              {p.current ? (
-                <Button variant="outline" disabled className="w-full">Plan actuel</Button>
-              ) : (
-                <Link to="/pricing">
-                  <Button className="w-full">Passer à {p.label}</Button>
-                </Link>
-              )}
-            </Card>
-          ))}
+          {PLANS.map((p) => {
+            const current = !loading && plan === p.id;
+            return (
+              <Card key={p.id} className={`p-5 relative ${current ? "border-primary shadow-[var(--shadow-elegant)]" : p.highlight ? "border-primary/60" : ""}`}>
+                {current && (
+                  <span className="absolute -top-2 left-4 inline-flex items-center gap-1 text-[10px] uppercase tracking-wider bg-primary text-primary-foreground px-2 py-0.5 rounded-full">
+                    Plan actuel
+                  </span>
+                )}
+                {!current && p.highlight && (
+                  <span className="absolute -top-2 right-4 inline-flex items-center gap-1 text-[10px] uppercase tracking-wider bg-primary text-primary-foreground px-2 py-0.5 rounded-full">
+                    <Crown className="h-3 w-3" /> Recommandé
+                  </span>
+                )}
+                <div className="flex items-baseline justify-between gap-3 mb-1">
+                  <h3 className="font-display text-xl">{p.label}</h3>
+                  <span className="text-sm text-muted-foreground">{p.price}</span>
+                </div>
+                <p className="text-sm text-muted-foreground mb-4">{p.description}</p>
+                <ul className="space-y-2 mb-5">
+                  {p.features.map((f) => (
+                    <li key={f} className="flex items-start gap-2 text-sm">
+                      <Check className="h-4 w-4 text-primary shrink-0 mt-0.5" />
+                      <span>{f}</span>
+                    </li>
+                  ))}
+                </ul>
+                {current ? (
+                  <Button variant="outline" disabled className="w-full">Plan actuel</Button>
+                ) : (
+                  <Link to="/pricing">
+                    <Button className="w-full">Passer à {p.label}</Button>
+                  </Link>
+                )}
+              </Card>
+            );
+          })}
         </div>
       </section>
 
