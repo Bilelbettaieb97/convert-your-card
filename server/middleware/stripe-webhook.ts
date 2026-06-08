@@ -58,6 +58,32 @@ async function sendTrialEndingEmail(email: string, nom: string, trialEndDate: Da
   });
 }
 
+async function sendAdminNotification(email: string, plan: string, slug: string) {
+  const resendKey = process.env.RESEND_API_KEY;
+  if (!resendKey) return;
+  const appUrl = process.env.VITE_APP_URL ?? "https://www.cartevisitedigitale.fr";
+  const now = new Date().toLocaleString("fr-FR", { timeZone: "Europe/Paris", dateStyle: "full", timeStyle: "short" });
+
+  await fetch("https://api.resend.com/emails", {
+    method: "POST",
+    headers: { Authorization: `Bearer ${resendKey}`, "Content-Type": "application/json" },
+    body: JSON.stringify({
+      from: "CVD Notifs <bilel@convertilab.com>",
+      to: "Convertilab@gmail.com",
+      subject: `🆕 Nouveau client CVD — ${email} (${plan})`,
+      html: `<div style="font-family:sans-serif;max-width:500px;margin:0 auto;padding:32px 20px;background:#f9fafb;border-radius:12px">
+        <h2 style="color:#1a1a2e;margin:0 0 16px">Nouveau client 🎉</h2>
+        <table style="width:100%;border-collapse:collapse;font-size:14px">
+          <tr><td style="padding:8px 0;color:#6b7280;width:120px">Email</td><td style="font-weight:600;color:#1a1a2e">${email}</td></tr>
+          <tr><td style="padding:8px 0;color:#6b7280">Plan</td><td style="font-weight:600;color:#c026d3;text-transform:capitalize">${plan}</td></tr>
+          <tr><td style="padding:8px 0;color:#6b7280">Carte</td><td><a href="${appUrl}/${slug}" style="color:#c026d3">${appUrl}/${slug}</a></td></tr>
+          <tr><td style="padding:8px 0;color:#6b7280">Date</td><td style="color:#1a1a2e">${now}</td></tr>
+        </table>
+      </div>`,
+    }),
+  });
+}
+
 async function sendWelcomeEmail(
   email: string,
   nom: string,
@@ -192,12 +218,18 @@ export default defineEventHandler(async (event) => {
       );
     }
 
-    // Send welcome email
+    // Send welcome email + admin notification
     try {
       await sendWelcomeEmail(email, email.split("@")[0], profileSlug, plan);
       console.log("[stripe-webhook] Welcome email sent to:", email);
     } catch (e) {
       console.error("[stripe-webhook] Email error:", e);
+    }
+    try {
+      await sendAdminNotification(email, plan, profileSlug);
+      console.log("[stripe-webhook] Admin notification sent");
+    } catch (e) {
+      console.error("[stripe-webhook] Admin notification error:", e);
     }
 
   } else if (stripeEvent.type === "customer.subscription.updated") {
