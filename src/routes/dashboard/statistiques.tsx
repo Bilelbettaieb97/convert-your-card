@@ -50,27 +50,19 @@ function StatistiquesPage() {
   const [period, setPeriod] = useState<Period>("7j");
   const [copied, setCopied] = useState(false);
   const [profileId, setProfileId] = useState<string | null>(null);
-  const [dbg, setDbg] = useState<string>("init");
-
-  const loadData = React.useCallback(async (pid: string) => {
-    setDbg(`calling rpc with ${pid.slice(0,8)}`);
-    // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    const { data, error } = await (supabase as any).rpc("get_card_analytics", { p_profile_id: pid });
-    if (error) {
-      setDbg(`ERROR: ${error.message}`);
-    } else {
-      setDbg(`OK: ${data?.length ?? 0} rows, clicks=${(data ?? []).filter((r: any) => r.event_type === "click_button" || r.event_type === "click_social").length}`);
-    }
-    setAnalytics((data ?? []) as AnalyticsRow[]);
-    setLoading(false);
-    setRefreshing(false);
-  }, []);
 
   const refresh = React.useCallback(() => {
     if (!profileId) return;
     setRefreshing(true);
-    loadData(profileId);
-  }, [profileId, loadData]);
+    supabase.from("nfc_analytics")
+      .select("event_type, created_at, event_data")
+      .eq("profile_id", profileId)
+      .order("created_at", { ascending: true })
+      .then(({ data }) => {
+        if (data) setAnalytics(data as AnalyticsRow[]);
+        setRefreshing(false);
+      });
+  }, [profileId]);
 
   useEffect(() => {
     const profile = getProfileMeta();
@@ -80,7 +72,18 @@ function StatistiquesPage() {
     setPlan(profile.plan ?? "free");
     setProfileId(profile.id);
 
-    loadData(profile.id);
+    // Exact same pattern as notifications page (which works)
+    supabase.from("nfc_analytics")
+      .select("event_type, created_at, event_data")
+      .eq("profile_id", profile.id)
+      .order("created_at", { ascending: true })
+      .then(({ data }) => {
+        if (data) setAnalytics(data as AnalyticsRow[]);
+        setLoading(false);
+      });
+
+    // Mirror notifications: also call getUser() in same effect
+    supabase.auth.getUser().then(() => { setLoading(false); });
 
     // Real-time: append new events as they arrive
     const channel = supabase
@@ -94,7 +97,7 @@ function StatistiquesPage() {
       .subscribe();
 
     return () => { supabase.removeChannel(channel); };
-  }, [loadData]);
+  }, []);
 
   const PERIOD_DAYS: Record<Period, number> = { "7j": 7, "30j": 30, "90j": 90 };
   const LOCKED_PERIODS: Period[] = plan === "free" ? ["30j", "90j"] : plan === "starter" ? ["90j"] : [];
@@ -147,10 +150,6 @@ function StatistiquesPage() {
 
   return (
     <div className="p-5 lg:p-8 max-w-5xl space-y-6">
-      {/* DEBUG TEMP — à supprimer */}
-      <div className="text-xs font-mono bg-yellow-100 text-yellow-900 rounded px-3 py-2 border border-yellow-300">
-        🔍 DEBUG: pid={profileId?.slice(0,8) ?? "null"} | {dbg}
-      </div>
       {/* Header + period selector */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
         <div className="flex items-center gap-3">
