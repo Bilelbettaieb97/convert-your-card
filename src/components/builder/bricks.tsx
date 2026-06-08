@@ -392,14 +392,15 @@ export function ListingsBrick({ data, update }: BrickProps) {
 /* ---------- Gallery ---------- */
 
 export function GalleryBrick({ data, update }: BrickProps) {
+  const gallery = data.gallery ?? [];
   const setPhoto = (id: string, patch: Partial<import("@/lib/card-types").GalleryPhoto>) =>
-    update("gallery", data.gallery.map((p) => (p.id === id ? { ...p, ...patch } : p)));
+    update("gallery", gallery.map((p) => (p.id === id ? { ...p, ...patch } : p)));
   const add = () =>
     update("gallery", [
-      ...data.gallery,
+      ...gallery,
       { id: crypto.randomUUID(), img: "", caption: "" },
     ]);
-  const remove = (id: string) => update("gallery", data.gallery.filter((p) => p.id !== id));
+  const remove = (id: string) => update("gallery", gallery.filter((p) => p.id !== id));
   const [uploading, setUploading] = useState<string | null>(null);
   const onImage = async (id: string, f: File) => {
     setUploading(id);
@@ -409,10 +410,10 @@ export function GalleryBrick({ data, update }: BrickProps) {
   };
   return (
     <div className="space-y-4">
-      {data.gallery.length === 0 && (
+      {gallery.length === 0 && (
         <p className="text-sm text-muted-foreground">Aucune photo. Ajoutez votre première image.</p>
       )}
-      {data.gallery.map((p) => (
+      {gallery.map((p) => (
         <div key={p.id} className="rounded-xl border border-border p-3 flex gap-3 items-start">
           <label className="h-20 w-20 rounded-lg overflow-hidden bg-muted grid place-items-center cursor-pointer shrink-0">
             {uploading === p.id ? (

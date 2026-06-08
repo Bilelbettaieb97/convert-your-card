@@ -650,15 +650,16 @@ function ServicesSection({ data }: { data: CardData }) {
    ============================================================ */
 
 function GallerySection({ data }: { data: CardData }) {
-  if (!data.galleryEnabled || data.gallery.length === 0) return null;
-  const v = data.variants.gallery;
+  const gallery = data.gallery ?? [];
+  if (!data.galleryEnabled || gallery.length === 0) return null;
+  const v = data.variants?.gallery;
 
   if (v === "carousel") {
     return (
       <section>
         <div className="px-5"><SectionTitle>Galerie</SectionTitle></div>
         <div className="mt-3 flex gap-2 overflow-x-auto px-5 pb-2 snap-x snap-mandatory [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-          {data.gallery.map((p) => (
+          {gallery.map((p) => (
             <div key={p.id} className="snap-start shrink-0 w-[72%] rounded-2xl overflow-hidden bg-card-surface border border-card-border">
               <div className="aspect-[3/4] overflow-hidden bg-card-surface-alt">
                 {p.img ? <img src={p.img} alt={p.caption} className="h-full w-full object-cover" /> :
@@ -676,7 +677,7 @@ function GallerySection({ data }: { data: CardData }) {
     return (
       <section className="px-5 space-y-3">
         <SectionTitle>Galerie</SectionTitle>
-        {data.gallery.map((p) => (
+        {gallery.map((p) => (
           <div key={p.id} className="rounded-2xl overflow-hidden bg-card-surface border border-card-border">
             <div className="aspect-[4/3] overflow-hidden bg-card-surface-alt">
               {p.img ? <img src={p.img} alt={p.caption} className="h-full w-full object-cover" /> :
@@ -694,7 +695,7 @@ function GallerySection({ data }: { data: CardData }) {
     <section className="px-5">
       <SectionTitle>Galerie</SectionTitle>
       <div className="mt-3 grid grid-cols-2 gap-2">
-        {data.gallery.map((p) => (
+        {gallery.map((p) => (
           <div key={p.id} className="rounded-xl overflow-hidden bg-card-surface border border-card-border">
             <div className="aspect-square overflow-hidden bg-card-surface-alt">
               {p.img ? <img src={p.img} alt={p.caption} className="h-full w-full object-cover" /> :
