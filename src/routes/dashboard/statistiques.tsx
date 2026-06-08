@@ -1,7 +1,9 @@
 import * as React from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
+import { createServerFn } from "@tanstack/react-start";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { adminSupabase } from "@/lib/supabase-admin";
 import { getProfileMeta } from "@/lib/profile-store";
 import {
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend,
@@ -18,6 +20,34 @@ type AnalyticsRow = { event_type: string; created_at: string | null; event_data?
 const SCAN_GOAL = 10;
 
 export const Route = createFileRoute("/dashboard/statistiques")({ component: StatistiquesPage });
+
+// Server function: bypasses RLS via adminSupabase, verifies ownership via JWT
+const fetchProfileAnalytics = createServerFn({ method: "POST" })
+  .validator((input: { profileId: string; accessToken: string }) => input)
+  .handler(async ({ data }) => {
+    // Verify the JWT token server-side
+    const { data: { user } } = await adminSupabase.auth.getUser(data.accessToken);
+    if (!user) return [] as AnalyticsRow[];
+
+    // Verify the profile belongs to this user
+    const { data: profile } = await adminSupabase
+      .from("nfc_profiles")
+      .select("id")
+      .eq("id", data.profileId)
+      .eq("user_id", user.id)
+      .maybeSingle();
+
+    if (!profile) return [] as AnalyticsRow[];
+
+    // Fetch all analytics with admin privileges (no RLS)
+    const { data: rows } = await adminSupabase
+      .from("nfc_analytics")
+      .select("event_type, created_at, event_data")
+      .eq("profile_id", data.profileId)
+      .order("created_at", { ascending: true });
+
+    return (rows ?? []) as AnalyticsRow[];
+  });
 
 function daysBack(n: number) { return new Date(Date.now() - n * 86400000); }
 function fmtDate(iso: string, days: number): string {
@@ -50,24 +80,20 @@ function StatistiquesPage() {
   const [copied, setCopied] = useState(false);
   const [profileId, setProfileId] = useState<string | null>(null);
 
-  const doFetch = React.useCallback((pid: string) => {
-    // Exact same pattern as notifications page — no auth.getUser(), plain .then()
-    supabase.from("nfc_analytics")
-      .select("event_type, created_at, event_data")
-      .eq("profile_id", pid)
-      .order("created_at", { ascending: true })
-      .then(({ data }) => {
-        setAnalytics((data ?? []) as AnalyticsRow[]);
-        setLoading(false);
-        setRefreshing(false);
-      });
+  const loadData = React.useCallback(async (pid: string) => {
+    const { data: { session } } = await supabase.auth.getSession();
+    if (!session) return;
+    const rows = await fetchProfileAnalytics({ data: { profileId: pid, accessToken: session.access_token } });
+    setAnalytics(rows as AnalyticsRow[]);
+    setLoading(false);
+    setRefreshing(false);
   }, []);
 
   const refresh = React.useCallback(() => {
     if (!profileId) return;
     setRefreshing(true);
-    doFetch(profileId);
-  }, [profileId, doFetch]);
+    loadData(profileId);
+  }, [profileId, loadData]);
 
   useEffect(() => {
     const profile = getProfileMeta();
@@ -77,7 +103,7 @@ function StatistiquesPage() {
     setPlan(profile.plan ?? "free");
     setProfileId(profile.id);
 
-    doFetch(profile.id);
+    loadData(profile.id);
 
     // Real-time: append new events as they arrive
     const channel = supabase
@@ -91,7 +117,7 @@ function StatistiquesPage() {
       .subscribe();
 
     return () => { supabase.removeChannel(channel); };
-  }, [doFetch]);
+  }, [loadData]);
 
   const PERIOD_DAYS: Record<Period, number> = { "7j": 7, "30j": 30, "90j": 90 };
   const LOCKED_PERIODS: Period[] = plan === "free" ? ["30j", "90j"] : plan === "starter" ? ["90j"] : [];
