@@ -105,10 +105,78 @@ async function sendWelcomeEmail(
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      from: "Bilel · ConvertiLab <bilel@convertilab.com>",
+      from: "Bilel · Carte Visite Digitale <bilel@convertilab.com>",
       to: email,
-      subject: `🎉 Ta carte Carte Visite Digitale est prête, ${firstName} !`,
-      html: `<div style="font-family:sans-serif;max-width:600px;margin:0 auto;padding:40px 20px"><h1 style="color:#1a1a2e">Ta carte est prête ! 🚀</h1><p style="color:#6b7280">Salut ${firstName}, bienvenue sur Carte Visite Digitale. Ton plan <strong>${planLabel}</strong> est actif.</p><div style="background:#f9fafb;border:1px solid #e5e7eb;border-radius:12px;padding:24px;margin-bottom:24px"><p style="font-weight:600;margin:0 0 8px;color:#1a1a2e">Ta carte de visite digitale :</p><a href="${cardUrl}" style="color:#c026d3">${cardUrl}</a></div><a href="${dashboardUrl}" style="display:inline-block;background:linear-gradient(135deg,#c026d3,#7c3aed);color:white;padding:14px 28px;border-radius:50px;text-decoration:none;font-weight:600">Accéder à mon dashboard →</a></div>`,
+      subject: `Bienvenue ${firstName} — ta carte est en ligne 🎉`,
+      html: `<!DOCTYPE html>
+<html lang="fr">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
+<body style="margin:0;padding:0;background:#f4f4f8;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">
+  <div style="max-width:580px;margin:40px auto;padding:0 16px 40px">
+
+    <!-- Header gradient -->
+    <div style="background:linear-gradient(135deg,#c026d3,#7c3aed);border-radius:16px 16px 0 0;padding:40px 40px 32px;text-align:center">
+      <div style="display:inline-block;background:rgba(255,255,255,0.15);border-radius:50px;padding:6px 18px;font-size:12px;color:rgba(255,255,255,0.9);letter-spacing:1px;text-transform:uppercase;margin-bottom:20px">Carte Visite Digitale</div>
+      <h1 style="margin:0;color:#ffffff;font-size:28px;font-weight:700;line-height:1.3">Bienvenue, ${firstName} ! 🎉</h1>
+      <p style="margin:12px 0 0;color:rgba(255,255,255,0.85);font-size:15px">Ta carte de visite digitale est prête et en ligne.</p>
+    </div>
+
+    <!-- Body -->
+    <div style="background:#ffffff;padding:40px;border-radius:0 0 16px 16px;box-shadow:0 4px 24px rgba(0,0,0,0.06)">
+
+      <p style="margin:0 0 24px;color:#374151;font-size:15px;line-height:1.7">
+        Félicitations pour ton plan <strong style="color:#c026d3">${planLabel}</strong> — tu fais maintenant partie des professionnels qui partagent leur profil en 1 tap. 🚀
+      </p>
+
+      <!-- Card URL block -->
+      <div style="background:linear-gradient(135deg,#fdf4ff,#f5f3ff);border:1px solid #e9d5ff;border-radius:12px;padding:24px;margin-bottom:28px;text-align:center">
+        <p style="margin:0 0 6px;font-size:12px;color:#6b7280;text-transform:uppercase;letter-spacing:0.8px">🔗 Ton lien public</p>
+        <a href="${cardUrl}" style="font-size:16px;font-weight:700;color:#7c3aed;text-decoration:none;word-break:break-all">${cardUrl}</a>
+        <p style="margin:10px 0 0;font-size:12px;color:#9ca3af">Partage ce lien ou génère un QR code depuis ton dashboard</p>
+      </div>
+
+      <!-- Steps -->
+      <p style="margin:0 0 14px;font-size:14px;font-weight:600;color:#1a1a2e">3 premières choses à faire :</p>
+      <div style="margin-bottom:10px;display:flex;align-items:flex-start;gap:12px">
+        <div style="min-width:28px;height:28px;background:#f3e8ff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#7c3aed;text-align:center;line-height:28px">1</div>
+        <div style="padding-top:4px;color:#374151;font-size:14px">Ajoute ta photo, ton logo et tes coordonnées dans <strong>Ma carte</strong></div>
+      </div>
+      <div style="margin-bottom:10px;display:flex;align-items:flex-start;gap:12px">
+        <div style="min-width:28px;height:28px;background:#f3e8ff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#7c3aed;text-align:center;line-height:28px">2</div>
+        <div style="padding-top:4px;color:#374151;font-size:14px">Génère ton QR code et enregistre-le dans tes favoris</div>
+      </div>
+      <div style="margin-bottom:28px;display:flex;align-items:flex-start;gap:12px">
+        <div style="min-width:28px;height:28px;background:#f3e8ff;border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#7c3aed;text-align:center;line-height:28px">3</div>
+        <div style="padding-top:4px;color:#374151;font-size:14px">Partage ton lien dans ta bio Instagram, ta signature email et tes messages</div>
+      </div>
+
+      <!-- CTA -->
+      <div style="text-align:center;margin-bottom:32px">
+        <a href="${dashboardUrl}" style="display:inline-block;background:linear-gradient(135deg,#c026d3,#7c3aed);color:#ffffff;padding:16px 36px;border-radius:50px;text-decoration:none;font-weight:700;font-size:15px;box-shadow:0 4px 14px rgba(192,38,211,0.35)">
+          Accéder à mon dashboard →
+        </a>
+      </div>
+
+      <!-- Signature -->
+      <div style="border-top:1px solid #f3f4f6;padding-top:24px;display:flex;align-items:center;gap:14px">
+        <div style="width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#c026d3,#7c3aed);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:16px;text-align:center;line-height:44px">B</div>
+        <div>
+          <div style="font-weight:600;color:#1a1a2e;font-size:14px">Bilel, fondateur de Carte Visite Digitale</div>
+          <div style="color:#6b7280;font-size:13px;margin-top:2px">Une question ? Réponds directement à cet email, je lis tout. 🙏</div>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- Footer -->
+    <p style="text-align:center;color:#9ca3af;font-size:12px;margin:20px 0 0;line-height:1.6">
+      Tu reçois cet email car tu viens d'activer ton abonnement Carte Visite Digitale.<br>
+      <a href="${appUrl}/dashboard" style="color:#9ca3af">Se désabonner</a>
+    </p>
+
+  </div>
+</body>
+</html>`,
     }),
   });
 }
