@@ -1612,25 +1612,12 @@ function StickyMobileCTA() {
       style={{ paddingBottom: "max(0.5rem, env(safe-area-inset-bottom))" }}
     >
       <div className="mx-3 mb-2 bg-card/95 backdrop-blur-lg border border-border rounded-2xl shadow-2xl overflow-hidden">
-        <div className="bg-gradient-brand text-primary-foreground px-3 py-1.5 text-[11px] font-semibold flex items-center justify-between gap-2">
-          <span className="flex items-center gap-1.5 truncate">
-            <span className="w-1.5 h-1.5 rounded-full bg-white animate-pulse shrink-0" />
-            🔥 Plus que 47 places à -40%
-          </span>
-          <Countdown />
-        </div>
-        <a
-          href="#offres"
-          onClick={(e) => { e.preventDefault(); triggerCheckout("#offres"); }}
-          className="flex items-center gap-3 p-2.5 active:scale-[0.98] transition-transform"
+        <Link
+          to="/inscription"
+          className="flex items-center justify-center p-3 active:scale-[0.98] transition-transform"
         >
-          <div className="flex flex-col items-start pl-1.5 shrink-0">
-            <span className="text-[10px] text-muted-foreground line-through leading-none">33€</span>
-            <span className="font-display font-extrabold text-xl leading-tight text-foreground">19,80€</span>
-            <span className="text-[10px] text-success font-semibold leading-none">-13,20€</span>
-          </div>
-          <div className="flex-1 bg-gradient-cta text-primary-foreground rounded-xl py-3 px-3 text-center shadow-glow">
-            <div className="font-bold text-[15px] leading-tight flex items-center justify-center gap-1.5">
+          <div className="flex-1 bg-gradient-cta text-primary-foreground rounded-xl py-3.5 px-3 text-center shadow-glow">
+            <div className="font-bold text-[16px] leading-tight flex items-center justify-center gap-1.5">
               Créer ma carte
               <ArrowRight className="w-4 h-4" />
             </div>
@@ -1638,7 +1625,7 @@ function StickyMobileCTA() {
               <Shield className="w-2.5 h-2.5" /> Garantie 30j · Activation immédiate
             </div>
           </div>
-        </a>
+        </Link>
       </div>
     </div>
   );
