@@ -1,5 +1,5 @@
 import { j as jsxRuntimeExports } from "../_libs/react.mjs";
-import { av as MapPin, au as Phone, M as Mail, o as Save, a5 as Share2, G as Globe, l as Check, q as Smartphone, aI as Facebook, aJ as Youtube, aH as Instagram, aG as Linkedin } from "../_libs/lucide-react.mjs";
+import { t as MapPin, av as Phone, M as Mail, aJ as Save, a7 as Share2, G as Globe, j as Check, ax as Smartphone, aK as Facebook, aL as Youtube, aI as Instagram, aH as Linkedin } from "../_libs/lucide-react.mjs";
 function isLightBg(hex) {
   const c = hex.replace("#", "");
   if (c.length !== 6) return false;
