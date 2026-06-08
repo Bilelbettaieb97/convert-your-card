@@ -1,7 +1,7 @@
 import { r as reactExports, j as jsxRuntimeExports } from "../_libs/react.mjs";
 import { d as useNavigate, e as useRouterState, L as Link, O as Outlet } from "../_libs/tanstack__react-router.mjs";
 import { supabase } from "./client-CrY6GqN9.mjs";
-import { Z as Zap, L as LayoutDashboard, w as CreditCard, x as WandSparkles, y as ChartNoAxesColumn, a as LogOut } from "../_libs/lucide-react.mjs";
+import { Z as Zap, L as LayoutDashboard, v as CreditCard, w as WandSparkles, x as ChartNoAxesColumn, a as LogOut } from "../_libs/lucide-react.mjs";
 import "../_libs/tanstack__router-core.mjs";
 import "../_libs/tanstack__history.mjs";
 import "../_libs/cookie-es.mjs";

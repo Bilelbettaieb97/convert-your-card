@@ -1,7 +1,7 @@
 import { r as reactExports, j as jsxRuntimeExports } from "../_libs/react.mjs";
 import { L as Link } from "../_libs/tanstack__react-router.mjs";
 import { supabase } from "./client-CrY6GqN9.mjs";
-import { V as Lock, aw as Target, M as MessageCircle, Q as QrCode, al as Share2, m as Check, t as Copy, u as Download, E as Eye, ao as MousePointerClick, ap as UserPlus, T as TrendingUp, Z as Zap, aq as ArrowUpRight } from "../_libs/lucide-react.mjs";
+import { O as Lock, ay as Target, M as MessageCircle, Q as QrCode, ak as Share2, m as Check, s as Copy, t as Download, E as Eye, an as MousePointerClick, ao as UserPlus, T as TrendingUp, Z as Zap, ap as ArrowUpRight } from "../_libs/lucide-react.mjs";
 import { R as ResponsiveContainer, L as LineChart, C as CartesianGrid, X as XAxis, Y as YAxis, T as Tooltip, a as Line } from "../_libs/recharts.mjs";
 import "../_libs/tanstack__router-core.mjs";
 import "../_libs/tanstack__history.mjs";

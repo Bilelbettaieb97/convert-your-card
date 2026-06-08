@@ -1,6 +1,6 @@
 import { r as reactExports, j as jsxRuntimeExports } from "../_libs/react.mjs";
 import { L as Link } from "../_libs/tanstack__react-router.mjs";
-import { S as Sparkles, F as Wifi, m as Check, X, I as Upload, w as CreditCard, A as ArrowRight } from "../_libs/lucide-react.mjs";
+import { S as Sparkles, z as Wifi, m as Check, X, F as Upload, v as CreditCard, A as ArrowRight } from "../_libs/lucide-react.mjs";
 import "../_libs/tanstack__router-core.mjs";
 import "../_libs/tanstack__history.mjs";
 import "../_libs/cookie-es.mjs";
