@@ -266,7 +266,7 @@ function ActionsSection({ data, profileId }: { data: CardData; profileId?: strin
       <section className="px-5 space-y-2">
         {items.map((it, i) => (
           <a key={i} href={it.href} target={it.href.startsWith("http") ? "_blank" : undefined} rel="noopener noreferrer"
-            onClick={() => profileId && logEvent(profileId, "button_click", { type: it.type })}
+            onClick={() => profileId && logEvent(profileId, "click_button", { type: it.type })}
             className="flex items-center gap-3 rounded-2xl bg-card-surface border border-card-border px-4 py-3 active:scale-[0.99] transition">
             <span className="h-9 w-9 grid place-items-center rounded-xl" style={{ background: "var(--card-accent-gradient)" }}>
               <it.icon className="h-4 w-4 text-card-on-accent" />
@@ -284,7 +284,7 @@ function ActionsSection({ data, profileId }: { data: CardData; profileId?: strin
       <section className="px-5 grid grid-cols-2 gap-2">
         {items.map((it, i) => (
           <a key={i} href={it.href} target={it.href.startsWith("http") ? "_blank" : undefined} rel="noopener noreferrer"
-            onClick={() => profileId && logEvent(profileId, "button_click", { type: it.type })}
+            onClick={() => profileId && logEvent(profileId, "click_button", { type: it.type })}
             className="flex flex-col items-center justify-center gap-2 rounded-2xl bg-card-surface border border-card-border py-5 active:scale-[0.99] transition">
             <span className="h-10 w-10 grid place-items-center rounded-xl" style={{ background: "var(--card-accent-gradient)" }}>
               <it.icon className="h-5 w-5 text-card-on-accent" />
@@ -302,7 +302,7 @@ function ActionsSection({ data, profileId }: { data: CardData; profileId?: strin
       <div className="flex gap-2 justify-center">
         {items.map((it, i) => (
           <QuickActionIcon key={i} icon={it.icon} label={it.label} href={it.href} primary={it.label === "Appeler"}
-            onTrack={() => profileId && logEvent(profileId, "button_click", { type: it.type })} />
+            onTrack={() => profileId && logEvent(profileId, "click_button", { type: it.type })} />
         ))}
       </div>
     </section>
@@ -817,7 +817,7 @@ function CalendarSection({ data, profileId }: { data: CardData; profileId?: stri
   if (!data.calendarEnabled || !data.calendarUrl) return null;
   const v = data.variants.calendar;
   const label = data.calendarLabel || "Réserver un rendez-vous";
-  const track = () => profileId && logEvent(profileId, "button_click", { type: "calendar" });
+  const track = () => profileId && logEvent(profileId, "click_button", { type: "calendar" });
 
   if (v === "cta") {
     return (
@@ -946,7 +946,7 @@ function CtaSection({ data, profileId }: { data: CardData; profileId?: string })
   if (!data.ctaEnabled) return null;
   const v = data.variants.cta;
   const hasBtn = data.ctaButtonLabel && data.ctaButtonUrl;
-  const track = () => profileId && logEvent(profileId, "button_click", { type: "cta" });
+  const track = () => profileId && logEvent(profileId, "click_button", { type: "cta" });
 
   if (v === "outline") {
     return (

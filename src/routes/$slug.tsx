@@ -198,7 +198,7 @@ function ActionButton({ btn, profileId, theme }: { btn: Bouton; profileId: strin
       href={hrefs[btn.type] ?? "#"}
       target={openInNew ? "_blank" : undefined}
       rel="noopener noreferrer"
-      onClick={() => logEvent(profileId, "button_click", { type: btn.type })}
+      onClick={() => logEvent(profileId, "click_button", { type: btn.type })}
       className="flex items-center gap-3 w-full rounded-2xl px-5 py-4 text-sm font-semibold text-white transition hover:opacity-90"
       style={{ backgroundColor: theme.accent, boxShadow: `0 4px 15px -4px ${theme.accent}80` }}
     >

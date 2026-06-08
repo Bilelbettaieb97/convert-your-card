@@ -72,7 +72,7 @@ function StatistiquesPage() {
   const from = daysBack(days);
   const filtered = analytics.filter((e) => e.created_at && new Date(e.created_at) >= from);
   const scans = filtered.filter((e) => e.event_type === "scan");
-  const clicks = filtered.filter((e) => e.event_type === "button_click");
+  const clicks = filtered.filter((e) => e.event_type === "click_button");
   const contacts = filtered.filter((e) => e.event_type === "vcard_download");
   const convRate = scans.length > 0 ? Math.round((contacts.length / scans.length) * 100) : 0;
   const clickRate = scans.length > 0 ? Math.round((clicks.length / scans.length) * 100) : 0;
