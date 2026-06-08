@@ -5,28 +5,49 @@ import { Card } from "@/components/ui/card";
 import { Link2, QrCode, Eye, MousePointerClick, Smartphone, Download, Copy } from "lucide-react";
 import { toast } from "sonner";
 import { getProfileMeta } from "@/lib/profile-store";
+import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/dashboard/share")({
   component: SharePage,
 });
 
-const STATS = [
-  { icon: Eye, label: "Vues 30 j.", value: "—", hint: "Disponible après publication" },
-  { icon: MousePointerClick, label: "Clics 30 j.", value: "—", hint: "Sur les boutons d'action" },
-  { icon: Smartphone, label: "Ajouts vCard", value: "—", hint: "Téléphones où vous êtes enregistré" },
-  { icon: QrCode, label: "Scans QR", value: "—", hint: "Détection des scans physiques" },
-];
+type Stats = { views: number; clicks: number; saves: number; qr: number };
 
 function SharePage() {
   const [publicUrl, setPublicUrl] = useState("https://www.cartevisitedigitale.fr/");
+  const [stats, setStats] = useState<Stats>({ views: 0, clicks: 0, saves: 0, qr: 0 });
+  const [loadingStats, setLoadingStats] = useState(true);
 
   useEffect(() => {
     const profile = getProfileMeta();
-    if (profile) {
-      const origin = typeof window !== "undefined" ? window.location.origin : "https://www.cartevisitedigitale.fr";
-      setPublicUrl(`${origin}/${profile.slug}`);
-    }
+    if (!profile) { setLoadingStats(false); return; }
+
+    const origin = typeof window !== "undefined" ? window.location.origin : "https://www.cartevisitedigitale.fr";
+    setPublicUrl(`${origin}/${profile.slug}`);
+
+    const since30 = new Date(Date.now() - 30 * 86_400_000).toISOString();
+    supabase
+      .from("nfc_analytics")
+      .select("event_type")
+      .eq("profile_id", profile.id)
+      .gte("created_at", since30)
+      .then(({ data: rows }) => {
+        if (!rows) { setLoadingStats(false); return; }
+        const views = rows.filter(r => r.event_type === "view" || r.event_type === "scan").length;
+        const clicks = rows.filter(r => r.event_type === "button_click").length;
+        const saves = rows.filter(r => r.event_type === "vcard_download").length;
+        const qr = rows.filter(r => r.event_type === "qr_scan").length;
+        setStats({ views, clicks, saves, qr });
+        setLoadingStats(false);
+      });
   }, []);
+
+  const STATS = [
+    { icon: Eye,              label: "Vues 30 j.",    value: loadingStats ? "…" : stats.views.toString(),  hint: "Visites de votre carte" },
+    { icon: MousePointerClick, label: "Clics 30 j.",  value: loadingStats ? "…" : stats.clicks.toString(), hint: "Sur les boutons d'action" },
+    { icon: Smartphone,       label: "Ajouts vCard",  value: loadingStats ? "…" : stats.saves.toString(),  hint: "Téléphones où vous êtes enregistré" },
+    { icon: QrCode,           label: "Scans QR",      value: loadingStats ? "…" : stats.qr.toString(),     hint: "Scans via QR code" },
+  ];
 
   return (
     <div className="mx-auto max-w-5xl px-5 py-8 space-y-8">
@@ -53,7 +74,7 @@ function SharePage() {
       <section>
         <h2 className="font-display text-2xl font-medium">Statistiques</h2>
         <p className="text-sm text-muted-foreground mt-1 mb-4">
-          Les indicateurs s'activent automatiquement dès la publication de votre carte.
+          Activité des 30 derniers jours sur votre carte publique.
         </p>
         <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-3">
           {STATS.map(({ icon: Icon, label, value, hint }) => (
