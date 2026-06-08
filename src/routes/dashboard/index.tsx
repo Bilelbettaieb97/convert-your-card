@@ -13,6 +13,7 @@ import { Button } from "@/components/ui/button";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { getProfileMeta } from "@/lib/profile-store";
+import { usePlan } from "@/lib/use-plan";
 
 export const Route = createFileRoute("/dashboard/")({ component: OverviewPage });
 
@@ -20,6 +21,7 @@ type Kpis = { vues: number; clics: number; vcards: number; scans: number };
 
 function OverviewPage() {
   const { data, hydrated } = useCardStore();
+  const { plan } = usePlan();
   const [kpis, setKpis] = useState<Kpis>({ vues: 0, clics: 0, vcards: 0, scans: 0 });
 
   useEffect(() => {
@@ -129,7 +131,9 @@ function OverviewPage() {
               <QuickAction to="/dashboard/card" icon={CreditCard} label="Ouvrir ma carte" hint="Aperçu, QR, partage" />
               <QuickAction to="/dashboard/style" icon={Palette} label="Changer l'apparence" hint="Thème & variantes" />
               <QuickAction to="/dashboard/analytics" icon={Share2} label="Voir les stats" hint="Engagement détaillé" />
-              <QuickAction to="/dashboard/account" icon={TrendingUp} label="Passer à Vitrine" hint="Débloquer tout" highlight />
+              {plan !== "vitrine" && (
+                <QuickAction to="/dashboard/account" icon={TrendingUp} label="Passer à Vitrine" hint="Débloquer tout" highlight />
+              )}
             </div>
           </div>
 

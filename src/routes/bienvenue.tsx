@@ -17,14 +17,32 @@ function BienvenePage() {
   const navigate = useNavigate();
 
   useEffect(() => {
-    async function redirect() {
-      // Small delay for webhook to process the Stripe session
-      await new Promise((r) => setTimeout(r, 1500));
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) { navigate({ to: "/connexion" }); return; }
-      navigate({ to: "/dashboard", replace: true });
-    }
-    redirect();
+    // Use onAuthStateChange to reliably detect session after Stripe redirect
+    const { data: { subscription } } = supabase.auth.onAuthStateChange((_, session) => {
+      if (session?.user) {
+        subscription.unsubscribe();
+        navigate({ to: "/dashboard", replace: true });
+      }
+    });
+
+    // Also check immediately (session may already be in localStorage)
+    supabase.auth.getSession().then(({ data: { session } }) => {
+      if (session?.user) {
+        subscription.unsubscribe();
+        navigate({ to: "/dashboard", replace: true });
+      }
+    });
+
+    // Hard fallback after 8s — if still no session, send to login
+    const fallback = setTimeout(() => {
+      subscription.unsubscribe();
+      navigate({ to: "/connexion" });
+    }, 8000);
+
+    return () => {
+      subscription.unsubscribe();
+      clearTimeout(fallback);
+    };
   }, [navigate]);
 
   return (

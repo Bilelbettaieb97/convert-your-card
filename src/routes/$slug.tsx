@@ -5,7 +5,9 @@ import { adminSupabase } from "@/lib/supabase-admin";
 import { Phone, Mail, Globe, MapPin, Calendar, Download, ExternalLink } from "lucide-react";
 import { useEffect } from "react";
 import type { Tables } from "@/integrations/supabase/types";
-import { CARD_THEMES } from "@/lib/card-themes";
+import { CARD_THEMES, THEMES_BY_ID } from "@/lib/card-themes";
+import { BusinessCard } from "@/components/card/BusinessCard";
+import type { CardData } from "@/lib/card-types";
 
 type NfcProfile = Tables<"nfc_profiles">;
 
@@ -91,15 +93,29 @@ export const Route = createFileRoute("/$slug")({
 
 function ProfilePage() {
   const { profile } = Route.useLoaderData();
-  const theme = getTheme(profile.couleur_accent);
-
-  const boutons = ((profile.boutons as Bouton[]) ?? []).filter((b) => b.active !== false && b.value);
-  const reseaux = ((profile.reseaux as Reseau[]) ?? []).filter((r) => r.active !== false && r.url);
 
   useEffect(() => {
     logEvent(profile.id, "scan", { referrer: document.referrer, ua: navigator.userAgent.slice(0, 100) });
   }, [profile.id]);
 
+  // If card_data is available (saved via builder), use the exact same BusinessCard component
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const cardData = (profile as any).card_data as CardData | null;
+  if (cardData) {
+    const themePalette = (THEMES_BY_ID[cardData.accent ?? "gold"] ?? THEMES_BY_ID.gold).palette;
+    return (
+      <div className="min-h-screen pb-8" style={{ background: themePalette.bg }}>
+        <div className="mx-auto max-w-sm">
+          <BusinessCard data={cardData} />
+        </div>
+      </div>
+    );
+  }
+
+  // Legacy fallback for older profiles without card_data blob
+  const theme = getTheme(profile.couleur_accent);
+  const boutons = ((profile.boutons as Bouton[]) ?? []).filter((b) => b.active !== false && b.value);
+  const reseaux = ((profile.reseaux as Reseau[]) ?? []).filter((r) => r.active !== false && r.url);
   const isLight = theme.mode === "light";
   const subTextColor = isLight ? "rgba(17,24,39,0.65)" : "rgba(255,255,255,0.75)";
   const subTextColorDim = isLight ? "rgba(17,24,39,0.5)" : "rgba(255,255,255,0.6)";
@@ -107,67 +123,35 @@ function ProfilePage() {
   return (
     <div className="min-h-screen flex flex-col items-center py-8 px-4" style={{ background: theme.bg }}>
       <div className="w-full max-w-sm">
-        {/* Header card */}
         <div
           className="relative rounded-3xl overflow-hidden mb-4"
           style={{ background: theme.gradient, boxShadow: `0 20px 60px -15px ${theme.accent}66` }}
         >
           <div className="p-8 text-center">
             {profile.photo_url ? (
-              <img
-                src={profile.photo_url}
-                alt={profile.nom}
-                className="w-24 h-24 rounded-full object-cover mx-auto mb-4 border-4 shadow-lg"
-                style={{ borderColor: "rgba(255,255,255,0.3)" }}
-              />
+              <img src={profile.photo_url} alt={profile.nom} className="w-24 h-24 rounded-full object-cover mx-auto mb-4 border-4 shadow-lg" style={{ borderColor: "rgba(255,255,255,0.3)" }} />
             ) : (
-              <div
-                className="w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl font-bold"
-                style={{ backgroundColor: "rgba(255,255,255,0.2)", color: "#fff" }}
-              >
+              <div className="w-24 h-24 rounded-full flex items-center justify-center mx-auto mb-4 text-3xl font-bold" style={{ backgroundColor: "rgba(255,255,255,0.2)", color: "#fff" }}>
                 {profile.nom.charAt(0).toUpperCase()}
               </div>
             )}
             <h1 className="text-2xl font-bold" style={{ color: "#fff" }}>{profile.nom}</h1>
-            {profile.fonction && (
-              <p className="text-sm mt-1" style={{ color: "rgba(255,255,255,0.82)" }}>{profile.fonction}</p>
-            )}
-            {profile.entreprise && (
-              <p className="text-xs mt-0.5 font-medium" style={{ color: "rgba(255,255,255,0.68)" }}>{profile.entreprise}</p>
-            )}
-            {profile.bio && (
-              <p className="text-sm mt-3 leading-relaxed" style={{ color: "rgba(255,255,255,0.72)" }}>{profile.bio}</p>
-            )}
+            {profile.fonction && <p className="text-sm mt-1" style={{ color: "rgba(255,255,255,0.82)" }}>{profile.fonction}</p>}
+            {profile.entreprise && <p className="text-xs mt-0.5 font-medium" style={{ color: "rgba(255,255,255,0.68)" }}>{profile.entreprise}</p>}
+            {profile.bio && <p className="text-sm mt-3 leading-relaxed" style={{ color: "rgba(255,255,255,0.72)" }}>{profile.bio}</p>}
           </div>
         </div>
-
-        {/* Action buttons */}
         {boutons.length > 0 && (
           <div className="space-y-3 mb-4">
-            {boutons.map((btn, i) => (
-              <ActionButton key={i} btn={btn} profileId={profile.id} theme={theme} />
-            ))}
+            {boutons.map((btn, i) => <ActionButton key={i} btn={btn} profileId={profile.id} theme={theme} />)}
           </div>
         )}
-
-        {/* Social links */}
         {reseaux.length > 0 && (
-          <div
-            className="rounded-2xl p-4 mb-4"
-            style={{ backgroundColor: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.12)" }}
-          >
+          <div className="rounded-2xl p-4 mb-4" style={{ backgroundColor: "rgba(255,255,255,0.08)", border: "1px solid rgba(255,255,255,0.12)" }}>
             <p className="text-xs font-semibold uppercase tracking-wider mb-3" style={{ color: subTextColor }}>Réseaux</p>
             <div className="flex flex-wrap gap-3">
               {reseaux.map((r, i) => (
-                <a
-                  key={i}
-                  href={r.url}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  onClick={() => logEvent(profile.id, "social_click", { type: r.type })}
-                  className="flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition hover:opacity-80"
-                  style={{ backgroundColor: "rgba(255,255,255,0.12)", color: "#fff" }}
-                >
+                <a key={i} href={r.url} target="_blank" rel="noopener noreferrer" onClick={() => logEvent(profile.id, "social_click", { type: r.type })} className="flex items-center gap-2 px-4 py-2 rounded-full text-sm font-medium transition hover:opacity-80" style={{ backgroundColor: "rgba(255,255,255,0.12)", color: "#fff" }}>
                   <ExternalLink className="w-3.5 h-3.5" style={{ color: "rgba(255,255,255,0.6)" }} />
                   {r.label || (r.type.charAt(0).toUpperCase() + r.type.slice(1))}
                 </a>
@@ -175,24 +159,11 @@ function ProfilePage() {
             </div>
           </div>
         )}
-
-        {/* Save contact */}
-        <button
-          onClick={() => downloadVCard(profile)}
-          className="flex items-center justify-center gap-2 w-full rounded-full py-3.5 text-sm font-semibold transition hover:opacity-90"
-          style={{
-            backgroundColor: "rgba(255,255,255,0.1)",
-            border: "1px solid rgba(255,255,255,0.2)",
-            color: "#fff",
-          }}
-        >
-          <Download className="w-4 h-4" />
-          Enregistrer le contact
+        <button onClick={() => downloadVCard(profile)} className="flex items-center justify-center gap-2 w-full rounded-full py-3.5 text-sm font-semibold transition hover:opacity-90" style={{ backgroundColor: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.2)", color: "#fff" }}>
+          <Download className="w-4 h-4" /> Enregistrer le contact
         </button>
-
         <p className="text-center text-xs mt-6" style={{ color: subTextColorDim }}>
-          Propulsé par{" "}
-          <a href="/" className="font-semibold hover:underline" style={{ color: theme.accent }}>OneTap</a>
+          Propulsé par <a href="/" className="font-semibold hover:underline" style={{ color: theme.accent }}>OneTap</a>
         </p>
       </div>
     </div>
