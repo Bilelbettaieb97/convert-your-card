@@ -12,6 +12,7 @@ import {
 } from "@dnd-kit/sortable";
 import { CSS } from "@dnd-kit/utilities";
 import type { CardData, BrickId } from "@/lib/card-types";
+import { DEFAULT_SECTION_ORDER } from "@/lib/card-types";
 import {
   BRICK_META,
   VariantPicker,
@@ -28,6 +29,12 @@ interface BrickListProps {
 }
 
 export function BrickList({ data, update, setData, styleOnly = false }: BrickListProps) {
+  // Merge any new bricks added to DEFAULT_SECTION_ORDER that the user's saved order doesn't have yet
+  const sectionOrder: BrickId[] = [
+    ...data.sectionOrder,
+    ...DEFAULT_SECTION_ORDER.filter((id) => !data.sectionOrder.includes(id)),
+  ];
+
   const sensors = useSensors(
     useSensor(PointerSensor, { activationConstraint: { distance: 6 } }),
     useSensor(KeyboardSensor, { coordinateGetter: sortableKeyboardCoordinates }),
@@ -36,10 +43,10 @@ export function BrickList({ data, update, setData, styleOnly = false }: BrickLis
   const onDragEnd = (e: DragEndEvent) => {
     const { active, over } = e;
     if (!over || active.id === over.id) return;
-    const oldIdx = data.sectionOrder.indexOf(active.id as BrickId);
-    const newIdx = data.sectionOrder.indexOf(over.id as BrickId);
+    const oldIdx = sectionOrder.indexOf(active.id as BrickId);
+    const newIdx = sectionOrder.indexOf(over.id as BrickId);
     if (oldIdx < 0 || newIdx < 0) return;
-    setData({ ...data, sectionOrder: arrayMove(data.sectionOrder, oldIdx, newIdx) });
+    setData({ ...data, sectionOrder: arrayMove(sectionOrder, oldIdx, newIdx) });
   };
 
   const wrap = (id: BrickId, body: ReactNode): ReactNode => (
@@ -98,9 +105,9 @@ export function BrickList({ data, update, setData, styleOnly = false }: BrickLis
 
   return (
     <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={onDragEnd}>
-      <SortableContext items={data.sectionOrder} strategy={verticalListSortingStrategy}>
-        <Accordion type="single" collapsible defaultValue={data.sectionOrder[0]} className="space-y-3">
-          {data.sectionOrder.map((id) => {
+      <SortableContext items={sectionOrder} strategy={verticalListSortingStrategy}>
+        <Accordion type="single" collapsible defaultValue={sectionOrder[0]} className="space-y-3">
+          {sectionOrder.map((id) => {
             const meta = BRICK_META[id];
             const alwaysOn = id === "identity" || id === "theme";
             return (
