@@ -168,7 +168,7 @@ function HeroCTA() {
     <div className="flex flex-col sm:flex-row gap-3">
       <div className="relative flex-1">
         <div className="absolute left-3 top-1/2 -translate-y-1/2 text-muted-foreground font-medium text-sm">
-          onetap/
+          cartevisitedigitale/
         </div>
         <input
           type="text"
