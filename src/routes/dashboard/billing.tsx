@@ -69,6 +69,7 @@ function InvoiceStatus({ status }: { status: string | null }) {
 
 function BillingPage() {
   const [sub, setSub] = useState<Sub | null>(null);
+  const [profilePlan, setProfilePlan] = useState<string | null>(null);
   const [invoices, setInvoices] = useState<Invoice[]>([]);
   const [loadingSub, setLoadingSub] = useState(true);
   const [loadingInvoices, setLoadingInvoices] = useState(false);
@@ -77,13 +78,23 @@ function BillingPage() {
   useEffect(() => {
     supabase.auth.getUser().then(async ({ data: { user } }) => {
       if (!user) { setLoadingSub(false); return; }
-      const { data } = await supabase
-        .from("subscriptions")
-        .select("plan, status, current_period_end, stripe_customer_id, stripe_subscription_id")
-        .eq("user_id", user.id)
-        .maybeSingle();
-      const s = data as Sub | null;
+
+      const [{ data: subData }, { data: profileData }] = await Promise.all([
+        supabase
+          .from("subscriptions")
+          .select("plan, status, current_period_end, stripe_customer_id, stripe_subscription_id")
+          .eq("user_id", user.id)
+          .maybeSingle(),
+        supabase
+          .from("nfc_profiles")
+          .select("plan")
+          .eq("user_id", user.id)
+          .maybeSingle(),
+      ]);
+
+      const s = subData as Sub | null;
       setSub(s);
+      setProfilePlan((profileData as { plan?: string } | null)?.plan ?? null);
       setLoadingSub(false);
 
       if (s?.stripe_customer_id) {
@@ -111,7 +122,7 @@ function BillingPage() {
     }
   }
 
-  const plan = sub?.plan ?? "free";
+  const plan = sub?.plan ?? profilePlan ?? "free";
   const meta = PLAN_META[plan] ?? PLAN_META.free;
   const hasSub = !!sub?.stripe_customer_id;
 
