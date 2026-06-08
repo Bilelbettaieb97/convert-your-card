@@ -2,6 +2,7 @@ import * as React from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { getProfileMeta } from "@/lib/profile-store";
 import {
   AreaChart, Area, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer, Legend,
 } from "recharts";
@@ -48,37 +49,33 @@ function StatistiquesPage() {
   const [copied, setCopied] = useState(false);
 
   useEffect(() => {
-    let profileId: string | null = null;
     let channel: ReturnType<typeof supabase.channel> | null = null;
 
     async function load() {
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) return;
-      const [profileRes, subRes] = await Promise.all([
-        supabase.from("nfc_profiles").select("id, slug").eq("user_id", user.id).maybeSingle(),
-        supabase.from("subscriptions").select("plan").eq("user_id", user.id).maybeSingle(),
-      ]);
-      setPlan(subRes.data?.plan ?? "free");
-      if (profileRes.data?.slug) setCardUrl(`${window.location.origin}/${profileRes.data.slug}`);
-      if (profileRes.data?.id) {
-        profileId = profileRes.data.id;
-        const { data: events } = await supabase
-          .from("nfc_analytics").select("event_type, created_at, event_data")
-          .eq("profile_id", profileId)
-          .order("created_at", { ascending: true });
-        setAnalytics((events ?? []) as AnalyticsRow[]);
+      // Use same profile source as notifications page (localStorage)
+      const profile = getProfileMeta();
+      if (!profile) { setLoading(false); return; }
 
-        // Real-time: append new events as they arrive
-        channel = supabase
-          .channel(`analytics-${profileId}`)
-          .on("postgres_changes", {
-            event: "INSERT", schema: "public", table: "nfc_analytics",
-            filter: `profile_id=eq.${profileId}`,
-          }, (payload) => {
-            setAnalytics((prev) => [...prev, payload.new as AnalyticsRow]);
-          })
-          .subscribe();
-      }
+      setCardUrl(`${window.location.origin}/${profile.slug}`);
+      setPlan(profile.plan ?? "free");
+
+      const { data: events } = await supabase
+        .from("nfc_analytics").select("event_type, created_at, event_data")
+        .eq("profile_id", profile.id)
+        .order("created_at", { ascending: true });
+      setAnalytics((events ?? []) as AnalyticsRow[]);
+
+      // Real-time: append new events as they arrive
+      channel = supabase
+        .channel(`analytics-${profile.id}`)
+        .on("postgres_changes", {
+          event: "INSERT", schema: "public", table: "nfc_analytics",
+          filter: `profile_id=eq.${profile.id}`,
+        }, (payload) => {
+          setAnalytics((prev) => [...prev, payload.new as AnalyticsRow]);
+        })
+        .subscribe();
+
       setLoading(false);
     }
     load();
