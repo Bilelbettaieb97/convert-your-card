@@ -137,7 +137,7 @@ function RootComponent() {
     s.async = true;
     s.src = "https://connect.facebook.net/en_US/fbevents.js";
     document.head.appendChild(s);
-    w.fbq("init", "517991158551582");
+    w.fbq("init", "2460619001098990");
     w.fbq("track", "PageView");
   }, []);
 
