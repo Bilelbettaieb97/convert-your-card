@@ -656,16 +656,16 @@ function GallerySection({ data }: { data: CardData }) {
 
   if (v === "carousel") {
     return (
-      <section>
-        <div className="px-5"><SectionTitle>Galerie</SectionTitle></div>
-        <div className="mt-3 flex gap-2 overflow-x-auto px-5 pb-2 snap-x snap-mandatory [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+      <section className="px-5">
+        <SectionTitle>Galerie</SectionTitle>
+        <div className="mt-3 flex gap-2 overflow-x-auto pb-2 snap-x snap-mandatory [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {gallery.map((p) => (
-            <div key={p.id} className="snap-start shrink-0 w-[72%] rounded-2xl overflow-hidden bg-card-surface border border-card-border">
-              <div className="aspect-[3/4] overflow-hidden bg-card-surface-alt">
+            <div key={p.id} className="snap-start shrink-0 w-[calc(50%-4px)] rounded-xl overflow-hidden bg-card-surface border border-card-border">
+              <div className="aspect-square overflow-hidden bg-card-surface-alt">
                 {p.img ? <img src={p.img} alt={p.caption} className="h-full w-full object-cover" /> :
-                  <div className="h-full w-full grid place-items-center"><ImageIcon className="h-8 w-8 text-card-muted" /></div>}
+                  <div className="h-full w-full grid place-items-center"><ImageIcon className="h-6 w-6 text-card-muted" /></div>}
               </div>
-              {p.caption && <p className="text-xs text-card-muted px-3 py-2 truncate">{p.caption}</p>}
+              {p.caption && <p className="text-[10px] text-card-muted px-2 py-1.5 truncate">{p.caption}</p>}
             </div>
           ))}
         </div>
