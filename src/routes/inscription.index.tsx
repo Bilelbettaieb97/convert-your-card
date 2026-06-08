@@ -4,6 +4,7 @@ import { useState } from "react";
 import { z } from "zod";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
+import { signUpWithAutoConfirm } from "@/fns/signup";
 import { Toaster } from "@/components/ui/sonner";
 import { Zap, ShieldCheck, Lock, Users, Star, TrendingUp, Award, Quote, Eye, EyeOff } from "lucide-react";
 
@@ -40,28 +41,21 @@ function InscriptionPage() {
     }
     setSubmitting(true);
     try {
-      const { error: signUpError } = await supabase.auth.signUp({
-        email: parsed.data.email,
-        password: parsed.data.password,
-      });
+      // Server-side creation with email pre-confirmed (bypasses email verification)
+      const result = await signUpWithAutoConfirm({ data: { email: parsed.data.email, password: parsed.data.password } });
 
-      if (signUpError) {
-        if (signUpError.message.toLowerCase().includes("already registered") || signUpError.message.toLowerCase().includes("already exists")) {
-          // Compte existant → tenter connexion directe
-          const { error: signInError } = await supabase.auth.signInWithPassword({
-            email: parsed.data.email,
-            password: parsed.data.password,
-          });
-          if (signInError) {
-            toast.error("Ce compte existe déjà. Va sur la page connexion.");
-            return;
-          }
-        } else {
-          toast.error(signUpError.message);
+      if (result.exists) {
+        // Account exists → try sign in directly
+        const { error: signInError } = await supabase.auth.signInWithPassword({
+          email: parsed.data.email,
+          password: parsed.data.password,
+        });
+        if (signInError) {
+          toast.error("Ce compte existe déjà. Va sur la page connexion.");
           return;
         }
       } else {
-        // Connexion immédiate après création
+        // New account created and confirmed → sign in
         const { error: signInError } = await supabase.auth.signInWithPassword({
           email: parsed.data.email,
           password: parsed.data.password,
