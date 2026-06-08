@@ -15,6 +15,7 @@ export type BrickId =
   | "video"
   | "services"
   | "listings"
+  | "gallery"
   | "testimonials"
   | "calendar"
   | "languages"
@@ -32,6 +33,7 @@ export const DEFAULT_SECTION_ORDER: BrickId[] = [
   "video",
   "services",
   "listings",
+  "gallery",
   "testimonials",
   "calendar",
   "languages",
@@ -43,6 +45,7 @@ export const DEFAULT_SECTION_ORDER: BrickId[] = [
 
 export interface Stat { label: string; value: string }
 export interface Listing { id: string; img: string; title: string; meta: string; price: string }
+export interface GalleryPhoto { id: string; img: string; caption: string }
 export interface Badge { id: string; label: string }
 export interface Service { id: string; title: string; description: string }
 export interface Testimonial { id: string; name: string; role: string; text: string; rating: number; photo: string; link: string }
@@ -87,6 +90,10 @@ export interface CardData {
   // Listings
   listingsEnabled: boolean;
   listings: Listing[];
+
+  // Gallery
+  galleryEnabled: boolean;
+  gallery: GalleryPhoto[];
 
   // Testimonials
   testimonialsEnabled: boolean;
@@ -169,6 +176,8 @@ export const DEFAULT_CARD: CardData = {
   ],
   listingsEnabled: true,
   listings: [],
+  galleryEnabled: false,
+  gallery: [],
   testimonialsEnabled: true,
   testimonials: [
     { id: "t1", name: "Camille D.", role: "Vendeuse — Paris 7e", text: "Discret, efficace, à l'écoute. Vente conclue 8 % au-dessus de l'estimation initiale.", rating: 5, photo: "", link: "" },

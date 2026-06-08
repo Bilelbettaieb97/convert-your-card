@@ -66,6 +66,7 @@ export function BrickList({ data, update, setData, styleOnly = false }: BrickLis
       case "video":        return data.videoEnabled;
       case "services":     return data.servicesEnabled;
       case "listings":     return data.listingsEnabled;
+      case "gallery":      return data.galleryEnabled;
       case "testimonials": return data.testimonialsEnabled;
       case "calendar":     return data.calendarEnabled;
       case "languages":    return data.languagesEnabled;
@@ -85,6 +86,7 @@ export function BrickList({ data, update, setData, styleOnly = false }: BrickLis
       case "video":        update("videoEnabled", v); break;
       case "services":     update("servicesEnabled", v); break;
       case "listings":     update("listingsEnabled", v); break;
+      case "gallery":      update("galleryEnabled", v); break;
       case "testimonials": update("testimonialsEnabled", v); break;
       case "calendar":     update("calendarEnabled", v); break;
       case "languages":    update("languagesEnabled", v); break;

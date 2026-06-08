@@ -389,6 +389,66 @@ export function ListingsBrick({ data, update }: BrickProps) {
   );
 }
 
+/* ---------- Gallery ---------- */
+
+export function GalleryBrick({ data, update }: BrickProps) {
+  const setPhoto = (id: string, patch: Partial<import("@/lib/card-types").GalleryPhoto>) =>
+    update("gallery", data.gallery.map((p) => (p.id === id ? { ...p, ...patch } : p)));
+  const add = () =>
+    update("gallery", [
+      ...data.gallery,
+      { id: crypto.randomUUID(), img: "", caption: "" },
+    ]);
+  const remove = (id: string) => update("gallery", data.gallery.filter((p) => p.id !== id));
+  const [uploading, setUploading] = useState<string | null>(null);
+  const onImage = async (id: string, f: File) => {
+    setUploading(id);
+    const url = await uploadImage(f);
+    if (url) setPhoto(id, { img: url });
+    setUploading(null);
+  };
+  return (
+    <div className="space-y-4">
+      {data.gallery.length === 0 && (
+        <p className="text-sm text-muted-foreground">Aucune photo. Ajoutez votre première image.</p>
+      )}
+      {data.gallery.map((p) => (
+        <div key={p.id} className="rounded-xl border border-border p-3 flex gap-3 items-start">
+          <label className="h-20 w-20 rounded-lg overflow-hidden bg-muted grid place-items-center cursor-pointer shrink-0">
+            {uploading === p.id ? (
+              <Loader2 className="h-4 w-4 text-muted-foreground animate-spin" />
+            ) : p.img ? (
+              <img src={p.img} alt="" className="h-full w-full object-cover" />
+            ) : (
+              <Upload className="h-4 w-4 text-muted-foreground" />
+            )}
+            <input
+              type="file"
+              accept="image/*"
+              className="hidden"
+              onChange={(e) => { const f = e.target.files?.[0]; if (f) onImage(p.id, f); }}
+            />
+          </label>
+          <div className="flex-1 min-w-0 space-y-2">
+            <Input
+              placeholder="Légende (optionnel)"
+              value={p.caption}
+              onChange={(e) => setPhoto(p.id, { caption: e.target.value })}
+            />
+            <Button type="button" variant="ghost" size="sm" className="text-muted-foreground hover:text-destructive px-0" onClick={() => remove(p.id)}>
+              <Trash2 className="h-4 w-4 mr-1" /> Supprimer
+            </Button>
+          </div>
+        </div>
+      ))}
+      <Button type="button" variant="outline" size="sm" onClick={add}>
+        <Plus className="h-4 w-4 mr-1.5" />
+        Ajouter une photo
+      </Button>
+    </div>
+  );
+}
+
 /* ---------- Contact ---------- */
 
 export function ContactBrick({ data, update }: BrickProps) {
@@ -909,6 +969,7 @@ export const BRICK_META: Record<BrickId, { title: string; subtitle: string }> = 
   video: { title: "Vidéo de présentation", subtitle: "Lien YouTube" },
   services: { title: "Services", subtitle: "Vos offres / prestations" },
   listings: { title: "Sélection de biens", subtitle: "Vos annonces phares" },
+  gallery: { title: "Galerie de photos", subtitle: "Photos & légendes" },
   testimonials: { title: "Témoignages", subtitle: "Avis clients" },
   calendar: { title: "Prendre rendez-vous", subtitle: "Lien Calendly / agenda" },
   languages: { title: "Langues parlées", subtitle: "Idiomes & niveau" },
@@ -928,6 +989,7 @@ export function renderBrickBody(id: BrickId, props: BrickProps): ReactNode {
     case "video":        return <VideoBrick {...props} />;
     case "services":     return <ServicesBrick {...props} />;
     case "listings":     return <ListingsBrick {...props} />;
+    case "gallery":      return <GalleryBrick {...props} />;
     case "testimonials": return <TestimonialsBrick {...props} />;
     case "calendar":     return <CalendarBrick {...props} />;
     case "languages":    return <LanguagesBrick {...props} />;

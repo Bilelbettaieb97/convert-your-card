@@ -147,6 +147,7 @@ function MediaPage() {
 
   const hasTestimonials = data.testimonialsEnabled;
   const hasListings = data.listingsEnabled;
+  const hasGallery = data.galleryEnabled;
 
   return (
     <div className="mx-auto max-w-[1400px] px-5 sm:px-8 py-8 grid grid-cols-1 xl:grid-cols-[1fr_380px] gap-8 items-start">
@@ -288,6 +289,15 @@ function MediaPage() {
                         toast.success(`Image appliquée à ${l.title || `annonce ${i + 1}`}`);
                       },
                     })),
+                    ...data.gallery.map((g, i) => ({
+                      id: `g-${g.id}`,
+                      label: g.caption || `Photo ${i + 1}`,
+                      prefix: "Galerie",
+                      apply: () => {
+                        setData({ ...data, gallery: data.gallery.map((x) => x.id === g.id ? { ...x, img: p.url } : x) });
+                        toast.success(`Photo appliquée à la galerie`);
+                      },
+                    })),
                   ];
 
                   return (
@@ -326,9 +336,45 @@ function MediaPage() {
         </div>
 
         {/* Sections de la carte */}
-        {(hasTestimonials || hasListings) && (
+        {(hasTestimonials || hasListings || hasGallery) && (
           <div>
             <p className="text-xs uppercase tracking-wider text-muted-foreground mb-4">Sections de la carte</p>
+
+            {hasGallery && (
+              <div className={(hasTestimonials || hasListings) ? "mb-6" : ""}>
+                <p className="text-[11px] uppercase tracking-wider text-muted-foreground mb-3 flex items-center gap-1.5">
+                  <ImageIcon className="h-3 w-3" /> Galerie de photos
+                </p>
+                {data.gallery.length === 0 ? (
+                  <div className="rounded-xl border border-dashed border-border bg-card/20 px-4 py-5 text-center">
+                    <p className="text-xs text-muted-foreground mb-3">Aucune photo dans la galerie. Ajoutez vos photos dans Contenu, puis revenez ici pour les gérer.</p>
+                    <Link to="/dashboard/content">
+                      <Button size="sm" variant="outline" className="h-8 text-xs">
+                        <PlusCircle className="h-3.5 w-3.5 mr-1.5" /> Aller dans Contenu
+                      </Button>
+                    </Link>
+                  </div>
+                ) : (
+                  <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-3">
+                    {data.gallery.map((g, i) => (
+                      <SectionSlot
+                        key={g.id}
+                        label={g.caption || `Photo ${i + 1}`}
+                        currentUrl={g.img}
+                        onApply={(url) =>
+                          setData({ ...data, gallery: data.gallery.map((x) => x.id === g.id ? { ...x, img: url } : x) })
+                        }
+                        onUploadFile={async (file) => {
+                          const url = await uploadFile(file, "library");
+                          if (url) loadLibrary();
+                          return url;
+                        }}
+                      />
+                    ))}
+                  </div>
+                )}
+              </div>
+            )}
 
             {hasTestimonials && (
               <div className={hasListings ? "mb-6" : ""}>

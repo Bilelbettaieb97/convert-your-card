@@ -52,6 +52,11 @@ export const BRICK_VARIANTS: Partial<Record<BrickId, VariantOption[]>> = {
     { id: "stacked",  label: "Empilés",   hint: "Cartes pleine largeur" },
     { id: "compact",  label: "Compact",   hint: "Lignes mini-thumb" },
   ],
+  gallery: [
+    { id: "grid",     label: "Grille",    hint: "2 colonnes, format carré" },
+    { id: "carousel", label: "Carrousel", hint: "Défilement horizontal" },
+    { id: "stacked",  label: "Empilées",  hint: "Photos pleine largeur" },
+  ],
   calendar: [
     { id: "row",   label: "Row",    hint: "Ligne avec chevron" },
     { id: "cta",   label: "CTA",    hint: "Bouton pleine largeur" },
@@ -88,6 +93,7 @@ export const DEFAULT_VARIANTS = {
   video: "embed",
   services: "list",
   listings: "carousel",
+  gallery: "grid",
   calendar: "row",
   languages: "chips",
   cta: "gradient",
@@ -104,6 +110,7 @@ export type BrickVariants = {
   video:     "embed" | "thumb" | "cinema";
   services:  "list" | "numbered" | "carousel";
   listings:  "carousel" | "stacked" | "compact";
+  gallery:   "grid" | "carousel" | "stacked";
   calendar:  "row" | "cta" | "block";
   languages: "chips" | "list" | "grid";
   cta:       "gradient" | "outline" | "bold";

@@ -81,6 +81,7 @@ export function BusinessCard({ data }: { data: CardData }) {
               case "video":        return data.videoEnabled;
               case "services":     return data.servicesEnabled;
               case "listings":     return data.listingsEnabled;
+              case "gallery":      return data.galleryEnabled;
               case "testimonials": return data.testimonialsEnabled;
               case "calendar":     return data.calendarEnabled;
               case "languages":    return data.languagesEnabled;
@@ -100,6 +101,7 @@ export function BusinessCard({ data }: { data: CardData }) {
                 case "video":        return <VideoSection data={data} />;
                 case "services":     return <ServicesSection data={data} />;
                 case "listings":     return <ListingsSection data={data} />;
+                case "gallery":      return <GallerySection data={data} />;
                 case "testimonials": return <TestimonialsSection data={data} />;
                 case "calendar":     return <CalendarSection data={data} />;
                 case "languages":    return <LanguagesSection data={data} />;
@@ -646,6 +648,65 @@ function ServicesSection({ data }: { data: CardData }) {
 /* ============================================================
    LISTINGS
    ============================================================ */
+
+function GallerySection({ data }: { data: CardData }) {
+  if (!data.galleryEnabled || data.gallery.length === 0) return null;
+  const v = data.variants.gallery;
+
+  if (v === "carousel") {
+    return (
+      <section>
+        <div className="px-5"><SectionTitle>Galerie</SectionTitle></div>
+        <div className="mt-3 flex gap-2 overflow-x-auto px-5 pb-2 snap-x snap-mandatory [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
+          {data.gallery.map((p) => (
+            <div key={p.id} className="snap-start shrink-0 w-[72%] rounded-2xl overflow-hidden bg-card-surface border border-card-border">
+              <div className="aspect-[3/4] overflow-hidden bg-card-surface-alt">
+                {p.img ? <img src={p.img} alt={p.caption} className="h-full w-full object-cover" /> :
+                  <div className="h-full w-full grid place-items-center"><ImageIcon className="h-8 w-8 text-card-muted" /></div>}
+              </div>
+              {p.caption && <p className="text-xs text-card-muted px-3 py-2 truncate">{p.caption}</p>}
+            </div>
+          ))}
+        </div>
+      </section>
+    );
+  }
+
+  if (v === "stacked") {
+    return (
+      <section className="px-5 space-y-3">
+        <SectionTitle>Galerie</SectionTitle>
+        {data.gallery.map((p) => (
+          <div key={p.id} className="rounded-2xl overflow-hidden bg-card-surface border border-card-border">
+            <div className="aspect-[4/3] overflow-hidden bg-card-surface-alt">
+              {p.img ? <img src={p.img} alt={p.caption} className="h-full w-full object-cover" /> :
+                <div className="h-full w-full grid place-items-center"><ImageIcon className="h-8 w-8 text-card-muted" /></div>}
+            </div>
+            {p.caption && <p className="text-xs text-card-muted px-4 py-2">{p.caption}</p>}
+          </div>
+        ))}
+      </section>
+    );
+  }
+
+  // grid (default)
+  return (
+    <section className="px-5">
+      <SectionTitle>Galerie</SectionTitle>
+      <div className="mt-3 grid grid-cols-2 gap-2">
+        {data.gallery.map((p) => (
+          <div key={p.id} className="rounded-xl overflow-hidden bg-card-surface border border-card-border">
+            <div className="aspect-square overflow-hidden bg-card-surface-alt">
+              {p.img ? <img src={p.img} alt={p.caption} className="h-full w-full object-cover" /> :
+                <div className="h-full w-full grid place-items-center"><ImageIcon className="h-6 w-6 text-card-muted" /></div>}
+            </div>
+            {p.caption && <p className="text-[10px] text-card-muted px-2 py-1.5 truncate">{p.caption}</p>}
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
 
 function ListingsSection({ data }: { data: CardData }) {
   if (!data.listingsEnabled || data.listings.length === 0) return null;
