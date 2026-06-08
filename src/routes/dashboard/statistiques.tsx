@@ -9,7 +9,7 @@ import {
 import {
   Eye, MousePointerClick, UserPlus, TrendingUp, Lock, Share2, Copy, Check,
   MessageCircle, QrCode, Download, Zap, Target, ArrowUpRight, Phone, Mail,
-  Globe, Calendar, BarChart3,
+  Globe, Calendar, BarChart3, RefreshCw,
 } from "lucide-react";
 
 type Period = "7j" | "30j" | "90j";
@@ -45,27 +45,43 @@ function StatistiquesPage() {
   const [plan, setPlan] = useState<string>("free");
   const [cardUrl, setCardUrl] = useState<string>("");
   const [loading, setLoading] = useState(true);
+  const [refreshing, setRefreshing] = useState(false);
   const [period, setPeriod] = useState<Period>("7j");
   const [copied, setCopied] = useState(false);
+  const [profileId, setProfileId] = useState<string | null>(null);
+
+  const fetchAnalytics = React.useCallback(async (pid: string) => {
+    const { data: events } = await supabase
+      .from("nfc_analytics").select("event_type, created_at, event_data")
+      .eq("profile_id", pid)
+      .order("created_at", { ascending: true });
+    setAnalytics((events ?? []) as AnalyticsRow[]);
+  }, []);
+
+  const refresh = React.useCallback(async () => {
+    if (!profileId) return;
+    setRefreshing(true);
+    await fetchAnalytics(profileId);
+    setRefreshing(false);
+  }, [profileId, fetchAnalytics]);
 
   useEffect(() => {
     let channel: ReturnType<typeof supabase.channel> | null = null;
 
     async function load() {
-      // Use same profile source as notifications page (localStorage)
+      // Wait for auth session to be ready before querying (RLS blocks unauthenticated SELECTs)
+      const { data: { user } } = await supabase.auth.getUser();
+      if (!user) { setLoading(false); return; }
+
       const profile = getProfileMeta();
       if (!profile) { setLoading(false); return; }
 
       setCardUrl(`${window.location.origin}/${profile.slug}`);
       setPlan(profile.plan ?? "free");
+      setProfileId(profile.id);
 
-      const { data: events } = await supabase
-        .from("nfc_analytics").select("event_type, created_at, event_data")
-        .eq("profile_id", profile.id)
-        .order("created_at", { ascending: true });
-      setAnalytics((events ?? []) as AnalyticsRow[]);
+      await fetchAnalytics(profile.id);
 
-      // Real-time: append new events as they arrive
       channel = supabase
         .channel(`analytics-${profile.id}`)
         .on("postgres_changes", {
@@ -80,7 +96,7 @@ function StatistiquesPage() {
     }
     load();
     return () => { if (channel) supabase.removeChannel(channel); };
-  }, []);
+  }, [fetchAnalytics]);
 
   const PERIOD_DAYS: Record<Period, number> = { "7j": 7, "30j": 30, "90j": 90 };
   const LOCKED_PERIODS: Period[] = plan === "free" ? ["30j", "90j"] : plan === "starter" ? ["90j"] : [];
@@ -135,11 +151,18 @@ function StatistiquesPage() {
     <div className="p-5 lg:p-8 max-w-5xl space-y-6">
       {/* Header + period selector */}
       <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-        <div>
-          <h1 className="text-xl font-semibold text-foreground">Statistiques</h1>
-          <p className="text-sm text-muted-foreground mt-0.5">
-            {totalScans} scans au total &middot; {analytics.filter((e) => e.event_type === "vcard_download").length} contacts sauvegardés
-          </p>
+        <div className="flex items-center gap-3">
+          <div>
+            <h1 className="text-xl font-semibold text-foreground">Statistiques</h1>
+            <p className="text-sm text-muted-foreground mt-0.5">
+              {totalScans} scans au total &middot; {analytics.filter((e) => e.event_type === "vcard_download").length} contacts sauvegardés
+            </p>
+          </div>
+          <button onClick={refresh} disabled={refreshing}
+            className="h-8 w-8 grid place-items-center rounded-lg bg-muted hover:bg-accent transition disabled:opacity-50"
+            title="Rafraîchir les données">
+            <RefreshCw className={`h-3.5 w-3.5 ${refreshing ? "animate-spin" : ""}`} />
+          </button>
         </div>
         <div className="flex items-center gap-1 p-1 rounded-xl bg-muted self-start sm:self-auto">
           {(["7j", "30j", "90j"] as Period[]).map((p) => {
