@@ -57,7 +57,7 @@ function MyCardPage() {
           <div className="rounded-2xl border border-border bg-card/30 p-4 space-y-3">
             <div className="flex items-center justify-between">
               <span className="text-xs uppercase tracking-wider text-muted-foreground">Lien public</span>
-              <Link to="/dashboard/abonnement" className="text-[11px] text-primary hover:underline">Personnaliser →</Link>
+              <Link to="/dashboard/account" className="text-[11px] text-primary hover:underline">Personnaliser →</Link>
             </div>
             <PublicLinkBar url={publicUrl} />
           </div>

@@ -39,7 +39,6 @@ const META: Record<string, { title: string; subtitle?: string }> = {
   "/dashboard/orders":        { title: "Commandes",             subtitle: "Historique cartes NFC et livraisons" },
   "/dashboard/integrations":  { title: "Intégrations",          subtitle: "HubSpot, Zapier, Calendly, Slack…" },
   "/dashboard/billing":       { title: "Facturation",           subtitle: "Plan, méthode de paiement, factures" },
-  "/dashboard/abonnement":    { title: "Abonnement",            subtitle: "Plan, méthode de paiement, factures" },
   "/dashboard/settings":      { title: "Paramètres",            subtitle: "Profil, sécurité, RGPD" },
   "/dashboard/help":          { title: "Aide & onboarding",     subtitle: "Checklist activation, tutos, support" },
   "/dashboard/account":       { title: "Plan & compte",         subtitle: "Abonnement, facturation et préférences" },

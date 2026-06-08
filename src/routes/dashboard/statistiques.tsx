@@ -363,7 +363,7 @@ function StatistiquesPage() {
                       ? "Plan Starter = données 30 jours. Plan Pro = 90 jours d'historique complet."
                       : "Plan Pro = 90 jours d'historique pour suivre vos tendances."}
                   </p>
-                  <Link to="/dashboard/abonnement"
+                  <Link to="/dashboard/account"
                     className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-bold text-white transition hover:opacity-90"
                     style={{ background: "linear-gradient(135deg,#7c3aed,#EC4899)" }}>
                     Passer au Pro <ArrowUpRight className="w-3.5 h-3.5" />

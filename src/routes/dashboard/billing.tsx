@@ -200,7 +200,7 @@ function BillingPage() {
               </button>
             )}
             <Link
-              to="/dashboard/abonnement"
+              to="/dashboard/account"
               className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-medium text-white/60 hover:text-white transition"
             >
               Changer d'abonnement <ChevronRight className="w-3.5 h-3.5" />
@@ -297,7 +297,7 @@ function BillingPage() {
       {/* ── Discreet footer ── */}
       <p className="text-center text-xs text-muted-foreground">
         Questions ou changement de plan ?{" "}
-        <Link to="/dashboard/abonnement" className="underline underline-offset-2 hover:text-foreground transition">
+        <Link to="/dashboard/account" className="underline underline-offset-2 hover:text-foreground transition">
           Voir tous les plans
         </Link>
         {" · "}

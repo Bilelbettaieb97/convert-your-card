@@ -46,7 +46,6 @@ import { Route as DashboardCardRouteImport } from './routes/dashboard/card'
 import { Route as DashboardBillingRouteImport } from './routes/dashboard/billing'
 import { Route as DashboardAnalyticsRouteImport } from './routes/dashboard/analytics'
 import { Route as DashboardAccountRouteImport } from './routes/dashboard/account'
-import { Route as DashboardAbonnementRouteImport } from './routes/dashboard/abonnement'
 import { Route as InscriptionOffrePlanRouteImport } from './routes/inscription.offre.$plan'
 
 const TemplatesRoute = TemplatesRouteImport.update({
@@ -236,11 +235,6 @@ const DashboardAccountRoute = DashboardAccountRouteImport.update({
   path: '/account',
   getParentRoute: () => DashboardRoute,
 } as any)
-const DashboardAbonnementRoute = DashboardAbonnementRouteImport.update({
-  id: '/abonnement',
-  path: '/abonnement',
-  getParentRoute: () => DashboardRoute,
-} as any)
 const InscriptionOffrePlanRoute = InscriptionOffrePlanRouteImport.update({
   id: '/offre/$plan',
   path: '/offre/$plan',
@@ -260,7 +254,6 @@ export interface FileRoutesByFullPath {
   '/onboarding': typeof OnboardingRoute
   '/pricing': typeof PricingRoute
   '/templates': typeof TemplatesRoute
-  '/dashboard/abonnement': typeof DashboardAbonnementRoute
   '/dashboard/account': typeof DashboardAccountRoute
   '/dashboard/analytics': typeof DashboardAnalyticsRoute
   '/dashboard/billing': typeof DashboardBillingRoute
@@ -299,7 +292,6 @@ export interface FileRoutesByTo {
   '/onboarding': typeof OnboardingRoute
   '/pricing': typeof PricingRoute
   '/templates': typeof TemplatesRoute
-  '/dashboard/abonnement': typeof DashboardAbonnementRoute
   '/dashboard/account': typeof DashboardAccountRoute
   '/dashboard/analytics': typeof DashboardAnalyticsRoute
   '/dashboard/billing': typeof DashboardBillingRoute
@@ -341,7 +333,6 @@ export interface FileRoutesById {
   '/onboarding': typeof OnboardingRoute
   '/pricing': typeof PricingRoute
   '/templates': typeof TemplatesRoute
-  '/dashboard/abonnement': typeof DashboardAbonnementRoute
   '/dashboard/account': typeof DashboardAccountRoute
   '/dashboard/analytics': typeof DashboardAnalyticsRoute
   '/dashboard/billing': typeof DashboardBillingRoute
@@ -384,7 +375,6 @@ export interface FileRouteTypes {
     | '/onboarding'
     | '/pricing'
     | '/templates'
-    | '/dashboard/abonnement'
     | '/dashboard/account'
     | '/dashboard/analytics'
     | '/dashboard/billing'
@@ -423,7 +413,6 @@ export interface FileRouteTypes {
     | '/onboarding'
     | '/pricing'
     | '/templates'
-    | '/dashboard/abonnement'
     | '/dashboard/account'
     | '/dashboard/analytics'
     | '/dashboard/billing'
@@ -464,7 +453,6 @@ export interface FileRouteTypes {
     | '/onboarding'
     | '/pricing'
     | '/templates'
-    | '/dashboard/abonnement'
     | '/dashboard/account'
     | '/dashboard/analytics'
     | '/dashboard/billing'
@@ -770,13 +758,6 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardAccountRouteImport
       parentRoute: typeof DashboardRoute
     }
-    '/dashboard/abonnement': {
-      id: '/dashboard/abonnement'
-      path: '/abonnement'
-      fullPath: '/dashboard/abonnement'
-      preLoaderRoute: typeof DashboardAbonnementRouteImport
-      parentRoute: typeof DashboardRoute
-    }
     '/inscription/offre/$plan': {
       id: '/inscription/offre/$plan'
       path: '/offre/$plan'
@@ -788,7 +769,6 @@ declare module '@tanstack/react-router' {
 }
 
 interface DashboardRouteChildren {
-  DashboardAbonnementRoute: typeof DashboardAbonnementRoute
   DashboardAccountRoute: typeof DashboardAccountRoute
   DashboardAnalyticsRoute: typeof DashboardAnalyticsRoute
   DashboardBillingRoute: typeof DashboardBillingRoute
@@ -813,7 +793,6 @@ interface DashboardRouteChildren {
 }
 
 const DashboardRouteChildren: DashboardRouteChildren = {
-  DashboardAbonnementRoute: DashboardAbonnementRoute,
   DashboardAccountRoute: DashboardAccountRoute,
   DashboardAnalyticsRoute: DashboardAnalyticsRoute,
   DashboardBillingRoute: DashboardBillingRoute,
