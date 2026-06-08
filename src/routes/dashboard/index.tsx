@@ -37,7 +37,7 @@ function OverviewPage() {
         if (!rows) return;
         setKpis({
           vues: rows.filter((e) => e.event_type === "view").length,
-          clics: rows.filter((e) => e.event_type === "button_click").length,
+          clics: rows.filter((e) => e.event_type === "click_button" || e.event_type === "click_social").length,
           vcards: rows.filter((e) => e.event_type === "vcard_download").length,
           scans: rows.filter((e) => e.event_type === "qr_scan").length,
         });

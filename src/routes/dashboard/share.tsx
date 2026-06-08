@@ -34,7 +34,7 @@ function SharePage() {
       .then(({ data: rows }) => {
         if (!rows) { setLoadingStats(false); return; }
         const views = rows.filter(r => r.event_type === "view" || r.event_type === "scan").length;
-        const clicks = rows.filter(r => r.event_type === "button_click").length;
+        const clicks = rows.filter(r => r.event_type === "click_button" || r.event_type === "click_social").length;
         const saves = rows.filter(r => r.event_type === "vcard_download").length;
         const qr = rows.filter(r => r.event_type === "qr_scan").length;
         setStats({ views, clicks, saves, qr });

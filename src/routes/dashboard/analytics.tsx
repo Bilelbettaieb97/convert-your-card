@@ -36,7 +36,7 @@ function AnalyticsPage() {
         if (!rows) { setLoading(false); return; }
 
         const views = rows.filter(r => r.event_type === "view" || r.event_type === "scan").length;
-        const clicks = rows.filter(r => r.event_type === "button_click").length;
+        const clicks = rows.filter(r => r.event_type === "click_button" || r.event_type === "click_social").length;
         const saves = rows.filter(r => r.event_type === "vcard_download").length;
         setTotals({ views, clicks, saves, engagement: views > 0 ? Math.round(((clicks + saves) / views) * 100) : 0 });
 
