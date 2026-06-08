@@ -22,12 +22,12 @@ export function DigitalCardVisual() {
                 </div>
                 <div>
                   <div className="font-display font-bold text-lg leading-tight">Julien Dubois</div>
-                  <div className="text-xs opacity-90">CEO · OneTap Studio</div>
+                  <div className="text-xs opacity-90">CEO · CVD Studio</div>
                 </div>
               </div>
               <div className="relative mt-4 flex items-center gap-2 text-xs">
                 <Wifi className="w-4 h-4" />
-                <span>onetap.me/julien</span>
+                <span>cartevisitedigitale.fr/julien</span>
               </div>
             </div>
 
@@ -60,7 +60,7 @@ export function DigitalCardVisual() {
 
       {/* Floating physical card */}
       <div className="hidden md:block absolute -bottom-6 -right-8 w-56 h-32 rounded-2xl bg-gradient-brand shadow-glow animate-float p-4 text-primary-foreground">
-        <div className="text-[10px] uppercase tracking-widest opacity-80">OneTap</div>
+        <div className="text-[10px] uppercase tracking-widest opacity-80">CVD</div>
         <div className="font-display font-bold mt-1">Julien Dubois</div>
         <div className="text-xs opacity-90">Approchez votre téléphone</div>
         <div className="absolute bottom-3 right-3 w-8 h-8 rounded-full bg-white/20 backdrop-blur flex items-center justify-center border border-white/30">

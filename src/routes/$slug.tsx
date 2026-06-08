@@ -163,7 +163,7 @@ function ProfilePage() {
           <Download className="w-4 h-4" /> Enregistrer le contact
         </button>
         <p className="text-center text-xs mt-6" style={{ color: subTextColorDim }}>
-          Propulsé par <a href="/" className="font-semibold hover:underline" style={{ color: theme.accent }}>OneTap</a>
+          Propulsé par <a href="/" className="font-semibold hover:underline" style={{ color: theme.accent }}>CVD</a>
         </p>
       </div>
     </div>
@@ -230,7 +230,7 @@ function downloadVCard(profile: NfcProfile) {
     profile.email ? `EMAIL:${profile.email}` : null,
     profile.photo_url ? `PHOTO;VALUE=URI:${profile.photo_url}` : null,
     `URL:${appUrl}/${profile.slug}`,
-    `NOTE:Carte de visite digitale — ${profile.entreprise || "OneTap"}`,
+    `NOTE:Carte de visite digitale — ${profile.entreprise || "CVD"}`,
     "END:VCARD",
   ].filter(Boolean).join("\r\n");
 

@@ -65,7 +65,7 @@ export function DashboardSidebar() {
           <div className="w-8 h-8 rounded-xl bg-gradient-brand flex items-center justify-center shadow-card shrink-0">
             <Zap className="w-4 h-4 text-white" />
           </div>
-          <span className="font-display font-bold text-base">OneTap</span>
+          <span className="font-display font-bold text-base">CVD</span>
         </Link>
       </SidebarHeader>
 

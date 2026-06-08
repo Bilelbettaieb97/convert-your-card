@@ -62,7 +62,7 @@ export function VideoTestimonials() {
             Témoignages vidéo
           </div>
           <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-bold tracking-tight">
-            Ils racontent leur OneTap en 30 secondes
+            Ils racontent leur CVD en 30 secondes
           </h2>
           <p className="mt-3 text-muted-foreground max-w-2xl mx-auto">
             Des vraies personnes, des vrais résultats. Cliquez pour lancer la vidéo.

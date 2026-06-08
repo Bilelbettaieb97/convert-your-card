@@ -6,7 +6,7 @@ import { Zap } from "lucide-react";
 export const Route = createFileRoute("/bienvenue")({
   head: () => ({
     meta: [
-      { title: "Bienvenue sur OneTap !" },
+      { title: "Bienvenue sur CVD !" },
       { name: "description", content: "Votre abonnement est confirmé." },
     ],
   }),

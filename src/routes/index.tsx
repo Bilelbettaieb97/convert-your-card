@@ -19,9 +19,9 @@ import { CardPreview, type Template } from "@/components/TemplateCardPreview";
 export const Route = createFileRoute("/")({
   head: () => ({
     meta: [
-      { title: "OneTap · Carte de visite digitale à 19,80€ — Partagez vos contacts en 1 tap" },
+      { title: "CVD · Carte de visite digitale à 19,80€ — Partagez vos contacts en 1 tap" },
       { name: "description", content: "Créez votre carte de visite digitale professionnelle en 3 minutes. Partagez vos coordonnées, réseaux et site en un seul tap. À partir de 19,80€. Sans abonnement." },
-      { property: "og:title", content: "OneTap · La carte de visite digitale qui convertit" },
+      { property: "og:title", content: "CVD · La carte de visite digitale qui convertit" },
       { property: "og:description", content: "Partagez vos contacts en 1 tap. À partir de 19,80€. Sans abonnement, mises à jour illimitées." },
       { property: "og:type", content: "product" },
       { property: "og:url", content: "/" },
@@ -104,7 +104,7 @@ export function Nav() {
           <div className="w-9 h-9 rounded-xl bg-gradient-brand flex items-center justify-center shadow-card">
             <Zap className="w-5 h-5 text-primary-foreground" />
           </div>
-          <span className="font-display font-bold text-lg">OneTap</span>
+          <span className="font-display font-bold text-lg">CVD</span>
         </Link>
         <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-muted-foreground">
           <Link to="/" hash="fonctionnement" className="hover:text-foreground transition">Fonctionnement</Link>
@@ -378,7 +378,7 @@ function Logos() {
   return (
     <section className="border-y border-border bg-card">
       <div className="max-w-7xl mx-auto px-4 py-6 flex flex-wrap items-center justify-center gap-x-10 gap-y-4 text-muted-foreground/70 text-sm font-display font-semibold tracking-wider">
-        <span className="text-xs uppercase">Ils utilisent OneTap :</span>
+        <span className="text-xs uppercase">Ils utilisent CVD :</span>
         {["NOVA", "PIXELHAUS", "atlas.", "MENTOR&CO", "FORGE", "LUMIA"].map((n) => (
           <span key={n} className="opacity-60 hover:opacity-100 transition">{n}</span>
         ))}
@@ -478,7 +478,7 @@ function Problem() {
               <span className="inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-success/15 text-success text-[11px] font-bold uppercase tracking-wider">
                 <Check className="w-3 h-3" strokeWidth={3} /> Aujourd'hui
               </span>
-              <span className="text-xs text-magenta font-semibold">OneTap Digital</span>
+              <span className="text-xs text-magenta font-semibold">CVD Digital</span>
             </div>
 
             <div className="flex-1 flex items-center justify-center py-4">
@@ -524,7 +524,7 @@ function HowItWorks() {
       id: "agency", sector: "Agence & conseil", secondary: "Voir le site", icon: Building2, gradientAccent: "from-violet-500 to-pink-500",
       name: "Agence Studio", job: "Directrice associée", company: "Lumière Conseil", person: "Sophie Marchand", initials: "SM",
       tagline: "Stratégie & créativité", bio: "Agence de communication digitale. Disponible du lundi au samedi.", location: "Paris",
-      website: "onetap.cards/sm", phone: "+33 6 10 20 30 40", email: "sm@lumiere.fr",
+      website: "cartevisitedigitale.fr/sm", phone: "+33 6 10 20 30 40", email: "sm@lumiere.fr",
       avatar: "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=400&h=400&fit=crop&crop=faces&auto=format&q=80",
       socials: ["linkedin", "instagram"], style: "elegant", palette: { bg: "#1a0533", fg: "#ffffff", accent: "#a855f7" },
     },
@@ -532,7 +532,7 @@ function HowItWorks() {
       id: "real-estate", sector: "Immobilier premium", secondary: "Voir les biens", icon: Home, gradientAccent: "from-amber-400 to-yellow-600",
       name: "Horizon Immo", job: "Agent immobilier senior", company: "Prestige & Patrimoine", person: "Camille Durand", initials: "CD",
       tagline: "L'immobilier qui vous ressemble", bio: "Spécialiste des biens d'exception en Île-de-France.", location: "Paris",
-      website: "onetap.cards/cd", phone: "+33 6 11 21 31 41", email: "cd@prestige.fr",
+      website: "cartevisitedigitale.fr/cd", phone: "+33 6 11 21 31 41", email: "cd@prestige.fr",
       avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400&h=400&fit=crop&crop=faces&auto=format&q=80",
       socials: ["linkedin", "facebook"], style: "elegant", palette: { bg: "#0f1b3d", fg: "#ffffff", accent: "#d4a574" },
     },
@@ -540,7 +540,7 @@ function HowItWorks() {
       id: "restaurant", sector: "Restaurant & hospitalité", secondary: "Réserver une table", icon: UtensilsCrossed, gradientAccent: "from-red-500 to-rose-700",
       name: "La Maison", job: "Chef propriétaire", company: "La Maison du Chef", person: "Antoine Roussel", initials: "AR",
       tagline: "Cuisine du terroir revisitée", bio: "Tables gastronomiques, menu du marché. Réservation conseillée.", location: "Lyon",
-      website: "onetap.cards/ar", phone: "+33 4 78 10 20 30", email: "ar@lamaison.fr",
+      website: "cartevisitedigitale.fr/ar", phone: "+33 4 78 10 20 30", email: "ar@lamaison.fr",
       avatar: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?w=400&h=400&fit=crop&crop=faces&auto=format&q=80",
       socials: ["instagram", "facebook"], style: "bold", palette: { bg: "#1a0000", fg: "#ffffff", accent: "#ef4444" },
     },
@@ -548,7 +548,7 @@ function HowItWorks() {
       id: "coach", sector: "Coach & expert", secondary: "Réserver un appel", icon: GraduationCap, gradientAccent: "from-emerald-400 to-teal-500",
       name: "Growth Coach", job: "Coach business & mindset", company: "Mind & Performance", person: "Laura Martin", initials: "LM",
       tagline: "Libérez votre potentiel", bio: "Accompagnement individuel de dirigeants et entrepreneurs.", location: "Bordeaux",
-      website: "onetap.cards/lm", phone: "+33 6 12 22 32 42", email: "lm@mindperf.fr",
+      website: "cartevisitedigitale.fr/lm", phone: "+33 6 12 22 32 42", email: "lm@mindperf.fr",
       avatar: "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=400&h=400&fit=crop&crop=faces&auto=format&q=80",
       socials: ["linkedin", "instagram"], style: "neo", palette: { bg: "#0a1a0f", fg: "#ffffff", accent: "#10b981" },
     },
@@ -556,7 +556,7 @@ function HowItWorks() {
       id: "beauty", sector: "Beauté & bien-être", secondary: "Réserver", icon: Scissors, gradientAccent: "from-rose-300 to-amber-200",
       name: "Studio Chic", job: "Coiffeuse & coloriste", company: "Studio Chic", person: "Manon Aubert", initials: "MA",
       tagline: "Coupe, couleur, conseil", bio: "Salon haut de gamme, sur rendez-vous uniquement.", location: "Nice",
-      website: "onetap.cards/ma", phone: "+33 6 13 23 33 43", email: "ma@studiochic.fr",
+      website: "cartevisitedigitale.fr/ma", phone: "+33 6 13 23 33 43", email: "ma@studiochic.fr",
       avatar: "https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?w=400&h=400&fit=crop&crop=faces&auto=format&q=80",
       socials: ["instagram", "tiktok"], style: "soft", palette: { bg: "#fff0f5", fg: "#3d1a2d", accent: "#c45c7c" },
     },
@@ -564,7 +564,7 @@ function HowItWorks() {
       id: "artisan", sector: "BTP & artisan", secondary: "Demander un devis", icon: HardHat, gradientAccent: "from-orange-500 to-orange-600",
       name: "Pro Bâtiment", job: "Artisan électricien", company: "Électricité Pro", person: "Marc Lefebvre", initials: "ML",
       tagline: "Qualité & fiabilité depuis 2009", bio: "Interventions rapides, devis gratuit. RGE certifié.", location: "Toulouse",
-      website: "onetap.cards/ml", phone: "+33 5 34 10 20 30", email: "ml@electricitepro.fr",
+      website: "cartevisitedigitale.fr/ml", phone: "+33 5 34 10 20 30", email: "ml@electricitepro.fr",
       socials: ["facebook"], style: "minimal", palette: { bg: "#1a0d00", fg: "#ffffff", accent: "#f97316" },
     },
   ];
@@ -836,7 +836,7 @@ export function Pricing() {
           {/* Offer 1 — Essentiel (mobile: 2nd, desktop: 1st) */}
           <div className="order-2 lg:order-1 flex max-w-md mx-auto w-full lg:max-w-none">
             <OfferCard
-              name="OneTap Essentiel"
+              name="CVD Essentielle"
               tagline="La carte digitale qui convertit"
               oldPrice="33€"
               price="19,80€"
@@ -856,7 +856,7 @@ export function Pricing() {
           {/* Offer 2 — Physique (highlight) — mobile: 1st (top, centered), desktop: middle */}
           <div className="order-1 lg:order-2 flex max-w-md mx-auto w-full lg:max-w-none">
             <OfferCard
-              name="OneTap Physique"
+              name="CVD Physique"
               tagline="Carte NFC + page digitale"
               oldPrice="48€"
               price="28,80€"
@@ -887,7 +887,7 @@ export function Pricing() {
           {/* Offer 3 — Premium (mobile: 3rd, desktop: 3rd) */}
           <div className="order-3 lg:order-3 flex max-w-md mx-auto w-full lg:max-w-none">
             <OfferCard
-              name="OneTap Premium"
+              name="CVD Premium"
               tagline="Analytics & multi-cartes"
               oldPrice="79€"
               price="48€"
@@ -963,7 +963,7 @@ function ComparisonTable() {
       {/* Desktop / tablet table */}
       <div className="hidden md:block rounded-2xl border border-border bg-card shadow-sm overflow-hidden">
         <table className="w-full text-left">
-          <caption className="sr-only">Comparatif des formules OneTap</caption>
+          <caption className="sr-only">Comparatif des formules CVD</caption>
           <thead>
             <tr className="bg-muted/40">
               <th scope="col" className="p-5 font-semibold text-sm text-muted-foreground w-[40%]">Fonctionnalité</th>
@@ -1319,7 +1319,7 @@ function Testimonials() {
       name: "Élodie Rousseau",
       role: "Designer freelance & directrice artistique",
       location: "Bordeaux, France",
-      quote: "En tant que designer, l'esthétique est primordiale. Ma carte OneTap reflète parfaitement mon univers créatif. Les clients potentiels me disent systématiquement 'wow' quand je la partage. C'est devenu un argument de vente à part entière.",
+      quote: "En tant que designer, l'esthétique est primordiale. Ma carte CVD reflète parfaitement mon univers créatif. Les clients potentiels me disent systématiquement 'wow' quand je la partage. C'est devenu un argument de vente à part entière.",
       metric: "100% de retours positifs",
       metricLabel: "sur l'image professionnelle",
       avatar: "/avatars/elodie.jpg",
@@ -1330,7 +1330,7 @@ function Testimonials() {
       name: "Thomas Bernard",
       role: "Consultant en stratégie digitale",
       location: "Paris, France",
-      quote: "J'ai testé 3 solutions de cartes digitales avant de trouver OneTap. La différence ? La simplicité. Je configure les cartes de toute mon équipe en quelques clics, et les analytics me permettent de mesurer notre visibilité réelle.",
+      quote: "J'ai testé 3 solutions de cartes digitales avant de trouver CVD. La différence ? La simplicité. Je configure les cartes de toute mon équipe en quelques clics, et les analytics me permettent de mesurer notre visibilité réelle.",
       metric: "5 cartes gérées",
       metricLabel: "pour mon équipe commerciale",
       avatar: "/avatars/thomas.jpg",
@@ -1457,14 +1457,14 @@ function Comparison() {
       <div className="max-w-4xl mx-auto px-4">
         <div className="text-center max-w-2xl mx-auto">
           <h2 className="font-display font-bold text-3xl sm:text-4xl">
-            Papier vs. <span className="text-gradient">OneTap</span>
+            Papier vs. <span className="text-gradient">CVD</span>
           </h2>
         </div>
         <div className="mt-10 bg-card border border-border rounded-3xl overflow-hidden shadow-card">
           <div className="grid grid-cols-3 bg-secondary text-sm font-semibold">
             <div className="p-4"></div>
             <div className="p-4 text-center text-muted-foreground">Carte papier</div>
-            <div className="p-4 text-center bg-gradient-brand text-primary-foreground">OneTap</div>
+            <div className="p-4 text-center bg-gradient-brand text-primary-foreground">CVD</div>
           </div>
           {rows.map(([label, a, b], i) => (
             <div key={i} className={`grid grid-cols-3 text-sm border-t border-border ${i % 2 ? "bg-background" : ""}`}>
@@ -1562,7 +1562,7 @@ export function Footer() {
           <div className="w-7 h-7 rounded-lg bg-gradient-brand flex items-center justify-center">
             <Zap className="w-4 h-4 text-primary-foreground" />
           </div>
-          <span className="font-display font-bold text-foreground">OneTap</span>
+          <span className="font-display font-bold text-foreground">CVD</span>
           <span>© {new Date().getFullYear()}</span>
         </div>
         <div className="flex gap-6">

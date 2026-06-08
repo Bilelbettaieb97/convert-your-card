@@ -13,7 +13,7 @@ export async function sendWelcomeEmail({
   slug: string;
   plan: string;
 }) {
-  const appUrl = process.env.VITE_APP_URL ?? "https://convert-your-card.vercel.app";
+  const appUrl = process.env.VITE_APP_URL ?? "https://www.cartevisitedigitale.fr";
   const cardUrl = `${appUrl}/${slug}`;
   const dashboardUrl = `${appUrl}/dashboard`;
   const planLabel = plan.charAt(0).toUpperCase() + plan.slice(1);
@@ -21,12 +21,12 @@ export async function sendWelcomeEmail({
   await resend.emails.send({
     from: "Bilel · ConvertiLab <bilel@convertilab.com>",
     to: email,
-    subject: `🎉 Ta carte OneTap est prête, ${nom.split(" ")[0]} !`,
+    subject: `🎉 Ta carte CVD est prête, ${nom.split(" ")[0]} !`,
     html: `
       <div style="font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; max-width: 600px; margin: 0 auto; padding: 40px 20px;">
         <h1 style="color: #1a1a2e; font-size: 28px; margin-bottom: 8px;">Ta carte est prête ! 🚀</h1>
         <p style="color: #6b7280; font-size: 16px; margin-bottom: 32px;">
-          Salut ${nom.split(" ")[0]}, bienvenue sur OneTap. Ton plan <strong>${planLabel}</strong> est actif.
+          Salut ${nom.split(" ")[0]}, bienvenue sur CVD. Ton plan <strong>${planLabel}</strong> est actif.
         </p>
 
         <div style="background: #f9fafb; border: 1px solid #e5e7eb; border-radius: 12px; padding: 24px; margin-bottom: 24px;">

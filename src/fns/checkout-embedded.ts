@@ -29,7 +29,7 @@ export const createEmbeddedCheckout = createServerFn({ method: "POST" })
   .validator(schema)
   .handler(async ({ data }) => {
     const { plan, billing, email } = data;
-    const appUrl = process.env.VITE_APP_URL ?? "https://convert-your-card.vercel.app";
+    const appUrl = process.env.VITE_APP_URL ?? "https://www.cartevisitedigitale.fr";
     const priceId = PRICE_IDS[plan]?.[billing];
 
     if (!priceId) throw new Error(`Prix introuvable pour ${plan}/${billing}`);

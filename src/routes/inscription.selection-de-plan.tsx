@@ -7,8 +7,8 @@ import { PromoBar, Nav, Footer } from "./index";
 export const Route = createFileRoute("/inscription/selection-de-plan")({
   head: () => ({
     meta: [
-      { title: "Choisis ton forfait — OneTap" },
-      { name: "description", content: "Trouve le forfait OneTap : Free, Starter, Pro ou Premium. Essai gratuit 7 jours." },
+      { title: "Choisis ton forfait — CVD" },
+      { name: "description", content: "Trouve le forfait CVD : Free, Starter, Pro ou Premium. Essai gratuit 7 jours." },
     ],
   }),
   component: PlanSelectionPage,

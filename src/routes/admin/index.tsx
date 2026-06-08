@@ -133,7 +133,7 @@ function AdminPage() {
 
   if (!authorized) return null;
 
-  const appUrl = typeof window !== "undefined" ? window.location.origin : "https://convert-your-card.vercel.app";
+  const appUrl = typeof window !== "undefined" ? window.location.origin : "https://www.cartevisitedigitale.fr";
 
   return (
     <>
@@ -142,7 +142,7 @@ function AdminPage() {
         <header className="border-b border-border bg-card px-6 py-4 flex items-center justify-between">
           <div className="flex items-center gap-3">
             <Users className="w-5 h-5 text-magenta" />
-            <h1 className="font-bold text-foreground">Admin OneTap</h1>
+            <h1 className="font-bold text-foreground">Admin CVD</h1>
             <span className="text-xs text-muted-foreground bg-muted px-2 py-0.5 rounded-full">
               {profiles.length} profils
             </span>

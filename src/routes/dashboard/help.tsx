@@ -24,7 +24,7 @@ function HelpPage() {
   const profile = getProfileMeta();
 
   const STEPS = [
-    { done: true, label: "Créer votre compte", desc: "Bienvenue sur OneTap" },
+    { done: true, label: "Créer votre compte", desc: "Bienvenue sur CVD" },
     { done: !!data.name, label: "Compléter votre profil", desc: "Nom, photo, bio, liens", to: "/dashboard/card" },
     { done: !!data.accent, label: "Choisir un thème", desc: "Personnalisez l'apparence", to: "/dashboard/style" },
     { done: !!profile?.actif, label: "Activer votre carte", desc: "Passez au plan payant", to: "/pricing" },
@@ -83,7 +83,7 @@ function HelpPage() {
           <div className="rounded-2xl border border-border bg-card/40 p-5">
             <Play className="h-8 w-8 text-primary mb-3" />
             <h4 className="font-display text-lg mb-1">Tutoriels vidéo</h4>
-            <p className="text-xs text-muted-foreground mb-4">12 vidéos pour maîtriser OneTap en 30 min</p>
+            <p className="text-xs text-muted-foreground mb-4">12 vidéos pour maîtriser CVD en 30 min</p>
             <Button variant="outline" size="sm" className="w-full">Voir les vidéos</Button>
           </div>
           <div className="rounded-2xl border border-border bg-card/40 p-5">

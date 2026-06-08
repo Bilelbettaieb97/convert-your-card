@@ -4,12 +4,12 @@ import { Shield, X, Sparkles, Check, ShoppingBag, MapPin, Gift, RefreshCw, Lock,
 /* ─────────────  LIVE ACTIVITY FEED  ───────────── */
 
 const ACTIVITY = [
-  { name: "Marie", city: "Paris", offer: "OneTap Essentiel", time: "il y a 2 min" },
-  { name: "Lucas", city: "Lyon", offer: "OneTap Physique", time: "il y a 6 min" },
-  { name: "Sophia", city: "Bordeaux", offer: "OneTap Essentiel", time: "il y a 11 min" },
-  { name: "Karim", city: "Marseille", offer: "OneTap Premium", time: "il y a 14 min" },
-  { name: "Emma", city: "Nantes", offer: "OneTap Essentiel", time: "il y a 22 min" },
-  { name: "Antoine", city: "Toulouse", offer: "OneTap Essentiel", time: "il y a 28 min" },
+  { name: "Marie", city: "Paris", offer: "CVD Essentielle", time: "il y a 2 min" },
+  { name: "Lucas", city: "Lyon", offer: "CVD Physique", time: "il y a 6 min" },
+  { name: "Sophia", city: "Bordeaux", offer: "CVD Essentielle", time: "il y a 11 min" },
+  { name: "Karim", city: "Marseille", offer: "CVD Premium", time: "il y a 14 min" },
+  { name: "Emma", city: "Nantes", offer: "CVD Essentielle", time: "il y a 22 min" },
+  { name: "Antoine", city: "Toulouse", offer: "CVD Essentielle", time: "il y a 28 min" },
 ];
 
 export function LiveActivity() {
@@ -228,28 +228,28 @@ export function StructuredData() {
     "@graph": [
       {
         "@type": "Product",
-        name: "OneTap — Carte de visite digitale",
+        name: "CVD — Carte de visite digitale",
         description:
           "Carte de visite digitale professionnelle. Partagez vos contacts en 1 tap. Sans abonnement, mises à jour illimitées à vie.",
-        brand: { "@type": "Brand", name: "OneTap" },
+        brand: { "@type": "Brand", name: "CVD" },
         offers: [
           {
             "@type": "Offer",
-            name: "OneTap Essentiel",
+            name: "CVD Essentielle",
             price: "19.80",
             priceCurrency: "EUR",
             availability: "https://schema.org/InStock",
           },
           {
             "@type": "Offer",
-            name: "OneTap Physique",
+            name: "CVD Physique",
             price: "28.80",
             priceCurrency: "EUR",
             availability: "https://schema.org/InStock",
           },
           {
             "@type": "Offer",
-            name: "OneTap Premium",
+            name: "CVD Premium",
             price: "48.00",
             priceCurrency: "EUR",
             availability: "https://schema.org/InStock",

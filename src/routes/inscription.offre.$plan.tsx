@@ -12,8 +12,8 @@ export const Route = createFileRoute("/inscription/offre/$plan")({
   }),
   head: ({ params }) => ({
     meta: [
-      { title: `Offre ${params.plan} — OneTap` },
-      { name: "description", content: "Abonne-toi à OneTap et lance ta carte de visite digitale." },
+      { title: `Offre ${params.plan} — CVD` },
+      { name: "description", content: "Abonne-toi à CVD et lance ta carte de visite digitale." },
     ],
   }),
   component: OffrePage,
@@ -174,7 +174,7 @@ function OffrePage() {
           <div className="w-8 h-8 rounded-xl bg-gradient-brand flex items-center justify-center">
             <Zap className="w-4 h-4 text-primary-foreground" />
           </div>
-          <span className="font-display font-bold">OneTap</span>
+          <span className="font-display font-bold">CVD</span>
         </div>
       </header>
 
@@ -190,7 +190,7 @@ function OffrePage() {
               <div className="w-9 h-9 rounded-xl bg-gradient-brand flex items-center justify-center shadow-card">
                 <Zap className="w-5 h-5 text-primary-foreground" />
               </div>
-              <span className="font-display font-bold text-lg">OneTap</span>
+              <span className="font-display font-bold text-lg">CVD</span>
             </div>
           </div>
 

@@ -73,14 +73,14 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     meta: [
       { charSet: "utf-8" },
       { name: "viewport", content: "width=device-width, initial-scale=1" },
-      { title: "OneTap — Carte de visite digitale NFC" },
+      { title: "CVD — Carte de visite digitale NFC" },
       { name: "description", content: "Crée ta carte de visite digitale et partage tes contacts en 1 tap. Gratuit, sans application." },
-      { property: "og:title", content: "OneTap — Carte de visite digitale NFC" },
+      { property: "og:title", content: "CVD — Carte de visite digitale NFC" },
       { property: "og:description", content: "Crée ta carte de visite digitale et partage tes contacts en 1 tap. Gratuit, sans application." },
       { property: "og:type", content: "website" },
-      { property: "og:url", content: "https://convert-your-card.vercel.app" },
+      { property: "og:url", content: "https://www.cartevisitedigitale.fr" },
       { name: "twitter:card", content: "summary_large_image" },
-      { name: "twitter:title", content: "OneTap — Carte de visite digitale NFC" },
+      { name: "twitter:title", content: "CVD — Carte de visite digitale NFC" },
       { name: "twitter:description", content: "Crée ta carte de visite digitale et partage tes contacts en 1 tap. Gratuit, sans application." },
     ],
     links: [

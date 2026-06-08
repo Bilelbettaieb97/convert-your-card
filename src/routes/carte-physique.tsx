@@ -6,13 +6,13 @@ import { Check, CreditCard, Sparkles, Upload, X, Wifi, ArrowRight } from "lucide
 export const Route = createFileRoute("/carte-physique")({
   head: () => ({
     meta: [
-      { title: "Ajoute ta carte NFC physique — OneTap" },
+      { title: "Ajoute ta carte NFC physique — CVD" },
       {
         name: "description",
         content:
           "Personnalise ta carte de visite NFC physique : couleur, finition, logo et nom. Une commande unique, livrée chez toi.",
       },
-      { property: "og:title", content: "Ajoute ta carte NFC physique — OneTap" },
+      { property: "og:title", content: "Ajoute ta carte NFC physique — CVD" },
       {
         property: "og:description",
         content: "Carte NFC personnalisable, livrée chez toi. Paiement unique, en complément de ton abonnement.",
@@ -67,7 +67,7 @@ function CartePhysiqueUpsellPage() {
         {/* Header */}
         <div className="text-center mb-10 animate-fade-in">
           <Link to="/" className="inline-block mb-5">
-            <span className="text-2xl font-bold bg-gradient-cta bg-clip-text text-transparent">OneTap</span>
+            <span className="text-2xl font-bold bg-gradient-cta bg-clip-text text-transparent">CVD</span>
           </Link>
           <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-magenta/10 text-magenta text-xs font-semibold mb-4">
             <Sparkles className="h-3.5 w-3.5" />
@@ -133,7 +133,7 @@ function CartePhysiqueUpsellPage() {
                       {role || "Ton métier"}
                     </div>
                     <div className="mt-3 flex items-center gap-1.5 text-[10px] uppercase tracking-widest opacity-60">
-                      <span>OneTap</span>
+                      <span>CVD</span>
                       <span>·</span>
                       <span>Tap to connect</span>
                     </div>

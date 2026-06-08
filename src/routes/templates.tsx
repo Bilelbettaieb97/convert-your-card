@@ -39,17 +39,17 @@ import type { Template, SocialType, StyleId } from "@/components/TemplateCardPre
 export const Route = createFileRoute("/templates")({
   head: () => ({
     meta: [
-      { title: "Modèles de cartes de visite digitales par secteur — OneTap" },
+      { title: "Modèles de cartes de visite digitales par secteur — CVD" },
       {
         name: "description",
         content:
           "Plus de 40 modèles de cartes de visite digitales prêts à l'emploi : immobilier, restauration, santé, BTP, beauté, conseil, avocat, photographe… Trouvez la carte qui ressemble à votre métier.",
       },
-      { property: "og:title", content: "Modèles de cartes digitales par secteur — OneTap" },
+      { property: "og:title", content: "Modèles de cartes digitales par secteur — CVD" },
       {
         property: "og:description",
         content:
-          "Découvrez tous les modèles OneTap classés par métier. Sélectionnez le vôtre et personnalisez-le en 3 minutes.",
+          "Découvrez tous les modèles CVD classés par métier. Sélectionnez le vôtre et personnalisez-le en 3 minutes.",
       },
       { property: "og:type", content: "website" },
       { property: "og:url", content: "/templates" },
@@ -251,7 +251,7 @@ const TEMPLATES: Template[] = RAW_TEMPLATES.map((t, idx) => {
     company: companies[idx % companies.length],
     bio: `${t.tagline}. Disponible du lundi au samedi sur ${CITIES[idx % CITIES.length]} et sa région.`,
     location: CITIES[idx % CITIES.length],
-    website: `onetap.cards/${initialsSlug}`,
+    website: `cartevisitedigitale.fr/${initialsSlug}`,
     phone: `+33 6 ${10 + (idx % 80)} ${20 + (idx % 70)} ${30 + (idx % 60)} ${40 + (idx % 50)}`.replace(/\s+/g, " "),
     email: `${initialsSlug}@${(COMPANIES[t.sector]?.[idx % (COMPANIES[t.sector]?.length || 1)] || "onetap").toLowerCase().replace(/[^a-z]/g, "")}.fr`,
     avatar: avatarFor(t.id, female),

@@ -10,8 +10,8 @@ import { Zap, Eye, EyeOff } from "lucide-react";
 export const Route = createFileRoute("/connexion")({
   head: () => ({
     meta: [
-      { title: "Connexion — OneTap" },
-      { name: "description", content: "Connecte-toi à ton compte OneTap." },
+      { title: "Connexion — CVD" },
+      { name: "description", content: "Connecte-toi à ton compte CVD." },
     ],
   }),
   component: ConnexionPage,
@@ -69,7 +69,7 @@ function ConnexionPage() {
             <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-[#c026d3] to-[#7c3aed] flex items-center justify-center shadow-lg">
               <Zap className="w-5 h-5 text-white" />
             </div>
-            <span className="font-display font-bold text-xl">OneTap</span>
+            <span className="font-display font-bold text-xl">CVD</span>
           </div>
 
           <div className="bg-card border border-border rounded-2xl shadow-card p-7">

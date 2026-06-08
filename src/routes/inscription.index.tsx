@@ -11,9 +11,9 @@ import { Zap, ShieldCheck, Lock, Users, Star, TrendingUp, Award, Quote, Eye, Eye
 export const Route = createFileRoute("/inscription/")({
   head: () => ({
     meta: [
-      { title: "Inscription gratuite — OneTap" },
-      { name: "description", content: "Crée ton compte OneTap gratuitement et lance ta carte de visite digitale en quelques secondes." },
-      { property: "og:title", content: "Inscription gratuite — OneTap" },
+      { title: "Inscription gratuite — CVD" },
+      { name: "description", content: "Crée ton compte CVD gratuitement et lance ta carte de visite digitale en quelques secondes." },
+      { property: "og:title", content: "Inscription gratuite — CVD" },
       { property: "og:description", content: "Rejoins +2 400 pros qui partagent leurs contacts en 1 tap." },
     ],
   }),
@@ -84,7 +84,7 @@ function InscriptionPage() {
             <div className="w-9 h-9 rounded-xl bg-gradient-brand flex items-center justify-center shadow-card">
               <Zap className="w-5 h-5 text-primary-foreground" />
             </div>
-            <span className="font-display font-bold text-lg">OneTap</span>
+            <span className="font-display font-bold text-lg">CVD</span>
           </Link>
         </header>
 
@@ -96,12 +96,12 @@ function InscriptionPage() {
               <div className="w-10 h-10 rounded-xl bg-gradient-brand flex items-center justify-center shadow-card">
                 <Zap className="w-5 h-5 text-primary-foreground" />
               </div>
-              <span className="font-display font-bold text-xl">OneTap</span>
+              <span className="font-display font-bold text-xl">CVD</span>
             </div>
 
             <div className="bg-card border border-border rounded-2xl shadow-card p-6 sm:p-8">
               <p className="text-xs font-semibold uppercase tracking-wider text-magenta mb-2">
-                Rejoins OneTap
+                Rejoins CVD
               </p>
               <h1 className="font-display text-2xl sm:text-3xl font-bold text-foreground">
                 Inscris-toi gratuitement !
@@ -197,7 +197,7 @@ function InscriptionPage() {
 
           <div className="relative z-10 w-full max-w-lg space-y-8">
             <div className="grid grid-cols-2 gap-4">
-              <StatCard icon={<Users className="w-5 h-5 text-magenta" />} iconBg="bg-magenta/20" value="+12 400" label="Professionnels utilisent OneTap chaque jour" />
+              <StatCard icon={<Users className="w-5 h-5 text-magenta" />} iconBg="bg-magenta/20" value="+12 400" label="Professionnels utilisent CVD chaque jour" />
               <StatCard icon={<Star className="w-5 h-5 text-amber-400" />} iconBg="bg-amber-500/20" value="4.9/5" label="Note moyenne sur +2 800 avis vérifiés" />
               <StatCard icon={<TrendingUp className="w-5 h-5 text-emerald-400" />} iconBg="bg-emerald-500/20" value="+340 %" label="De contacts échangés en moyenne" />
               <StatCard icon={<Award className="w-5 h-5 text-violet-300" />} iconBg="bg-violet/30" value="#1" label="Appli carte de visite en France" />
@@ -227,7 +227,7 @@ function InscriptionPage() {
             </div>
 
             <div className="text-center">
-              <p className="text-xs uppercase tracking-wider text-white/40 font-medium mb-4">Ils font confiance à OneTap</p>
+              <p className="text-xs uppercase tracking-wider text-white/40 font-medium mb-4">Ils font confiance à CVD</p>
               <div className="flex items-center justify-center gap-8 opacity-50">
                 <span className="font-display font-bold text-xl tracking-tight text-white/70">KPMG</span>
                 <span className="font-display font-bold text-xl tracking-tight text-white/70">Deloitte</span>
