@@ -50,53 +50,48 @@ function StatistiquesPage() {
   const [copied, setCopied] = useState(false);
   const [profileId, setProfileId] = useState<string | null>(null);
 
-  const fetchAnalytics = React.useCallback(async (pid: string) => {
-    const { data: events } = await supabase
-      .from("nfc_analytics").select("event_type, created_at, event_data")
+  const doFetch = React.useCallback((pid: string) => {
+    // Exact same pattern as notifications page — no auth.getUser(), plain .then()
+    supabase.from("nfc_analytics")
+      .select("event_type, created_at, event_data")
       .eq("profile_id", pid)
-      .order("created_at", { ascending: true });
-    setAnalytics((events ?? []) as AnalyticsRow[]);
+      .order("created_at", { ascending: true })
+      .then(({ data }) => {
+        setAnalytics((data ?? []) as AnalyticsRow[]);
+        setLoading(false);
+        setRefreshing(false);
+      });
   }, []);
 
-  const refresh = React.useCallback(async () => {
+  const refresh = React.useCallback(() => {
     if (!profileId) return;
     setRefreshing(true);
-    await fetchAnalytics(profileId);
-    setRefreshing(false);
-  }, [profileId, fetchAnalytics]);
+    doFetch(profileId);
+  }, [profileId, doFetch]);
 
   useEffect(() => {
-    let channel: ReturnType<typeof supabase.channel> | null = null;
+    const profile = getProfileMeta();
+    if (!profile) { setLoading(false); return; }
 
-    async function load() {
-      // Wait for auth session to be ready before querying (RLS blocks unauthenticated SELECTs)
-      const { data: { user } } = await supabase.auth.getUser();
-      if (!user) { setLoading(false); return; }
+    setCardUrl(`${window.location.origin}/${profile.slug}`);
+    setPlan(profile.plan ?? "free");
+    setProfileId(profile.id);
 
-      const profile = getProfileMeta();
-      if (!profile) { setLoading(false); return; }
+    doFetch(profile.id);
 
-      setCardUrl(`${window.location.origin}/${profile.slug}`);
-      setPlan(profile.plan ?? "free");
-      setProfileId(profile.id);
+    // Real-time: append new events as they arrive
+    const channel = supabase
+      .channel(`analytics-${profile.id}`)
+      .on("postgres_changes", {
+        event: "INSERT", schema: "public", table: "nfc_analytics",
+        filter: `profile_id=eq.${profile.id}`,
+      }, (payload) => {
+        setAnalytics((prev) => [...prev, payload.new as AnalyticsRow]);
+      })
+      .subscribe();
 
-      await fetchAnalytics(profile.id);
-
-      channel = supabase
-        .channel(`analytics-${profile.id}`)
-        .on("postgres_changes", {
-          event: "INSERT", schema: "public", table: "nfc_analytics",
-          filter: `profile_id=eq.${profile.id}`,
-        }, (payload) => {
-          setAnalytics((prev) => [...prev, payload.new as AnalyticsRow]);
-        })
-        .subscribe();
-
-      setLoading(false);
-    }
-    load();
-    return () => { if (channel) supabase.removeChannel(channel); };
-  }, [fetchAnalytics]);
+    return () => { supabase.removeChannel(channel); };
+  }, [doFetch]);
 
   const PERIOD_DAYS: Record<Period, number> = { "7j": 7, "30j": 30, "90j": 90 };
   const LOCKED_PERIODS: Period[] = plan === "free" ? ["30j", "90j"] : plan === "starter" ? ["90j"] : [];
