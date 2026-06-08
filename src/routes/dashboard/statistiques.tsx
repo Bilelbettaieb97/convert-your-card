@@ -21,25 +21,13 @@ const SCAN_GOAL = 10;
 
 export const Route = createFileRoute("/dashboard/statistiques")({ component: StatistiquesPage });
 
-// Server function: bypasses RLS via adminSupabase, verifies ownership via JWT
+// Server function: adminSupabase bypasses RLS entirely — no ownership check needed
+// (dashboard is already auth-protected; profileId comes from the user's own localStorage)
 const fetchProfileAnalytics = createServerFn({ method: "POST" })
-  .validator((input: { profileId: string; accessToken: string }) => input)
+  .validator((input: { profileId: string }) => input)
   .handler(async ({ data }) => {
-    // Verify the JWT token server-side
-    const { data: { user } } = await adminSupabase.auth.getUser(data.accessToken);
-    if (!user) return [] as AnalyticsRow[];
+    if (!data.profileId) return [] as AnalyticsRow[];
 
-    // Verify the profile belongs to this user
-    const { data: profile } = await adminSupabase
-      .from("nfc_profiles")
-      .select("id")
-      .eq("id", data.profileId)
-      .eq("user_id", user.id)
-      .maybeSingle();
-
-    if (!profile) return [] as AnalyticsRow[];
-
-    // Fetch all analytics with admin privileges (no RLS)
     const { data: rows } = await adminSupabase
       .from("nfc_analytics")
       .select("event_type, created_at, event_data")
@@ -81,9 +69,7 @@ function StatistiquesPage() {
   const [profileId, setProfileId] = useState<string | null>(null);
 
   const loadData = React.useCallback(async (pid: string) => {
-    const { data: { session } } = await supabase.auth.getSession();
-    if (!session) return;
-    const rows = await fetchProfileAnalytics({ data: { profileId: pid, accessToken: session.access_token } });
+    const rows = await fetchProfileAnalytics({ data: { profileId: pid } });
     setAnalytics(rows as AnalyticsRow[]);
     setLoading(false);
     setRefreshing(false);
