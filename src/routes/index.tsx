@@ -14,12 +14,7 @@ import { Countdown } from "@/components/landing/Countdown";
 import { VideoTestimonials } from "@/components/landing/VideoTestimonials";
 import { LiveActivity, ExitIntent, GuaranteeBlock, StructuredData } from "@/components/landing/CroEnhancements";
 import { CheckoutFlow, onCheckoutClick, triggerCheckout } from "@/components/landing/CheckoutFlow";
-import t1Asset from "@/assets/templates/t1-agency.png.asset.json";
-import t2Asset from "@/assets/templates/t2-realestate.png.asset.json";
-import t3Asset from "@/assets/templates/t3-restaurant.png.asset.json";
-import t4Asset from "@/assets/templates/t4-coach.png.asset.json";
-import t5Asset from "@/assets/templates/t5-beauty.png.asset.json";
-import t6Asset from "@/assets/templates/t6-artisan.png.asset.json";
+import { CardPreview, type Template } from "@/components/TemplateCardPreview";
 
 export const Route = createFileRoute("/")({
   head: () => ({
@@ -524,13 +519,54 @@ function Problem() {
 
 
 function HowItWorks() {
-  const templates = [
-    { id: "agency", sector: "Agence & conseil", secondary: "Voir le site", icon: Building2, accent: "from-violet-500 to-pink-500", image: t1Asset.url },
-    { id: "real-estate", sector: "Immobilier premium", secondary: "Voir les biens", icon: Home, accent: "from-amber-400 to-yellow-600", image: t2Asset.url },
-    { id: "restaurant", sector: "Restaurant & hospitalité", secondary: "Réserver une table", icon: UtensilsCrossed, accent: "from-red-500 to-rose-700", image: t3Asset.url },
-    { id: "coach", sector: "Coach & expert", secondary: "Réserver un appel", icon: GraduationCap, accent: "from-emerald-400 to-teal-500", image: t4Asset.url },
-    { id: "beauty", sector: "Beauté & bien-être", secondary: "Réserver", icon: Scissors, accent: "from-rose-300 to-amber-200", image: t5Asset.url },
-    { id: "artisan", sector: "BTP & artisan", secondary: "Demander un devis", icon: HardHat, accent: "from-orange-500 to-orange-600", image: t6Asset.url },
+  const templates: (Template & { secondary: string; icon: typeof Building2; gradientAccent: string })[] = [
+    {
+      id: "agency", sector: "Agence & conseil", secondary: "Voir le site", icon: Building2, gradientAccent: "from-violet-500 to-pink-500",
+      name: "Agence Studio", job: "Directrice associée", company: "Lumière Conseil", person: "Sophie Marchand", initials: "SM",
+      tagline: "Stratégie & créativité", bio: "Agence de communication digitale. Disponible du lundi au samedi.", location: "Paris",
+      website: "onetap.cards/sm", phone: "+33 6 10 20 30 40", email: "sm@lumiere.fr",
+      avatar: "https://images.unsplash.com/photo-1573497019940-1c28c88b4f3e?w=400&h=400&fit=crop&crop=faces&auto=format&q=80",
+      socials: ["linkedin", "instagram"], style: "elegant", palette: { bg: "#1a0533", fg: "#ffffff", accent: "#a855f7" },
+    },
+    {
+      id: "real-estate", sector: "Immobilier premium", secondary: "Voir les biens", icon: Home, gradientAccent: "from-amber-400 to-yellow-600",
+      name: "Horizon Immo", job: "Agent immobilier senior", company: "Prestige & Patrimoine", person: "Camille Durand", initials: "CD",
+      tagline: "L'immobilier qui vous ressemble", bio: "Spécialiste des biens d'exception en Île-de-France.", location: "Paris",
+      website: "onetap.cards/cd", phone: "+33 6 11 21 31 41", email: "cd@prestige.fr",
+      avatar: "https://images.unsplash.com/photo-1544005313-94ddf0286df2?w=400&h=400&fit=crop&crop=faces&auto=format&q=80",
+      socials: ["linkedin", "facebook"], style: "elegant", palette: { bg: "#0f1b3d", fg: "#ffffff", accent: "#d4a574" },
+    },
+    {
+      id: "restaurant", sector: "Restaurant & hospitalité", secondary: "Réserver une table", icon: UtensilsCrossed, gradientAccent: "from-red-500 to-rose-700",
+      name: "La Maison", job: "Chef propriétaire", company: "La Maison du Chef", person: "Antoine Roussel", initials: "AR",
+      tagline: "Cuisine du terroir revisitée", bio: "Tables gastronomiques, menu du marché. Réservation conseillée.", location: "Lyon",
+      website: "onetap.cards/ar", phone: "+33 4 78 10 20 30", email: "ar@lamaison.fr",
+      avatar: "https://images.unsplash.com/photo-1566492031773-4f4e44671857?w=400&h=400&fit=crop&crop=faces&auto=format&q=80",
+      socials: ["instagram", "facebook"], style: "bold", palette: { bg: "#1a0000", fg: "#ffffff", accent: "#ef4444" },
+    },
+    {
+      id: "coach", sector: "Coach & expert", secondary: "Réserver un appel", icon: GraduationCap, gradientAccent: "from-emerald-400 to-teal-500",
+      name: "Growth Coach", job: "Coach business & mindset", company: "Mind & Performance", person: "Laura Martin", initials: "LM",
+      tagline: "Libérez votre potentiel", bio: "Accompagnement individuel de dirigeants et entrepreneurs.", location: "Bordeaux",
+      website: "onetap.cards/lm", phone: "+33 6 12 22 32 42", email: "lm@mindperf.fr",
+      avatar: "https://images.unsplash.com/photo-1487412720507-e7ab37603c6f?w=400&h=400&fit=crop&crop=faces&auto=format&q=80",
+      socials: ["linkedin", "instagram"], style: "neo", palette: { bg: "#0a1a0f", fg: "#ffffff", accent: "#10b981" },
+    },
+    {
+      id: "beauty", sector: "Beauté & bien-être", secondary: "Réserver", icon: Scissors, gradientAccent: "from-rose-300 to-amber-200",
+      name: "Studio Chic", job: "Coiffeuse & coloriste", company: "Studio Chic", person: "Manon Aubert", initials: "MA",
+      tagline: "Coupe, couleur, conseil", bio: "Salon haut de gamme, sur rendez-vous uniquement.", location: "Nice",
+      website: "onetap.cards/ma", phone: "+33 6 13 23 33 43", email: "ma@studiochic.fr",
+      avatar: "https://images.unsplash.com/photo-1508214751196-bcfd4ca60f91?w=400&h=400&fit=crop&crop=faces&auto=format&q=80",
+      socials: ["instagram", "tiktok"], style: "soft", palette: { bg: "#fff0f5", fg: "#3d1a2d", accent: "#c45c7c" },
+    },
+    {
+      id: "artisan", sector: "BTP & artisan", secondary: "Demander un devis", icon: HardHat, gradientAccent: "from-orange-500 to-orange-600",
+      name: "Pro Bâtiment", job: "Artisan électricien", company: "Électricité Pro", person: "Marc Lefebvre", initials: "ML",
+      tagline: "Qualité & fiabilité depuis 2009", bio: "Interventions rapides, devis gratuit. RGE certifié.", location: "Toulouse",
+      website: "onetap.cards/ml", phone: "+33 5 34 10 20 30", email: "ml@electricitepro.fr",
+      socials: ["facebook"], style: "minimal", palette: { bg: "#1a0d00", fg: "#ffffff", accent: "#f97316" },
+    },
   ];
 
   const [activeIndex, setActiveIndex] = useState(0);
@@ -583,7 +619,7 @@ function HowItWorks() {
                 {/* Counter + sector pill */}
                 <div className="flex items-center justify-between gap-4 mb-6">
                   <div className="inline-flex items-center gap-2 rounded-full bg-background border border-border px-3 py-1.5 text-xs font-semibold">
-                    <span className={`h-2 w-2 rounded-full bg-gradient-to-r ${activeTemplate.accent}`} />
+                    <span className={`h-2 w-2 rounded-full bg-gradient-to-r ${activeTemplate.gradientAccent}`} />
                     {activeTemplate.sector}
                   </div>
                   <div className="text-xs font-mono text-muted-foreground tabular-nums">
@@ -593,12 +629,19 @@ function HowItWorks() {
 
                 <div className="relative flex justify-center">
                   <div className="relative w-[280px] xl:w-[320px]">
-                    <img
+                    <div
                       key={activeTemplate.id}
-                      src={activeTemplate.image}
-                      alt={`Exemple de carte digitale — ${activeTemplate.sector}`}
-                      className="block w-full h-auto drop-shadow-[0_30px_60px_rgba(0,0,0,0.25)] animate-in fade-in zoom-in-95 duration-500"
-                    />
+                      className="w-[260px] xl:w-[280px] mx-auto aspect-[9/19] rounded-[2.5rem] p-2 shadow-2xl drop-shadow-[0_30px_60px_rgba(0,0,0,0.25)] animate-in fade-in zoom-in-95 duration-500"
+                      style={{ background: "#1a1a2e" }}
+                    >
+                      <div
+                        className="relative w-full h-full rounded-[2rem] overflow-hidden flex flex-col"
+                        style={{ background: activeTemplate.palette.bg, color: activeTemplate.palette.fg }}
+                      >
+                        <div className="absolute top-2 left-1/2 -translate-x-1/2 w-16 h-4 rounded-full bg-black/50 z-10" />
+                        <CardPreview t={activeTemplate} size="lg" />
+                      </div>
+                    </div>
 
                     {/* Floating feature chips around device */}
                     <div className="absolute -left-16 xl:-left-24 top-12 animate-in fade-in slide-in-from-left-4 duration-700">
@@ -632,15 +675,22 @@ function HowItWorks() {
               </div>
             </div>
 
-            {/* Mobile carousel (unchanged) */}
+            {/* Mobile carousel */}
             <div className="relative flex justify-center lg:hidden">
-              <div className="relative w-[200px] sm:w-[280px] md:w-[320px]">
-                <img
+              <div className="relative w-[200px] sm:w-[260px]">
+                <div
                   key={`m-${activeTemplate.id}`}
-                  src={activeTemplate.image}
-                  alt={`Exemple de carte digitale — ${activeTemplate.sector}`}
-                  className="block w-full h-auto drop-shadow-[0_30px_60px_rgba(0,0,0,0.25)] animate-in fade-in zoom-in-95 duration-500"
-                />
+                  className="w-full aspect-[9/19] rounded-[2.5rem] p-2 shadow-2xl drop-shadow-[0_30px_60px_rgba(0,0,0,0.25)] animate-in fade-in zoom-in-95 duration-500"
+                  style={{ background: "#1a1a2e" }}
+                >
+                  <div
+                    className="relative w-full h-full rounded-[2rem] overflow-hidden flex flex-col"
+                    style={{ background: activeTemplate.palette.bg, color: activeTemplate.palette.fg }}
+                  >
+                    <div className="absolute top-2 left-1/2 -translate-x-1/2 w-14 h-3.5 rounded-full bg-black/50 z-10" />
+                    <CardPreview t={activeTemplate} size="sm" />
+                  </div>
+                </div>
                 <button
                   type="button"
                   onClick={goPrev}
@@ -721,14 +771,14 @@ function HowItWorks() {
                   >
                     {/* Active accent bar */}
                     <span
-                      className={`absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b ${template.accent} transition-opacity ${
+                      className={`absolute left-0 top-0 bottom-0 w-1 bg-gradient-to-b ${template.gradientAccent} transition-opacity ${
                         isActive ? "opacity-100" : "opacity-0 group-hover:opacity-50"
                       }`}
                       aria-hidden
                     />
                     <div className="flex items-center gap-4">
                       <div
-                        className={`shrink-0 h-11 w-11 rounded-xl flex items-center justify-center bg-gradient-to-br ${template.accent} text-white shadow-sm transition-transform ${
+                        className={`shrink-0 h-11 w-11 rounded-xl flex items-center justify-center bg-gradient-to-br ${template.gradientAccent} text-white shadow-sm transition-transform ${
                           isActive ? "scale-105" : "opacity-80 group-hover:opacity-100"
                         }`}
                       >
