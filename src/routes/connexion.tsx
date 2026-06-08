@@ -5,7 +5,7 @@ import { z } from "zod";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { Toaster } from "@/components/ui/sonner";
-import { Zap, Eye, EyeOff } from "lucide-react";
+import { Zap, Eye, EyeOff, Mail } from "lucide-react";
 
 export const Route = createFileRoute("/connexion")({
   head: () => ({
@@ -28,6 +28,8 @@ function ConnexionPage() {
   const [password, setPassword] = useState("");
   const [showPassword, setShowPassword] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [magicSent, setMagicSent] = useState(false);
+  const [sendingMagic, setSendingMagic] = useState(false);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
@@ -59,6 +61,28 @@ function ConnexionPage() {
     }
   }
 
+  async function handleMagicLink() {
+    const trimmed = email.trim().toLowerCase();
+    if (!trimmed || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed)) {
+      toast.error("Entre ton email d'abord");
+      return;
+    }
+    setSendingMagic(true);
+    try {
+      const appUrl = typeof window !== "undefined" ? window.location.origin : "https://www.cartevisitedigitale.fr";
+      const { error } = await supabase.auth.signInWithOtp({
+        email: trimmed,
+        options: { emailRedirectTo: `${appUrl}/dashboard` },
+      });
+      if (error) throw error;
+      setMagicSent(true);
+    } catch {
+      toast.error("Impossible d'envoyer le lien");
+    } finally {
+      setSendingMagic(false);
+    }
+  }
+
   return (
     <>
       <Toaster />
@@ -72,15 +96,31 @@ function ConnexionPage() {
             <span className="font-display font-bold text-sm leading-tight">Carte Visite Digitale</span>
           </div>
 
-          <div className="bg-card border border-border rounded-2xl shadow-card p-7">
-            <h1 className="font-display text-2xl font-bold text-foreground mb-1">
-              Connexion
-            </h1>
-            <p className="text-sm text-muted-foreground mb-6">
-              Content de te revoir !
-            </p>
+          {magicSent ? (
+            <div className="bg-card border border-border rounded-2xl shadow-card p-7 text-center">
+              <div className="w-14 h-14 bg-magenta/10 rounded-full flex items-center justify-center mx-auto mb-4">
+                <Mail className="w-7 h-7 text-magenta" />
+              </div>
+              <h2 className="font-display text-xl font-bold text-foreground mb-2">Vérifie ta boîte email</h2>
+              <p className="text-sm text-muted-foreground mb-1">Lien envoyé à</p>
+              <p className="text-sm font-semibold text-foreground mb-5 break-all">{email}</p>
+              <button
+                type="button"
+                onClick={() => setMagicSent(false)}
+                className="text-xs text-muted-foreground hover:text-foreground transition underline underline-offset-2"
+              >
+                Retour
+              </button>
+            </div>
+          ) : (
+            <div className="bg-card border border-border rounded-2xl shadow-card p-7">
+              <h1 className="font-display text-2xl font-bold text-foreground mb-1">
+                Connexion
+              </h1>
+              <p className="text-sm text-muted-foreground mb-6">
+                Content de te revoir !
+              </p>
 
-            <form onSubmit={handleSubmit} className="space-y-4">
               <div>
                 <label htmlFor="email" className="block text-sm font-medium text-foreground mb-1.5">
                   E-mail
@@ -97,10 +137,26 @@ function ConnexionPage() {
                 />
               </div>
 
-              <div>
-                <label htmlFor="password" className="block text-sm font-medium text-foreground mb-1.5">
-                  Mot de passe
-                </label>
+              {/* Magic link — primary */}
+              <button
+                type="button"
+                onClick={handleMagicLink}
+                disabled={sendingMagic}
+                className="w-full mt-4 bg-gradient-to-r from-[#c026d3] to-[#7c3aed] text-white rounded-full py-3 text-sm font-semibold shadow-lg hover:opacity-90 transition-all disabled:opacity-60 flex items-center justify-center gap-2"
+              >
+                <Mail className="w-4 h-4" />
+                {sendingMagic ? "Envoi…" : "Recevoir un lien de connexion"}
+              </button>
+
+              {/* Separator */}
+              <div className="flex items-center gap-3 my-4">
+                <div className="flex-1 h-px bg-border" />
+                <span className="text-xs text-muted-foreground">ou avec mot de passe</span>
+                <div className="flex-1 h-px bg-border" />
+              </div>
+
+              {/* Password — secondary */}
+              <form onSubmit={handleSubmit} className="space-y-3">
                 <div className="relative">
                   <input
                     id="password"
@@ -120,17 +176,16 @@ function ConnexionPage() {
                     {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
                   </button>
                 </div>
-              </div>
-
-              <button
-                type="submit"
-                disabled={submitting}
-                className="w-full bg-gradient-to-r from-[#c026d3] to-[#7c3aed] text-white rounded-full py-3 text-sm font-semibold shadow-lg hover:opacity-90 transition-all disabled:opacity-60 mt-2"
-              >
-                {submitting ? "Connexion…" : "Se connecter"}
-              </button>
-            </form>
-          </div>
+                <button
+                  type="submit"
+                  disabled={submitting}
+                  className="w-full border border-border text-foreground rounded-full py-2.5 text-sm font-medium hover:bg-muted transition-all disabled:opacity-60"
+                >
+                  {submitting ? "Connexion…" : "Se connecter avec mot de passe"}
+                </button>
+              </form>
+            </div>
+          )}
 
           <p className="mt-5 text-center text-sm text-muted-foreground">
             Pas encore de compte ?{" "}

@@ -1,74 +1,71 @@
 import * as React from "react";
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState } from "react";
 import { z } from "zod";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
-import { signUpWithAutoConfirm } from "@/fns/signup";
 import { Toaster } from "@/components/ui/sonner";
-import { Zap, ShieldCheck, Lock, Users, Star, TrendingUp, Award, Quote, Eye, EyeOff } from "lucide-react";
+import { Zap, ShieldCheck, Lock, Users, Star, TrendingUp, Award, Quote, Mail, ArrowRight, RefreshCw } from "lucide-react";
 
 export const Route = createFileRoute("/inscription/")({
+  validateSearch: z.object({ redirect: z.string().optional() }),
   head: () => ({
     meta: [
-      { title: "Inscription gratuite — CVD" },
-      { name: "description", content: "Crée ton compte CVD gratuitement et lance ta carte de visite digitale en quelques secondes." },
-      { property: "og:title", content: "Inscription gratuite — CVD" },
+      { title: "Inscription — Carte Visite Digitale" },
+      { name: "description", content: "Crée ta carte de visite digitale gratuitement en 30 secondes. Aucun mot de passe requis." },
+      { property: "og:title", content: "Inscription — Carte Visite Digitale" },
       { property: "og:description", content: "Rejoins +2 400 pros qui partagent leurs contacts en 1 tap." },
     ],
   }),
   component: InscriptionPage,
 });
 
-const schema = z.object({
-  email: z.string().trim().email({ message: "Email invalide" }),
-  password: z.string().min(8, { message: "8 caractères minimum" }),
-});
-
 function InscriptionPage() {
-  const navigate = useNavigate();
+  const search = Route.useSearch();
   const [email, setEmail] = useState("");
-  const [password, setPassword] = useState("");
-  const [showPassword, setShowPassword] = useState(false);
   const [submitting, setSubmitting] = useState(false);
+  const [sent, setSent] = useState(false);
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault();
-    const parsed = schema.safeParse({ email, password });
-    if (!parsed.success) {
-      toast.error(parsed.error.issues[0].message);
+    const trimmed = email.trim().toLowerCase();
+    if (!trimmed || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed)) {
+      toast.error("Adresse email invalide");
       return;
     }
     setSubmitting(true);
     try {
-      // Server-side creation with email pre-confirmed (bypasses email verification)
-      const result = await signUpWithAutoConfirm({ data: { email: parsed.data.email, password: parsed.data.password } });
+      const redirectPath = search.redirect ?? "/builder";
+      const appUrl = typeof window !== "undefined" ? window.location.origin : "https://www.cartevisitedigitale.fr";
+      const emailRedirectTo = `${appUrl}${redirectPath}`;
 
-      if (result.exists) {
-        // Account exists → try sign in directly
-        const { error: signInError } = await supabase.auth.signInWithPassword({
-          email: parsed.data.email,
-          password: parsed.data.password,
-        });
-        if (signInError) {
-          toast.error("Ce compte existe déjà. Va sur la page connexion.");
-          return;
-        }
-      } else {
-        // New account created and confirmed → sign in
-        const { error: signInError } = await supabase.auth.signInWithPassword({
-          email: parsed.data.email,
-          password: parsed.data.password,
-        });
-        if (signInError) {
-          toast.error(signInError.message);
-          return;
-        }
-      }
+      const { error } = await supabase.auth.signInWithOtp({
+        email: trimmed,
+        options: { emailRedirectTo },
+      });
 
-      navigate({ to: "/builder" });
+      if (error) throw error;
+      setSent(true);
+    } catch (err) {
+      toast.error(err instanceof Error ? err.message : "Une erreur est survenue");
+    } finally {
+      setSubmitting(false);
+    }
+  }
+
+  async function handleResend() {
+    setSubmitting(true);
+    try {
+      const redirectPath = search.redirect ?? "/builder";
+      const appUrl = typeof window !== "undefined" ? window.location.origin : "https://www.cartevisitedigitale.fr";
+      const { error } = await supabase.auth.signInWithOtp({
+        email: email.trim().toLowerCase(),
+        options: { emailRedirectTo: `${appUrl}${redirectPath}` },
+      });
+      if (error) throw error;
+      toast.success("Lien renvoyé !");
     } catch {
-      toast.error("Une erreur est survenue");
+      toast.error("Impossible de renvoyer le lien");
     } finally {
       setSubmitting(false);
     }
@@ -99,85 +96,109 @@ function InscriptionPage() {
               <span className="font-display font-bold text-sm leading-tight">Carte Visite Digitale</span>
             </div>
 
-            <div className="bg-card border border-border rounded-2xl shadow-card p-6 sm:p-8">
-              <p className="text-xs font-semibold uppercase tracking-wider text-magenta mb-2">
-                Rejoins CVD
-              </p>
-              <h1 className="font-display text-2xl sm:text-3xl font-bold text-foreground">
-                Inscris-toi gratuitement !
-              </h1>
-              <p className="mt-2 text-sm text-muted-foreground">
-                Carte de visite digitale, sans engagement, sans carte bancaire.
-              </p>
+            {!sent ? (
+              <div className="bg-card border border-border rounded-2xl shadow-card p-6 sm:p-8">
+                <p className="text-xs font-semibold uppercase tracking-wider text-magenta mb-2">
+                  Commence en 30 secondes
+                </p>
+                <h1 className="font-display text-2xl sm:text-3xl font-bold text-foreground">
+                  Crée ton espace gratuitement
+                </h1>
+                <p className="mt-2 text-sm text-muted-foreground">
+                  Aucun mot de passe. On t'envoie un lien direct dans ta boîte email.
+                </p>
 
-              <div className="mt-6">
-                <div className="flex flex-wrap items-center gap-2 mb-5">
-                  <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800 px-3 py-1 text-[11px] font-semibold text-emerald-700 dark:text-emerald-400">
-                    <ShieldCheck className="w-3.5 h-3.5" />
-                    100 % gratuit
-                  </span>
-                  <span className="inline-flex items-center gap-1.5 rounded-full bg-background border border-border px-3 py-1 text-[11px] font-medium text-muted-foreground">
-                    <Lock className="w-3.5 h-3.5" />
-                    Sans engagement
-                  </span>
+                <div className="mt-6">
+                  <div className="flex flex-wrap items-center gap-2 mb-5">
+                    <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800 px-3 py-1 text-[11px] font-semibold text-emerald-700 dark:text-emerald-400">
+                      <ShieldCheck className="w-3.5 h-3.5" />
+                      100 % gratuit
+                    </span>
+                    <span className="inline-flex items-center gap-1.5 rounded-full bg-background border border-border px-3 py-1 text-[11px] font-medium text-muted-foreground">
+                      <Lock className="w-3.5 h-3.5" />
+                      Sans mot de passe
+                    </span>
+                  </div>
+
+                  <form onSubmit={handleSubmit} className="space-y-4">
+                    <div>
+                      <label htmlFor="email" className="block text-sm font-medium text-foreground mb-1.5">
+                        Ton adresse email
+                      </label>
+                      <input
+                        id="email"
+                        type="email"
+                        required
+                        autoComplete="email"
+                        autoFocus
+                        value={email}
+                        onChange={(e) => setEmail(e.target.value)}
+                        className="w-full rounded-xl border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-magenta/40 focus:border-magenta transition"
+                        placeholder="ton@email.com"
+                      />
+                    </div>
+
+                    <button
+                      type="submit"
+                      disabled={submitting}
+                      className="w-full bg-gradient-cta text-primary-foreground rounded-full py-3 text-sm font-semibold shadow-card hover:shadow-glow transition-all disabled:opacity-60 flex items-center justify-center gap-2"
+                    >
+                      {submitting ? (
+                        "Envoi en cours…"
+                      ) : (
+                        <>
+                          Recevoir mon lien de connexion
+                          <ArrowRight className="w-4 h-4" />
+                        </>
+                      )}
+                    </button>
+
+                    <p className="text-[11px] leading-relaxed text-muted-foreground">
+                      En continuant, tu acceptes nos conditions générales et notre politique de confidentialité.
+                    </p>
+                  </form>
+                </div>
+              </div>
+            ) : (
+              <div className="bg-card border border-border rounded-2xl shadow-card p-6 sm:p-8 text-center">
+                <div className="w-16 h-16 bg-magenta/10 rounded-full flex items-center justify-center mx-auto mb-5">
+                  <Mail className="w-8 h-8 text-magenta" />
+                </div>
+                <h2 className="font-display text-2xl font-bold text-foreground mb-2">
+                  Vérifie ta boîte email
+                </h2>
+                <p className="text-sm text-muted-foreground mb-1">
+                  On a envoyé un lien de connexion à
+                </p>
+                <p className="text-sm font-semibold text-foreground mb-6 break-all">{email}</p>
+
+                <div className="bg-muted/40 rounded-xl p-4 mb-6 text-left space-y-2">
+                  <p className="text-xs font-medium text-foreground">Comment ça marche :</p>
+                  <p className="text-xs text-muted-foreground">1. Ouvre ta boîte email</p>
+                  <p className="text-xs text-muted-foreground">2. Clique sur le lien dans l'email de Carte Visite Digitale</p>
+                  <p className="text-xs text-muted-foreground">3. Tu es connecté et tu peux commencer !</p>
                 </div>
 
-                <form onSubmit={handleSubmit} className="space-y-4">
-                  <div>
-                    <label htmlFor="email" className="block text-sm font-medium text-foreground mb-1.5">
-                      E-mail
-                    </label>
-                    <input
-                      id="email"
-                      type="email"
-                      required
-                      autoComplete="email"
-                      value={email}
-                      onChange={(e) => setEmail(e.target.value)}
-                      className="w-full rounded-xl border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-magenta/40 focus:border-magenta transition"
-                      placeholder="ton.email@exemple.com"
-                    />
-                  </div>
-
-                  <div>
-                    <label htmlFor="password" className="block text-sm font-medium text-foreground mb-1.5">
-                      Mot de passe
-                    </label>
-                    <div className="relative">
-                      <input
-                        id="password"
-                        type={showPassword ? "text" : "password"}
-                        required
-                        autoComplete="new-password"
-                        value={password}
-                        onChange={(e) => setPassword(e.target.value)}
-                        className="w-full rounded-xl border border-border bg-background px-4 py-3 pr-11 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-magenta/40 focus:border-magenta transition"
-                        placeholder="8 caractères minimum"
-                      />
-                      <button
-                        type="button"
-                        onClick={() => setShowPassword((v) => !v)}
-                        className="absolute right-3 top-1/2 -translate-y-1/2 text-muted-foreground hover:text-foreground transition"
-                      >
-                        {showPassword ? <EyeOff className="w-4 h-4" /> : <Eye className="w-4 h-4" />}
-                      </button>
-                    </div>
-                  </div>
-
+                <div className="flex flex-col gap-2">
                   <button
-                    type="submit"
+                    type="button"
+                    onClick={handleResend}
                     disabled={submitting}
-                    className="w-full bg-gradient-cta text-primary-foreground rounded-full py-3 text-sm font-semibold shadow-card hover:shadow-glow transition-all disabled:opacity-60"
+                    className="w-full flex items-center justify-center gap-2 rounded-full border border-border py-2.5 text-sm font-medium text-muted-foreground hover:text-foreground hover:border-foreground/30 transition disabled:opacity-50"
                   >
-                    {submitting ? "Création du compte…" : "Créer mon compte →"}
+                    <RefreshCw className="w-3.5 h-3.5" />
+                    Renvoyer le lien
                   </button>
-
-                  <p className="text-[11px] leading-relaxed text-muted-foreground">
-                    En créant un compte, tu acceptes nos conditions générales et notre politique de confidentialité.
-                  </p>
-                </form>
+                  <button
+                    type="button"
+                    onClick={() => { setSent(false); setEmail(""); }}
+                    className="text-xs text-muted-foreground hover:text-foreground transition underline underline-offset-2"
+                  >
+                    Changer l'adresse email
+                  </button>
+                </div>
               </div>
-            </div>
+            )}
 
             <p className="mt-6 text-center text-sm text-muted-foreground">
               Tu as déjà un compte ?{" "}
