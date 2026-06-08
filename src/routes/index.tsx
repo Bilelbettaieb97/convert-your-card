@@ -203,7 +203,7 @@ function Hero() {
   return (
     <section className="relative bg-gradient-soft">
       <div className="absolute inset-0 bg-[radial-gradient(ellipse_at_top_right,_color-mix(in_oklab,var(--magenta)_25%,transparent),transparent_60%)]" />
-      <div className="relative max-w-7xl mx-auto px-4 pt-12 pb-20 lg:pt-20 lg:pb-28 grid lg:grid-cols-2 gap-12 items-center">
+      <div className="relative max-w-7xl mx-auto px-4 pt-4 sm:pt-12 pb-12 lg:pt-20 lg:pb-28 grid lg:grid-cols-2 gap-12 items-center">
         <div>
           <div className="inline-flex items-center gap-2 bg-card border border-border rounded-full px-3 py-1.5 text-xs font-semibold shadow-sm">
             <span className="flex -space-x-1.5">
@@ -219,15 +219,15 @@ function Hero() {
             </span>
           </div>
 
-          <h1 className="mt-5 font-display font-extrabold text-4xl sm:text-5xl lg:text-6xl leading-[1.05]">
+          <h1 className="mt-4 sm:mt-5 font-display font-extrabold text-3xl sm:text-5xl lg:text-6xl leading-[1.05]">
             Une carte de visite digitale, <span className="text-gradient">conçue pour vous.</span>
           </h1>
 
-          <p className="mt-5 text-lg text-muted-foreground max-w-xl">
+          <p className="hidden sm:block mt-5 text-lg text-muted-foreground max-w-xl">
             Rejoignez les pros qui ne distribuent plus de papier. Une seule carte pour partager tout ce que vous êtes — réseaux, site, contact, prise de rendez-vous — d'un simple contact avec un téléphone. Designée et gérée par notre équipe.
           </p>
 
-          <ul className="mt-6 space-y-2.5">
+          <ul className="hidden sm:block mt-6 space-y-2.5">
             {[
               "Activée en 3 minutes — aucune compétence technique",
               "Compatible iPhone & Android (sans appli)",
@@ -242,18 +242,18 @@ function Hero() {
             ))}
           </ul>
 
-          <div className="mt-8">
+          <div className="mt-5 sm:mt-8">
             <HeroCTA />
           </div>
 
-          <div className="mt-6 flex flex-wrap items-center gap-x-6 gap-y-2 text-xs text-muted-foreground">
+          <div className="hidden sm:flex mt-6 flex-wrap items-center gap-x-6 gap-y-2 text-xs text-muted-foreground">
             <span className="flex items-center gap-1.5"><Shield className="w-4 h-4 text-success" /> Paiement 100% sécurisé</span>
             <span className="flex items-center gap-1.5"><Clock className="w-4 h-4 text-success" /> Activation immédiate</span>
             <span className="flex items-center gap-1.5"><Check className="w-4 h-4 text-success" /> Garantie 30 jours</span>
           </div>
 
           {/* Mobile scarcity strip */}
-          <div className="mt-5 sm:hidden bg-card border border-magenta/30 rounded-2xl p-3 shadow-card">
+          <div className="mt-4 sm:hidden bg-card border border-magenta/30 rounded-2xl p-3 shadow-card">
             <div className="flex items-center justify-between text-xs font-semibold mb-1.5">
               <span className="text-foreground">🔥 Offre lancement — plus que 47 places</span>
               <span className="text-magenta">31%</span>
