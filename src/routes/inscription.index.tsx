@@ -39,41 +39,36 @@ function InscriptionPage() {
     }
     setSubmitting(true);
     try {
-      const res = await fetch("/api/signup", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: parsed.data.email, password: parsed.data.password }),
+      const { error: signUpError } = await supabase.auth.signUp({
+        email: parsed.data.email,
+        password: parsed.data.password,
       });
-      const data = await res.json();
 
-      // If email already exists (409), try signing in directly
-      if (res.status === 409) {
+      if (signUpError) {
+        if (signUpError.message.toLowerCase().includes("already registered") || signUpError.message.toLowerCase().includes("already exists")) {
+          // Compte existant → tenter connexion directe
+          const { error: signInError } = await supabase.auth.signInWithPassword({
+            email: parsed.data.email,
+            password: parsed.data.password,
+          });
+          if (signInError) {
+            toast.error("Ce compte existe déjà. Va sur la page connexion.");
+            return;
+          }
+        } else {
+          toast.error(signUpError.message);
+          return;
+        }
+      } else {
+        // Connexion immédiate après création
         const { error: signInError } = await supabase.auth.signInWithPassword({
           email: parsed.data.email,
           password: parsed.data.password,
         });
         if (signInError) {
-          toast.error("Ce compte existe déjà. Va sur la page connexion.");
+          toast.error(signInError.message);
           return;
         }
-        sessionStorage.setItem("onetap_email", parsed.data.email);
-        navigate({ to: "/inscription/selection-de-plan" });
-        return;
-      }
-
-      if (!res.ok) {
-        toast.error(data.error ?? "Erreur lors de la création du compte");
-        return;
-      }
-
-      // Sign in immediately after account creation
-      const { error: signInError } = await supabase.auth.signInWithPassword({
-        email: parsed.data.email,
-        password: parsed.data.password,
-      });
-      if (signInError) {
-        toast.error(signInError.message);
-        return;
       }
 
       sessionStorage.setItem("onetap_email", parsed.data.email);
