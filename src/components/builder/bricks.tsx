@@ -4,7 +4,8 @@ import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";
-import { Upload, Plus, Trash2, Check } from "lucide-react";
+import { Upload, Plus, Trash2, Check, Loader2 } from "lucide-react";
+import { uploadImage } from "@/lib/upload-image";
 import {
   CARD_THEMES,
   PROFESSIONS,
@@ -103,15 +104,19 @@ export function VariantPicker({
 export function IdentityBrick({ data, update }: BrickProps) {
   const fileRef = useRef<HTMLInputElement>(null);
   const coverRef = useRef<HTMLInputElement>(null);
-  const onFile = (f: File) => {
-    const reader = new FileReader();
-    reader.onload = () => update("photo", String(reader.result));
-    reader.readAsDataURL(f);
+  const [uploadingPhoto, setUploadingPhoto] = useState(false);
+  const [uploadingCover, setUploadingCover] = useState(false);
+  const onFile = async (f: File) => {
+    setUploadingPhoto(true);
+    const url = await uploadImage(f);
+    if (url) update("photo", url);
+    setUploadingPhoto(false);
   };
-  const onCover = (f: File) => {
-    const reader = new FileReader();
-    reader.onload = () => update("coverPhoto", String(reader.result));
-    reader.readAsDataURL(f);
+  const onCover = async (f: File) => {
+    setUploadingCover(true);
+    const url = await uploadImage(f);
+    if (url) update("coverPhoto", url);
+    setUploadingCover(false);
   };
   const isCover = data.variants.identity === "cover";
   return (
@@ -135,8 +140,9 @@ export function IdentityBrick({ data, update }: BrickProps) {
               if (f) onFile(f);
             }}
           />
-          <Button type="button" variant="outline" size="sm" onClick={() => fileRef.current?.click()}>
-            <Upload className="h-4 w-4 mr-1.5" /> Importer une photo
+          <Button type="button" variant="outline" size="sm" onClick={() => fileRef.current?.click()} disabled={uploadingPhoto}>
+            {uploadingPhoto ? <Loader2 className="h-4 w-4 mr-1.5 animate-spin" /> : <Upload className="h-4 w-4 mr-1.5" />}
+            {uploadingPhoto ? "Upload…" : "Importer une photo"}
           </Button>
           {data.photo && (
             <Button type="button" variant="ghost" size="sm" onClick={() => update("photo", "")}>
@@ -175,8 +181,9 @@ export function IdentityBrick({ data, update }: BrickProps) {
                 if (f) onCover(f);
               }}
             />
-            <Button type="button" variant="outline" size="sm" onClick={() => coverRef.current?.click()}>
-              <Upload className="h-4 w-4 mr-1.5" /> Importer
+            <Button type="button" variant="outline" size="sm" onClick={() => coverRef.current?.click()} disabled={uploadingCover}>
+              {uploadingCover ? <Loader2 className="h-4 w-4 mr-1.5 animate-spin" /> : <Upload className="h-4 w-4 mr-1.5" />}
+              {uploadingCover ? "Upload…" : "Importer"}
             </Button>
           </div>
           {data.coverPhoto && (
@@ -316,10 +323,12 @@ export function ListingsBrick({ data, update }: BrickProps) {
       { id: crypto.randomUUID(), img: "", title: "Nouveau bien", meta: "", price: "" },
     ]);
   const remove = (id: string) => update("listings", data.listings.filter((l) => l.id !== id));
-  const onImage = (id: string, f: File) => {
-    const reader = new FileReader();
-    reader.onload = () => setListing(id, { img: String(reader.result) });
-    reader.readAsDataURL(f);
+  const [uploading, setUploading] = useState<string | null>(null);
+  const onImage = async (id: string, f: File) => {
+    setUploading(id);
+    const url = await uploadImage(f);
+    if (url) setListing(id, { img: url });
+    setUploading(null);
   };
   return (
     <div className="space-y-4">
@@ -330,7 +339,9 @@ export function ListingsBrick({ data, update }: BrickProps) {
         <div key={l.id} className="rounded-xl border border-border p-3 space-y-2">
           <div className="flex gap-3">
             <label className="h-16 w-16 rounded-lg overflow-hidden bg-muted grid place-items-center cursor-pointer shrink-0">
-              {l.img ? (
+              {uploading === l.id ? (
+                <Loader2 className="h-4 w-4 text-muted-foreground animate-spin" />
+              ) : l.img ? (
                 <img src={l.img} alt="" className="h-full w-full object-cover" />
               ) : (
                 <Upload className="h-4 w-4 text-muted-foreground" />
@@ -508,10 +519,12 @@ export function TestimonialsBrick({ data, update }: BrickProps) {
       { id: crypto.randomUUID(), name: "Prénom N.", role: "Client", text: "", rating: 5, photo: "", link: "" },
     ]);
   const remove = (id: string) => update("testimonials", data.testimonials.filter((t) => t.id !== id));
-  const onPhoto = (id: string, f: File) => {
-    const reader = new FileReader();
-    reader.onload = () => set(id, { photo: String(reader.result) });
-    reader.readAsDataURL(f);
+  const [uploading, setUploading] = useState<string | null>(null);
+  const onPhoto = async (id: string, f: File) => {
+    setUploading(id);
+    const url = await uploadImage(f);
+    if (url) set(id, { photo: url });
+    setUploading(null);
   };
 
   return (
@@ -541,7 +554,9 @@ export function TestimonialsBrick({ data, update }: BrickProps) {
           <div key={t.id} className="rounded-xl border border-border p-3 space-y-3">
             <div className="flex gap-3">
               <label className="h-14 w-14 rounded-full overflow-hidden bg-muted border border-border grid place-items-center cursor-pointer shrink-0">
-                {t.photo ? (
+                {uploading === t.id ? (
+                  <Loader2 className="h-4 w-4 text-muted-foreground animate-spin" />
+                ) : t.photo ? (
                   <img src={t.photo} alt="" className="h-full w-full object-cover" />
                 ) : (
                   <Upload className="h-4 w-4 text-muted-foreground" />
