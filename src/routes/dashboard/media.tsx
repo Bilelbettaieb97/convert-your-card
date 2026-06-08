@@ -16,7 +16,7 @@ export const Route = createFileRoute("/dashboard/media")({
   component: MediaPage,
 });
 
-const BUCKET = "user-photos";
+const BUCKET = "nfc-photos";
 const MAX_SIZE = 5 * 1024 * 1024;
 
 type Photo = { name: string; path: string; url: string };

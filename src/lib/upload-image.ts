@@ -1,6 +1,6 @@
 import { supabase } from "@/integrations/supabase/client";
 
-const BUCKET = "user-photos";
+const BUCKET = "nfc-photos";
 const MAX_MB = 5;
 
 export async function uploadImage(file: File): Promise<string | null> {
