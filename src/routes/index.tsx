@@ -833,9 +833,9 @@ export function Pricing() {
         <div className="text-center max-w-2xl mx-auto">
           <span className="text-sm font-semibold text-magenta uppercase tracking-wider">Choisissez votre formule</span>
           <h2 className="mt-3 font-display font-bold text-3xl sm:text-4xl">
-            Un tarif unique. <span className="text-gradient">Sans abonnement.</span>
+            Simple, transparent. <span className="text-gradient">Sans engagement.</span>
           </h2>
-          <p className="mt-4 text-muted-foreground">Payez une fois, profitez à vie. Garantie satisfait ou remboursé 30 jours.</p>
+          <p className="mt-4 text-muted-foreground">Essai gratuit 7 jours, sans CB. Annulable à tout moment. Garantie satisfait ou remboursé 30 jours.</p>
         </div>
 
         <div className="mt-14 grid lg:grid-cols-3 gap-6 lg:gap-5 items-stretch max-w-6xl mx-auto">
@@ -844,69 +844,69 @@ export function Pricing() {
             <OfferCard
               name="CVD Essentielle"
               tagline="La carte digitale qui convertit"
-              oldPrice="33€"
-              price="19,80€"
-              badge="Digital only"
+              oldPrice="9,80€/mois"
+              price="8,16€/mois"
+              badge="Annuel — 2 mois offerts"
               features={[
                 { t: "Page de carte de visite digitale", v: true },
-                { t: "Modifications illimitées à vie", v: true },
+                { t: "Modifications illimitées", v: true },
                 { t: "QR code personnalisé", v: true },
                 { t: "Tous vos réseaux & liens", v: true },
                 { t: "Compatible iPhone & Android", v: true },
-                { t: "Sans abonnement, paiement unique", v: true },
+                { t: "Essai gratuit 7 jours", v: true },
               ]}
-              cta="Oui, je veux ma carte — 19,80€"
+              cta="Démarrer l'essai gratuit"
             />
           </div>
 
           {/* Offer 2 — Physique (highlight) — mobile: 1st (top, centered), desktop: middle */}
           <div className="order-1 lg:order-2 flex max-w-md mx-auto w-full lg:max-w-none">
             <OfferCard
-              name="CVD Physique"
-              tagline="Carte NFC + page digitale"
-              oldPrice="48€"
-              price="28,80€"
+              name="CVD Vitrine"
+              tagline="Carte digitale + statistiques"
+              oldPrice="15,80€/mois"
+              price="13,16€/mois"
               badge="⭐ Le plus populaire"
               highlight
               stockLeft={32}
               stockTotal={100}
               valueStack={[
-                { t: "Page de carte digitale", v: "49€" },
-                { t: "QR code personnalisé", v: "19€" },
-                { t: "Carte NFC premium", v: "25€" },
-                { t: "Livraison offerte 48h", v: "12€" },
-                { t: "Modifications à vie", v: "29€" },
+                { t: "Plan Essentielle complet", v: "inclus" },
+                { t: "Témoignages clients", v: "inclus" },
+                { t: "Statistiques de vues", v: "inclus" },
+                { t: "Section À propos enrichie", v: "inclus" },
+                { t: "Support prioritaire", v: "inclus" },
               ]}
               features={[
-                { t: "Tout l'essentiel inclus", v: true },
-                { t: "Carte NFC physique premium", v: true },
-                { t: "Livraison offerte 48h", v: true },
-                { t: "QR code intégré à la carte", v: true },
-                { t: "Compatible iPhone & Android", v: true },
-                { t: "Sans abonnement, paiement unique", v: true },
+                { t: "Tout l'Essentielle inclus", v: true },
+                { t: "Témoignages clients", v: true },
+                { t: "Statistiques avancées", v: true },
+                { t: "Section À propos enrichie", v: true },
+                { t: "Support prioritaire", v: true },
+                { t: "Essai gratuit 7 jours", v: true },
               ]}
-              cta="Commander ma carte NFC — 28,80€"
-              subCta="Activation immédiate · Garantie 30 jours"
+              cta="Démarrer l'essai gratuit"
+              subCta="Sans CB · Annulable à tout moment"
             />
           </div>
 
           {/* Offer 3 — Premium (mobile: 3rd, desktop: 3rd) */}
           <div className="order-3 lg:order-3 flex max-w-md mx-auto w-full lg:max-w-none">
             <OfferCard
-              name="CVD Premium"
-              tagline="Analytics & multi-cartes"
-              oldPrice="79€"
-              price="48€"
-              badge="Pour les équipes"
+              name="Carte NFC physique"
+              tagline="En option avec votre plan"
+              oldPrice="39€"
+              price="29€"
+              badge="Add-on"
               features={[
-                { t: "Tout l'essentiel + Physique", v: true },
-                { t: "Analytics avancées en temps réel", v: true },
-                { t: "Lead capture & CRM export", v: true },
-                { t: "Multi-cartes (jusqu'à 5)", v: true },
-                { t: "Domaine personnalisé", v: true },
-                { t: "Support prioritaire", v: true },
+                { t: "Carte NFC premium gravée", v: true },
+                { t: "Livraison offerte 48h", v: true },
+                { t: "QR code intégré", v: true },
+                { t: "Compatible iPhone & Android", v: true },
+                { t: "1 tap = profil ouvert", v: true },
+                { t: "Paiement unique, sans abonnement", v: true },
               ]}
-              cta="Passer Premium"
+              cta="Ajouter la carte NFC"
             />
           </div>
         </div>
@@ -927,29 +927,29 @@ export function Pricing() {
 
 function ComparisonTable() {
   const offers: { key: string; name: string; price: string; badge: string; highlight?: boolean }[] = [
-    { key: "essentiel", name: "Essentiel", price: "19,80€", badge: "Digital only" },
-    { key: "physique", name: "Physique", price: "28,80€", badge: "Carte NFC", highlight: true },
-    { key: "premium", name: "Premium", price: "48€", badge: "Équipes" },
+    { key: "essentielle", name: "Essentielle", price: "8,16€/mois", badge: "Annuel" },
+    { key: "vitrine", name: "Vitrine", price: "13,16€/mois", badge: "Populaire", highlight: true },
+    { key: "nfc", name: "NFC", price: "29€", badge: "Add-on" },
   ];
 
   type Cell = boolean | string;
   const rows: { label: string; values: [Cell, Cell, Cell]; group?: string }[] = [
     { group: "L'essentiel", label: "Page de carte digitale", values: [true, true, true] },
     { label: "QR code personnalisé", values: [true, true, true] },
-    { label: "Modifications illimitées à vie", values: [true, true, true] },
+    { label: "Modifications illimitées", values: [true, true, true] },
     { label: "Tous vos réseaux & liens", values: [true, true, true] },
     { label: "Compatible iPhone & Android", values: [true, true, true] },
-    { label: "Paiement unique, sans abonnement", values: [true, true, true] },
+    { label: "Essai gratuit 7 jours", values: [true, true, false] },
 
-    { group: "Carte physique", label: "Carte NFC premium livrée", values: [false, true, true] },
-    { label: "Livraison offerte 48h", values: [false, true, true] },
-    { label: "QR code intégré à la carte", values: [false, true, true] },
+    { group: "Vitrine", label: "Témoignages clients", values: [false, true, false] },
+    { label: "Statistiques avancées", values: [false, true, false] },
+    { label: "Section À propos enrichie", values: [false, true, false] },
+    { label: "Support prioritaire", values: [false, true, false] },
 
-    { group: "Pro & équipes", label: "Analytics temps réel (vues, clics)", values: [false, false, true] },
-    { label: "Lead capture & export CRM", values: [false, false, true] },
-    { label: "Multi-cartes (jusqu'à 5)", values: [false, false, true] },
-    { label: "Domaine personnalisé", values: [false, false, true] },
-    { label: "Support prioritaire", values: [false, false, true] },
+    { group: "Carte NFC (add-on)", label: "Carte NFC premium livrée", values: [false, false, true] },
+    { label: "Livraison offerte 48h", values: [false, false, true] },
+    { label: "1 tap = profil ouvert", values: [false, false, true] },
+    { label: "Paiement unique sans abonnement", values: [false, false, true] },
   ];
 
   const cell = (v: Cell, highlight?: boolean) => {
@@ -1452,7 +1452,7 @@ function Testimonials() {
 
 function Comparison() {
   const rows = [
-    ["Coût annuel moyen", "120€+ (réimpressions)", "19,80€ payés une fois"],
+    ["Coût annuel moyen", "120€+ (réimpressions)", "À partir de 8,16€/mois"],
     ["Mises à jour", "Réimpression complète", "Illimitées en 1 clic"],
     ["Mesure d'impact", "Aucune", "Vues, clics, contacts"],
     ["Impact écologique", "Papier jeté", "Zéro déchet"],
@@ -1489,12 +1489,12 @@ function Comparison() {
 
 function FAQ() {
   const items = [
-    { q: "Comment fonctionne la carte digitale à 19,80€ ?", a: "Vous recevez immédiatement l'accès à votre éditeur. En 3 minutes, vous créez votre profil (photo, infos, réseaux, liens). Un QR code et un lien unique sont générés : partagez-les sur votre téléphone, signature mail, présentations, etc." },
-    { q: "Y a-t-il un abonnement caché ?", a: "Non. Vous payez 19,80€ une seule fois. Modifications illimitées à vie incluses. Aucun frais récurrent." },
-    { q: "Quelle est la différence avec l'offre physique à 28,80€ ?", a: "L'offre Physique inclut tout l'essentiel + une carte NFC premium livrée chez vous. Un simple tap sur le téléphone de votre contact ouvre votre carte digitale." },
-    { q: "Compatible avec iPhone et Android ?", a: "Oui, 100%. Aucune application à télécharger, votre carte s'ouvre directement dans le navigateur." },
-    { q: "Et si je ne suis pas satisfait ?", a: "Vous êtes remboursé sous 30 jours, sans question. Zéro risque." },
-    { q: "Mes données sont-elles protégées ?", a: "Oui, hébergement européen, conformité RGPD, vous restez 100% propriétaire de vos données." },
+    { q: "Comment fonctionne la carte de visite digitale CVD ?", a: "Vous créez votre profil en 3 minutes (photo, infos, réseaux, liens). Un QR code et un lien unique sont générés instantanément. Partagez-les lors de vos rencontres, en signature email ou sur vos réseaux." },
+    { q: "Combien ça coûte ?", a: "L'offre Essentielle est à 9,80€/mois (ou 8,16€/mois en annuel). L'offre Vitrine est à 15,80€/mois (ou 13,16€/mois en annuel). Essai gratuit 7 jours, sans carte bancaire. Annulable à tout moment, sans engagement." },
+    { q: "Y a-t-il un engagement ou un contrat ?", a: "Aucun. Vous pouvez annuler votre abonnement en 1 clic depuis votre dashboard, à tout moment, avant ou après l'essai. Pas de frais de résiliation." },
+    { q: "Quelle est la différence entre Essentielle et Vitrine ?", a: "Essentielle couvre la carte complète, le QR code et les réseaux. Vitrine ajoute les témoignages clients, les statistiques de vues avancées, la section À propos enrichie et la priorité support." },
+    { q: "Compatible avec iPhone et Android ?", a: "Oui, 100%. Aucune application à télécharger — votre carte s'ouvre directement dans le navigateur de votre contact, en 1 scan." },
+    { q: "Et si je ne suis pas satisfait ?", a: "Garantie satisfait ou remboursé 30 jours. Si CVD ne vous convient pas, on vous rembourse intégralement, sans question." },
   ];
   const [open, setOpen] = useState<number | null>(0);
   return (
@@ -1540,17 +1540,16 @@ function FinalCTA() {
               Votre prochaine rencontre<br className="hidden sm:block" /> mérite mieux qu'un papier.
             </h2>
             <p className="mt-5 text-lg opacity-90 max-w-xl mx-auto">
-              Créez votre carte digitale en 3 minutes. Sans abonnement. Garantie 30 jours.
+              Créez votre carte digitale en 3 minutes. Essai gratuit 7 jours, sans CB. Garantie 30 jours.
             </p>
             <a
-              href="#offres"
-              onClick={onCheckoutClick}
+              href="/inscription"
               className="mt-8 inline-flex items-center gap-2 bg-background text-foreground px-8 py-4 rounded-xl font-bold text-lg shadow-card hover:scale-[1.03] transition-all"
             >
-              Créer ma carte — 19,80€
+              Commencer gratuitement
               <ArrowRight className="w-5 h-5" />
             </a>
-            <p className="mt-4 text-xs opacity-80">Paiement sécurisé · Activation immédiate · Satisfait ou remboursé</p>
+            <p className="mt-4 text-xs opacity-80">Sans carte bancaire · Annulable à tout moment · Satisfait ou remboursé</p>
           </div>
         </div>
       </div>
