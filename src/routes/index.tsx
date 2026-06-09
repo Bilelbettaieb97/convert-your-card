@@ -121,23 +121,19 @@ export function Nav() {
             <>
               <Link
                 to="/dashboard"
-                className="hidden sm:flex items-center gap-1.5 text-sm font-medium text-muted-foreground hover:text-foreground transition"
+                className="flex items-center gap-1.5 bg-gradient-cta text-primary-foreground px-3 sm:px-4 py-2 rounded-full text-sm font-semibold shadow-card hover:shadow-glow transition-all whitespace-nowrap"
               >
                 <LayoutDashboard className="w-4 h-4" />
-                Tableau de bord
+                <span className="hidden sm:inline">Tableau de bord</span>
+                <span className="sm:hidden">Dashboard</span>
               </Link>
-              <div className="flex items-center gap-2 border border-border rounded-full pl-3 pr-1 py-1 bg-card shadow-card">
-                <span className="text-xs font-medium text-foreground max-w-[120px] truncate hidden sm:block">
-                  {userEmail}
-                </span>
-                <button
-                  onClick={handleSignOut}
-                  className="w-7 h-7 rounded-full bg-muted hover:bg-destructive/10 flex items-center justify-center transition"
-                  title="Se déconnecter"
-                >
-                  <LogOut className="w-3.5 h-3.5 text-muted-foreground hover:text-destructive" />
-                </button>
-              </div>
+              <button
+                onClick={handleSignOut}
+                className="w-8 h-8 rounded-full bg-muted hover:bg-destructive/10 flex items-center justify-center transition"
+                title="Se déconnecter"
+              >
+                <LogOut className="w-3.5 h-3.5 text-muted-foreground hover:text-destructive" />
+              </button>
             </>
           ) : (
             <>
