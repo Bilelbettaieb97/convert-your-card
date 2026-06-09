@@ -29,7 +29,58 @@ export const Route = createFileRoute("/metiers/")({
 });
 
 const METIERS = [
+  // Professions libérales & conseil
   { slug: "coach", label: "Coach", desc: "Coach professionnel, coach de vie, coach business" },
+  { slug: "consultant", label: "Consultant", desc: "Consultant en stratégie, management, organisation" },
+  { slug: "avocat", label: "Avocat", desc: "Avocat en droit des affaires, droit de la famille…" },
+  { slug: "notaire", label: "Notaire", desc: "Notaire, office notarial, actes et conseils" },
+  { slug: "huissier", label: "Huissier", desc: "Huissier de justice, commissaire de justice" },
+  { slug: "juriste", label: "Juriste", desc: "Juriste d'entreprise, juriste en droit social" },
+  { slug: "expert-comptable", label: "Expert-Comptable", desc: "Expertise comptable, audit, conseil fiscal" },
+  { slug: "conseiller-financier", label: "Conseiller Financier", desc: "CGP, gestion de patrimoine, placements" },
+  { slug: "assureur", label: "Assureur", desc: "Agent général, courtier en assurances" },
+  // Santé & bien-être
+  { slug: "medecin", label: "Médecin", desc: "Médecin généraliste, spécialiste, praticien" },
+  { slug: "dentiste", label: "Dentiste", desc: "Chirurgien-dentiste, cabinet dentaire" },
+  { slug: "kinesitherapeute", label: "Kinésithérapeute", desc: "Rééducation, kiné libéral, masseur-kiné" },
+  { slug: "osteopathe", label: "Ostéopathe", desc: "Ostéopathie, douleurs chroniques, sport" },
+  { slug: "therapeute", label: "Thérapeute", desc: "Psychothérapeute, psychologue, sophrologue" },
+  { slug: "coach-nutritionnel", label: "Coach Nutritionnel", desc: "Diététicien, nutritionniste, coaching minceur" },
+  // Beauté & image
+  { slug: "coiffeur", label: "Coiffeur", desc: "Coiffeur, salon de coiffure, coloriste" },
+  { slug: "estheticienne", label: "Esthéticienne", desc: "Institut de beauté, soins visage & corps" },
+  { slug: "maquilleur", label: "Maquilleur", desc: "Maquilleur artistique, maquillage mariage" },
+  // Architecture & design
+  { slug: "architecte", label: "Architecte", desc: "Architecte DPLG, architecture intérieure" },
+  { slug: "designer-graphique", label: "Designer Graphique", desc: "Identité visuelle, UX/UI, motion design" },
+  // Immobilier & patrimoine
+  { slug: "agent-immobilier", label: "Agent Immobilier", desc: "Transaction, location, estimation, promotion" },
+  { slug: "promoteur-immobilier", label: "Promoteur Immobilier", desc: "Construction neuve, VEFA, programmes résidentiels" },
+  { slug: "gestionnaire-patrimoine", label: "Gestionnaire de Patrimoine", desc: "Gestion locative, investissement, SCPI" },
+  { slug: "diagnostiqueur", label: "Diagnostiqueur Immobilier", desc: "DPE, amiante, plomb, diagnostics immobiliers" },
+  // Photographie & art
+  { slug: "photographe", label: "Photographe", desc: "Mariage, corporate, portrait, événementiel" },
+  // Restauration & hôtellerie
+  { slug: "chef-cuisinier", label: "Chef Cuisinier", desc: "Chef de cuisine, restaurant gastronomique, traiteur" },
+  { slug: "restaurateur", label: "Restaurateur", desc: "Restaurant, brasserie, cuisine du monde" },
+  { slug: "traiteur", label: "Traiteur", desc: "Réceptions, mariages, cocktails d'entreprise" },
+  { slug: "barman", label: "Barman", desc: "Barman mixologue, bar à cocktails, événements" },
+  // Sport & fitness
+  { slug: "coach-sportif", label: "Coach Sportif", desc: "Personal trainer, fitness, musculation" },
+  { slug: "yoga", label: "Professeur de Yoga", desc: "Yoga, méditation, pilates, bien-être" },
+  { slug: "coach-crossfit", label: "Coach CrossFit", desc: "CrossFit, HIIT, préparation physique" },
+  // Artisanat & créatif
+  { slug: "menuisier", label: "Menuisier", desc: "Menuiserie, ébénisterie, aménagement sur mesure" },
+  { slug: "fleuriste", label: "Fleuriste", desc: "Fleurs, événements, mariages, décoration florale" },
+  { slug: "bijoutier", label: "Bijoutier", desc: "Joaillerie, bijoux sur mesure, horlogerie" },
+  // Automobile
+  { slug: "mecanicien", label: "Mécanicien", desc: "Garage, entretien, réparation, dépannage auto" },
+  { slug: "carrossier", label: "Carrossier", desc: "Carrosserie, peinture auto, réparation sinistres" },
+  { slug: "conseiller-auto", label: "Conseiller Auto", desc: "Vente véhicules neufs, occasion, premium" },
+  // Formation & éducation
+  { slug: "formateur", label: "Formateur", desc: "Organisme de formation, Qualiopi, soft skills" },
+  { slug: "coach-carriere", label: "Coach Carrière", desc: "Reconversion, bilan de compétences, leadership" },
+  { slug: "professeur-particulier", label: "Professeur Particulier", desc: "Soutien scolaire, maths, langues, prépa concours" },
 ];
 
 function MetiersStructuredData() {

@@ -28,6 +28,7 @@ import { Route as InscriptionIndexRouteImport } from './routes/inscription.index
 import { Route as DashboardIndexRouteImport } from './routes/dashboard/index'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as MetiersCoachRouteImport } from './routes/metiers/coach'
+import { Route as MetiersSlugRouteImport } from './routes/metiers/$slug'
 import { Route as InscriptionSelectionDePlanRouteImport } from './routes/inscription.selection-de-plan'
 import { Route as InscriptionCartePhysiqueRouteImport } from './routes/inscription.carte-physique'
 import { Route as DashboardThemeRouteImport } from './routes/dashboard/theme'
@@ -145,6 +146,11 @@ const AdminIndexRoute = AdminIndexRouteImport.update({
 const MetiersCoachRoute = MetiersCoachRouteImport.update({
   id: '/coach',
   path: '/coach',
+  getParentRoute: () => MetiersRoute,
+} as any)
+const MetiersSlugRoute = MetiersSlugRouteImport.update({
+  id: '/$slug',
+  path: '/$slug',
   getParentRoute: () => MetiersRoute,
 } as any)
 const InscriptionSelectionDePlanRoute =
@@ -302,6 +308,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/theme': typeof DashboardThemeRoute
   '/inscription/carte-physique': typeof InscriptionCartePhysiqueRoute
   '/inscription/selection-de-plan': typeof InscriptionSelectionDePlanRoute
+  '/metiers/$slug': typeof MetiersSlugRoute
   '/metiers/coach': typeof MetiersCoachRoute
   '/admin/': typeof AdminIndexRoute
   '/dashboard/': typeof DashboardIndexRoute
@@ -343,6 +350,7 @@ export interface FileRoutesByTo {
   '/dashboard/theme': typeof DashboardThemeRoute
   '/inscription/carte-physique': typeof InscriptionCartePhysiqueRoute
   '/inscription/selection-de-plan': typeof InscriptionSelectionDePlanRoute
+  '/metiers/$slug': typeof MetiersSlugRoute
   '/metiers/coach': typeof MetiersCoachRoute
   '/admin': typeof AdminIndexRoute
   '/dashboard': typeof DashboardIndexRoute
@@ -388,6 +396,7 @@ export interface FileRoutesById {
   '/dashboard/theme': typeof DashboardThemeRoute
   '/inscription/carte-physique': typeof InscriptionCartePhysiqueRoute
   '/inscription/selection-de-plan': typeof InscriptionSelectionDePlanRoute
+  '/metiers/$slug': typeof MetiersSlugRoute
   '/metiers/coach': typeof MetiersCoachRoute
   '/admin/': typeof AdminIndexRoute
   '/dashboard/': typeof DashboardIndexRoute
@@ -434,6 +443,7 @@ export interface FileRouteTypes {
     | '/dashboard/theme'
     | '/inscription/carte-physique'
     | '/inscription/selection-de-plan'
+    | '/metiers/$slug'
     | '/metiers/coach'
     | '/admin/'
     | '/dashboard/'
@@ -475,6 +485,7 @@ export interface FileRouteTypes {
     | '/dashboard/theme'
     | '/inscription/carte-physique'
     | '/inscription/selection-de-plan'
+    | '/metiers/$slug'
     | '/metiers/coach'
     | '/admin'
     | '/dashboard'
@@ -519,6 +530,7 @@ export interface FileRouteTypes {
     | '/dashboard/theme'
     | '/inscription/carte-physique'
     | '/inscription/selection-de-plan'
+    | '/metiers/$slug'
     | '/metiers/coach'
     | '/admin/'
     | '/dashboard/'
@@ -678,6 +690,13 @@ declare module '@tanstack/react-router' {
       path: '/coach'
       fullPath: '/metiers/coach'
       preLoaderRoute: typeof MetiersCoachRouteImport
+      parentRoute: typeof MetiersRoute
+    }
+    '/metiers/$slug': {
+      id: '/metiers/$slug'
+      path: '/$slug'
+      fullPath: '/metiers/$slug'
+      preLoaderRoute: typeof MetiersSlugRouteImport
       parentRoute: typeof MetiersRoute
     }
     '/inscription/selection-de-plan': {
@@ -915,11 +934,13 @@ const InscriptionRouteWithChildren = InscriptionRoute._addFileChildren(
 )
 
 interface MetiersRouteChildren {
+  MetiersSlugRoute: typeof MetiersSlugRoute
   MetiersCoachRoute: typeof MetiersCoachRoute
   MetiersIndexRoute: typeof MetiersIndexRoute
 }
 
 const MetiersRouteChildren: MetiersRouteChildren = {
+  MetiersSlugRoute: MetiersSlugRoute,
   MetiersCoachRoute: MetiersCoachRoute,
   MetiersIndexRoute: MetiersIndexRoute,
 }
