@@ -120,51 +120,25 @@ export function ExitIntent() {
           </div>
           <h3 className="mt-3 font-display font-extrabold text-2xl leading-tight">
             Avant de partir…<br />
-            <span className="opacity-90">-10€ supplémentaires</span>
+            <span className="opacity-90">2 mois offerts</span>
           </h3>
           <p className="mt-2 text-sm opacity-90">
-            Recevez votre code promo par e-mail.<br />
-            Carte digitale à <strong>9,80€</strong> au lieu de 19,80€.
+            Choisissez le plan annuel et économisez 2 mois.<br />
+            À partir de <strong>8,16€/mois</strong> au lieu de 9,80€.
           </p>
         </div>
 
-        <div className="p-6">
-          {sent ? (
-            <div className="text-center py-4">
-              <div className="w-12 h-12 mx-auto rounded-full bg-success/15 flex items-center justify-center">
-                <Check className="w-6 h-6 text-success" strokeWidth={3} />
-              </div>
-              <p className="mt-3 font-semibold">Code envoyé !</p>
-              <p className="text-sm text-muted-foreground">Vérifiez votre boîte mail.</p>
-            </div>
-          ) : (
-            <form
-              onSubmit={(e) => {
-                e.preventDefault();
-                if (!email) return;
-                setSent(true);
-              }}
-              className="space-y-3"
-            >
-              <input
-                type="email"
-                required
-                placeholder="votre@email.com"
-                value={email}
-                onChange={(e) => setEmail(e.target.value)}
-                className="w-full px-4 py-3 rounded-xl border border-border bg-background focus:outline-none focus:ring-2 focus:ring-primary"
-              />
-              <button
-                type="submit"
-                className="w-full bg-gradient-cta text-primary-foreground font-semibold py-3 rounded-xl shadow-glow hover:scale-[1.02] transition"
-              >
-                Recevoir mon code -10€
-              </button>
-              <p className="text-[11px] text-muted-foreground text-center">
-                Sans spam. Désinscription en 1 clic.
-              </p>
-            </form>
-          )}
+        <div className="p-6 space-y-3">
+          <a
+            href="/inscription"
+            onClick={() => setOpen(false)}
+            className="w-full flex items-center justify-center gap-2 bg-gradient-cta text-primary-foreground font-semibold py-3.5 rounded-xl shadow-glow hover:scale-[1.02] transition text-sm"
+          >
+            Démarrer ma période d'essai
+          </a>
+          <p className="text-[11px] text-muted-foreground text-center">
+            Essai gratuit 7 jours · Sans carte bancaire · Annulable à tout moment
+          </p>
         </div>
       </div>
     </div>
