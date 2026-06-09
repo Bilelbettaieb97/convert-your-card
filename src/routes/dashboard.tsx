@@ -101,6 +101,7 @@ function DashboardLayout() {
             </div>
 
             <div className="flex items-center gap-1.5">
+              {/* Desktop only — recherche */}
               <button
                 onClick={() => {
                   const ev = new KeyboardEvent("keydown", { key: "k", metaKey: true });
@@ -114,21 +115,23 @@ function DashboardLayout() {
                 <kbd className="hidden xl:inline-flex h-5 items-center px-1.5 rounded bg-background border border-border text-[10px] font-mono">⌘K</kbd>
               </button>
 
+              {/* Desktop only — Voir en ligne */}
               <Button
                 variant="outline"
                 size="sm"
                 onClick={() => window.open(publicUrl, "_blank")}
-                className="h-9 gap-1.5 text-sm font-medium"
+                className="hidden sm:inline-flex h-9 gap-1.5 text-sm font-medium"
               >
                 <ExternalLink className="h-4 w-4" />
-                <span className="hidden sm:inline">Voir en ligne</span>
+                <span className="hidden md:inline">Voir en ligne</span>
               </Button>
 
+              {/* Desktop only — QR Code */}
               <Button
                 asChild
                 variant="outline"
                 size="sm"
-                className="h-9 gap-1.5 text-sm font-medium"
+                className="hidden sm:inline-flex h-9 gap-1.5 text-sm font-medium"
               >
                 <Link to="/dashboard/card">
                   <QrCode className="h-4 w-4" />
@@ -136,14 +139,16 @@ function DashboardLayout() {
                 </Link>
               </Button>
 
+              {/* Desktop only — Support */}
               <a
                 href="mailto:convertilab@gmail.com?subject=Support%20%E2%80%94%20Carte%20Visite%20Digitale"
-                className="inline-flex items-center gap-1.5 h-9 px-3 rounded-md border border-border bg-background text-sm font-medium text-muted-foreground hover:text-foreground hover:border-foreground/30 transition"
+                className="hidden md:inline-flex items-center gap-1.5 h-9 px-3 rounded-md border border-border bg-background text-sm font-medium text-muted-foreground hover:text-foreground hover:border-foreground/30 transition"
               >
                 <HeadphonesIcon className="h-4 w-4" />
-                <span className="hidden md:inline">Support</span>
+                <span className="hidden lg:inline">Support</span>
               </a>
 
+              {/* Toujours visible — Partager */}
               <Button
                 size="sm"
                 onClick={() => setShareOpen(true)}

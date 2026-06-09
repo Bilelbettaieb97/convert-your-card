@@ -3,6 +3,7 @@ import {
   Sidebar, SidebarContent, SidebarFooter, SidebarGroup, SidebarGroupContent,
   SidebarGroupLabel, SidebarHeader, SidebarMenu, SidebarMenuButton, SidebarMenuItem,
   SidebarMenuSub, SidebarMenuSubButton, SidebarMenuSubItem,
+  useSidebar,
 } from "@/components/ui/sidebar";
 import {
   LayoutDashboard, CreditCard, Layers, Palette, Sparkles, Link2, Image,
@@ -45,6 +46,9 @@ export function DashboardSidebar() {
   const pathname = useRouterState({ select: (r) => r.location.pathname });
   const { user } = useAuthStore();
   const navigate = useNavigate();
+  const { setOpenMobile, isMobile } = useSidebar();
+
+  const closeOnMobile = () => { if (isMobile) setOpenMobile(false); };
 
   async function handleSignOut() {
     await supabase.auth.signOut();
@@ -59,7 +63,7 @@ export function DashboardSidebar() {
     CARD_SUB.some((s) => pathname === s.to);
 
   return (
-    <Sidebar>
+    <Sidebar className="bg-background border-r border-border">
       <SidebarHeader className="p-4">
         <Link to="/" className="flex items-center gap-2.5">
           <div className="w-9 h-9 rounded-xl bg-gradient-brand flex items-center justify-center shadow-card shrink-0">
@@ -77,7 +81,7 @@ export function DashboardSidebar() {
               {/* Vue d'ensemble */}
               <SidebarMenuItem>
                 <SidebarMenuButton asChild isActive={pathname === "/dashboard"} size="lg">
-                  <Link to="/dashboard">
+                  <Link to="/dashboard" onClick={closeOnMobile}>
                     <LayoutDashboard className="h-5 w-5" />
                     <span className="text-sm font-medium">Vue d'ensemble</span>
                   </Link>
@@ -87,7 +91,7 @@ export function DashboardSidebar() {
               {/* Ma carte + 3 sous-pages */}
               <SidebarMenuItem>
                 <SidebarMenuButton asChild isActive={isCardSection} size="lg">
-                  <Link to="/dashboard/card">
+                  <Link to="/dashboard/card" onClick={closeOnMobile}>
                     <CreditCard className="h-5 w-5" />
                     <span className="text-sm font-medium">Ma carte</span>
                   </Link>
@@ -96,7 +100,7 @@ export function DashboardSidebar() {
                   {CARD_SUB.map((item) => (
                     <SidebarMenuSubItem key={item.to}>
                       <SidebarMenuSubButton asChild isActive={pathname === item.to}>
-                        <Link to={item.to}>
+                        <Link to={item.to} onClick={closeOnMobile}>
                           <item.icon className="h-4 w-4" />
                           <span className="text-sm">{item.label}</span>
                         </Link>
@@ -110,7 +114,7 @@ export function DashboardSidebar() {
               {NAV_EXTRAS.map((item) => (
                 <SidebarMenuItem key={item.to}>
                   <SidebarMenuButton asChild isActive={isActive(item.to)} size="lg">
-                    <Link to={item.to}>
+                    <Link to={item.to} onClick={closeOnMobile}>
                       <item.icon className="h-5 w-5" />
                       <span className="text-sm font-medium">{item.label}</span>
                     </Link>
@@ -128,7 +132,7 @@ export function DashboardSidebar() {
               {NAV_DATA.map((item) => (
                 <SidebarMenuItem key={item.to}>
                   <SidebarMenuButton asChild isActive={isActive(item.to)} size="lg">
-                    <Link to={item.to}>
+                    <Link to={item.to} onClick={closeOnMobile}>
                       <item.icon className="h-5 w-5" />
                       <span className="text-sm font-medium">{item.label}</span>
                     </Link>
@@ -146,7 +150,7 @@ export function DashboardSidebar() {
               {NAV_ACCOUNT.map((item) => (
                 <SidebarMenuItem key={item.to}>
                   <SidebarMenuButton asChild isActive={isActive(item.to)} size="lg">
-                    <Link to={item.to}>
+                    <Link to={item.to} onClick={closeOnMobile}>
                       <item.icon className="h-5 w-5" />
                       <span className="text-sm font-medium">{item.label}</span>
                     </Link>
