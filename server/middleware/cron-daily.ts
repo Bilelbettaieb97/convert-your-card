@@ -1,8 +1,18 @@
 import { defineEventHandler, getHeader } from "h3";
 import { createClient } from "@supabase/supabase-js";
 
-const NC_DELAYS: Record<number, number> = { 1: 1, 2: 4, 3: 8 };
-const BR_DELAYS: Record<number, number> = { 1: 1, 2: 3, 3: 6, 4: 10, 5: 14, 6: 21 };
+const NC_DELAYS: Record<number, number> = {
+  1: 10 / 1440,  // 10 minutes
+  2: 1 / 24,     // 1 heure
+  3: 1,          // 1 jour
+};
+const BR_DELAYS: Record<number, number> = {
+  1: 1 / 24,  // 1 heure
+  2: 1,       // 1 jour
+  3: 3,       // 3 jours
+  4: 5,       // 5 jours
+  5: 7,       // 7 jours
+};
 
 function daysSince(ts: string | null | undefined): number {
   if (!ts) return -1;
