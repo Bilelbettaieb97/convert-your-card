@@ -1,7 +1,10 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect } from "react";
 import { supabase } from "@/integrations/supabase/client";
+import { loadCard } from "@/lib/card-store";
 import { Zap } from "lucide-react";
+
+const CARD_KEY = "cyk.card.v1";
 
 export const Route = createFileRoute("/auth/callback")({
   component: AuthCallbackPage,
@@ -12,31 +15,53 @@ function AuthCallbackPage() {
 
   useEffect(() => {
     async function handleCallback() {
-      // Exchange code for session (PKCE flow)
-      const { data: { session }, error } = await supabase.auth.getSession();
+      let session = (await supabase.auth.getSession()).data.session;
 
-      if (error || !session?.user) {
-        // Try exchanging code from URL
+      if (!session?.user) {
         const url = new URL(window.location.href);
         const code = url.searchParams.get("code");
         if (code) {
-          const { data: { session: s } } = await supabase.auth.exchangeCodeForSession(code);
-          if (s?.user) return redirect(s.user.id);
+          const { data } = await supabase.auth.exchangeCodeForSession(code);
+          session = data.session;
         }
+      }
+
+      if (!session?.user) {
         navigate({ to: "/connexion", replace: true });
         return;
       }
 
-      redirect(session.user.id);
-    }
-
-    async function redirect(userId: string) {
       const { data: profile } = await supabase
         .from("nfc_profiles")
         .select("id")
-        .eq("user_id", userId)
+        .eq("user_id", session.user.id)
         .maybeSingle();
-      navigate({ to: profile ? "/dashboard" : "/builder", replace: true });
+
+      if (profile) {
+        navigate({ to: "/dashboard", replace: true });
+        return;
+      }
+
+      // Nouvel user → pré-remplir le store avec les données Google
+      const meta = session.user.user_metadata ?? {};
+      const fullName: string = meta.full_name ?? meta.name ?? "";
+      const avatarUrl: string = meta.avatar_url ?? meta.picture ?? "";
+      const email: string = session.user.email ?? "";
+
+      if (fullName || avatarUrl || email) {
+        try {
+          const existing = loadCard();
+          const prefilled = {
+            ...existing,
+            ...(fullName && !existing.name ? { name: fullName } : {}),
+            ...(avatarUrl && !existing.photo ? { photo: avatarUrl } : {}),
+            ...(email && !existing.email ? { email } : {}),
+          };
+          localStorage.setItem(CARD_KEY, JSON.stringify(prefilled));
+        } catch {}
+      }
+
+      navigate({ to: "/builder", replace: true });
     }
 
     handleCallback();
