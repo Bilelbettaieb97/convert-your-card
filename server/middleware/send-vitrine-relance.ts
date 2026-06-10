@@ -169,7 +169,7 @@ function email1(p: P): { subject: string; html: string } {
   return {
     subject: p.prenom
       ? `${p.prenom}, voici une offre réservée 24h pour vous`
-      : "Votre carte est active — voici une offre réservée 24h",
+      : "Votre carte est active : voici une offre réservée 24h",
     html: wrap(`
 ${logo()}
 ${badge("Offre exclusive · 72h seulement")}
@@ -177,12 +177,12 @@ ${badge("Offre exclusive · 72h seulement")}
 <p style="margin:0;font-size:28px;font-weight:800;line-height:1.25;color:#0f0f14;letter-spacing:-0.4px;">Votre carte est en ligne.<br>Voici ce que vous ratez encore.</p>
 </td></tr>
 <tr><td style="padding:0 36px 16px;">
-<p style="margin:0;font-size:15px;line-height:1.75;color:#374151;">${hi(p.prenom)} Votre carte digitale est en ligne. C'est déjà un bon début. Mais le plan Essentielle, c'est la version de base — celle qu'on donne gratuitement pour vous laisser tester.</p>
+<p style="margin:0;font-size:15px;line-height:1.75;color:#374151;">${hi(p.prenom)} Votre carte digitale est en ligne. C'est déjà un bon début. Mais le plan Essentielle, c'est la version de base, celle qu'on donne gratuitement pour vous laisser tester.</p>
 </td></tr>
 <tr><td style="padding:0 36px 24px;">
 <table cellpadding="0" cellspacing="0" border="0" width="100%" style="background:#faf5ff;border:1px solid #e9d5ff;border-radius:10px;">
 <tr><td style="padding:20px 22px;">
-<p style="margin:0 0 12px;font-size:13px;font-weight:700;color:#7c3aed;text-transform:uppercase;letter-spacing:0.5px;">Plan Vitrine — ce que vous débloquez :</p>
+<p style="margin:0 0 12px;font-size:13px;font-weight:700;color:#7c3aed;text-transform:uppercase;letter-spacing:0.5px;">Ce que vous débloquez avec Vitrine :</p>
 <p style="margin:0 0 8px;font-size:14px;color:#374151;line-height:1.6;">✦ Sections Services, Galerie, Témoignages, Calendly</p>
 <p style="margin:0 0 8px;font-size:14px;color:#374151;line-height:1.6;">✦ Analytics : qui visite votre carte, quand, d'où</p>
 <p style="margin:0 0 8px;font-size:14px;color:#374151;line-height:1.6;">✦ 15+ thèmes premium pour vous démarquer</p>
@@ -223,7 +223,7 @@ ${badge("Ce que vous ne voyez pas")}
 <p style="margin:0;font-size:28px;font-weight:800;line-height:1.25;color:#0f0f14;letter-spacing:-0.4px;">Votre carte reçoit des visites.<br>Vous ne le verrez jamais.</p>
 </td></tr>
 <tr><td style="padding:0 36px 16px;">
-<p style="margin:0;font-size:15px;line-height:1.75;color:#374151;">${hi(p.prenom)} Chaque fois que vous partagez votre carte — à un client, dans une signature mail, sur un sticker — des gens cliquent. Ils regardent. Parfois ils reviennent.</p>
+<p style="margin:0;font-size:15px;line-height:1.75;color:#374151;">${hi(p.prenom)} Chaque fois que vous partagez votre carte (à un client, dans une signature mail, sur un sticker), des gens cliquent. Ils regardent. Parfois ils reviennent.</p>
 </td></tr>
 <tr><td style="padding:0 36px 24px;">
 <table cellpadding="0" cellspacing="0" border="0" width="100%" style="background:#0f0f14;border-radius:10px;">
@@ -297,7 +297,7 @@ ${badge("Fonctionnalités manquantes")}
 </table>
 </td></tr>
 <tr><td style="padding:0 36px 16px;">
-<p style="margin:0;font-size:15px;line-height:1.75;color:#374151;">Un prospect qui tombe sur votre carte Vitrine voit vos services, vos photos de travail, ce que disent vos clients — et peut prendre rendez-vous en un tap. C'est une carte qui convertit.</p>
+<p style="margin:0;font-size:15px;line-height:1.75;color:#374151;">Un prospect qui tombe sur votre carte Vitrine voit vos services, vos photos de travail, ce que disent vos clients. Ils peuvent prendre rendez-vous en un tap. C'est une carte qui convertit.</p>
 </td></tr>
 ${cta("Ajouter ces sections →", p.trackUrl)}
 <tr><td style="padding:8px 36px 28px;" align="center"><p style="margin:0;font-size:12px;color:#9ca3af;">Plan Vitrine · 4,80€/mois · Résiliable à tout moment</p></td></tr>
@@ -371,7 +371,7 @@ ${badge("Design & différenciation")}
 <p style="margin:0;font-size:28px;font-weight:800;line-height:1.25;color:#0f0f14;letter-spacing:-0.4px;">En 3 secondes, on juge.<br>Votre carte fait quelle impression ?</p>
 </td></tr>
 <tr><td style="padding:0 36px 16px;">
-<p style="margin:0;font-size:15px;line-height:1.75;color:#374151;">${hi(p.prenom)} Quand quelqu'un ouvre votre carte, il ne lit pas d'abord. Il regarde. Le thème, les couleurs, la mise en page — tout ça communique quelque chose avant même le premier mot.</p>
+<p style="margin:0;font-size:15px;line-height:1.75;color:#374151;">${hi(p.prenom)} Quand quelqu'un ouvre votre carte, il ne lit pas d'abord. Il regarde. Le thème, les couleurs, la mise en page : tout ça communique quelque chose avant même le premier mot.</p>
 </td></tr>
 <tr><td style="padding:0 36px 24px;">
 <table cellpadding="0" cellspacing="0" border="0" width="100%" style="background:#f9fafb;border-radius:10px;border:1px solid #f0f0f0;">
@@ -419,7 +419,7 @@ ${logo()}
 <tr><td style="padding:0 36px 24px;">
 <table cellpadding="0" cellspacing="0" border="0" width="100%" style="border-left:3px solid #7c3aed;background:#fafafa;border-radius:0 8px 8px 0;">
 <tr><td style="padding:18px 20px;">
-<p style="margin:0 0 10px;font-size:15px;line-height:1.75;color:#374151;font-style:italic;">"La semaine d'après, un prospect que je ne connaissais pas m'a contactée. Il avait reçu mon lien par une connaissance commune. Il m'a dit qu'il avait regardé ma carte trois fois avant de prendre contact — parce que ça lui semblait très sérieux."</p>
+<p style="margin:0 0 10px;font-size:15px;line-height:1.75;color:#374151;font-style:italic;">"La semaine d'après, un prospect que je ne connaissais pas m'a contactée. Il avait reçu mon lien par une connaissance commune. Il m'a dit qu'il avait regardé ma carte trois fois avant de prendre contact, parce que ça lui semblait très sérieux."</p>
 <p style="margin:0;font-size:13px;color:#9ca3af;">— Sophie M., consultante RH, Paris 8e</p>
 </td></tr>
 </table>
@@ -462,7 +462,7 @@ ${badge("Analytics & pilotage")}
 </table>
 </td></tr>
 <tr><td style="padding:0 36px 16px;">
-<p style="margin:0;font-size:15px;line-height:1.75;color:#374151;">Avec le plan Vitrine, vous avez accès à un tableau de bord complet mis à jour en temps réel. Chaque partage, chaque visite, chaque clic — tout est tracé. Vous savez exactement ce qui fonctionne.</p>
+<p style="margin:0;font-size:15px;line-height:1.75;color:#374151;">Avec le plan Vitrine, vous avez accès à un tableau de bord complet mis à jour en temps réel. Chaque partage, chaque visite, chaque clic : tout est tracé. Vous savez exactement ce qui fonctionne.</p>
 </td></tr>
 <tr><td style="padding:0 36px 24px;">
 <table cellpadding="0" cellspacing="0" border="0" width="100%" style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;">
@@ -500,7 +500,7 @@ ${badge("Questions directes")}
 <p style="margin:0 0 18px;font-size:14px;color:#374151;line-height:1.6;">C'est 0,16€ par jour. Moins qu'un café. Et si Vitrine vous fait décrocher un seul client de plus, l'abonnement est remboursé pour toute l'année.</p>
 
 <p style="margin:0 0 14px;font-size:14px;font-weight:700;color:#374151;padding-bottom:12px;border-bottom:1px solid #e5e7eb;">"Ma carte actuelle me convient."</p>
-<p style="margin:0 0 18px;font-size:14px;color:#374151;line-height:1.6;">Si vous ne savez pas combien de personnes visitent votre carte, ni ce qu'ils font dessus, elle ne vous "convient" pas — vous n'avez tout simplement pas les données pour le savoir.</p>
+<p style="margin:0 0 18px;font-size:14px;color:#374151;line-height:1.6;">Si vous ne savez pas combien de personnes visitent votre carte, ni ce qu'ils font dessus, elle ne vous "convient" pas vraiment : vous n'avez tout simplement pas les données pour le savoir.</p>
 
 <p style="margin:0 0 14px;font-size:14px;font-weight:700;color:#374151;padding-bottom:12px;border-bottom:1px solid #e5e7eb;">"Je n'en ai pas vraiment besoin maintenant."</p>
 <p style="margin:0;font-size:14px;color:#374151;line-height:1.6;">Chaque semaine sans analytics, sans section Services, sans thème différenciant, c'est une semaine où votre carte est moins efficace qu'elle pourrait l'être. Il n'y a pas de "bon moment" pour améliorer son image professionnelle.</p>
@@ -517,7 +517,7 @@ ${footer()}
 /* ─── Email 9 — J+28 : Carte qui convainc ───────────────────────────── */
 
 function email9(p: P): { subject: string; html: string } {
-  const entStr = p.entreprise ? ` — et ${p.entreprise}` : "";
+  const entStr = p.entreprise ? ` et de ${p.entreprise}` : "";
   return {
     subject: p.prenom
       ? `${p.prenom}, votre carte parle de vous avant que vous parliez.`
@@ -529,7 +529,7 @@ ${badge("Image professionnelle")}
 <p style="margin:0;font-size:28px;font-weight:800;line-height:1.25;color:#0f0f14;letter-spacing:-0.4px;">Votre carte, c'est votre première impression.<br>Qu'est-ce qu'elle dit de vous${entStr} ?</p>
 </td></tr>
 <tr><td style="padding:0 36px 16px;">
-<p style="margin:0;font-size:15px;line-height:1.75;color:#374151;">${hi(p.prenom)} Avant que vous parliez, avant que vous envoyiez un devis, avant même une poignée de main — quelqu'un a ouvert votre carte. Et il a déjà formé une opinion.</p>
+<p style="margin:0;font-size:15px;line-height:1.75;color:#374151;">${hi(p.prenom)} Avant que vous parliez, avant que vous envoyiez un devis, avant même une poignée de main, quelqu'un a ouvert votre carte. Et il a déjà formé une opinion.</p>
 </td></tr>
 <tr><td style="padding:0 36px 24px;">
 <table cellpadding="0" cellspacing="0" border="0" width="100%">
@@ -549,7 +549,7 @@ ${badge("Image professionnelle")}
 </table>
 </td></tr>
 <tr><td style="padding:0 36px 16px;">
-<p style="margin:0;font-size:15px;line-height:1.75;color:#374151;">En tant que ${p.metier}, votre crédibilité passe par les détails. Une carte avec votre galerie, vos témoignages, votre charte graphique — c'est une carte qui rassure avant même que vous parliez.</p>
+<p style="margin:0;font-size:15px;line-height:1.75;color:#374151;">En tant que ${p.metier}, votre crédibilité passe par les détails. Une carte avec votre galerie, vos témoignages, votre charte graphique : c'est une carte qui rassure avant même que vous parliez.</p>
 </td></tr>
 ${cta("Améliorer mon image →", p.trackUrl)}
 <tr><td style="padding:8px 36px 28px;" align="center"><p style="margin:0;font-size:12px;color:#9ca3af;">Plan Vitrine · 4,80€/mois · Sans engagement</p></td></tr>
@@ -562,7 +562,7 @@ ${footer()}
 
 function email10(p: P): { subject: string; html: string } {
   return {
-    subject: "5 sections que votre carte n'a pas — et pourquoi ça coûte des clients",
+    subject: "5 sections que votre carte n'a pas : ce que ça coûte vraiment",
     html: wrap(`
 ${logo()}
 ${badge("Ce que vous ne montrez pas")}
@@ -570,7 +570,7 @@ ${badge("Ce que vous ne montrez pas")}
 <p style="margin:0;font-size:28px;font-weight:800;line-height:1.25;color:#0f0f14;letter-spacing:-0.4px;">5 sections absentes de votre carte.<br>5 raisons de ne pas rappeler.</p>
 </td></tr>
 <tr><td style="padding:0 36px 16px;">
-<p style="margin:0;font-size:15px;line-height:1.75;color:#374151;">${hi(p.prenom)} Quand un prospect hésite entre deux professionnels, il compare. Et souvent, c'est la carte la plus complète qui l'emporte — pas la plus chère, pas la plus connue. Celle qui répond aux questions avant qu'il les pose.</p>
+<p style="margin:0;font-size:15px;line-height:1.75;color:#374151;">${hi(p.prenom)} Quand un prospect hésite entre deux professionnels, il compare. Et souvent, c'est la carte la plus complète qui l'emporte, pas la plus chère, pas la plus connue. Celle qui répond aux questions avant qu'il les pose.</p>
 </td></tr>
 <tr><td style="padding:0 36px 24px;">
 <table cellpadding="0" cellspacing="0" border="0" width="100%" style="background:#f9fafb;border-radius:10px;border:1px solid #f0f0f0;">
@@ -582,7 +582,7 @@ ${badge("Ce que vous ne montrez pas")}
 </td></tr>
 <tr><td style="padding:10px 0;border-bottom:1px solid #e5e7eb;">
 <p style="margin:0 0 4px;font-size:14px;font-weight:700;color:#7c3aed;">2. Galerie photos</p>
-<p style="margin:0;font-size:13px;color:#6b7280;line-height:1.5;">Les gens achètent ce qu'ils voient. Votre travail mérite d'être montré — pas juste décrit.</p>
+<p style="margin:0;font-size:13px;color:#6b7280;line-height:1.5;">Les gens achètent ce qu'ils voient. Votre travail mérite d'être montré, pas juste décrit.</p>
 </td></tr>
 <tr><td style="padding:10px 0;border-bottom:1px solid #e5e7eb;">
 <p style="margin:0 0 4px;font-size:14px;font-weight:700;color:#7c3aed;">3. Témoignages clients</p>
@@ -619,7 +619,7 @@ ${badge("Benchmark concurrentiel")}
 <p style="margin:0;font-size:28px;font-weight:800;line-height:1.25;color:#0f0f14;letter-spacing:-0.4px;">Pendant que vous attendez,<br>votre concurrent avance.</p>
 </td></tr>
 <tr><td style="padding:0 36px 16px;">
-<p style="margin:0;font-size:15px;line-height:1.75;color:#374151;">${hi(p.prenom)} Je ne vais pas vous montrer des noms. Mais je vous garantis qu'en ce moment, d'autres ${p.metier}s ont déjà une carte digitale complète, avec leurs services détaillés, leurs photos, leurs avis clients — et qu'ils la partagent à chaque contact.</p>
+<p style="margin:0;font-size:15px;line-height:1.75;color:#374151;">${hi(p.prenom)} Je ne vais pas vous montrer des noms. Mais je vous garantis qu'en ce moment, d'autres ${p.metier}s ont déjà une carte digitale complète, avec leurs services détaillés, leurs photos, leurs avis clients. Et ils la partagent à chaque contact.</p>
 </td></tr>
 <tr><td style="padding:0 36px 24px;">
 <table cellpadding="0" cellspacing="0" border="0" width="100%" style="background:#0f0f14;border-radius:10px;">
@@ -634,7 +634,7 @@ ${badge("Benchmark concurrentiel")}
 <p style="margin:0;font-size:15px;line-height:1.75;color:#374151;">Ce n'est pas une question de talent. C'est une question de première impression. Et votre carte est votre première impression digitale.</p>
 </td></tr>
 <tr><td style="padding:0 36px 24px;">
-<p style="margin:0;font-size:15px;line-height:1.75;color:#374151;">4,80€/mois pour ne plus être le professionnel avec la carte basique — <strong style="color:#0f0f14;">c'est l'investissement le plus simple que vous pouvez faire aujourd'hui.</strong></p>
+<p style="margin:0;font-size:15px;line-height:1.75;color:#374151;">4,80€/mois pour ne plus être le professionnel avec la carte basique. <strong style="color:#0f0f14;">C'est l'investissement le plus simple que vous pouvez faire aujourd'hui.</strong></p>
 </td></tr>
 ${cta("Ne pas laisser le champ libre →", p.trackUrl)}
 <tr><td style="padding:8px 36px 28px;" align="center"><p style="margin:0;font-size:12px;color:#9ca3af;">Plan Vitrine · 4,80€/mois · Activé en 2 minutes</p></td></tr>
@@ -671,11 +671,11 @@ ${badge("Offre finale · Dernière chance")}
 </table>
 </td></tr>
 <tr><td style="padding:0 36px 16px;">
-<p style="margin:0;font-size:15px;line-height:1.75;color:#374151;">En 14 jours, vous pourrez construire votre carte complète, voir vos analytics, choisir votre thème premium — et décider vous-même si ça vaut 4,80€/mois. Je suis convaincu que oui. Mais c'est vous qui décidez.</p>
+<p style="margin:0;font-size:15px;line-height:1.75;color:#374151;">En 14 jours, vous pourrez construire votre carte complète, voir vos analytics, choisir votre thème premium. Vous décidez ensuite si ça vaut 4,80€/mois. Je suis convaincu que oui. Mais c'est vous qui décidez.</p>
 </td></tr>
 ${cta("Commencer mon essai gratuit →", p.trackUrl, "#7c3aed")}
 <tr><td style="padding:10px 36px 28px;">
-<p style="margin:0 0 12px;font-size:14px;line-height:1.75;color:#6b7280;">Quoi qu'il arrive — merci d'avoir créé votre carte sur CVD. Bonne continuation dans votre activité.</p>
+<p style="margin:0 0 12px;font-size:14px;line-height:1.75;color:#6b7280;">Quoi qu'il arrive, merci d'avoir créé votre carte sur CVD. Bonne continuation dans votre activité.</p>
 <p style="margin:0;font-size:13px;color:#9ca3af;">— L'équipe cartevisitedigitale.fr</p>
 </td></tr>
 ${footer()}

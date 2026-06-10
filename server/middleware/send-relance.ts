@@ -22,7 +22,7 @@ ${logo()}
 <p style="margin:0;font-size:28px;font-weight:800;line-height:1.25;color:#0f0f14;letter-spacing:-0.4px;">Tu as déjà fait le plus dur.</p>
 </td></tr>
 <tr><td style="padding:0 36px 16px;">
-<p style="margin:0;font-size:15px;line-height:1.75;color:#374151;">Tu t'es inscrit sur CVD. Tu as confirmé ton email. <strong style="color:#0f0f14;">85 % des gens s'arrêtent là.</strong> Ils voient un formulaire, se disent "plus tard" — et "plus tard" n'arrive jamais.</p>
+<p style="margin:0;font-size:15px;line-height:1.75;color:#374151;">Tu t'es inscrit sur CVD. Tu as confirmé ton email. <strong style="color:#0f0f14;">85 % des gens s'arrêtent là.</strong> Ils voient un formulaire, se disent "plus tard". Et "plus tard" n'arrive jamais.</p>
 </td></tr>
 <tr><td style="padding:0 36px 26px;">
 <p style="margin:0;font-size:15px;line-height:1.75;color:#374151;">Toi, tu es allé jusqu'au bout de l'inscription. Il te reste une seule chose à faire : créer ta carte. Ça prend 3 minutes.</p>
@@ -35,19 +35,19 @@ ${logo()}
 <tr><td style="padding:8px 0;border-bottom:1px solid #f0f0f0;">
 <table cellpadding="0" cellspacing="0" border="0"><tr>
 <td style="vertical-align:top;"><span style="display:inline-block;width:20px;height:20px;border-radius:50%;background:#7c3aed;color:#fff;font-size:10px;font-weight:800;text-align:center;line-height:20px;">1</span></td>
-<td style="padding-left:10px;font-size:14px;color:#374151;line-height:1.5;"><strong style="color:#0f0f14;">Choisis ton style</strong> — thème, couleurs, mise en page</td>
+<td style="padding-left:10px;font-size:14px;color:#374151;line-height:1.5;"><strong style="color:#0f0f14;">Choisis ton style</strong> : thème, couleurs, mise en page</td>
 </tr></table>
 </td></tr>
 <tr><td style="padding:8px 0;border-bottom:1px solid #f0f0f0;">
 <table cellpadding="0" cellspacing="0" border="0"><tr>
 <td style="vertical-align:top;"><span style="display:inline-block;width:20px;height:20px;border-radius:50%;background:#7c3aed;color:#fff;font-size:10px;font-weight:800;text-align:center;line-height:20px;">2</span></td>
-<td style="padding-left:10px;font-size:14px;color:#374151;line-height:1.5;"><strong style="color:#0f0f14;">Remplis tes infos</strong> — nom, métier, numéro, réseaux</td>
+<td style="padding-left:10px;font-size:14px;color:#374151;line-height:1.5;"><strong style="color:#0f0f14;">Remplis tes infos</strong> : nom, métier, numéro, réseaux</td>
 </tr></table>
 </td></tr>
 <tr><td style="padding:8px 0;">
 <table cellpadding="0" cellspacing="0" border="0"><tr>
 <td style="vertical-align:top;"><span style="display:inline-block;width:20px;height:20px;border-radius:50%;background:#7c3aed;color:#fff;font-size:10px;font-weight:800;text-align:center;line-height:20px;">3</span></td>
-<td style="padding-left:10px;font-size:14px;color:#374151;line-height:1.5;"><strong style="color:#0f0f14;">Active ta carte</strong> — lien live + QR code prêts à partager</td>
+<td style="padding-left:10px;font-size:14px;color:#374151;line-height:1.5;"><strong style="color:#0f0f14;">Active ta carte</strong> : lien live et QR code prêts à partager</td>
 </tr></table>
 </td></tr>
 </table>
@@ -115,7 +115,7 @@ ${logo()}
 <p style="margin:0;font-size:28px;font-weight:800;line-height:1.25;color:#0f0f14;letter-spacing:-0.4px;">C'est le dernier message. Promis.</p>
 </td></tr>
 <tr><td style="padding:0 36px 16px;">
-<p style="margin:0;font-size:15px;line-height:1.75;color:#374151;">Ça fait 8 jours. Deux messages. Tu n'as pas créé ta carte. Et c'est OK — peut-être que le timing n'est pas le bon, peut-être que tu as changé d'avis.</p>
+<p style="margin:0;font-size:15px;line-height:1.75;color:#374151;">Ça fait 8 jours. Deux messages. Tu n'as pas créé ta carte. Et c'est OK. Peut-être que le timing n'est pas le bon, peut-être que tu as changé d'avis.</p>
 </td></tr>
 <tr><td style="padding:0 36px 16px;">
 <p style="margin:0;font-size:15px;line-height:1.75;color:#374151;">Je ne vais pas t'envoyer un quatrième email. Mais avant de partir, deux choses.</p>
@@ -125,11 +125,11 @@ ${logo()}
 <tr><td style="padding:20px 22px;">
 <table cellpadding="0" cellspacing="0" border="0" width="100%">
 <tr><td style="padding:0 0 16px;border-bottom:1px solid #e5e7eb;">
-<p style="margin:0 0 4px;font-size:14px;font-weight:700;color:#0f0f14;">1 — Ton compte est toujours là.</p>
+<p style="margin:0 0 4px;font-size:14px;font-weight:700;color:#0f0f14;">1. Ton compte est toujours là.</p>
 <p style="margin:0;font-size:14px;color:#374151;line-height:1.6;">Si tu veux créer ta carte dans 3 mois, tes informations de connexion fonctionnent toujours. Tu reprends là où tu t'es arrêté.</p>
 </td></tr>
 <tr><td style="padding:16px 0 0;">
-<p style="margin:0 0 4px;font-size:14px;font-weight:700;color:#0f0f14;">2 — Si c'est maintenant, c'est 3 minutes.</p>
+<p style="margin:0 0 4px;font-size:14px;font-weight:700;color:#0f0f14;">2. Si c'est maintenant, c'est 3 minutes.</p>
 <p style="margin:0;font-size:14px;color:#374151;line-height:1.6;">Le plan gratuit ne nécessite aucune carte bancaire. Tu vas dans le builder, tu remplis tes infos, tu actives. Voilà.</p>
 </td></tr>
 </table>
@@ -139,7 +139,7 @@ ${logo()}
 ${cta("Créer ma carte (dernière chance)", trackUrl)}
 <tr><td style="padding:8px 36px 28px;" align="center"><p style="margin:0;font-size:12px;color:#9ca3af;">Gratuit pour toujours · Sans engagement</p></td></tr>
 <tr><td style="padding:0 36px 32px;border-top:1px solid #f3f4f6;">
-<p style="margin:16px 0 10px;font-size:14px;line-height:1.75;color:#6b7280;">Quoi qu'il arrive — bonne continuation.</p>
+<p style="margin:16px 0 10px;font-size:14px;line-height:1.75;color:#6b7280;">Quoi qu'il arrive, bonne continuation.</p>
 <p style="margin:0;font-size:13px;color:#9ca3af;">— L'équipe CVD &nbsp;·&nbsp; <a href="https://www.cartevisitedigitale.fr/unsubscribe" style="color:#d1d5db;font-size:12px;text-decoration:none;">Se désabonner définitivement</a></p>
 </td></tr>
 `),

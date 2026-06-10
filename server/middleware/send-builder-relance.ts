@@ -146,7 +146,7 @@ ${logo()}
 <p style="margin:0;font-size:28px;font-weight:800;line-height:1.25;color:#0f0f14;letter-spacing:-0.4px;">La plupart s'arrêtent là où tu es.<br>Très peu continuent.</p>
 </td></tr>
 <tr><td style="padding:0 36px 16px;">
-<p style="margin:0;font-size:15px;line-height:1.75;color:#374151;">Tu t'es arrêté au début de ta carte. Tu as vu comment ça marchait, tu as choisi ton univers visuel — et puis quelque chose t'a distrait.</p>
+<p style="margin:0;font-size:15px;line-height:1.75;color:#374151;">Tu t'es arrêté au début de ta carte. Tu as vu comment ça marchait, tu as choisi ton univers visuel. Et puis quelque chose t'a distrait.</p>
 </td></tr>
 <tr><td style="padding:0 36px 24px;">
 <p style="margin:0;font-size:15px;line-height:1.75;color:#374151;">La vérité : <strong style="color:#0f0f14;">80 % des gens qui s'inscrivent sur CVD ne terminent jamais leur carte.</strong> Pas parce qu'ils n'en ont pas besoin. Parce qu'ils remettent à demain.</p>
@@ -186,7 +186,7 @@ ${logo()}
 <tr><td style="padding:20px;" align="center">
 <p style="margin:0 0 6px;font-size:28px;color:#15803d;font-weight:900;">✓</p>
 <p style="margin:0 0 4px;font-size:16px;font-weight:800;color:#15803d;">Tout est sauvegardé.</p>
-<p style="margin:0;font-size:14px;color:#166534;line-height:1.6;">Ton thème, ton style, les infos que tu as déjà remplies — tout t'attend. Tu reprends exactement là où tu t'es arrêté.</p>
+<p style="margin:0;font-size:14px;color:#166534;line-height:1.6;">Ton thème, ton style, les infos que tu as déjà remplies, tout t'attend. Tu reprends exactement là où tu t'es arrêté.</p>
 </td></tr>
 </table>
 </td></tr>
@@ -215,7 +215,7 @@ ${logo()}
 <p style="margin:0;font-size:15px;line-height:1.75;color:#374151;">Là, je ne vais pas te mentir.</p>
 </td></tr>
 <tr><td style="padding:0 36px 16px;">
-<p style="margin:0;font-size:15px;line-height:1.75;color:#374151;">Tu as fait tout le travail. Tu as choisi ton style, rempli tes infos, vu ta carte avec ton nom dessus. Et à la dernière étape — tu es parti.</p>
+<p style="margin:0;font-size:15px;line-height:1.75;color:#374151;">Tu as fait tout le travail. Tu as choisi ton style, rempli tes infos, vu ta carte avec ton nom dessus. Et à la dernière étape, tu es parti.</p>
 </td></tr>
 <tr><td style="padding:0 36px 26px;">
 <table cellpadding="0" cellspacing="0" border="0" width="100%" style="background:#fff7ed;border:1px solid #fed7aa;border-radius:10px;">
@@ -255,7 +255,7 @@ ${logo()}
 <tr><td style="padding:0 36px 26px;">
 <table cellpadding="0" cellspacing="0" border="0" width="100%" style="border-left:3px solid #7c3aed;background:#fafafa;border-radius:0 8px 8px 0;">
 <tr><td style="padding:18px 20px;">
-<p style="margin:0 0 10px;font-size:15px;line-height:1.75;color:#374151;">Au lieu de chercher dans ton portefeuille une carte froissée — ou pire, de dire <em>"j'en ai plus sur moi"</em> — tu sors ton téléphone. Tu fais glisser.</p>
+<p style="margin:0 0 10px;font-size:15px;line-height:1.75;color:#374151;">Au lieu de chercher dans ton portefeuille une carte froissée, ou pire de dire <em>"j'en ai plus sur moi"</em> : tu sors ton téléphone. Tu fais glisser.</p>
 <p style="margin:0;font-size:15px;line-height:1.75;color:#374151;"><strong style="color:#0f0f14;">En 3 secondes, tes coordonnées sont dans leur téléphone.</strong> Ton nom. Ton numéro. Tes réseaux. Ton lien de prise de RDV.</p>
 </td></tr>
 </table>
@@ -346,7 +346,7 @@ ${logo()}
 <p style="margin:0;font-size:28px;font-weight:800;line-height:1.25;color:#0f0f14;letter-spacing:-0.4px;">Je sais pourquoi tu n'as pas terminé.</p>
 </td></tr>
 <tr><td style="padding:0 36px 22px;">
-<p style="margin:0;font-size:15px;line-height:1.75;color:#374151;">Ça fait 10 jours. J'ai envoyé 3 messages. Tu n'as pas terminé ta carte. Alors j'ai décidé de répondre directement aux vraies objections — celles que personne ne dit à voix haute.</p>
+<p style="margin:0;font-size:15px;line-height:1.75;color:#374151;">Ça fait 10 jours. J'ai envoyé 3 messages. Tu n'as pas terminé ta carte. Alors j'ai décidé de répondre directement aux vraies objections, celles que personne ne dit à voix haute.</p>
 </td></tr>
 <tr><td style="padding:0 36px 26px;">
 <table cellpadding="0" cellspacing="0" border="0" width="100%" style="background:#f9fafb;border-radius:10px;border:1px solid #f0f0f0;">
@@ -377,7 +377,7 @@ ${logo()}
 </table>
 </td></tr>
 <tr><td style="padding:0 36px 26px;">
-<p style="margin:0;font-size:15px;line-height:1.75;color:#374151;">Quelle que soit la vraie raison — <strong style="color:#0f0f14;">elle ne justifie pas de continuer à manquer des contacts.</strong></p>
+<p style="margin:0;font-size:15px;line-height:1.75;color:#374151;">Quelle que soit la vraie raison, <strong style="color:#0f0f14;">elle ne justifie pas de continuer à manquer des contacts.</strong></p>
 </td></tr>
 ${cta("Terminer maintenant →", trackUrl)}
 <tr><td style="padding:8px 36px 28px;" align="center"><p style="margin:0;font-size:12px;color:#9ca3af;">Gratuit · 3 minutes · Modifiable à vie</p></td></tr>
@@ -397,7 +397,7 @@ ${logo()}
 <p style="margin:0;font-size:28px;font-weight:800;line-height:1.25;color:#0f0f14;letter-spacing:-0.4px;">Une carte digitale travaille 24h/24.<br>La tienne est en pause.</p>
 </td></tr>
 <tr><td style="padding:0 36px 16px;">
-<p style="margin:0;font-size:15px;line-height:1.75;color:#374151;">Chaque semaine, des dizaines de personnes rencontrent un professionnel, lui demandent sa carte — et repartent les mains vides parce que ce pro n'en a pas.</p>
+<p style="margin:0;font-size:15px;line-height:1.75;color:#374151;">Chaque semaine, des dizaines de personnes rencontrent un professionnel, lui demandent sa carte. Et repartent les mains vides parce que ce pro n'en a pas.</p>
 </td></tr>
 <tr><td style="padding:0 36px 26px;">
 <table cellpadding="0" cellspacing="0" border="0" width="100%" style="background:#0f0f14;border-radius:10px;">
@@ -434,7 +434,7 @@ ${logo()}
 <p style="margin:0;font-size:28px;font-weight:800;line-height:1.25;color:#0f0f14;letter-spacing:-0.4px;">Je ne t'enverrai plus de messages après celui-ci.</p>
 </td></tr>
 <tr><td style="padding:0 36px 16px;">
-<p style="margin:0;font-size:15px;line-height:1.75;color:#374151;">Ça fait 3 semaines. 5 messages. Tu n'as pas terminé ta carte. Et c'est OK — tout le monde n'est pas prêt au même moment.</p>
+<p style="margin:0;font-size:15px;line-height:1.75;color:#374151;">Ça fait 3 semaines. 5 messages. Tu n'as pas terminé ta carte. Et c'est OK. Tout le monde n'est pas prêt au même moment.</p>
 </td></tr>
 <tr><td style="padding:0 36px 16px;">
 <p style="margin:0;font-size:15px;line-height:1.75;color:#374151;">Je ne sais pas ce qui s'est passé. Peut-être que le timing n'était pas le bon. Peut-être que tu avais d'autres priorités. Peut-être que tu n'as tout simplement pas eu envie.</p>
@@ -443,13 +443,13 @@ ${logo()}
 <table cellpadding="0" cellspacing="0" border="0" width="100%" style="border-left:3px solid #e5e7eb;background:#fafafa;border-radius:0 8px 8px 0;">
 <tr><td style="padding:18px 20px;">
 <p style="margin:0 0 10px;font-size:15px;line-height:1.75;color:#374151;">Ce que je sais : si un jour tu veux une carte digitale, le lien sera toujours là. Ton profil est sauvegardé. Tu peux revenir dans 6 mois et reprendre en 2 minutes.</p>
-<p style="margin:0;font-size:15px;line-height:1.75;color:#374151;">Et si c'est maintenant — <strong style="color:#0f0f14;">3 minutes, c'est tout ce qu'il faut.</strong></p>
+<p style="margin:0;font-size:15px;line-height:1.75;color:#374151;">Et si c'est maintenant : <strong style="color:#0f0f14;">3 minutes, c'est tout ce qu'il faut.</strong></p>
 </td></tr>
 </table>
 </td></tr>
 ${cta("Terminer ma carte (dernière chance)", trackUrl)}
 <tr><td style="padding:16px 36px 28px;">
-<p style="margin:0 0 12px;font-size:14px;line-height:1.75;color:#6b7280;">Quoi qu'il arrive — bonne continuation dans ton activité.</p>
+<p style="margin:0 0 12px;font-size:14px;line-height:1.75;color:#6b7280;">Quoi qu'il arrive, bonne continuation dans ton activité.</p>
 </td></tr>
 ${footer()}
 `),
