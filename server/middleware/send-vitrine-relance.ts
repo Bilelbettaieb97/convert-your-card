@@ -70,7 +70,11 @@ export default defineEventHandler(async (event) => {
       sent++;
     } else {
       errors++;
-      await admin.from("vitrine_upgrade_series").delete().eq("click_token", clickToken);
+      try {
+        await admin.from("vitrine_upgrade_series").delete().eq("click_token", clickToken);
+      } catch (delErr) {
+        console.error(`[send-vitrine-relance] DELETE failed for ${u.email} step ${step}:`, delErr);
+      }
     }
   }
 

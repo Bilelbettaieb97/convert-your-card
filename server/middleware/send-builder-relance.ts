@@ -63,7 +63,11 @@ export default defineEventHandler(async (event) => {
       sent++;
     } else {
       errors++;
-      await admin.from("builder_relance_series").delete().eq("click_token", clickToken);
+      try {
+        await admin.from("builder_relance_series").delete().eq("click_token", clickToken);
+      } catch (delErr) {
+        console.error(`[send-builder-relance] DELETE failed for ${u.email} step ${step}:`, delErr);
+      }
     }
   }
 

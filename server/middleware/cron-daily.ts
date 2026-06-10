@@ -29,9 +29,9 @@ const VU_DELAYS: Record<number, number> = {
   12: 50,  // J+50
 };
 
-function daysSince(ts: string | null | undefined): number {
+function msSince(ts: string | null | undefined): number {
   if (!ts) return -1;
-  return (Date.now() - new Date(ts).getTime()) / 86_400_000;
+  return Date.now() - new Date(ts).getTime();
 }
 
 async function sendAlertEmail(resendKey: string, subject: string, body: string) {
@@ -109,6 +109,18 @@ export default defineEventHandler(async (event) => {
   let cronError: string | null = null;
 
   try {
+    // Valider la clé Resend avant de traiter les users
+    if (resendKey) {
+      const pingRes = await fetch("https://api.resend.com/emails", {
+        method: "POST",
+        headers: { Authorization: `Bearer ${resendKey}`, "Content-Type": "application/json" },
+        body: JSON.stringify({ from: "x@x.com", to: "x@x.com", subject: "ping", html: "ping" }),
+      });
+      if (pingRes.status === 401) {
+        throw new Error("RESEND_API_KEY invalide ou expirée — aucun email envoyé");
+      }
+    }
+
     const { data: users, error } = await admin.rpc("get_user_funnel");
     if (error || !users) throw new Error(error?.message ?? "get_user_funnel returned null");
 
@@ -120,9 +132,9 @@ export default defineEventHandler(async (event) => {
     for (const [stepStr, minDays] of Object.entries(NC_DELAYS)) {
       const step = Number(stepStr);
       const toSend = nonCliques.filter((r: any) =>
-        daysSince(r.inscrit_le) >= minDays &&
+        msSince(r.inscrit_le) >= minDays * 86_400_000 &&
         (!r.relance_step || r.relance_step < step)
-      );
+      ).slice(0, 200);
       if (toSend.length === 0) continue;
 
       console.log(`[cron-daily] NC step ${step}: ${toSend.length} destinataire(s)`);
@@ -134,6 +146,12 @@ export default defineEventHandler(async (event) => {
           step,
         }),
       });
+      if (!resp.ok) {
+        const errText = await resp.text().catch(() => "unknown");
+        console.error(`[cron-daily] NC step ${step} HTTP ${resp.status}: ${errText}`);
+        results[`nc_step_${step}_err`] = 1;
+        continue;
+      }
       const result = await resp.json().catch(() => ({}));
       results[`nc_step_${step}`] = result.sent ?? 0;
     }
@@ -144,9 +162,9 @@ export default defineEventHandler(async (event) => {
     for (const [stepStr, minDays] of Object.entries(BR_DELAYS)) {
       const step = Number(stepStr);
       const toSend = builder.filter((r: any) =>
-        daysSince(r.email_confirme_le) >= minDays &&
+        msSince(r.email_confirme_le) >= minDays * 86_400_000 &&
         (!r.builder_relance_step || r.builder_relance_step < step)
-      );
+      ).slice(0, 200);
       if (toSend.length === 0) continue;
 
       console.log(`[cron-daily] Builder step ${step}: ${toSend.length} destinataire(s)`);
@@ -162,6 +180,12 @@ export default defineEventHandler(async (event) => {
           step,
         }),
       });
+      if (!resp.ok) {
+        const errText = await resp.text().catch(() => "unknown");
+        console.error(`[cron-daily] Builder step ${step} HTTP ${resp.status}: ${errText}`);
+        results[`br_step_${step}_err`] = 1;
+        continue;
+      }
       const result = await resp.json().catch(() => ({}));
       results[`br_step_${step}`] = result.sent ?? 0;
     }
@@ -172,9 +196,9 @@ export default defineEventHandler(async (event) => {
     for (const [stepStr, minDays] of Object.entries(VU_DELAYS)) {
       const step = Number(stepStr);
       const toSend = vitrineUsers.filter((r: any) =>
-        daysSince(r.profil_cree_le) >= minDays &&
+        msSince(r.profil_cree_le) >= minDays * 86_400_000 &&
         (!r.vitrine_relance_step || r.vitrine_relance_step < step)
-      );
+      ).slice(0, 200);
       if (toSend.length === 0) continue;
 
       console.log(`[cron-daily] Vitrine upgrade step ${step}: ${toSend.length} destinataire(s)`);
@@ -193,6 +217,12 @@ export default defineEventHandler(async (event) => {
           step,
         }),
       });
+      if (!resp.ok) {
+        const errText = await resp.text().catch(() => "unknown");
+        console.error(`[cron-daily] Vitrine step ${step} HTTP ${resp.status}: ${errText}`);
+        results[`vu_step_${step}_err`] = 1;
+        continue;
+      }
       const result = await resp.json().catch(() => ({}));
       results[`vu_step_${step}`] = result.sent ?? 0;
     }

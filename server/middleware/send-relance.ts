@@ -12,7 +12,9 @@ const EMAIL_TEMPLATES: Record<
   (firstName: string, trackUrl: string) => { subject: string; html: string }
 > = {
   1: (firstName, trackUrl) => ({
-    subject: `${firstName}, tu as déjà fait le plus dur. Il reste 3 minutes.`,
+    subject: firstName
+      ? `${firstName}, tu as déjà fait le plus dur. Il reste 3 minutes.`
+      : "Tu as déjà fait le plus dur. Il reste 3 minutes.",
     html: wrap(`
 ${logo()}
 <tr><td style="padding:28px 36px 6px;">
@@ -108,7 +110,9 @@ ${footer()}
   }),
 
   3: (firstName, trackUrl) => ({
-    subject: `Je ne t'enverrai plus rien après ça, ${firstName}.`,
+    subject: firstName
+      ? `Je ne t'enverrai plus rien après ça, ${firstName}.`
+      : "Je ne t'enverrai plus rien après ça.",
     html: wrap(`
 ${logo()}
 <tr><td style="padding:28px 36px 22px;">
@@ -257,10 +261,10 @@ export default defineEventHandler(async (event) => {
       }
 
       const trackUrl = `${appUrl}/api/relance-click?t=${inserted.click_token}`;
-      const firstName =
-        user.email.split("@")[0].split(".")[0];
-      const capitalized =
-        firstName.charAt(0).toUpperCase() + firstName.slice(1);
+      const rawFirst = user.email.split("@")[0].split(".")[0];
+      const capitalized = rawFirst.length >= 3
+        ? rawFirst.charAt(0).toUpperCase() + rawFirst.slice(1)
+        : "";
 
       const { subject, html } = EMAIL_TEMPLATES[step](capitalized, trackUrl);
 
@@ -282,10 +286,11 @@ export default defineEventHandler(async (event) => {
         const err = await resp.text();
         errors.push(`${user.email}: ${err}`);
         // Supprimer l'enregistrement pour pouvoir réessayer
-        await admin
-          .from("email_relance_series")
-          .delete()
-          .eq("id", inserted.id);
+        try {
+          await admin.from("email_relance_series").delete().eq("id", inserted.id);
+        } catch (delErr) {
+          console.error(`[send-relance] DELETE failed for ${user.email} step ${step}:`, delErr);
+        }
       } else {
         sent++;
       }
