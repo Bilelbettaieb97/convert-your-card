@@ -1,7 +1,8 @@
 import { defineEventHandler, readBody, getHeader } from "h3";
 import { createClient } from "@supabase/supabase-js";
-// eslint-disable-next-line @typescript-eslint/no-require-imports
-const disposableDomains: string[] = require("disposable-email-domains");
+import { createRequire } from "module";
+const _require = createRequire(import.meta.url);
+const disposableDomains: string[] = _require("disposable-email-domains");
 function isDisposableEmail(email: string): boolean {
   const domain = email.split("@")[1]?.toLowerCase().trim();
   return domain ? disposableDomains.includes(domain) : false;
