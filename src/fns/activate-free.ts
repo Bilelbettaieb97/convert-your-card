@@ -31,7 +31,7 @@ async function sendWelcomeEmail(email: string, nom: string, slug: string) {
     method: "POST",
     headers: { Authorization: `Bearer ${resendKey}`, "Content-Type": "application/json" },
     body: JSON.stringify({
-      from: "Bilel · Carte Visite Digitale <contact@cartevisitedigitale.fr>",
+      from: "Carte Visite Digitale <contact@cartevisitedigitale.fr>",
       to: email,
       subject: `${firstName}, ta carte est en ligne. Voilà la suite.`,
       html: `<!DOCTYPE html>

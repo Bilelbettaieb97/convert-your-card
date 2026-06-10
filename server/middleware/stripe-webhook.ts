@@ -89,7 +89,7 @@ async function sendWelcomeEmail(
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      from: "Bilel · Carte Visite Digitale <contact@cartevisitedigitale.fr>",
+      from: "Carte Visite Digitale <contact@cartevisitedigitale.fr>",
       to: email,
       subject: `${firstName}, ta carte Vitrine est en ligne. Ton essai démarre maintenant.`,
       html: `<!DOCTYPE html>
