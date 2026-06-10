@@ -236,6 +236,7 @@ export function StructuredData() {
         "@id": "https://cartevisitedigitale.fr/#product",
         name: "CVD — Carte de visite digitale",
         url: "https://cartevisitedigitale.fr",
+        image: "https://cartevisitedigitale.fr/og-image.jpg",
         description: "Carte de visite digitale professionnelle. Partagez vos contacts, réseaux sociaux et prise de rendez-vous en 1 tap. Compatible iPhone & Android sans application.",
         brand: { "@type": "Brand", name: "CVD" },
         offers: [
@@ -252,6 +253,24 @@ export function StructuredData() {
             },
             availability: "https://schema.org/InStock",
             url: "https://cartevisitedigitale.fr/pricing",
+            shippingDetails: {
+              "@type": "OfferShippingDetails",
+              shippingRate: { "@type": "MonetaryAmount", value: "0", currency: "EUR" },
+              shippingDestination: { "@type": "DefinedRegion", addressCountry: "FR" },
+              deliveryTime: {
+                "@type": "ShippingDeliveryTime",
+                handlingTime: { "@type": "QuantitativeValue", minValue: 0, maxValue: 0, unitCode: "DAY" },
+                transitTime: { "@type": "QuantitativeValue", minValue: 0, maxValue: 0, unitCode: "DAY" },
+              },
+            },
+            hasMerchantReturnPolicy: {
+              "@type": "MerchantReturnPolicy",
+              applicableCountry: "FR",
+              returnPolicyCategory: "https://schema.org/MerchantReturnFiniteReturnWindow",
+              merchantReturnDays: 30,
+              returnMethod: "https://schema.org/ReturnByMail",
+              returnFees: "https://schema.org/FreeReturn",
+            },
           },
           {
             "@type": "Offer",
@@ -266,6 +285,24 @@ export function StructuredData() {
             },
             availability: "https://schema.org/InStock",
             url: "https://cartevisitedigitale.fr/pricing",
+            shippingDetails: {
+              "@type": "OfferShippingDetails",
+              shippingRate: { "@type": "MonetaryAmount", value: "0", currency: "EUR" },
+              shippingDestination: { "@type": "DefinedRegion", addressCountry: "FR" },
+              deliveryTime: {
+                "@type": "ShippingDeliveryTime",
+                handlingTime: { "@type": "QuantitativeValue", minValue: 0, maxValue: 0, unitCode: "DAY" },
+                transitTime: { "@type": "QuantitativeValue", minValue: 0, maxValue: 0, unitCode: "DAY" },
+              },
+            },
+            hasMerchantReturnPolicy: {
+              "@type": "MerchantReturnPolicy",
+              applicableCountry: "FR",
+              returnPolicyCategory: "https://schema.org/MerchantReturnFiniteReturnWindow",
+              merchantReturnDays: 30,
+              returnMethod: "https://schema.org/ReturnByMail",
+              returnFees: "https://schema.org/FreeReturn",
+            },
           },
           {
             "@type": "Offer",
@@ -274,6 +311,24 @@ export function StructuredData() {
             priceCurrency: "EUR",
             availability: "https://schema.org/InStock",
             url: "https://cartevisitedigitale.fr/carte-physique",
+            shippingDetails: {
+              "@type": "OfferShippingDetails",
+              shippingRate: { "@type": "MonetaryAmount", value: "0", currency: "EUR" },
+              shippingDestination: { "@type": "DefinedRegion", addressCountry: "FR" },
+              deliveryTime: {
+                "@type": "ShippingDeliveryTime",
+                handlingTime: { "@type": "QuantitativeValue", minValue: 0, maxValue: 0, unitCode: "DAY" },
+                transitTime: { "@type": "QuantitativeValue", minValue: 0, maxValue: 0, unitCode: "DAY" },
+              },
+            },
+            hasMerchantReturnPolicy: {
+              "@type": "MerchantReturnPolicy",
+              applicableCountry: "FR",
+              returnPolicyCategory: "https://schema.org/MerchantReturnFiniteReturnWindow",
+              merchantReturnDays: 30,
+              returnMethod: "https://schema.org/ReturnByMail",
+              returnFees: "https://schema.org/FreeReturn",
+            },
           },
         ],
         aggregateRating: {
