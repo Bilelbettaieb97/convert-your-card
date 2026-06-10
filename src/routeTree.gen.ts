@@ -19,9 +19,11 @@ import { Route as MetiersRouteImport } from './routes/metiers'
 import { Route as MentionsLegalesRouteImport } from './routes/mentions-legales'
 import { Route as InscriptionRouteImport } from './routes/inscription'
 import { Route as DashboardRouteImport } from './routes/dashboard'
+import { Route as CookiesRouteImport } from './routes/cookies'
 import { Route as ConnexionRouteImport } from './routes/connexion'
 import { Route as ConfidentialiteRouteImport } from './routes/confidentialite'
 import { Route as CgvRouteImport } from './routes/cgv'
+import { Route as CguRouteImport } from './routes/cgu'
 import { Route as CartePhysiqueRouteImport } from './routes/carte-physique'
 import { Route as BuilderRouteImport } from './routes/builder'
 import { Route as BienvenueRouteImport } from './routes/bienvenue'
@@ -108,6 +110,11 @@ const DashboardRoute = DashboardRouteImport.update({
   path: '/dashboard',
   getParentRoute: () => rootRouteImport,
 } as any)
+const CookiesRoute = CookiesRouteImport.update({
+  id: '/cookies',
+  path: '/cookies',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const ConnexionRoute = ConnexionRouteImport.update({
   id: '/connexion',
   path: '/connexion',
@@ -121,6 +128,11 @@ const ConfidentialiteRoute = ConfidentialiteRouteImport.update({
 const CgvRoute = CgvRouteImport.update({
   id: '/cgv',
   path: '/cgv',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CguRoute = CguRouteImport.update({
+  id: '/cgu',
+  path: '/cgu',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CartePhysiqueRoute = CartePhysiqueRouteImport.update({
@@ -307,9 +319,11 @@ export interface FileRoutesByFullPath {
   '/bienvenue': typeof BienvenueRoute
   '/builder': typeof BuilderRoute
   '/carte-physique': typeof CartePhysiqueRoute
+  '/cgu': typeof CguRoute
   '/cgv': typeof CgvRoute
   '/confidentialite': typeof ConfidentialiteRoute
   '/connexion': typeof ConnexionRoute
+  '/cookies': typeof CookiesRoute
   '/dashboard': typeof DashboardRouteWithChildren
   '/inscription': typeof InscriptionRouteWithChildren
   '/mentions-legales': typeof MentionsLegalesRoute
@@ -357,9 +371,11 @@ export interface FileRoutesByTo {
   '/bienvenue': typeof BienvenueRoute
   '/builder': typeof BuilderRoute
   '/carte-physique': typeof CartePhysiqueRoute
+  '/cgu': typeof CguRoute
   '/cgv': typeof CgvRoute
   '/confidentialite': typeof ConfidentialiteRoute
   '/connexion': typeof ConnexionRoute
+  '/cookies': typeof CookiesRoute
   '/mentions-legales': typeof MentionsLegalesRoute
   '/offres': typeof OffresRoute
   '/onboarding': typeof OnboardingRoute
@@ -405,9 +421,11 @@ export interface FileRoutesById {
   '/bienvenue': typeof BienvenueRoute
   '/builder': typeof BuilderRoute
   '/carte-physique': typeof CartePhysiqueRoute
+  '/cgu': typeof CguRoute
   '/cgv': typeof CgvRoute
   '/confidentialite': typeof ConfidentialiteRoute
   '/connexion': typeof ConnexionRoute
+  '/cookies': typeof CookiesRoute
   '/dashboard': typeof DashboardRouteWithChildren
   '/inscription': typeof InscriptionRouteWithChildren
   '/mentions-legales': typeof MentionsLegalesRoute
@@ -457,9 +475,11 @@ export interface FileRouteTypes {
     | '/bienvenue'
     | '/builder'
     | '/carte-physique'
+    | '/cgu'
     | '/cgv'
     | '/confidentialite'
     | '/connexion'
+    | '/cookies'
     | '/dashboard'
     | '/inscription'
     | '/mentions-legales'
@@ -507,9 +527,11 @@ export interface FileRouteTypes {
     | '/bienvenue'
     | '/builder'
     | '/carte-physique'
+    | '/cgu'
     | '/cgv'
     | '/confidentialite'
     | '/connexion'
+    | '/cookies'
     | '/mentions-legales'
     | '/offres'
     | '/onboarding'
@@ -554,9 +576,11 @@ export interface FileRouteTypes {
     | '/bienvenue'
     | '/builder'
     | '/carte-physique'
+    | '/cgu'
     | '/cgv'
     | '/confidentialite'
     | '/connexion'
+    | '/cookies'
     | '/dashboard'
     | '/inscription'
     | '/mentions-legales'
@@ -605,9 +629,11 @@ export interface RootRouteChildren {
   BienvenueRoute: typeof BienvenueRoute
   BuilderRoute: typeof BuilderRoute
   CartePhysiqueRoute: typeof CartePhysiqueRoute
+  CguRoute: typeof CguRoute
   CgvRoute: typeof CgvRoute
   ConfidentialiteRoute: typeof ConfidentialiteRoute
   ConnexionRoute: typeof ConnexionRoute
+  CookiesRoute: typeof CookiesRoute
   DashboardRoute: typeof DashboardRouteWithChildren
   InscriptionRoute: typeof InscriptionRouteWithChildren
   MentionsLegalesRoute: typeof MentionsLegalesRoute
@@ -694,6 +720,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/cookies': {
+      id: '/cookies'
+      path: '/cookies'
+      fullPath: '/cookies'
+      preLoaderRoute: typeof CookiesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/connexion': {
       id: '/connexion'
       path: '/connexion'
@@ -713,6 +746,13 @@ declare module '@tanstack/react-router' {
       path: '/cgv'
       fullPath: '/cgv'
       preLoaderRoute: typeof CgvRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cgu': {
+      id: '/cgu'
+      path: '/cgu'
+      fullPath: '/cgu'
+      preLoaderRoute: typeof CguRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/carte-physique': {
@@ -1054,9 +1094,11 @@ const rootRouteChildren: RootRouteChildren = {
   BienvenueRoute: BienvenueRoute,
   BuilderRoute: BuilderRoute,
   CartePhysiqueRoute: CartePhysiqueRoute,
+  CguRoute: CguRoute,
   CgvRoute: CgvRoute,
   ConfidentialiteRoute: ConfidentialiteRoute,
   ConnexionRoute: ConnexionRoute,
+  CookiesRoute: CookiesRoute,
   DashboardRoute: DashboardRouteWithChildren,
   InscriptionRoute: InscriptionRouteWithChildren,
   MentionsLegalesRoute: MentionsLegalesRoute,

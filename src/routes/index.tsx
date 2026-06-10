@@ -1617,7 +1617,9 @@ export function Footer() {
             <ul className="space-y-2 text-sm text-muted-foreground">
               <li><a href="/mentions-legales" className="hover:text-foreground transition">Mentions légales</a></li>
               <li><a href="/cgv" className="hover:text-foreground transition">CGV</a></li>
+              <li><a href="/cgu" className="hover:text-foreground transition">CGU</a></li>
               <li><a href="/confidentialite" className="hover:text-foreground transition">Confidentialité</a></li>
+              <li><a href="/cookies" className="hover:text-foreground transition">Cookies</a></li>
               <li><a href="mailto:contact@cartevisitedigitale.fr" className="hover:text-foreground transition">Contact</a></li>
             </ul>
           </div>
