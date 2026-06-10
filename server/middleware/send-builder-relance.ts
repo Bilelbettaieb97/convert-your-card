@@ -52,7 +52,7 @@ export default defineEventHandler(async (event) => {
       method: "POST",
       headers: { Authorization: `Bearer ${resendKey}`, "Content-Type": "application/json" },
       body: JSON.stringify({
-        from: "Carte Visite Digitale <bilel@convertilab.com>",
+        from: "Carte Visite Digitale <contact@cartevisitedigitale.fr>",
         to: u.email,
         subject,
         html,

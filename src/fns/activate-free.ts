@@ -31,7 +31,7 @@ async function sendWelcomeEmail(email: string, nom: string, slug: string) {
     method: "POST",
     headers: { Authorization: `Bearer ${resendKey}`, "Content-Type": "application/json" },
     body: JSON.stringify({
-      from: "Bilel · Carte Visite Digitale <bilel@convertilab.com>",
+      from: "Bilel · Carte Visite Digitale <contact@cartevisitedigitale.fr>",
       to: email,
       subject: `${firstName}, ta carte est en ligne. Voilà la suite.`,
       html: `<!DOCTYPE html>
@@ -125,7 +125,7 @@ async function sendAdminNotification(email: string, slug: string) {
     method: "POST",
     headers: { Authorization: `Bearer ${resendKey}`, "Content-Type": "application/json" },
     body: JSON.stringify({
-      from: "CVD Notifs <bilel@convertilab.com>",
+      from: "CVD Notifs <contact@cartevisitedigitale.fr>",
       to: "Convertilab@gmail.com",
       subject: `🆕 Nouveau compte CVD — ${email} (gratuit)`,
       html: `<div style="font-family:sans-serif;max-width:500px;margin:0 auto;padding:32px 20px;background:#f9fafb;border-radius:12px">

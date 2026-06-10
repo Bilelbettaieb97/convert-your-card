@@ -271,7 +271,7 @@ export default defineEventHandler(async (event) => {
           "Content-Type": "application/json",
         },
         body: JSON.stringify({
-          from: "Bilel · Carte Visite Digitale <bilel@convertilab.com>",
+          from: "Bilel · Carte Visite Digitale <contact@cartevisitedigitale.fr>",
           to: user.email,
           subject,
           html,

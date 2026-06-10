@@ -43,7 +43,7 @@ async function sendAdminNotification(email: string, plan: string, slug: string) 
     method: "POST",
     headers: { Authorization: `Bearer ${resendKey}`, "Content-Type": "application/json" },
     body: JSON.stringify({
-      from: "CVD Notifs <bilel@convertilab.com>",
+      from: "CVD Notifs <contact@cartevisitedigitale.fr>",
       to: "Convertilab@gmail.com",
       subject: `🆕 Nouveau client CVD — ${email} (${plan})`,
       html: `<div style="font-family:sans-serif;max-width:500px;margin:0 auto;padding:32px 20px;background:#f9fafb;border-radius:12px">
@@ -89,7 +89,7 @@ async function sendWelcomeEmail(
       "Content-Type": "application/json",
     },
     body: JSON.stringify({
-      from: "Bilel · Carte Visite Digitale <bilel@convertilab.com>",
+      from: "Bilel · Carte Visite Digitale <contact@cartevisitedigitale.fr>",
       to: email,
       subject: `${firstName}, ta carte Vitrine est en ligne. Ton essai démarre maintenant.`,
       html: `<!DOCTYPE html>
