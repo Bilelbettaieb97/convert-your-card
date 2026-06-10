@@ -30,7 +30,7 @@ function CgvPage() {
           <p><strong className="text-foreground">Responsable :</strong> Bilel Bettaieb</p>
           <p><strong className="text-foreground">Adresse :</strong> Rueil-Malmaison, 92500, Île-de-France, France</p>
           <p><strong className="text-foreground">Email :</strong> contact@cartevisitedigitale.fr</p>
-          <p><strong className="text-foreground">SIRET :</strong> [À COMPLÉTER]</p>
+          <p><strong className="text-foreground">SIRET :</strong> Entreprise en cours de création</p>
         </Section>
 
         <Section title="2. Produits et services">

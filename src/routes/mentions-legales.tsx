@@ -31,8 +31,7 @@ function MentionsLegalesPage() {
           <p><strong className="text-foreground">Adresse :</strong> Rueil-Malmaison, 92500, Île-de-France, France</p>
           <p><strong className="text-foreground">Email :</strong> contact@cartevisitedigitale.fr</p>
           <p><strong className="text-foreground">Téléphone :</strong> 06 16 47 72 45</p>
-          <p><strong className="text-foreground">SIRET :</strong> [À COMPLÉTER]</p>
-          <p className="text-xs text-muted-foreground/70 mt-1">Activité exercée à titre individuel en cours d'immatriculation.</p>
+          <p><strong className="text-foreground">SIRET :</strong> Entreprise en cours de création</p>
         </Section>
 
         <Section title="2. Hébergement">
