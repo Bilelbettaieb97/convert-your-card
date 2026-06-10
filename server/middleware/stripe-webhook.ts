@@ -10,6 +10,10 @@ async function verifyStripeSignature(
   const timestamp = parts.find((p) => p.startsWith("t="))?.slice(2);
   const sig = parts.find((p) => p.startsWith("v1="))?.slice(3);
   if (!timestamp || !sig) return false;
+  const MAX_AGE_SECONDS = 300;
+  if (Math.floor(Date.now() / 1000) - parseInt(timestamp, 10) > MAX_AGE_SECONDS) {
+    return false;
+  }
   const payload = `${timestamp}.${body}`;
   const key = await crypto.subtle.importKey(
     "raw",
@@ -169,10 +173,10 @@ async function sendWelcomeEmail(
 
       <!-- Signature -->
       <div style="border-top:1px solid #f3f4f6;padding-top:24px;display:flex;align-items:center;gap:14px">
-        <div style="width:44px;height:44px;border-radius:50%;background:linear-gradient(135deg,#c026d3,#7c3aed);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:700;font-size:16px;text-align:center;line-height:44px">B</div>
+        <div style="width:44px;height:44px;border-radius:50%;background:#c026d3;text-align:center;line-height:44px;color:#fff;font-weight:700;font-size:14px">CVD</div>
         <div>
-          <div style="font-weight:600;color:#1a1a2e;font-size:14px">Bilel, fondateur de Carte Visite Digitale</div>
-          <div style="color:#6b7280;font-size:13px;margin-top:2px">Une question ? Réponds directement à cet email, je lis tout. 🙏</div>
+          <div style="font-weight:600;color:#1a1a2e;font-size:14px">L'équipe Carte Visite Digitale</div>
+          <div style="color:#6b7280;font-size:13px;margin-top:2px">Une question ? Réponds directement à cet email, on lit tout. 🙏</div>
         </div>
       </div>
 
