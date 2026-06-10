@@ -24,6 +24,8 @@ export default defineConfig(async ({ command }) => {
           { middleware: true, handler: "./server/middleware/stripe-webhook" },
           { middleware: true, handler: "./server/middleware/auth" },
           { middleware: true, handler: "./server/middleware/checkout-embedded" },
+          { middleware: true, handler: "./server/middleware/relance-click" },
+          { middleware: true, handler: "./server/middleware/send-relance" },
         ],
       })
     );
