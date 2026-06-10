@@ -6,6 +6,14 @@ import { supabase } from "@/integrations/supabase/client";
 import { Toaster } from "@/components/ui/sonner";
 import { Zap, Eye, EyeOff, ArrowRight, Mail, RefreshCw } from "lucide-react";
 
+function LinkedInIcon() {
+  return (
+    <svg viewBox="0 0 24 24" className="w-4 h-4" fill="#0A66C2" aria-hidden="true">
+      <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
+    </svg>
+  );
+}
+
 function GoogleIcon() {
   return (
     <svg viewBox="0 0 24 24" className="w-4 h-4" aria-hidden="true">
@@ -37,6 +45,20 @@ function ConnexionPage() {
   const [showPassword, setShowPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
+  const [linkedInLoading, setLinkedInLoading] = useState(false);
+
+  async function handleLinkedInLogin() {
+    setLinkedInLoading(true);
+    const appUrl = typeof window !== "undefined" ? window.location.origin : "https://www.cartevisitedigitale.fr";
+    const { error } = await supabase.auth.signInWithOAuth({
+      provider: "linkedin_oidc",
+      options: { redirectTo: `${appUrl}/auth/callback` },
+    });
+    if (error) {
+      toast.error("Impossible de se connecter avec LinkedIn");
+      setLinkedInLoading(false);
+    }
+  }
 
   async function handleGoogleLogin() {
     setGoogleLoading(true);
@@ -130,16 +152,27 @@ function ConnexionPage() {
               <h1 className="font-display text-2xl font-bold text-foreground mb-1">Connexion</h1>
               <p className="text-sm text-muted-foreground mb-6">Bienvenue de retour.</p>
 
-              {/* Google */}
-              <button
-                type="button"
-                onClick={handleGoogleLogin}
-                disabled={googleLoading}
-                className="w-full flex items-center justify-center gap-2.5 rounded-xl border border-border bg-background px-4 py-3 text-sm font-medium text-foreground hover:bg-muted/50 transition disabled:opacity-60 mb-5"
-              >
-                <GoogleIcon />
-                {googleLoading ? "Redirection…" : "Continuer avec Google"}
-              </button>
+              {/* OAuth buttons */}
+              <div className="flex flex-col gap-2.5 mb-5">
+                <button
+                  type="button"
+                  onClick={handleGoogleLogin}
+                  disabled={googleLoading}
+                  className="w-full flex items-center justify-center gap-2.5 rounded-xl border border-border bg-background px-4 py-3 text-sm font-medium text-foreground hover:bg-muted/50 transition disabled:opacity-60"
+                >
+                  <GoogleIcon />
+                  {googleLoading ? "Redirection…" : "Continuer avec Google"}
+                </button>
+                <button
+                  type="button"
+                  onClick={handleLinkedInLogin}
+                  disabled={linkedInLoading}
+                  className="w-full flex items-center justify-center gap-2.5 rounded-xl border border-border bg-background px-4 py-3 text-sm font-medium text-foreground hover:bg-muted/50 transition disabled:opacity-60"
+                >
+                  <LinkedInIcon />
+                  {linkedInLoading ? "Redirection…" : "Continuer avec LinkedIn"}
+                </button>
+              </div>
 
               <div className="flex items-center gap-3 mb-5">
                 <div className="flex-1 h-px bg-border" />
