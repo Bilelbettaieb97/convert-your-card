@@ -92,12 +92,20 @@ function BuilderIAPage() {
     resultReady.current = false;
 
     // Appel IA en parallèle de l'animation
-    generateCard({ data: { input: input.trim() } })
+    generateCard({
+      data: {
+        input: input.trim(),
+        name: userName || undefined,
+        email: user?.email || undefined,
+      },
+    })
       .then((res) => {
         const merged: CardData = {
           ...DEFAULT_CARD,
           ...res,
           name: userName || DEFAULT_CARD.name,
+          photo: user?.user_metadata?.avatar_url || DEFAULT_CARD.photo,
+          email: user?.email || DEFAULT_CARD.email,
         };
         setGeneratedCard(merged);
         resultReady.current = true;
