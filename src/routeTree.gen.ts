@@ -16,9 +16,12 @@ import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as OffresRouteImport } from './routes/offres'
 import { Route as MetiersRouteImport } from './routes/metiers'
+import { Route as MentionsLegalesRouteImport } from './routes/mentions-legales'
 import { Route as InscriptionRouteImport } from './routes/inscription'
 import { Route as DashboardRouteImport } from './routes/dashboard'
 import { Route as ConnexionRouteImport } from './routes/connexion'
+import { Route as ConfidentialiteRouteImport } from './routes/confidentialite'
+import { Route as CgvRouteImport } from './routes/cgv'
 import { Route as CartePhysiqueRouteImport } from './routes/carte-physique'
 import { Route as BuilderRouteImport } from './routes/builder'
 import { Route as BienvenueRouteImport } from './routes/bienvenue'
@@ -90,6 +93,11 @@ const MetiersRoute = MetiersRouteImport.update({
   path: '/metiers',
   getParentRoute: () => rootRouteImport,
 } as any)
+const MentionsLegalesRoute = MentionsLegalesRouteImport.update({
+  id: '/mentions-legales',
+  path: '/mentions-legales',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const InscriptionRoute = InscriptionRouteImport.update({
   id: '/inscription',
   path: '/inscription',
@@ -103,6 +111,16 @@ const DashboardRoute = DashboardRouteImport.update({
 const ConnexionRoute = ConnexionRouteImport.update({
   id: '/connexion',
   path: '/connexion',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const ConfidentialiteRoute = ConfidentialiteRouteImport.update({
+  id: '/confidentialite',
+  path: '/confidentialite',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const CgvRoute = CgvRouteImport.update({
+  id: '/cgv',
+  path: '/cgv',
   getParentRoute: () => rootRouteImport,
 } as any)
 const CartePhysiqueRoute = CartePhysiqueRouteImport.update({
@@ -289,9 +307,12 @@ export interface FileRoutesByFullPath {
   '/bienvenue': typeof BienvenueRoute
   '/builder': typeof BuilderRoute
   '/carte-physique': typeof CartePhysiqueRoute
+  '/cgv': typeof CgvRoute
+  '/confidentialite': typeof ConfidentialiteRoute
   '/connexion': typeof ConnexionRoute
   '/dashboard': typeof DashboardRouteWithChildren
   '/inscription': typeof InscriptionRouteWithChildren
+  '/mentions-legales': typeof MentionsLegalesRoute
   '/metiers': typeof MetiersRouteWithChildren
   '/offres': typeof OffresRoute
   '/onboarding': typeof OnboardingRoute
@@ -336,7 +357,10 @@ export interface FileRoutesByTo {
   '/bienvenue': typeof BienvenueRoute
   '/builder': typeof BuilderRoute
   '/carte-physique': typeof CartePhysiqueRoute
+  '/cgv': typeof CgvRoute
+  '/confidentialite': typeof ConfidentialiteRoute
   '/connexion': typeof ConnexionRoute
+  '/mentions-legales': typeof MentionsLegalesRoute
   '/offres': typeof OffresRoute
   '/onboarding': typeof OnboardingRoute
   '/pricing': typeof PricingRoute
@@ -381,9 +405,12 @@ export interface FileRoutesById {
   '/bienvenue': typeof BienvenueRoute
   '/builder': typeof BuilderRoute
   '/carte-physique': typeof CartePhysiqueRoute
+  '/cgv': typeof CgvRoute
+  '/confidentialite': typeof ConfidentialiteRoute
   '/connexion': typeof ConnexionRoute
   '/dashboard': typeof DashboardRouteWithChildren
   '/inscription': typeof InscriptionRouteWithChildren
+  '/mentions-legales': typeof MentionsLegalesRoute
   '/metiers': typeof MetiersRouteWithChildren
   '/offres': typeof OffresRoute
   '/onboarding': typeof OnboardingRoute
@@ -430,9 +457,12 @@ export interface FileRouteTypes {
     | '/bienvenue'
     | '/builder'
     | '/carte-physique'
+    | '/cgv'
+    | '/confidentialite'
     | '/connexion'
     | '/dashboard'
     | '/inscription'
+    | '/mentions-legales'
     | '/metiers'
     | '/offres'
     | '/onboarding'
@@ -477,7 +507,10 @@ export interface FileRouteTypes {
     | '/bienvenue'
     | '/builder'
     | '/carte-physique'
+    | '/cgv'
+    | '/confidentialite'
     | '/connexion'
+    | '/mentions-legales'
     | '/offres'
     | '/onboarding'
     | '/pricing'
@@ -521,9 +554,12 @@ export interface FileRouteTypes {
     | '/bienvenue'
     | '/builder'
     | '/carte-physique'
+    | '/cgv'
+    | '/confidentialite'
     | '/connexion'
     | '/dashboard'
     | '/inscription'
+    | '/mentions-legales'
     | '/metiers'
     | '/offres'
     | '/onboarding'
@@ -569,9 +605,12 @@ export interface RootRouteChildren {
   BienvenueRoute: typeof BienvenueRoute
   BuilderRoute: typeof BuilderRoute
   CartePhysiqueRoute: typeof CartePhysiqueRoute
+  CgvRoute: typeof CgvRoute
+  ConfidentialiteRoute: typeof ConfidentialiteRoute
   ConnexionRoute: typeof ConnexionRoute
   DashboardRoute: typeof DashboardRouteWithChildren
   InscriptionRoute: typeof InscriptionRouteWithChildren
+  MentionsLegalesRoute: typeof MentionsLegalesRoute
   MetiersRoute: typeof MetiersRouteWithChildren
   OffresRoute: typeof OffresRoute
   OnboardingRoute: typeof OnboardingRoute
@@ -634,6 +673,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof MetiersRouteImport
       parentRoute: typeof rootRouteImport
     }
+    '/mentions-legales': {
+      id: '/mentions-legales'
+      path: '/mentions-legales'
+      fullPath: '/mentions-legales'
+      preLoaderRoute: typeof MentionsLegalesRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/inscription': {
       id: '/inscription'
       path: '/inscription'
@@ -653,6 +699,20 @@ declare module '@tanstack/react-router' {
       path: '/connexion'
       fullPath: '/connexion'
       preLoaderRoute: typeof ConnexionRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/confidentialite': {
+      id: '/confidentialite'
+      path: '/confidentialite'
+      fullPath: '/confidentialite'
+      preLoaderRoute: typeof ConfidentialiteRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/cgv': {
+      id: '/cgv'
+      path: '/cgv'
+      fullPath: '/cgv'
+      preLoaderRoute: typeof CgvRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/carte-physique': {
@@ -994,9 +1054,12 @@ const rootRouteChildren: RootRouteChildren = {
   BienvenueRoute: BienvenueRoute,
   BuilderRoute: BuilderRoute,
   CartePhysiqueRoute: CartePhysiqueRoute,
+  CgvRoute: CgvRoute,
+  ConfidentialiteRoute: ConfidentialiteRoute,
   ConnexionRoute: ConnexionRoute,
   DashboardRoute: DashboardRouteWithChildren,
   InscriptionRoute: InscriptionRouteWithChildren,
+  MentionsLegalesRoute: MentionsLegalesRoute,
   MetiersRoute: MetiersRouteWithChildren,
   OffresRoute: OffresRoute,
   OnboardingRoute: OnboardingRoute,
