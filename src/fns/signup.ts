@@ -1,6 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { createClient } from "@supabase/supabase-js";
 import { z } from "zod";
+import { isDisposableEmail } from "@/lib/is-disposable-email";
 
 const schema = z.object({
   email: z.string().trim().email(),
@@ -15,6 +16,10 @@ export const signUpWithAutoConfirm = createServerFn({ method: "POST" })
       process.env.SUPABASE_SERVICE_ROLE_KEY!,
       { auth: { autoRefreshToken: false, persistSession: false } }
     );
+
+    if (isDisposableEmail(data.email)) {
+      throw new Error("Les adresses email temporaires ne sont pas acceptées.");
+    }
 
     // Check if user already exists
     const { data: existingUsers } = await supabaseAdmin.auth.admin.listUsers();

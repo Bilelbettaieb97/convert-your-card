@@ -4,6 +4,7 @@ import { useState } from "react";
 import { z } from "zod";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
+import { isDisposableEmail } from "@/lib/is-disposable-email";
 import { Toaster } from "@/components/ui/sonner";
 import { Zap, ShieldCheck, Lock, Users, Star, TrendingUp, Award, Quote, Mail, ArrowRight, RefreshCw } from "lucide-react";
 
@@ -31,6 +32,10 @@ function InscriptionPage() {
     const trimmed = email.trim().toLowerCase();
     if (!trimmed || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed)) {
       toast.error("Adresse email invalide");
+      return;
+    }
+    if (isDisposableEmail(trimmed)) {
+      toast.error("Les adresses email temporaires ne sont pas acceptées. Utilise ton email professionnel ou personnel.");
       return;
     }
     setSubmitting(true);

@@ -1,6 +1,7 @@
 import { createServerFn } from "@tanstack/react-start";
 import { z } from "zod";
 import { createClient } from "@supabase/supabase-js";
+import { isDisposableEmail } from "@/lib/is-disposable-email";
 
 const schema = z.object({
   email: z.string().email(),
@@ -145,6 +146,10 @@ export const activateFree = createServerFn({ method: "POST" })
 
     const userId = callerUser.id;
     const email = callerUser.email ?? data.email;
+
+    if (isDisposableEmail(email)) {
+      throw new Error("Les adresses email temporaires ne sont pas acceptées.");
+    }
     const nom = email.split("@")[0];
 
     // Check existing profile

@@ -1,5 +1,11 @@
 import { defineEventHandler, readBody } from "h3";
 import { createClient } from "@supabase/supabase-js";
+// eslint-disable-next-line @typescript-eslint/no-require-imports
+const disposableDomains: string[] = require("disposable-email-domains");
+function isDisposableEmail(email: string): boolean {
+  const domain = email.split("@")[1]?.toLowerCase().trim();
+  return domain ? disposableDomains.includes(domain) : false;
+}
 
 export default defineEventHandler(async (event) => {
   if (event.path !== "/api/signup" || event.method !== "POST") return;
@@ -10,6 +16,13 @@ export default defineEventHandler(async (event) => {
   if (!email || !password) {
     return new Response(JSON.stringify({ error: "Email et mot de passe requis" }), {
       status: 400,
+      headers: { "Content-Type": "application/json" },
+    });
+  }
+
+  if (isDisposableEmail(email)) {
+    return new Response(JSON.stringify({ error: "Les adresses email temporaires ne sont pas acceptées." }), {
+      status: 422,
       headers: { "Content-Type": "application/json" },
     });
   }
