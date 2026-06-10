@@ -33,64 +33,82 @@ async function sendWelcomeEmail(email: string, nom: string, slug: string) {
     body: JSON.stringify({
       from: "Bilel · Carte Visite Digitale <bilel@convertilab.com>",
       to: email,
-      subject: `Bienvenue ${firstName} — ta carte est en ligne 🎉`,
+      subject: `${firstName}, ta carte est en ligne. Voilà la suite.`,
       html: `<!DOCTYPE html>
 <html lang="fr">
 <head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"></head>
-<body style="margin:0;padding:0;background:#f4f4f8;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif">
-  <div style="max-width:580px;margin:40px auto;padding:0 16px 40px">
-    <div style="background:linear-gradient(135deg,#c026d3,#7c3aed);border-radius:16px 16px 0 0;padding:40px 40px 32px;text-align:center">
-      <div style="display:inline-block;background:rgba(255,255,255,0.15);border-radius:50px;padding:6px 18px;font-size:12px;color:rgba(255,255,255,0.9);letter-spacing:1px;text-transform:uppercase;margin-bottom:20px">Carte Visite Digitale</div>
-      <h1 style="margin:0;color:#ffffff;font-size:28px;font-weight:700;line-height:1.3">Bienvenue, ${firstName} ! 🎉</h1>
-      <p style="margin:12px 0 0;color:rgba(255,255,255,0.85);font-size:15px">Ta carte de visite digitale est prête et en ligne.</p>
-    </div>
-    <div style="background:#ffffff;padding:40px;border-radius:0 0 16px 16px;box-shadow:0 4px 24px rgba(0,0,0,0.06)">
-      <p style="margin:0 0 24px;color:#374151;font-size:15px;line-height:1.7">
-        Félicitations pour ton plan <strong style="color:#c026d3">Essentielle (gratuit)</strong> — tu fais maintenant partie des professionnels qui partagent leur profil en 1 tap. 🚀
-      </p>
-      <div style="background:linear-gradient(135deg,#fdf4ff,#f5f3ff);border:1px solid #e9d5ff;border-radius:12px;padding:24px;margin-bottom:28px;text-align:center">
-        <p style="margin:0 0 6px;font-size:12px;color:#6b7280;text-transform:uppercase;letter-spacing:0.8px">🔗 Ton lien public</p>
-        <a href="${cardUrl}" style="font-size:16px;font-weight:700;color:#7c3aed;text-decoration:none;word-break:break-all">${cardUrl}</a>
-        <p style="margin:10px 0 0;font-size:12px;color:#9ca3af">Partage ce lien ou génère un QR code depuis ton dashboard</p>
-      </div>
-      <p style="margin:0 0 14px;font-size:14px;font-weight:600;color:#1a1a2e">3 premières choses à faire :</p>
-      <div style="margin-bottom:10px">
-        <span style="display:inline-flex;align-items:center;gap:12px">
-          <span style="min-width:28px;height:28px;background:#f3e8ff;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#7c3aed">1</span>
-          <span style="color:#374151;font-size:14px">Ajoute ta photo, ton logo et tes coordonnées dans <strong>Ma carte</strong></span>
-        </span>
-      </div>
-      <div style="margin-bottom:10px">
-        <span style="display:inline-flex;align-items:center;gap:12px">
-          <span style="min-width:28px;height:28px;background:#f3e8ff;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#7c3aed">2</span>
-          <span style="color:#374151;font-size:14px">Génère ton QR code et enregistre-le dans tes favoris</span>
-        </span>
-      </div>
-      <div style="margin-bottom:28px">
-        <span style="display:inline-flex;align-items:center;gap:12px">
-          <span style="min-width:28px;height:28px;background:#f3e8ff;border-radius:50%;display:inline-flex;align-items:center;justify-content:center;font-size:13px;font-weight:700;color:#7c3aed">3</span>
-          <span style="color:#374151;font-size:14px">Partage ton lien dans ta bio Instagram, ta signature email et tes messages</span>
-        </span>
-      </div>
-      <div style="text-align:center;margin-bottom:32px">
-        <a href="${dashboardUrl}" style="display:inline-block;background:linear-gradient(135deg,#c026d3,#7c3aed);color:#ffffff;padding:16px 36px;border-radius:50px;text-decoration:none;font-weight:700;font-size:15px;box-shadow:0 4px 14px rgba(192,38,211,0.35)">
-          Accéder à mon dashboard →
-        </a>
-      </div>
-      <div style="border-top:1px solid #f3f4f6;padding-top:24px">
-        <div style="display:inline-flex;align-items:center;gap:14px">
-          <div style="width:44px;height:44px;border-radius:50%;background:#c026d3;text-align:center;line-height:44px;color:#fff;font-weight:700;font-size:14px">CVD</div>
-          <div>
-            <div style="font-weight:600;color:#1a1a2e;font-size:14px">L'équipe Carte Visite Digitale</div>
-            <div style="color:#6b7280;font-size:13px;margin-top:2px">Une question ? Réponds directement à cet email, on lit tout. 🙏</div>
-          </div>
-        </div>
-      </div>
-    </div>
-    <p style="text-align:center;color:#9ca3af;font-size:12px;margin:20px 0 0;line-height:1.6">
-      Tu reçois cet email car tu viens d'activer ton compte Carte Visite Digitale (plan gratuit).
-    </p>
-  </div>
+<body style="margin:0;padding:0;background:#ffffff;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Arial,sans-serif;">
+<table cellpadding="0" cellspacing="0" border="0" width="100%" style="background:#ffffff;">
+<tr><td align="center" style="padding:40px 20px 0;">
+<table cellpadding="0" cellspacing="0" border="0" width="500" style="max-width:500px;width:100%;">
+
+  <tr><td style="padding-bottom:28px;">
+    <table cellpadding="0" cellspacing="0" border="0"><tr>
+      <td style="background:#7c3aed;border-radius:6px;padding:4px 10px;"><span style="font-size:11px;font-weight:800;color:#fff;letter-spacing:0.5px;">CVD</span></td>
+      <td style="padding-left:8px;font-size:12px;color:#9ca3af;">cartevisitedigitale.fr</td>
+    </tr></table>
+  </td></tr>
+
+  <tr><td style="padding-bottom:6px;">
+    <p style="margin:0;font-size:11px;font-weight:700;color:#15803d;text-transform:uppercase;letter-spacing:1px;">C'est en ligne</p>
+  </td></tr>
+  <tr><td style="padding-bottom:22px;">
+    <p style="margin:0;font-size:30px;font-weight:800;line-height:1.2;color:#0f0f14;letter-spacing:-0.5px;">Ta carte est prête.<br>Elle t'attend.</p>
+  </td></tr>
+  <tr><td style="padding-bottom:24px;">
+    <p style="margin:0;font-size:15px;line-height:1.75;color:#374151;">Tu rejoins <strong style="color:#0f0f14;">2 400+ professionnels</strong> qui partagent leurs coordonnées en 1 tap. Ton lien est live dès maintenant.</p>
+  </td></tr>
+
+  <tr><td style="padding-bottom:26px;">
+    <table cellpadding="0" cellspacing="0" border="0" width="100%" style="background:#f0fdf4;border:1px solid #bbf7d0;border-radius:10px;">
+    <tr><td style="padding:18px 20px;">
+      <p style="margin:0 0 6px;font-size:11px;font-weight:700;color:#15803d;text-transform:uppercase;letter-spacing:0.6px;">Ton lien public</p>
+      <p style="margin:0 0 8px;font-size:16px;font-weight:700;color:#0f0f14;word-break:break-all;">${cardUrl}</p>
+      <p style="margin:0;font-size:12px;color:#6b7280;">Partage ce lien partout. Génère ton QR code depuis le dashboard.</p>
+    </td></tr>
+    </table>
+  </td></tr>
+
+  <tr><td style="padding-bottom:24px;">
+    <p style="margin:0 0 14px;font-size:13px;font-weight:700;color:#0f0f14;">3 choses à faire maintenant :</p>
+    <table cellpadding="0" cellspacing="0" border="0" width="100%">
+      <tr><td style="padding:10px 0;border-bottom:1px solid #f3f4f6;">
+        <table cellpadding="0" cellspacing="0" border="0"><tr>
+          <td style="vertical-align:top;"><span style="display:inline-block;width:22px;height:22px;border-radius:50%;background:#7c3aed;color:#fff;font-size:11px;font-weight:800;text-align:center;line-height:22px;">1</span></td>
+          <td style="padding-left:12px;font-size:14px;color:#374151;line-height:1.6;vertical-align:top;"><strong style="color:#0f0f14;">Partage ton lien</strong> en réponse à ta prochaine demande de contact — WhatsApp, Instagram, email</td>
+        </tr></table>
+      </td></tr>
+      <tr><td style="padding:10px 0;border-bottom:1px solid #f3f4f6;">
+        <table cellpadding="0" cellspacing="0" border="0"><tr>
+          <td style="vertical-align:top;"><span style="display:inline-block;width:22px;height:22px;border-radius:50%;background:#7c3aed;color:#fff;font-size:11px;font-weight:800;text-align:center;line-height:22px;">2</span></td>
+          <td style="padding-left:12px;font-size:14px;color:#374151;line-height:1.6;vertical-align:top;"><strong style="color:#0f0f14;">Télécharge ton QR code</strong> et mets-le sur ton support, ton van, ta vitrine, tes flyers</td>
+        </tr></table>
+      </td></tr>
+      <tr><td style="padding:10px 0;">
+        <table cellpadding="0" cellspacing="0" border="0"><tr>
+          <td style="vertical-align:top;"><span style="display:inline-block;width:22px;height:22px;border-radius:50%;background:#7c3aed;color:#fff;font-size:11px;font-weight:800;text-align:center;line-height:22px;">3</span></td>
+          <td style="padding-left:12px;font-size:14px;color:#374151;line-height:1.6;vertical-align:top;"><strong style="color:#0f0f14;">Ajoute le lien à ta bio Instagram</strong> — chaque visiteur de ton profil peut maintenant te contacter en 1 tap</td>
+        </tr></table>
+      </td></tr>
+    </table>
+  </td></tr>
+
+  <tr><td style="padding-bottom:10px;" align="center">
+    <table cellpadding="0" cellspacing="0" border="0"><tr>
+      <td align="center" bgcolor="#0f0f14" style="border-radius:50px;">
+        <a href="${dashboardUrl}" style="display:inline-block;background:#0f0f14;padding:15px 38px;border-radius:50px;color:#fff;text-decoration:none;font-weight:700;font-size:15px;">Accéder à mon dashboard &#8594;</a>
+      </td>
+    </tr></table>
+  </td></tr>
+  <tr><td style="padding-bottom:36px;" align="center">
+    <p style="margin:0;font-size:12px;color:#9ca3af;">Des questions ? Réponds directement à cet email.</p>
+  </td></tr>
+
+  <tr><td style="border-top:1px solid #f3f4f6;padding:20px 0 32px;">
+    <p style="margin:0;font-size:14px;font-weight:600;color:#0f0f14;">L'équipe Carte Visite Digitale</p>
+    <p style="margin:4px 0 0;font-size:13px;color:#9ca3af;">On lit tous les emails. N'hésite pas.</p>
+  </td></tr>
+</table></td></tr></table>
 </body>
 </html>`,
     }),
