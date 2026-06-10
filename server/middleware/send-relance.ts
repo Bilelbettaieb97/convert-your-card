@@ -124,9 +124,12 @@ const EMAIL_TEMPLATES: Record<
 export default defineEventHandler(async (event) => {
   if (!event.path?.startsWith("/api/send-relance")) return;
 
-  // CORS — autorise les appels depuis le dashboard local (file://)
+  // CORS — autorise le domaine de prod + les fichiers HTML locaux (file:// → origin: null)
+  const appUrl = process.env.VITE_APP_URL ?? "https://www.cartevisitedigitale.fr";
+  const requestOrigin = getHeader(event, "origin") ?? "";
+  const corsOrigin = requestOrigin === "null" || requestOrigin === appUrl ? requestOrigin : appUrl;
   setResponseHeaders(event, {
-    "Access-Control-Allow-Origin": process.env.VITE_APP_URL ?? "https://www.cartevisitedigitale.fr",
+    "Access-Control-Allow-Origin": corsOrigin,
     "Access-Control-Allow-Methods": "POST, OPTIONS",
     "Access-Control-Allow-Headers": "Content-Type, Authorization",
   });
