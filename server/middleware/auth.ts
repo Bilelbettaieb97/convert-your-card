@@ -1,10 +1,24 @@
-import { defineEventHandler, readBody } from "h3";
+import { defineEventHandler, readBody, getHeader } from "h3";
 import { createClient } from "@supabase/supabase-js";
 // eslint-disable-next-line @typescript-eslint/no-require-imports
 const disposableDomains: string[] = require("disposable-email-domains");
 function isDisposableEmail(email: string): boolean {
   const domain = email.split("@")[1]?.toLowerCase().trim();
   return domain ? disposableDomains.includes(domain) : false;
+}
+
+// Rate limiting : 5 inscriptions par IP par heure (best-effort sur instances chaudes)
+const _rl = new Map<string, { count: number; reset: number }>();
+function checkRateLimit(ip: string): boolean {
+  const now = Date.now();
+  const entry = _rl.get(ip);
+  if (!entry || now > entry.reset) {
+    _rl.set(ip, { count: 1, reset: now + 3_600_000 });
+    return true;
+  }
+  if (entry.count >= 5) return false;
+  entry.count++;
+  return true;
 }
 
 export default defineEventHandler(async (event) => {
@@ -16,6 +30,16 @@ export default defineEventHandler(async (event) => {
   if (!email || !password) {
     return new Response(JSON.stringify({ error: "Email et mot de passe requis" }), {
       status: 400,
+      headers: { "Content-Type": "application/json" },
+    });
+  }
+
+  const ip = getHeader(event, "x-forwarded-for")?.split(",")[0]?.trim()
+           ?? getHeader(event, "x-real-ip")
+           ?? "unknown";
+  if (ip !== "unknown" && !checkRateLimit(ip)) {
+    return new Response(JSON.stringify({ error: "Trop de tentatives. Réessaie dans une heure." }), {
+      status: 429,
       headers: { "Content-Type": "application/json" },
     });
   }

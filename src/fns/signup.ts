@@ -21,13 +21,9 @@ export const signUpWithAutoConfirm = createServerFn({ method: "POST" })
       throw new Error("Les adresses email temporaires ne sont pas acceptées.");
     }
 
-    // Check if user already exists
-    const { data: existingUsers } = await supabaseAdmin.auth.admin.listUsers();
-    const existing = existingUsers?.users?.find(
-      (u) => u.email?.toLowerCase() === data.email.toLowerCase()
-    );
-
-    if (existing) {
+    // Check if user already exists (lookup direct, sans charger tous les users)
+    const { data: existingData } = await supabaseAdmin.auth.admin.getUserByEmail(data.email);
+    if (existingData?.user) {
       return { exists: true };
     }
 
