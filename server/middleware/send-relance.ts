@@ -3,8 +3,7 @@ import {
   readBody,
   getHeader,
   setResponseStatus,
-  sendError,
-  createError,
+  setResponseHeaders,
 } from "h3";
 import { createClient } from "@supabase/supabase-js";
 
@@ -124,6 +123,17 @@ const EMAIL_TEMPLATES: Record<
 
 export default defineEventHandler(async (event) => {
   if (!event.path?.startsWith("/api/send-relance")) return;
+
+  // CORS — autorise les appels depuis le dashboard local (file://)
+  setResponseHeaders(event, {
+    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Methods": "POST, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type, Authorization",
+  });
+
+  // Preflight OPTIONS
+  if (event.method === "OPTIONS") return null;
+
   if (event.method !== "POST") return;
 
   // Auth : service role key dans le header
