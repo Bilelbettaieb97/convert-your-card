@@ -9,6 +9,7 @@ import {
 } from "@tanstack/react-router";
 import { type ReactNode, useEffect } from "react";
 import { Toaster } from "@/components/ui/sonner";
+import { CookieBanner } from "@/components/CookieBanner";
 
 import appCss from "../styles.css?url";
 
@@ -124,36 +125,12 @@ function RootShell({ children }: { children: ReactNode }) {
 function RootComponent() {
   const { queryClient } = Route.useRouteContext();
 
-  useEffect(() => {
-    // Google Analytics
-    const w = window as any;
-    w.dataLayer = w.dataLayer || [];
-    w.gtag = function (...args: any[]) { w.dataLayer.push(args); };
-    w.gtag("js", new Date());
-    w.gtag("config", "G-97N9NYKHD0");
-    const ga = document.createElement("script");
-    ga.async = true;
-    ga.src = "https://www.googletagmanager.com/gtag/js?id=G-97N9NYKHD0";
-    document.head.appendChild(ga);
-    // Meta Pixel
-    if (w.fbq) return;
-    const n: any = (w.fbq = function () {
-      n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments);
-    });
-    if (!w._fbq) w._fbq = n;
-    n.push = n; n.loaded = true; n.version = "2.0"; n.queue = [];
-    const fb = document.createElement("script");
-    fb.async = true;
-    fb.src = "https://connect.facebook.net/en_US/fbevents.js";
-    document.head.appendChild(fb);
-    w.fbq("init", "2460619001098990");
-    w.fbq("track", "PageView");
-  }, []);
 
   return (
     <QueryClientProvider client={queryClient}>
       <Outlet />
       <Toaster position="top-center" richColors />
+      <CookieBanner />
     </QueryClientProvider>
   );
 }
