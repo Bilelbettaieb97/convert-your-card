@@ -109,8 +109,17 @@ function StatistiquesPage() {
     if (!profile) { setLoading(false); return; }
 
     setCardUrl(`${window.location.origin}/${profile.slug}`);
-    setPlan(profile.plan ?? "free");
     setProfileId(profile.id);
+    // Lire le plan depuis la DB, pas depuis localStorage (évite le bypass via localStorage)
+    supabase.auth.getUser().then(async ({ data: { user } }) => {
+      if (!user) return;
+      const { data: p } = await supabase
+        .from("nfc_profiles")
+        .select("plan")
+        .eq("user_id", user.id)
+        .maybeSingle();
+      setPlan(p?.plan ?? "free");
+    });
 
     supabase.from("nfc_analytics")
       .select("event_type, created_at, event_data")

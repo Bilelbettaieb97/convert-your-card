@@ -141,7 +141,8 @@ function PricingPage() {
 
       // 3a. Essentielle → activation gratuite directe (bypass Stripe)
       if (planToUse === "essentielle") {
-        const { url } = await activateFree({ data: { email: user.email!, userId: user.id } });
+        const { data: { session } } = await supabase.auth.getSession();
+        const { url } = await activateFree({ data: { email: user.email!, accessToken: session?.access_token ?? "" } });
         if (url) navigate({ to: url as any });
         return;
       }

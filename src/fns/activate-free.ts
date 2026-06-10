@@ -4,7 +4,7 @@ import { createClient } from "@supabase/supabase-js";
 
 const schema = z.object({
   email: z.string().email(),
-  userId: z.string(),
+  accessToken: z.string().min(10),
 });
 
 function getFirstName(nom: string, email: string): string {
@@ -127,14 +127,24 @@ export const activateFree = createServerFn({ method: "POST" })
   .handler(async ({ data }) => {
     const supabaseUrl = process.env.SUPABASE_URL ?? process.env.VITE_SUPABASE_URL ?? "";
     const serviceKey = process.env.SUPABASE_SERVICE_ROLE_KEY ?? "";
+    const anonKey = process.env.VITE_SUPABASE_ANON_KEY ?? process.env.SUPABASE_PUBLISHABLE_KEY ?? "";
 
     if (!serviceKey) throw new Error("SUPABASE_SERVICE_ROLE_KEY not set");
+
+    // Vérifier l'identité du caller via son token JWT — ne jamais faire confiance au userId client
+    const userClient = createClient(supabaseUrl, anonKey, {
+      global: { headers: { Authorization: `Bearer ${data.accessToken}` } },
+      auth: { autoRefreshToken: false, persistSession: false },
+    });
+    const { data: { user: callerUser }, error: authError } = await userClient.auth.getUser();
+    if (authError || !callerUser) throw new Error("Unauthorized");
 
     const adminSupabase = createClient(supabaseUrl, serviceKey, {
       auth: { autoRefreshToken: false, persistSession: false },
     });
 
-    const { email, userId } = data;
+    const userId = callerUser.id;
+    const email = callerUser.email ?? data.email;
     const nom = email.split("@")[0];
 
     // Check existing profile
