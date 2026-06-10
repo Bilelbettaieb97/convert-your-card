@@ -74,9 +74,9 @@ ${logo()}
 <table cellpadding="0" cellspacing="0" border="0" width="100%" style="border-left:3px solid #7c3aed;background:#fafafa;border-radius:0 8px 8px 0;">
 <tr><td style="padding:16px 20px;">
 <p style="margin:0 0 10px;font-size:14px;font-weight:700;color:#0f0f14;">Ce qu'ils font maintenant :</p>
-<p style="margin:0 0 8px;font-size:14px;color:#374151;line-height:1.6;">→ Ils partagent leur lien en réponse à chaque demande de contact</p>
-<p style="margin:0 0 8px;font-size:14px;color:#374151;line-height:1.6;">→ Leur QR code est sur leur véhicule, leur vitrine, leurs supports</p>
-<p style="margin:0;font-size:14px;color:#374151;line-height:1.6;">→ Leurs anciens clients transmettent leurs coordonnées d'un tap</p>
+<p style="margin:0 0 8px;font-size:14px;color:#374151;line-height:1.6;">Ils partagent leur lien en réponse à chaque demande de contact.</p>
+<p style="margin:0 0 8px;font-size:14px;color:#374151;line-height:1.6;">Leur QR code est sur leur véhicule, leur vitrine, leurs supports.</p>
+<p style="margin:0;font-size:14px;color:#374151;line-height:1.6;">Leurs anciens clients transmettent leurs coordonnées d'un tap.</p>
 </td></tr>
 </table>
 </td></tr>

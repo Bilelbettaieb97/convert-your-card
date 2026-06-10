@@ -155,9 +155,9 @@ ${logo()}
 <table cellpadding="0" cellspacing="0" border="0" width="100%" style="background:#f9fafb;border-radius:10px;border:1px solid #f0f0f0;">
 <tr><td style="padding:18px 20px;">
 <p style="margin:0 0 10px;font-size:13px;font-weight:700;color:#0f0f14;">Ce que tu obtiens en terminant :</p>
-<p style="margin:0 0 8px;font-size:14px;color:#374151;line-height:1.6;">→ Un lien unique : <span style="color:#7c3aed;font-weight:600;">cartevisitedigitale.fr/ton-nom</span></p>
-<p style="margin:0 0 8px;font-size:14px;color:#374151;line-height:1.6;">→ Un QR code que tu peux partager ou imprimer</p>
-<p style="margin:0;font-size:14px;color:#374151;line-height:1.6;">→ Tes contacts dans le téléphone de tes clients en 1 tap</p>
+<p style="margin:0 0 8px;font-size:14px;color:#374151;line-height:1.6;">Un lien unique : <span style="color:#7c3aed;font-weight:600;">cartevisitedigitale.fr/ton-nom</span></p>
+<p style="margin:0 0 8px;font-size:14px;color:#374151;line-height:1.6;">Un QR code que tu peux partager ou imprimer</p>
+<p style="margin:0;font-size:14px;color:#374151;line-height:1.6;">Tes contacts dans le téléphone de tes clients en 1 tap</p>
 </td></tr>
 </table>
 </td></tr>
@@ -354,23 +354,23 @@ ${logo()}
 <table cellpadding="0" cellspacing="0" border="0" width="100%">
 <tr><td style="padding:10px 0;border-bottom:1px solid #e5e7eb;">
 <p style="margin:0 0 4px;font-size:13px;font-weight:700;color:#374151;text-decoration:line-through;opacity:0.6;">"Je n'ai pas le temps"</p>
-<p style="margin:0;font-size:13px;color:#374151;line-height:1.5;">→ 3 minutes chrono, montre en main. C'est moins long que de lire cet email.</p>
+<p style="margin:0;font-size:13px;color:#374151;line-height:1.5;">3 minutes chrono, montre en main. C'est moins long que de lire cet email.</p>
 </td></tr>
 <tr><td style="padding:10px 0;border-bottom:1px solid #e5e7eb;">
 <p style="margin:0 0 4px;font-size:13px;font-weight:700;color:#374151;text-decoration:line-through;opacity:0.6;">"Je ne suis pas sûr que ça marche pour mon secteur"</p>
-<p style="margin:0;font-size:13px;color:#374151;line-height:1.5;">→ 2 400+ pros l'utilisent : artisans, coachs, avocats, restaurateurs, consultants. Si ton secteur existe, ça marche.</p>
+<p style="margin:0;font-size:13px;color:#374151;line-height:1.5;">2 400+ pros l'utilisent : artisans, coachs, avocats, restaurateurs, consultants. Si ton secteur existe, ça marche.</p>
 </td></tr>
 <tr><td style="padding:10px 0;border-bottom:1px solid #e5e7eb;">
 <p style="margin:0 0 4px;font-size:13px;font-weight:700;color:#374151;text-decoration:line-through;opacity:0.6;">"C'est payant, je ne veux pas m'engager"</p>
-<p style="margin:0;font-size:13px;color:#374151;line-height:1.5;">→ Le plan Essentielle est <strong>gratuit pour toujours</strong>. Aucune CB, aucun engagement, aucune date d'expiration.</p>
+<p style="margin:0;font-size:13px;color:#374151;line-height:1.5;">Le plan Essentielle est <strong>gratuit pour toujours</strong>. Aucune CB, aucun engagement, aucune date d'expiration.</p>
 </td></tr>
 <tr><td style="padding:10px 0;border-bottom:1px solid #e5e7eb;">
 <p style="margin:0 0 4px;font-size:13px;font-weight:700;color:#374151;text-decoration:line-through;opacity:0.6;">"J'attends d'avoir une belle photo"</p>
-<p style="margin:0;font-size:13px;color:#374151;line-height:1.5;">→ Tu peux activer ta carte sans photo et en ajouter une après. Les infos comptent plus que la photo.</p>
+<p style="margin:0;font-size:13px;color:#374151;line-height:1.5;">Tu peux activer ta carte sans photo et en ajouter une après. Les infos comptent plus que la photo.</p>
 </td></tr>
 <tr><td style="padding:10px 0;">
 <p style="margin:0 0 4px;font-size:13px;font-weight:700;color:#374151;text-decoration:line-through;opacity:0.6;">"Je le ferai quand j'aurai plus de temps"</p>
-<p style="margin:0;font-size:13px;color:#374151;line-height:1.5;">→ Tu avais le temps quand tu t'es inscrit. Tu l'as maintenant. Demain ressemble à aujourd'hui.</p>
+<p style="margin:0;font-size:13px;color:#374151;line-height:1.5;">Tu avais le temps quand tu t'es inscrit. Tu l'as maintenant. Demain ressemble à aujourd'hui.</p>
 </td></tr>
 </table>
 </td></tr>

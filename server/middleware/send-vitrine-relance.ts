@@ -497,13 +497,13 @@ ${badge("Questions directes")}
 <table cellpadding="0" cellspacing="0" border="0" width="100%" style="background:#f9fafb;border-radius:10px;border:1px solid #f0f0f0;">
 <tr><td style="padding:20px 22px;">
 <p style="margin:0 0 14px;font-size:14px;font-weight:700;color:#374151;padding-bottom:12px;border-bottom:1px solid #e5e7eb;">"C'est cher pour ce que c'est."</p>
-<p style="margin:0 0 18px;font-size:14px;color:#374151;line-height:1.6;">→ 0,16€/jour. Moins qu'un café. Et une carte Vitrine qui décroche un seul client de plus rembourse l'abonnement pour toute l'année.</p>
+<p style="margin:0 0 18px;font-size:14px;color:#374151;line-height:1.6;">C'est 0,16€ par jour. Moins qu'un café. Et si Vitrine vous fait décrocher un seul client de plus, l'abonnement est remboursé pour toute l'année.</p>
 
 <p style="margin:0 0 14px;font-size:14px;font-weight:700;color:#374151;padding-bottom:12px;border-bottom:1px solid #e5e7eb;">"Ma carte actuelle me convient."</p>
-<p style="margin:0 0 18px;font-size:14px;color:#374151;line-height:1.6;">→ Si vous ne savez pas combien de personnes visitent votre carte, ni ce qu'ils font dessus, elle ne vous "convient" pas — vous n'avez tout simplement pas les données pour le savoir.</p>
+<p style="margin:0 0 18px;font-size:14px;color:#374151;line-height:1.6;">Si vous ne savez pas combien de personnes visitent votre carte, ni ce qu'ils font dessus, elle ne vous "convient" pas — vous n'avez tout simplement pas les données pour le savoir.</p>
 
 <p style="margin:0 0 14px;font-size:14px;font-weight:700;color:#374151;padding-bottom:12px;border-bottom:1px solid #e5e7eb;">"Je n'en ai pas vraiment besoin maintenant."</p>
-<p style="margin:0;font-size:14px;color:#374151;line-height:1.6;">→ Chaque semaine sans analytics, sans section Services, sans thème différenciant, c'est une semaine où votre carte est moins efficace qu'elle pourrait l'être. Il n'y a pas de "bon moment" pour améliorer son image professionnelle.</p>
+<p style="margin:0;font-size:14px;color:#374151;line-height:1.6;">Chaque semaine sans analytics, sans section Services, sans thème différenciant, c'est une semaine où votre carte est moins efficace qu'elle pourrait l'être. Il n'y a pas de "bon moment" pour améliorer son image professionnelle.</p>
 </td></tr>
 </table>
 </td></tr>
@@ -578,23 +578,23 @@ ${badge("Ce que vous ne montrez pas")}
 <table cellpadding="0" cellspacing="0" border="0" width="100%">
 <tr><td style="padding:10px 0;border-bottom:1px solid #e5e7eb;">
 <p style="margin:0 0 4px;font-size:14px;font-weight:700;color:#7c3aed;">1. Section Services</p>
-<p style="margin:0;font-size:13px;color:#6b7280;line-height:1.5;">→ Sans elle, le prospect ne sait pas exactement ce que vous faites. Il suppose. Et souvent, il part chercher ailleurs.</p>
+<p style="margin:0;font-size:13px;color:#6b7280;line-height:1.5;">Sans elle, le prospect ne sait pas exactement ce que vous faites. Il suppose. Et souvent, il part chercher ailleurs.</p>
 </td></tr>
 <tr><td style="padding:10px 0;border-bottom:1px solid #e5e7eb;">
 <p style="margin:0 0 4px;font-size:14px;font-weight:700;color:#7c3aed;">2. Galerie photos</p>
-<p style="margin:0;font-size:13px;color:#6b7280;line-height:1.5;">→ Les gens achètent ce qu'ils voient. Votre travail mérite d'être montré — pas juste décrit.</p>
+<p style="margin:0;font-size:13px;color:#6b7280;line-height:1.5;">Les gens achètent ce qu'ils voient. Votre travail mérite d'être montré — pas juste décrit.</p>
 </td></tr>
 <tr><td style="padding:10px 0;border-bottom:1px solid #e5e7eb;">
 <p style="margin:0 0 4px;font-size:14px;font-weight:700;color:#7c3aed;">3. Témoignages clients</p>
-<p style="margin:0;font-size:13px;color:#6b7280;line-height:1.5;">→ Un avis d'un client vaut 10 fois votre discours commercial. C'est la section qui rassure le plus.</p>
+<p style="margin:0;font-size:13px;color:#6b7280;line-height:1.5;">Un avis client vaut 10 fois votre discours commercial. C'est la section qui rassure le plus.</p>
 </td></tr>
 <tr><td style="padding:10px 0;border-bottom:1px solid #e5e7eb;">
 <p style="margin:0 0 4px;font-size:14px;font-weight:700;color:#7c3aed;">4. Bouton Calendly / Prise de RDV</p>
-<p style="margin:0;font-size:13px;color:#6b7280;line-height:1.5;">→ Moins il y a de friction pour vous contacter, plus les gens passent à l'action. Un bouton "Réserver un appel" change tout.</p>
+<p style="margin:0;font-size:13px;color:#6b7280;line-height:1.5;">Moins il y a de friction pour vous contacter, plus les gens passent à l'action. Un bouton "Réserver un appel" change tout.</p>
 </td></tr>
 <tr><td style="padding:10px 0;">
 <p style="margin:0 0 4px;font-size:14px;font-weight:700;color:#7c3aed;">5. Portfolio / Projets</p>
-<p style="margin:0;font-size:13px;color:#6b7280;line-height:1.5;">→ Pour les métiers créatifs, artisans, consultants : montrer des réalisations concrètes crée une confiance immédiate.</p>
+<p style="margin:0;font-size:13px;color:#6b7280;line-height:1.5;">Pour les métiers créatifs, artisans, consultants : montrer des réalisations concrètes crée une confiance immédiate.</p>
 </td></tr>
 </table>
 </td></tr>
