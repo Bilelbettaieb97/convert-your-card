@@ -1,11 +1,10 @@
 import { defineEventHandler, readBody, getHeader } from "h3";
 import { createClient } from "@supabase/supabase-js";
-import { createRequire } from "module";
-const _require = createRequire(import.meta.url);
-const disposableDomains: string[] = _require("disposable-email-domains");
+import disposableDomains from "disposable-email-domains";
+
 function isDisposableEmail(email: string): boolean {
   const domain = email.split("@")[1]?.toLowerCase().trim();
-  return domain ? disposableDomains.includes(domain) : false;
+  return domain ? (disposableDomains as string[]).includes(domain) : false;
 }
 
 // Rate limiting : 5 inscriptions par IP par heure (best-effort sur instances chaudes)
