@@ -2,7 +2,7 @@ import { defineEventHandler, getQuery } from "h3";
 import { createClient } from "@supabase/supabase-js";
 
 export default defineEventHandler(async (event) => {
-  if (event.path !== "/api/builder-relance-click" || event.method !== "GET") return;
+  if (!event.path?.startsWith("/api/builder-relance-click") || event.method !== "GET") return;
 
   const { t: token } = getQuery(event);
   if (!token) return new Response("Missing token", { status: 400 });
