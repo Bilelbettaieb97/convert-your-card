@@ -25,6 +25,7 @@ import { Route as ConfidentialiteRouteImport } from './routes/confidentialite'
 import { Route as CgvRouteImport } from './routes/cgv'
 import { Route as CguRouteImport } from './routes/cgu'
 import { Route as CartePhysiqueRouteImport } from './routes/carte-physique'
+import { Route as BuilderiaRouteImport } from './routes/builderia'
 import { Route as BuilderRouteImport } from './routes/builder'
 import { Route as BienvenueRouteImport } from './routes/bienvenue'
 import { Route as SlugRouteImport } from './routes/$slug'
@@ -138,6 +139,11 @@ const CguRoute = CguRouteImport.update({
 const CartePhysiqueRoute = CartePhysiqueRouteImport.update({
   id: '/carte-physique',
   path: '/carte-physique',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const BuilderiaRoute = BuilderiaRouteImport.update({
+  id: '/builderia',
+  path: '/builderia',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BuilderRoute = BuilderRouteImport.update({
@@ -318,6 +324,7 @@ export interface FileRoutesByFullPath {
   '/$slug': typeof SlugRoute
   '/bienvenue': typeof BienvenueRoute
   '/builder': typeof BuilderRoute
+  '/builderia': typeof BuilderiaRoute
   '/carte-physique': typeof CartePhysiqueRoute
   '/cgu': typeof CguRoute
   '/cgv': typeof CgvRoute
@@ -370,6 +377,7 @@ export interface FileRoutesByTo {
   '/$slug': typeof SlugRoute
   '/bienvenue': typeof BienvenueRoute
   '/builder': typeof BuilderRoute
+  '/builderia': typeof BuilderiaRoute
   '/carte-physique': typeof CartePhysiqueRoute
   '/cgu': typeof CguRoute
   '/cgv': typeof CgvRoute
@@ -420,6 +428,7 @@ export interface FileRoutesById {
   '/$slug': typeof SlugRoute
   '/bienvenue': typeof BienvenueRoute
   '/builder': typeof BuilderRoute
+  '/builderia': typeof BuilderiaRoute
   '/carte-physique': typeof CartePhysiqueRoute
   '/cgu': typeof CguRoute
   '/cgv': typeof CgvRoute
@@ -474,6 +483,7 @@ export interface FileRouteTypes {
     | '/$slug'
     | '/bienvenue'
     | '/builder'
+    | '/builderia'
     | '/carte-physique'
     | '/cgu'
     | '/cgv'
@@ -526,6 +536,7 @@ export interface FileRouteTypes {
     | '/$slug'
     | '/bienvenue'
     | '/builder'
+    | '/builderia'
     | '/carte-physique'
     | '/cgu'
     | '/cgv'
@@ -575,6 +586,7 @@ export interface FileRouteTypes {
     | '/$slug'
     | '/bienvenue'
     | '/builder'
+    | '/builderia'
     | '/carte-physique'
     | '/cgu'
     | '/cgv'
@@ -628,6 +640,7 @@ export interface RootRouteChildren {
   SlugRoute: typeof SlugRoute
   BienvenueRoute: typeof BienvenueRoute
   BuilderRoute: typeof BuilderRoute
+  BuilderiaRoute: typeof BuilderiaRoute
   CartePhysiqueRoute: typeof CartePhysiqueRoute
   CguRoute: typeof CguRoute
   CgvRoute: typeof CgvRoute
@@ -760,6 +773,13 @@ declare module '@tanstack/react-router' {
       path: '/carte-physique'
       fullPath: '/carte-physique'
       preLoaderRoute: typeof CartePhysiqueRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/builderia': {
+      id: '/builderia'
+      path: '/builderia'
+      fullPath: '/builderia'
+      preLoaderRoute: typeof BuilderiaRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/builder': {
@@ -1093,6 +1113,7 @@ const rootRouteChildren: RootRouteChildren = {
   SlugRoute: SlugRoute,
   BienvenueRoute: BienvenueRoute,
   BuilderRoute: BuilderRoute,
+  BuilderiaRoute: BuilderiaRoute,
   CartePhysiqueRoute: CartePhysiqueRoute,
   CguRoute: CguRoute,
   CgvRoute: CgvRoute,
