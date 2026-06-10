@@ -49,7 +49,18 @@ const STEP_LABELS: Record<Step, string> = {
 
 function BuilderPage() {
   const { data, setData, update, hydrated } = useCardStore();
-  const { user } = useAuthStore();
+  const { user, loading } = useAuthStore();
+  const navigate = useNavigate();
+
+  useEffect(() => {
+    if (!loading && !user) navigate({ to: "/connexion" });
+  }, [loading, user, navigate]);
+
+  if (loading || !user) return (
+    <div className="min-h-screen bg-background flex items-center justify-center">
+      <div className="w-8 h-8 rounded-full border-2 border-primary border-t-transparent animate-spin" />
+    </div>
+  );
   const [step, setStep] = useState<Step>("intro");
   const [plan, setPlan] = useState<VariantId>("vitrine");
   const [completedThrough, setCompletedThrough] = useState<StepNum>(1);
