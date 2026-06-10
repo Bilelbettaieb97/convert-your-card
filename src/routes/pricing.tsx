@@ -14,6 +14,7 @@ import { UpsellSection } from "@/components/dashboard/UpsellSection";
 import { useCardStore } from "@/lib/card-store";
 import { createCard, loadMyCard } from "@/lib/card-actions";
 import { createCheckoutSession } from "@/fns/checkout";
+import { activateFree } from "@/fns/activate-free";
 import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 
@@ -21,9 +22,9 @@ export const Route = createFileRoute("/pricing")({
   head: () => ({
     meta: [
       { title: "Tarifs — Carte de visite digitale | CVD" },
-      { name: "description", content: "Choisissez votre plan CVD : Essentielle à 8,16€/mois ou Vitrine à 13,16€/mois. Carte NFC physique à 29€. Essai gratuit 7 jours. Sans engagement, annulable à tout moment." },
+      { name: "description", content: "Choisissez votre plan CVD : Essentielle gratuit ou Vitrine à 4,80€/mois. Carte NFC physique à 29€. Essai gratuit 7 jours sur Vitrine. Sans engagement, annulable à tout moment." },
       { property: "og:title", content: "Tarifs & Plans — Carte de visite digitale CVD" },
-      { property: "og:description", content: "Essentielle 8,16€/mois · Vitrine 13,16€/mois · Carte NFC 29€. Essai gratuit 7 jours. Sans engagement." },
+      { property: "og:description", content: "Essentielle Gratuit · Vitrine 4,80€/mois. Essai gratuit 7 jours. Sans engagement." },
       { property: "og:type", content: "website" },
       { property: "og:url", content: "https://cartevisitedigitale.fr/pricing" },
       { property: "og:site_name", content: "CVD — Carte de visite digitale" },
@@ -31,7 +32,7 @@ export const Route = createFileRoute("/pricing")({
       { property: "og:image", content: "https://cartevisitedigitale.fr/og-image.jpg" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: "Tarifs CVD — Carte de visite digitale" },
-      { name: "twitter:description", content: "Essentielle 8,16€/mois · Vitrine 13,16€/mois · Carte NFC 29€. Essai gratuit 7 jours." },
+      { name: "twitter:description", content: "Essentielle Gratuit · Vitrine 4,80€/mois. Essai gratuit 7 jours." },
     ],
     links: [{ rel: "canonical", href: "https://cartevisitedigitale.fr/pricing" }],
   }),
@@ -56,18 +57,17 @@ const PLANS: Plan[] = [
   {
     id: "essentielle",
     label: "Essentielle",
-    tagline: "Le minimum pour être joignable.",
-    monthly: 9.8,
-    yearlyMonthly: 8.16,    // 2 mois offerts ≈ 9.80 * 10 / 12
-    ctaLabel: () => "Choisir Essentielle",
+    tagline: "Le minimum pour être joignable. Gratuit pour toujours.",
+    monthly: 0,
+    yearlyMonthly: 0,
+    ctaLabel: () => "Commencer gratuitement",
   },
   {
     id: "vitrine",
     label: "Vitrine",
     tagline: "Pour vendre votre savoir-faire et convertir vos visiteurs.",
-    monthly: 15.8,
-    yearlyMonthly: 13.16,
-    oldMonthly: 19.8,
+    monthly: 4.8,
+    yearlyMonthly: 4.0,
     trial: 7,
     ctaLabel: (b) =>
       b === "yearly" ? "Démarrer — 7 jours gratuits" : "Démarrer 7 jours gratuits",
@@ -97,11 +97,11 @@ const TESTIMONIALS = [
 ];
 
 const FAQ = [
-  { q: "Que se passe-t-il après les 7 jours d'essai ?", a: "Vous êtes prélevé du montant du plan choisi. Vous pouvez annuler à tout moment depuis votre dashboard, en 1 clic, avant la fin de l'essai — sans aucun prélèvement." },
-  { q: "Puis-je changer de plan plus tard ?", a: "Oui, vous pouvez passer d'Essentielle à Vitrine (ou inversement) à tout moment depuis votre compte. La différence est calculée au prorata." },
-  { q: "Mes données sont-elles sauvegardées si j'annule ?", a: "Oui. Votre carte est mise en pause mais conservée 6 mois. Vous pouvez la réactiver à tout moment sans rien re-remplir." },
+  { q: "Le plan Essentielle est-il vraiment gratuit ?", a: "Oui, 100 % gratuit et sans limite de durée. Aucune carte bancaire requise. Vous gardez votre carte en ligne tant que vous le souhaitez." },
+  { q: "Que se passe-t-il après les 7 jours d'essai Vitrine ?", a: "Vous êtes prélevé de 4,80 € / mois. Vous pouvez annuler à tout moment depuis votre dashboard, en 1 clic, avant la fin de l'essai — sans aucun prélèvement." },
+  { q: "Puis-je passer de Gratuit à Vitrine plus tard ?", a: "Oui, vous pouvez passer au plan Vitrine à tout moment depuis votre dashboard. L'essai 7 jours s'applique si vous n'avez jamais souscrit." },
+  { q: "Mes données sont-elles sauvegardées si j'annule Vitrine ?", a: "Oui. Votre carte repasse en plan Gratuit mais reste accessible et modifiable. Rien n'est supprimé." },
   { q: "Mon lien public change si je modifie ma carte ?", a: "Non. Votre lien et votre QR code restent identiques à vie, même si vous modifiez vos informations." },
-  { q: "Y a-t-il un engagement ?", a: "Aucun. Mensuel ou annuel, vous annulez quand vous voulez. L'annuel offre simplement 2 mois gratuits par rapport au mensuel." },
 ];
 
 function PricingPage() {
@@ -128,14 +128,21 @@ function PricingPage() {
         await createCard(cardData);
       }
 
-      // 3. Create Stripe checkout session → redirect
+      // 3a. Essentielle → activation gratuite directe (bypass Stripe)
+      if (planToUse === "essentielle") {
+        const { url } = await activateFree({ data: { email: user.email!, userId: user.id } });
+        if (url) navigate({ to: url as any });
+        return;
+      }
+
+      // 3b. Vitrine → Stripe checkout
       const { url } = await createCheckoutSession({
         data: { plan: planToUse, billing, email: user.email! },
       });
       if (url) window.location.href = url;
     } catch (err) {
       console.error("[handleActivate]", err);
-      toast.error(err instanceof Error ? err.message : "Erreur lors du paiement");
+      toast.error(err instanceof Error ? err.message : "Erreur lors de l'activation");
     } finally {
       setCreating(null);
     }
@@ -147,7 +154,9 @@ function PricingPage() {
   const trialEndLabel = trialEnd.toLocaleDateString("fr-FR", { day: "numeric", month: "long" });
 
   const selectedPlan = PLANS.find((p) => p.id === selected)!;
-  const dailyCost = (selectedPlan.yearlyMonthly / 30).toFixed(2).replace(".", ",");
+  const dailyCost = selectedPlan.monthly > 0
+    ? (selectedPlan.yearlyMonthly / 30).toFixed(2).replace(".", ",")
+    : null;
 
   return (
     <main className="min-h-screen bg-background text-foreground pb-32">
@@ -201,9 +210,9 @@ function PricingPage() {
             </span>
           </button>
         </div>
-        {billing === "yearly" && (
+        {billing === "yearly" && selected !== "essentielle" && (
           <p className="mt-2 text-xs text-emerald-700 dark:text-emerald-400 font-medium">
-            Économisez 2 mois par an en payant à l'année — soit jusqu'à 31,60 € d'économie.
+            Économisez 2 mois par an en payant à l'année — soit jusqu'à 9,60 € d'économie.
           </p>
         )}
       </section>
@@ -260,19 +269,22 @@ function PricingPage() {
                 <p className="text-sm text-muted-foreground mt-1 mb-5">{p.tagline}</p>
 
                 <div className="flex items-baseline gap-2 mb-1 flex-wrap">
-                  {isHighlight && p.oldMonthly && (
-                    <span className="text-muted-foreground line-through text-lg">
-                      {p.oldMonthly.toFixed(2).replace(".", ",")} €
-                    </span>
+                  {p.monthly === 0 ? (
+                    <span className="font-display tabular-nums text-3xl">Gratuit</span>
+                  ) : (
+                    <>
+                      <span className={`font-display tabular-nums ${isHighlight ? "text-5xl" : "text-3xl"}`}>
+                        {priceStr}
+                      </span>
+                      <span className="text-muted-foreground text-sm">€ / mois</span>
+                    </>
                   )}
-                  <span className={`font-display tabular-nums ${isHighlight ? "text-5xl" : "text-3xl"}`}>
-                    {priceStr}
-                  </span>
-                  <span className="text-muted-foreground text-sm">€ / mois</span>
                 </div>
 
                 <div className="min-h-[36px] text-xs mb-4 space-y-0.5">
-                  {billing === "yearly" ? (
+                  {p.monthly === 0 ? (
+                    <div className="text-muted-foreground">Aucune carte bancaire requise</div>
+                  ) : billing === "yearly" ? (
                     <>
                       <div className="text-muted-foreground">
                         Soit <span className="text-foreground font-medium">{yearlyTotal} € / an</span> · facturé une fois
@@ -285,13 +297,11 @@ function PricingPage() {
                   ) : (
                     <div className="text-muted-foreground">Facturation mensuelle, sans engagement</div>
                   )}
-                  {p.trial ? (
+                  {p.monthly > 0 && p.trial && (
                     <div className="inline-flex items-center gap-1 text-emerald-700 dark:text-emerald-400 font-medium">
                       <Clock className="h-3 w-3" />
                       Gratuit jusqu'au {trialEndLabel}, puis {priceStr} €/mois
                     </div>
-                  ) : (
-                    <div className="text-muted-foreground">Paiement immédiat · pas de période d'essai</div>
                   )}
                 </div>
 
@@ -343,11 +353,19 @@ function PricingPage() {
 
       {/* Value framing */}
       <section className="mx-auto max-w-5xl px-5 pb-10 grid grid-cols-1 sm:grid-cols-3 gap-3">
-        <ValueBlock
-          icon={<Coffee className="h-4 w-4" />}
-          title={`Moins de ${dailyCost} € / jour`}
-          desc="Le prix d'un café par semaine pour une carte qui travaille pour vous 24h/24."
-        />
+        {dailyCost ? (
+          <ValueBlock
+            icon={<Coffee className="h-4 w-4" />}
+            title={`Moins de ${dailyCost} € / jour`}
+            desc="Le prix d'un café par semaine pour une carte qui travaille pour vous 24h/24."
+          />
+        ) : (
+          <ValueBlock
+            icon={<Coffee className="h-4 w-4" />}
+            title="100 % gratuit"
+            desc="Aucun prélèvement, aucune carte bancaire. Votre carte en ligne pour toujours."
+          />
+        )}
         <ValueBlock
           icon={<TrendingUp className="h-4 w-4" />}
           title="1 client = ROI atteint"
@@ -462,8 +480,9 @@ function PricingPage() {
               ) : (
                 <>
                   <ShieldCheck className="h-3 w-3 text-primary" />
-                  <span className="hidden sm:inline">Paiement immédiat sécurisé</span>
-                  <span className="sm:hidden">Paiement sécurisé</span>
+                  <span className="text-emerald-700 dark:text-emerald-400 font-medium">Gratuit pour toujours</span>
+                  <span className="hidden sm:inline">·</span>
+                  <span className="hidden sm:inline">Aucune carte bancaire</span>
                 </>
               )}
             </div>
@@ -479,10 +498,10 @@ function PricingPage() {
             ) : selected === "vitrine" ? (
               <>
                 <Rocket className="h-4 w-4 mr-2" />
-                Activer gratuitement
+                Démarrer 7 jours gratuits
               </>
             ) : (
-              <>Activer ma carte</>
+              <>Commencer gratuitement</>
             )}
           </Button>
         </div>
