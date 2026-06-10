@@ -48,7 +48,7 @@ export function CookieBanner() {
       requestAnimationFrame(() =>
         requestAnimationFrame(() => setVisible(true))
       );
-    }, 1200);
+    }, 1500);
     return () => clearTimeout(timer);
   }, []);
 
@@ -63,31 +63,46 @@ export function CookieBanner() {
 
   return (
     <div
-      className={`fixed bottom-4 left-4 right-4 md:left-auto md:right-6 md:max-w-sm z-50 transition-all duration-500 ease-out ${
-        visible ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"
+      className={`fixed bottom-0 left-0 right-0 z-50 transition-all duration-500 ease-out ${
+        visible ? "translate-y-0 opacity-100" : "translate-y-full opacity-0"
       }`}
     >
-      <div className="rounded-2xl border border-border bg-background/95 backdrop-blur-md shadow-xl p-4">
-        <p className="text-sm text-muted-foreground leading-relaxed">
-          On utilise des cookies analytiques et publicitaires pour améliorer le site.{" "}
-          <a href="/cookies" className="text-[#c026d3] hover:underline whitespace-nowrap">
+      <div className="bg-background border-t border-border shadow-2xl px-5 py-5 md:px-8 md:py-6 max-w-3xl mx-auto md:mb-4 md:rounded-2xl md:border md:shadow-2xl">
+
+        {/* Header */}
+        <div className="flex items-start justify-between gap-4 mb-3">
+          <p className="text-base font-bold text-foreground leading-snug">
+            Salut, c'est nous… les cookies ! 🍪
+          </p>
+          <button
+            onClick={() => dismiss("refused")}
+            className="text-xs text-muted-foreground hover:text-foreground underline underline-offset-2 transition-colors whitespace-nowrap shrink-0 mt-0.5"
+          >
+            Continuer sans accepter
+          </button>
+        </div>
+
+        {/* Body */}
+        <p className="text-sm text-muted-foreground leading-relaxed mb-4">
+          On a attendu d'être sûrs que le site t'intéresse avant de te déranger, mais on aimerait bien t'accompagner pendant ta visite… C'est OK pour toi ?{" "}
+          <a href="/cookies" className="text-[#c026d3] hover:underline">
             En savoir plus
           </a>
         </p>
-        <div className="flex gap-2 mt-3">
-          <button
-            onClick={() => dismiss("refused")}
-            className="flex-1 text-sm rounded-xl border border-border px-3 py-2 text-muted-foreground hover:text-foreground hover:border-foreground/30 transition-colors"
-          >
-            Refuser
-          </button>
+
+        {/* Footer note + CTA */}
+        <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3">
+          <p className="text-xs text-muted-foreground/70">
+            Tu peux modifier tes préférences à tout moment via le lien "Cookies" en bas de page.
+          </p>
           <button
             onClick={() => dismiss("accepted")}
-            className="flex-1 text-sm rounded-xl bg-gradient-to-r from-[#c026d3] to-[#7c3aed] text-white font-medium px-3 py-2 hover:opacity-90 transition-opacity"
+            className="shrink-0 rounded-xl bg-gradient-to-r from-[#c026d3] to-[#7c3aed] text-white text-sm font-semibold px-5 py-2.5 hover:opacity-90 transition-opacity"
           >
-            Accepter
+            Accepter les cookies ✨
           </button>
         </div>
+
       </div>
     </div>
   );
