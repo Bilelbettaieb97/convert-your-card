@@ -1,7 +1,6 @@
 import { defineEventHandler, getHeader } from "h3";
 import { createClient } from "@supabase/supabase-js";
 
-// Days after the trigger date before sending each step
 const NC_DELAYS: Record<number, number> = { 1: 1, 2: 4, 3: 8 };
 const BR_DELAYS: Record<number, number> = { 1: 1, 2: 3, 3: 6, 4: 10, 5: 14, 6: 21 };
 
@@ -10,10 +9,26 @@ function daysSince(ts: string | null | undefined): number {
   return (Date.now() - new Date(ts).getTime()) / 86_400_000;
 }
 
+async function sendAlertEmail(resendKey: string, subject: string, body: string) {
+  await fetch("https://api.resend.com/emails", {
+    method: "POST",
+    headers: { Authorization: `Bearer ${resendKey}`, "Content-Type": "application/json" },
+    body: JSON.stringify({
+      from: "CVD Monitoring <contact@cartevisitedigitale.fr>",
+      to: "convertilab@gmail.com",
+      subject,
+      html: `<div style="font-family:sans-serif;max-width:560px;margin:0 auto;padding:32px 20px;">
+        <h2 style="color:#dc2626;margin:0 0 16px">⚠️ CVD — Alerte email automatique</h2>
+        <div style="background:#fef2f2;border:1px solid #fecaca;border-radius:8px;padding:16px 20px;font-size:14px;line-height:1.7;color:#374151;">${body}</div>
+        <p style="margin:16px 0 0;font-size:12px;color:#9ca3af;">Envoyé automatiquement par le cron cartevisitedigitale.fr</p>
+      </div>`,
+    }),
+  });
+}
+
 export default defineEventHandler(async (event) => {
   if (!event.path?.startsWith("/api/cron-daily")) return;
 
-  // Vercel cron automatically sends Authorization: Bearer <CRON_SECRET>
   const cronSecret = process.env.CRON_SECRET ?? "";
   const auth = getHeader(event, "authorization") ?? "";
   if (!cronSecret || auth !== `Bearer ${cronSecret}`) {
@@ -23,6 +38,7 @@ export default defineEventHandler(async (event) => {
   const supabaseUrl = process.env.SUPABASE_URL ?? process.env.VITE_SUPABASE_URL ?? "";
   const serviceKey  = process.env.SUPABASE_SERVICE_ROLE_KEY ?? "";
   const appUrl      = process.env.VITE_APP_URL ?? "https://www.cartevisitedigitale.fr";
+  const resendKey   = process.env.RESEND_API_KEY ?? "";
 
   if (!serviceKey) {
     return new Response(JSON.stringify({ error: "SUPABASE_SERVICE_ROLE_KEY not set" }), { status: 500 });
@@ -32,71 +48,140 @@ export default defineEventHandler(async (event) => {
     auth: { autoRefreshToken: false, persistSession: false },
   });
 
-  const { data: users, error } = await admin.rpc("get_user_funnel");
-  if (error || !users) {
-    console.error("[cron-daily] Failed to fetch users:", error);
-    return new Response(JSON.stringify({ error: "Failed to fetch users" }), { status: 500 });
+  // ── Watchdog : vérifier la dernière exécution ─────────────────────────────
+  if (resendKey) {
+    const { data: lastLogs } = await admin
+      .from("cron_execution_logs")
+      .select("ran_at, errors")
+      .order("ran_at", { ascending: false })
+      .limit(1);
+
+    if (lastLogs && lastLogs.length > 0) {
+      const last = lastLogs[0];
+      const hoursSince = (Date.now() - new Date(last.ran_at).getTime()) / 3_600_000;
+
+      if (hoursSince > 25) {
+        await sendAlertEmail(
+          resendKey,
+          "⚠️ CVD Cron — exécution manquée",
+          `Le cron n'a pas tourné depuis <strong>${Math.round(hoursSince)}h</strong>.<br>
+           Dernière exécution : <strong>${new Date(last.ran_at).toLocaleString("fr-FR", { timeZone: "Europe/Paris" })}</strong><br>
+           Des emails ont peut-être été manqués.`
+        ).catch(console.error);
+      } else if (last.errors) {
+        await sendAlertEmail(
+          resendKey,
+          "⚠️ CVD Cron — erreur à la dernière exécution",
+          `La dernière exécution (${new Date(last.ran_at).toLocaleString("fr-FR", { timeZone: "Europe/Paris" })}) a retourné une erreur :<br><br>
+           <code style="background:#f3f4f6;padding:4px 8px;border-radius:4px;">${last.errors}</code>`
+        ).catch(console.error);
+      }
+    }
   }
 
+  const startTime = Date.now();
   const results: Record<string, number> = {};
-  const authHeader = { "Content-Type": "application/json", Authorization: `Bearer ${serviceKey}` };
+  let cronError: string | null = null;
 
-  // ── Série email non cliqué (J+1 / J+4 / J+8) ──────────────────────────
-  const nonCliques = users.filter((r: any) => !r.email_confirme_le);
+  try {
+    const { data: users, error } = await admin.rpc("get_user_funnel");
+    if (error || !users) throw new Error(error?.message ?? "get_user_funnel returned null");
 
-  for (const [stepStr, minDays] of Object.entries(NC_DELAYS)) {
-    const step = Number(stepStr);
-    const toSend = nonCliques.filter((r: any) =>
-      daysSince(r.inscrit_le) >= minDays &&
-      (!r.relance_step || r.relance_step < step)
-    );
-    if (toSend.length === 0) continue;
+    const authHeader = { "Content-Type": "application/json", Authorization: `Bearer ${serviceKey}` };
 
-    console.log(`[cron-daily] NC step ${step}: ${toSend.length} destinataire(s)`);
-    const resp = await fetch(`${appUrl}/api/send-relance`, {
-      method: "POST",
-      headers: authHeader,
-      body: JSON.stringify({
-        users: toSend.map((r: any) => ({ user_id: r.user_id, email: r.email })),
-        step,
-      }),
-    });
-    const result = await resp.json().catch(() => ({}));
-    results[`nc_step_${step}`] = result.sent ?? 0;
-  }
+    // ── Série email non cliqué (J+1 / J+4 / J+8) ───────────────────────────
+    const nonCliques = users.filter((r: any) => !r.email_confirme_le);
 
-  // ── Série builder (J+1 / J+3 / J+6 / J+10 / J+14 / J+21) ─────────────
-  const builder = users.filter((r: any) => r.email_confirme_le && !r.plan);
+    for (const [stepStr, minDays] of Object.entries(NC_DELAYS)) {
+      const step = Number(stepStr);
+      const toSend = nonCliques.filter((r: any) =>
+        daysSince(r.inscrit_le) >= minDays &&
+        (!r.relance_step || r.relance_step < step)
+      );
+      if (toSend.length === 0) continue;
 
-  for (const [stepStr, minDays] of Object.entries(BR_DELAYS)) {
-    const step = Number(stepStr);
-    const toSend = builder.filter((r: any) =>
-      daysSince(r.email_confirme_le) >= minDays &&
-      (!r.builder_relance_step || r.builder_relance_step < step)
-    );
-    if (toSend.length === 0) continue;
+      console.log(`[cron-daily] NC step ${step}: ${toSend.length} destinataire(s)`);
+      const resp = await fetch(`${appUrl}/api/send-relance`, {
+        method: "POST",
+        headers: authHeader,
+        body: JSON.stringify({
+          users: toSend.map((r: any) => ({ user_id: r.user_id, email: r.email })),
+          step,
+        }),
+      });
+      const result = await resp.json().catch(() => ({}));
+      results[`nc_step_${step}`] = result.sent ?? 0;
+    }
 
-    console.log(`[cron-daily] Builder step ${step}: ${toSend.length} destinataire(s)`);
-    const resp = await fetch(`${appUrl}/api/send-builder-relance`, {
-      method: "POST",
-      headers: authHeader,
-      body: JSON.stringify({
-        users: toSend.map((r: any) => ({
-          user_id: r.user_id,
-          email: r.email,
-          builder_step: r.builder_step ?? 1,
-        })),
-        step,
-      }),
-    });
-    const result = await resp.json().catch(() => ({}));
-    results[`br_step_${step}`] = result.sent ?? 0;
+    // ── Série builder (J+1 / J+3 / J+6 / J+10 / J+14 / J+21) ──────────────
+    const builder = users.filter((r: any) => r.email_confirme_le && !r.plan);
+
+    for (const [stepStr, minDays] of Object.entries(BR_DELAYS)) {
+      const step = Number(stepStr);
+      const toSend = builder.filter((r: any) =>
+        daysSince(r.email_confirme_le) >= minDays &&
+        (!r.builder_relance_step || r.builder_relance_step < step)
+      );
+      if (toSend.length === 0) continue;
+
+      console.log(`[cron-daily] Builder step ${step}: ${toSend.length} destinataire(s)`);
+      const resp = await fetch(`${appUrl}/api/send-builder-relance`, {
+        method: "POST",
+        headers: authHeader,
+        body: JSON.stringify({
+          users: toSend.map((r: any) => ({
+            user_id: r.user_id,
+            email: r.email,
+            builder_step: r.builder_step ?? 1,
+          })),
+          step,
+        }),
+      });
+      const result = await resp.json().catch(() => ({}));
+      results[`br_step_${step}`] = result.sent ?? 0;
+    }
+
+  } catch (err: any) {
+    cronError = err?.message ?? "Unknown error";
+    console.error("[cron-daily] Error:", cronError);
   }
 
   const totalSent = Object.values(results).reduce((a, b) => a + b, 0);
-  console.log("[cron-daily] Done:", results);
+  const durationMs = Date.now() - startTime;
 
-  return new Response(JSON.stringify({ ok: true, total_sent: totalSent, results }), {
+  // ── Logger l'exécution dans Supabase ─────────────────────────────────────
+  try {
+    await admin.from("cron_execution_logs").insert({
+      total_sent: totalSent,
+      results: Object.keys(results).length > 0 ? results : null,
+      errors: cronError,
+      duration_ms: durationMs,
+    });
+  } catch (logErr) {
+    console.error("[cron-daily] Failed to write log:", logErr);
+  }
+
+  // ── Alerte si erreur sur cette exécution ─────────────────────────────────
+  if (cronError && resendKey) {
+    await sendAlertEmail(
+      resendKey,
+      "⚠️ CVD Cron — erreur détectée",
+      `Une erreur s'est produite lors de l'exécution du cron :<br><br>
+       <code style="background:#f3f4f6;padding:4px 8px;border-radius:4px;">${cronError}</code><br><br>
+       Durée avant erreur : ${durationMs}ms`
+    ).catch(console.error);
+  }
+
+  console.log("[cron-daily] Done:", results, "| duration:", durationMs, "ms");
+
+  if (cronError) {
+    return new Response(JSON.stringify({ ok: false, error: cronError, results }), {
+      status: 500,
+      headers: { "Content-Type": "application/json" },
+    });
+  }
+
+  return new Response(JSON.stringify({ ok: true, total_sent: totalSent, results, duration_ms: durationMs }), {
     headers: { "Content-Type": "application/json" },
   });
 });
