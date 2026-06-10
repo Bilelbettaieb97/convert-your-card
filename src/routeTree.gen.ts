@@ -9,6 +9,7 @@
 // Additionally, you should also exclude this file from your linter and/or formatter to prevent it from being checked or modified.
 
 import { Route as rootRouteImport } from './routes/__root'
+import { Route as UnsubscribeRouteImport } from './routes/unsubscribe'
 import { Route as TemplatesRouteImport } from './routes/templates'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
 import { Route as PricingRouteImport } from './routes/pricing'
@@ -51,8 +52,14 @@ import { Route as DashboardCardRouteImport } from './routes/dashboard/card'
 import { Route as DashboardBillingRouteImport } from './routes/dashboard/billing'
 import { Route as DashboardAnalyticsRouteImport } from './routes/dashboard/analytics'
 import { Route as DashboardAccountRouteImport } from './routes/dashboard/account'
+import { Route as AuthCallbackRouteImport } from './routes/auth.callback'
 import { Route as InscriptionOffrePlanRouteImport } from './routes/inscription.offre.$plan'
 
+const UnsubscribeRoute = UnsubscribeRouteImport.update({
+  id: '/unsubscribe',
+  path: '/unsubscribe',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const TemplatesRoute = TemplatesRouteImport.update({
   id: '/templates',
   path: '/templates',
@@ -265,6 +272,11 @@ const DashboardAccountRoute = DashboardAccountRouteImport.update({
   path: '/account',
   getParentRoute: () => DashboardRoute,
 } as any)
+const AuthCallbackRoute = AuthCallbackRouteImport.update({
+  id: '/auth/callback',
+  path: '/auth/callback',
+  getParentRoute: () => rootRouteImport,
+} as any)
 const InscriptionOffrePlanRoute = InscriptionOffrePlanRouteImport.update({
   id: '/offre/$plan',
   path: '/offre/$plan',
@@ -286,6 +298,8 @@ export interface FileRoutesByFullPath {
   '/pricing': typeof PricingRoute
   '/reset-password': typeof ResetPasswordRoute
   '/templates': typeof TemplatesRoute
+  '/unsubscribe': typeof UnsubscribeRoute
+  '/auth/callback': typeof AuthCallbackRoute
   '/dashboard/account': typeof DashboardAccountRoute
   '/dashboard/analytics': typeof DashboardAnalyticsRoute
   '/dashboard/billing': typeof DashboardBillingRoute
@@ -328,6 +342,8 @@ export interface FileRoutesByTo {
   '/pricing': typeof PricingRoute
   '/reset-password': typeof ResetPasswordRoute
   '/templates': typeof TemplatesRoute
+  '/unsubscribe': typeof UnsubscribeRoute
+  '/auth/callback': typeof AuthCallbackRoute
   '/dashboard/account': typeof DashboardAccountRoute
   '/dashboard/analytics': typeof DashboardAnalyticsRoute
   '/dashboard/billing': typeof DashboardBillingRoute
@@ -374,6 +390,8 @@ export interface FileRoutesById {
   '/pricing': typeof PricingRoute
   '/reset-password': typeof ResetPasswordRoute
   '/templates': typeof TemplatesRoute
+  '/unsubscribe': typeof UnsubscribeRoute
+  '/auth/callback': typeof AuthCallbackRoute
   '/dashboard/account': typeof DashboardAccountRoute
   '/dashboard/analytics': typeof DashboardAnalyticsRoute
   '/dashboard/billing': typeof DashboardBillingRoute
@@ -421,6 +439,8 @@ export interface FileRouteTypes {
     | '/pricing'
     | '/reset-password'
     | '/templates'
+    | '/unsubscribe'
+    | '/auth/callback'
     | '/dashboard/account'
     | '/dashboard/analytics'
     | '/dashboard/billing'
@@ -463,6 +483,8 @@ export interface FileRouteTypes {
     | '/pricing'
     | '/reset-password'
     | '/templates'
+    | '/unsubscribe'
+    | '/auth/callback'
     | '/dashboard/account'
     | '/dashboard/analytics'
     | '/dashboard/billing'
@@ -508,6 +530,8 @@ export interface FileRouteTypes {
     | '/pricing'
     | '/reset-password'
     | '/templates'
+    | '/unsubscribe'
+    | '/auth/callback'
     | '/dashboard/account'
     | '/dashboard/analytics'
     | '/dashboard/billing'
@@ -554,11 +578,20 @@ export interface RootRouteChildren {
   PricingRoute: typeof PricingRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   TemplatesRoute: typeof TemplatesRoute
+  UnsubscribeRoute: typeof UnsubscribeRoute
+  AuthCallbackRoute: typeof AuthCallbackRoute
   AdminIndexRoute: typeof AdminIndexRoute
 }
 
 declare module '@tanstack/react-router' {
   interface FileRoutesByPath {
+    '/unsubscribe': {
+      id: '/unsubscribe'
+      path: '/unsubscribe'
+      fullPath: '/unsubscribe'
+      preLoaderRoute: typeof UnsubscribeRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/templates': {
       id: '/templates'
       path: '/templates'
@@ -853,6 +886,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardAccountRouteImport
       parentRoute: typeof DashboardRoute
     }
+    '/auth/callback': {
+      id: '/auth/callback'
+      path: '/auth/callback'
+      fullPath: '/auth/callback'
+      preLoaderRoute: typeof AuthCallbackRouteImport
+      parentRoute: typeof rootRouteImport
+    }
     '/inscription/offre/$plan': {
       id: '/inscription/offre/$plan'
       path: '/offre/$plan'
@@ -963,6 +1003,8 @@ const rootRouteChildren: RootRouteChildren = {
   PricingRoute: PricingRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   TemplatesRoute: TemplatesRoute,
+  UnsubscribeRoute: UnsubscribeRoute,
+  AuthCallbackRoute: AuthCallbackRoute,
   AdminIndexRoute: AdminIndexRoute,
 }
 export const routeTree = rootRouteImport
