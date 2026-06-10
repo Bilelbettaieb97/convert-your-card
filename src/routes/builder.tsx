@@ -77,6 +77,11 @@ function BuilderPage() {
     }, 500);
   };
 
+  // Enregistre l'étape intro dès que l'utilisateur arrive sur le builder
+  useEffect(() => {
+    if (user?.id) saveBuilderProgress("intro");
+  }, [user?.id]);
+
   const advanceTo = (next: Step) => {
     const n = STEP_NUM[next];
     setCompletedThrough((c) => (n > c ? n : c));
