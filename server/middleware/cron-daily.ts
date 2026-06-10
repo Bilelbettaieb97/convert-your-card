@@ -14,6 +14,20 @@ const BR_DELAYS: Record<number, number> = {
   5: 7,       // 7 jours
   6: 9,       // 9 jours
 };
+const VU_DELAYS: Record<number, number> = {
+  1:  1,   // J+1
+  2:  3,   // J+3
+  3:  7,   // J+7
+  4:  10,  // J+10
+  5:  15,  // J+15
+  6:  18,  // J+18
+  7:  22,  // J+22
+  8:  25,  // J+25
+  9:  28,  // J+28
+  10: 35,  // J+35
+  11: 42,  // J+42
+  12: 50,  // J+50
+};
 
 function daysSince(ts: string | null | undefined): number {
   if (!ts) return -1;
@@ -124,7 +138,7 @@ export default defineEventHandler(async (event) => {
       results[`nc_step_${step}`] = result.sent ?? 0;
     }
 
-    // ── Série builder (J+1 / J+3 / J+6 / J+10 / J+14 / J+21) ──────────────
+    // ── Série builder (J+1h / J+1 / J+3 / J+5 / J+7 / J+9) ────────────────
     const builder = users.filter((r: any) => r.email_confirme_le && !r.plan);
 
     for (const [stepStr, minDays] of Object.entries(BR_DELAYS)) {
@@ -150,6 +164,37 @@ export default defineEventHandler(async (event) => {
       });
       const result = await resp.json().catch(() => ({}));
       results[`br_step_${step}`] = result.sent ?? 0;
+    }
+
+    // ── Série upgrade Vitrine (J+1 → J+50, 12 emails) ───────────────────────
+    const vitrineUsers = users.filter((r: any) => r.plan === "essentielle");
+
+    for (const [stepStr, minDays] of Object.entries(VU_DELAYS)) {
+      const step = Number(stepStr);
+      const toSend = vitrineUsers.filter((r: any) =>
+        daysSince(r.profil_cree_le) >= minDays &&
+        (!r.vitrine_relance_step || r.vitrine_relance_step < step)
+      );
+      if (toSend.length === 0) continue;
+
+      console.log(`[cron-daily] Vitrine upgrade step ${step}: ${toSend.length} destinataire(s)`);
+      const resp = await fetch(`${appUrl}/api/send-vitrine-relance`, {
+        method: "POST",
+        headers: authHeader,
+        body: JSON.stringify({
+          users: toSend.map((r: any) => ({
+            user_id: r.user_id,
+            email: r.email,
+            nom: r.nom,
+            entreprise: r.entreprise,
+            fonction: r.fonction,
+            slug: r.slug,
+          })),
+          step,
+        }),
+      });
+      const result = await resp.json().catch(() => ({}));
+      results[`vu_step_${step}`] = result.sent ?? 0;
     }
 
   } catch (err: any) {
