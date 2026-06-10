@@ -112,7 +112,9 @@ function RootShell({ children }: { children: ReactNode }) {
     <html lang="fr">
       <head>
         <HeadContent />
-
+        {/* Google Analytics — cartevisitedigitale.fr */}
+        <script async src="https://www.googletagmanager.com/gtag/js?id=G-97N9NYKHD0" />
+        <script dangerouslySetInnerHTML={{ __html: `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-97N9NYKHD0');` }} />
       </head>
       <body>
         {children}
