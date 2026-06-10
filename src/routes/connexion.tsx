@@ -33,9 +33,19 @@ function ConnexionPage() {
     if (!password) { toast.error("Entre ton mot de passe"); return; }
     setLoading(true);
     try {
-      const { error } = await supabase.auth.signInWithPassword({ email: trimmed, password });
+      const { error, data: { session } } = await supabase.auth.signInWithPassword({ email: trimmed, password });
       if (error) throw error;
-      navigate({ to: "/dashboard" });
+      const userId = session?.user?.id;
+      if (userId) {
+        const { data: profile } = await supabase
+          .from("nfc_profiles")
+          .select("id")
+          .eq("user_id", userId)
+          .maybeSingle();
+        navigate({ to: profile ? "/dashboard" : "/builder" });
+      } else {
+        navigate({ to: "/dashboard" });
+      }
     } catch (err) {
       const msg = err instanceof Error ? err.message : "";
       if (msg.toLowerCase().includes("invalid login") || msg.toLowerCase().includes("invalid credentials")) {

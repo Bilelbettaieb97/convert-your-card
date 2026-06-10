@@ -52,19 +52,34 @@ function BuilderPage() {
   const { user, loading } = useAuthStore();
   const navigate = useNavigate();
 
+  // Tous les hooks avant tout return conditionnel (règle React)
+  const [step, setStep] = useState<Step>("intro");
+  const [plan, setPlan] = useState<VariantId>("vitrine");
+  const [completedThrough, setCompletedThrough] = useState<StepNum>(1);
+  const [progressLoaded, setProgressLoaded] = useState(false);
+  const saveTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
   useEffect(() => {
     if (!loading && !user) navigate({ to: "/connexion" });
   }, [loading, user, navigate]);
 
-  if (loading || !user) return (
-    <div className="min-h-screen bg-background flex items-center justify-center">
-      <div className="w-8 h-8 rounded-full border-2 border-primary border-t-transparent animate-spin" />
-    </div>
-  );
-  const [step, setStep] = useState<Step>("intro");
-  const [plan, setPlan] = useState<VariantId>("vitrine");
-  const [completedThrough, setCompletedThrough] = useState<StepNum>(1);
-  const saveTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+  // Charger la progression depuis Supabase et reprendre au bon step
+  useEffect(() => {
+    if (!user?.id) return;
+    supabase
+      .from("builder_progress")
+      .select("step, step_name")
+      .eq("user_id", user.id)
+      .maybeSingle()
+      .then(({ data: progress }) => {
+        if (progress && progress.step > 1) {
+          const savedStep = Math.min(progress.step, 6) as StepNum;
+          setCompletedThrough(savedStep);
+          setStep(NUM_STEP[savedStep]);
+        }
+        setProgressLoaded(true);
+      });
+  }, [user?.id]);
 
   const saveBuilderProgress = (s: Step) => {
     if (!user?.id) return;
@@ -77,10 +92,12 @@ function BuilderPage() {
     }, 500);
   };
 
-  // Enregistre l'étape intro dès que l'utilisateur arrive sur le builder
+  // Sauvegarder step intro seulement si aucune progression existante
   useEffect(() => {
-    if (user?.id) saveBuilderProgress("intro");
-  }, [user?.id]);
+    if (user?.id && progressLoaded && completedThrough === 1) {
+      saveBuilderProgress("intro");
+    }
+  }, [user?.id, progressLoaded]);
 
   const advanceTo = (next: Step) => {
     const n = STEP_NUM[next];
@@ -94,7 +111,13 @@ function BuilderPage() {
     setStep(NUM_STEP[n]);
   };
 
-  if (!hydrated) {
+  if (loading || !user) return (
+    <div className="min-h-screen bg-background flex items-center justify-center">
+      <div className="w-8 h-8 rounded-full border-2 border-primary border-t-transparent animate-spin" />
+    </div>
+  );
+
+  if (!hydrated || !progressLoaded) {
     return <div className="min-h-screen bg-background grid place-items-center text-muted-foreground">Chargement…</div>;
   }
 
