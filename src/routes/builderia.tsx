@@ -65,8 +65,8 @@ function BuilderIAPage() {
   const [input, setInput] = useState("");
   const [error, setError] = useState("");
   const [buildStep, setBuildStep] = useState(0);
-  const [animDone, setAnimDone] = useState(false);
   const [generatedCard, setGeneratedCard] = useState<CardData | null>(null);
+  const animDoneRef = useRef(false);
   const resultReady = useRef(false);
 
   useEffect(() => {
@@ -88,7 +88,7 @@ function BuilderIAPage() {
     if (!input.trim()) return;
     setPhase("building");
     setBuildStep(0);
-    setAnimDone(false);
+    animDoneRef.current = false;
     resultReady.current = false;
 
     // Appel IA en parallèle de l'animation
@@ -109,7 +109,9 @@ function BuilderIAPage() {
         };
         setGeneratedCard(merged);
         resultReady.current = true;
-        tryFinish(true);
+        if (animDoneRef.current) {
+          setTimeout(() => setPhase("preview"), 600);
+        }
       })
       .catch(() => {
         setPhase("prompt");
@@ -126,19 +128,14 @@ function BuilderIAPage() {
       setBuildStep(current);
       if (current >= BRICKS.length) {
         clearInterval(timer);
-        setAnimDone(true);
-        tryFinish(false);
+        animDoneRef.current = true;
+        if (resultReady.current) {
+          setTimeout(() => setPhase("preview"), 600);
+        }
       }
     }, 350);
     return () => clearInterval(timer);
   }, [phase]);
-
-  function tryFinish(fromResult: boolean) {
-    const readyNow = fromResult ? animDone : resultReady.current;
-    if (readyNow) {
-      setTimeout(() => setPhase("preview"), 600);
-    }
-  }
 
   // ── Actions depuis l'aperçu ──
   function handleActivateVitrine() {
