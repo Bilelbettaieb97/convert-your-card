@@ -15,14 +15,14 @@ const PLANS = [
   {
     id: "essentielle",
     label: "Essentielle",
-    price: "9,80 €/mois",
-    description: "Les briques indispensables pour être joignable.",
+    price: "Gratuit",
+    description: "Le minimum pour être joignable. Gratuit pour toujours.",
     features: ["Identité, contact, vCard", "Boutons d'action", "Bio & badges"],
   },
   {
     id: "vitrine",
     label: "Vitrine",
-    price: "15,80 €/mois",
+    price: "4,80 €/mois",
     description: "Toutes les briques pour vendre votre savoir-faire.",
     features: [
       "Tout le plan Essentielle",
