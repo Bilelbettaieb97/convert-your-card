@@ -111,6 +111,17 @@ function PricingPage() {
   const { data: cardData } = useCardStore();
   const navigate = useNavigate();
 
+  // Tracker l'arrivée sur la page pricing (étape 7) pour le funnel dashboard
+  React.useEffect(() => {
+    supabase.auth.getUser().then(({ data: { user } }) => {
+      if (!user) return;
+      supabase.from("builder_progress").upsert(
+        { user_id: user.id, step: 7, step_name: "pricing", updated_at: new Date().toISOString() },
+        { onConflict: "user_id" }
+      ).then(() => {});
+    });
+  }, []);
+
   async function handleActivate(planOverride?: Plan["id"]) {
     const planToUse = planOverride ?? selected;
     setCreating(planToUse);
