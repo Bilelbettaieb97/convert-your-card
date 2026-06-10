@@ -8,6 +8,21 @@ const schema = z.object({
 
 export type GeneratedCard = Partial<CardData>;
 
+// Ordre de sections fixe — toujours respecté
+// identity → actions → stats → socials → about → vcard → cta → services → testimonials → contact
+// (gallery peut s'insérer après stats pour les métiers visuels)
+const BASE_ORDER: BrickId[] = [
+  "identity", "actions", "stats", "socials", "about", "vcard",
+  "cta", "services", "testimonials", "contact",
+  "calendar", "gallery", "listings", "video", "languages", "theme",
+];
+
+const VISUAL_ORDER: BrickId[] = [
+  "identity", "actions", "stats", "gallery", "socials", "about", "vcard",
+  "cta", "services", "testimonials", "contact",
+  "calendar", "listings", "video", "languages", "theme",
+];
+
 const SYSTEM_PROMPT = `Tu es un expert en conversion digitale pour cartes de visite professionnelles françaises.
 Tu génères des configurations complètes, optimisées pour chaque métier.
 
@@ -48,135 +63,154 @@ THÈMES PAR SECTEUR :
 - crimson → sport, coaching sportif, fitness
 - copper → artisan d'art, décoration, intérieur
 
-RÈGLES DE CONVERSION PAR TYPE :
-- Urgence (plombier, électricien, serrurier) : stats "dispo+délai", services clairs, call+whatsapp, PAS de calendar/gallery/testimonials
-- Gros achat/confiance (immobilier, avocat, architecte) : stats + testimonials + services + calendar. listings si immo.
-- Expertise conseil (coach, consultant, formateur, thérapeute) : badges, services=offres, testimonials=transformations, calendar, cta=bilan gratuit
-- Visuel (photographe, coiffeur, tatoueur, esthéticienne) : gallery EN PREMIER dans sectionOrder, services, about
-- Restauration (restaurant, traiteur, chef) : gallery, services=menu/formules, socials
-- Médical (médecin, kiné, ostéo, dentiste) : services, calendar, badges certifications, PAS de testimonials
-- Artisan (menuisier, maçon, peintre, carreleur) : gallery=réalisations, services, stats=années+projets, call+whatsapp
+ORDRE DES SECTIONS — RÈGLE ABSOLUE :
+Toujours utiliser exactement cet ordre :
+identity → actions → stats → socials → about → vcard → cta → services → testimonials → contact → calendar → gallery → listings → video → languages → theme
 
-SECTIONORDER : Commence TOUJOURS par "identity" puis "actions". Ensuite les sections activées dans l'ordre de priorité pour la conversion. Termine par les sections inactives. Inclure les 16 identifiants exacts dans la liste.
+Exception pour les métiers visuels (photographe, coiffeur, artiste, tatoueur) : insérer gallery juste après stats.
 
-RÈGLE ABSOLUE : Active TOUJOURS le MAXIMUM de sections Vitrine possibles. La carte doit être impressionnante et montrer tout le potentiel. N'hésite JAMAIS à activer stats, services, testimonials, calendar, cta, gallery — même si ce n'est pas évident. Le but est de montrer une carte complète et waouh qui donne envie d'activer le plan Vitrine.`;
+SECTIONS TOUJOURS ACTIVÉES — sans exception :
+statsEnabled: true, servicesEnabled: true, testimonialsEnabled: true, ctaEnabled: true, aboutEnabled: true
+
+Activer aussi calendar pour : coaches, consultants, thérapeutes, médecins, avocats, architectes, agents immobiliers.
+Activer gallery pour : photographes, restaurateurs, artisans, coiffeurs, tatoueurs.
+
+CONTENU ULTRA PERSONNALISÉ :
+- stats : 4 chiffres très spécifiques au métier (délai, avis, années, projets...)
+- services : 3-4 prestations réalistes avec descriptions concrètes
+- testimonials : 3 avis avec vrais prénoms, rôles spécifiques, textes crédibles
+- cta : offre irrésistible adaptée au métier (bilan gratuit, devis, consultation...)
+- badges : 3-4 certifications et labels propres au secteur
+
+L'objectif est une carte tellement impressionnante que le visiteur veut immédiatement activer le plan Vitrine.`;
 
 const JSON_SCHEMA = `{
   "title": "Titre professionnel court (max 6 mots)",
   "accent": "un des thèmes disponibles",
   "bio": "Bio à la 1ère personne, 2-3 phrases, 70 mots max, concrète et accrocheuse",
-  "aboutEnabled": true/false,
+  "aboutEnabled": true,
   "badges": [{"id":"b1","label":"Badge court"}],
-  "statsEnabled": true/false,
+  "statsEnabled": true,
   "stats": [{"label":"Libellé court","value":"Valeur chiffrée ou texte court"}],
-  "servicesEnabled": true/false,
+  "servicesEnabled": true,
   "services": [{"id":"s1","title":"Nom service","description":"Description 1 phrase concrète"}],
-  "testimonialsEnabled": true/false,
+  "testimonialsEnabled": true,
   "testimonials": [{"id":"t1","name":"Prénom N.","role":"Profil client","text":"Avis court réaliste","rating":5,"photo":"","link":""}],
   "calendarEnabled": true/false,
   "calendarLabel": "Libellé du bouton RDV",
   "galleryEnabled": true/false,
   "listingsEnabled": true/false,
-  "ctaEnabled": true/false,
+  "ctaEnabled": true,
   "ctaTitle": "Titre accroche CTA",
   "ctaText": "Texte court CTA",
   "ctaButtonLabel": "Libellé bouton CTA",
   "actions": {"call":true/false,"whatsapp":true/false,"email":true/false,"website":true/false},
-  "sectionOrder": ["identity","actions","stats","about","services","testimonials","calendar","gallery","listings","cta","socials","vcard","languages","theme"]
+  "sectionOrder": ["identity","actions","stats","socials","about","vcard","cta","services","testimonials","contact","calendar","gallery","listings","video","languages","theme"]
 }`;
 
-// ─── Mocks riches pour tester sans clé API ───────────────────────────────────
+// ─── Mocks riches — toutes sections actives, ordre fixe ──────────────────────
 
 const MOCK_PLOMBIER: GeneratedCard = {
-  title: "Plombier · Dépannage Urgent",
+  title: "Plombier · Dépannage Urgent 24h/24",
   accent: "navy",
-  bio: "Plombier professionnel, j'interviens rapidement pour tous vos dépannages — fuites, chauffe-eau, canalisations bouchées. Devis gratuit, intervention garantie.",
+  bio: "Plombier certifié RGE, j'interviens en moins d'une heure pour tous vos dépannages — fuites, chauffe-eau, canalisations. Devis gratuit sur place, travail soigné et garanti.",
   aboutEnabled: true,
   badges: [
     { id: "b1", label: "Artisan RGE certifié" },
-    { id: "b2", label: "Devis gratuit" },
-    { id: "b3", label: "Garantie décennale" },
+    { id: "b2", label: "Garantie décennale" },
+    { id: "b3", label: "Devis gratuit" },
+    { id: "b4", label: "Intervention < 1h" },
   ],
   statsEnabled: true,
   stats: [
-    { label: "Disponibilité", value: "24h/24 7j/7" },
+    { label: "Disponibilité", value: "24h/24 · 7j/7" },
     { label: "Délai intervention", value: "< 1 heure" },
-    { label: "Années d'expérience", value: "15 ans" },
     { label: "Clients dépannés", value: "2 000+" },
+    { label: "Note Google", value: "4.9★ (180 avis)" },
   ],
   servicesEnabled: true,
   services: [
-    { id: "s1", title: "Dépannage urgence", description: "Intervention rapide pour fuites, pannes chauffe-eau et canalisations bouchées." },
-    { id: "s2", title: "Installation sanitaire", description: "Pose de salles de bain, WC, robinetterie et équipements sanitaires." },
-    { id: "s3", title: "Détartrage & entretien", description: "Maintenance préventive de vos installations pour éviter les pannes." },
+    { id: "s1", title: "Dépannage urgence", description: "Fuite, canalisation bouchée, chauffe-eau en panne — j'arrive en moins d'une heure." },
+    { id: "s2", title: "Installation sanitaire", description: "Pose de salles de bain complètes, WC, douche italienne et robinetterie haut de gamme." },
+    { id: "s3", title: "Remplacement chauffe-eau", description: "Ballon électrique, chauffe-eau thermodynamique ou gaz — pose et mise en service." },
+    { id: "s4", title: "Détartrage & entretien", description: "Maintenance préventive annuelle pour prolonger la durée de vie de vos équipements." },
   ],
   testimonialsEnabled: true,
   testimonials: [
-    { id: "t1", name: "Martine C.", role: "Cliente — Paris 15e", text: "Intervention en 45 minutes un dimanche. Problème réglé, tarif honnête. Je recommande !", rating: 5, photo: "", link: "" },
-    { id: "t2", name: "François D.", role: "Client — Boulogne", text: "Fuite sous évier réparée en un coup de main. Propre, efficace et sympa en plus.", rating: 5, photo: "", link: "" },
+    { id: "t1", name: "Martine C.", role: "Propriétaire — Paris 15e", text: "Intervention un dimanche à 7h du matin. En 45 minutes tout était réglé. Tarif honnête, propre et efficace.", rating: 5, photo: "", link: "" },
+    { id: "t2", name: "François D.", role: "Locataire — Boulogne", text: "Fuite sous évier réparée en un coup de main. Très pro, explique ce qu'il fait. Je le rappellerai.", rating: 5, photo: "", link: "" },
+    { id: "t3", name: "Sophie & Marc B.", role: "Propriétaires — Neuilly", text: "Remplacement chauffe-eau complet en 3h. Prix conforme au devis, aucune mauvaise surprise.", rating: 5, photo: "", link: "" },
   ],
   calendarEnabled: false,
-  calendarLabel: "Prendre RDV",
+  calendarLabel: "Planifier une intervention",
   galleryEnabled: true,
   gallery: [],
   listingsEnabled: false,
   ctaEnabled: true,
-  ctaTitle: "Besoin d'un dépannage rapide ?",
-  ctaText: "Appelez maintenant — intervention en moins d'une heure, devis gratuit sur place.",
-  ctaButtonLabel: "Appeler maintenant",
+  ctaTitle: "Urgence plomberie ? J'arrive.",
+  ctaText: "Appelez maintenant — intervention garantie en moins d'une heure, devis gratuit sur place.",
+  ctaButtonLabel: "Appeler pour une urgence",
   actions: { call: true, whatsapp: true, email: false, website: false },
-  sectionOrder: ["identity", "actions", "stats", "services", "testimonials", "cta", "gallery", "about", "vcard", "socials", "theme", "video", "listings", "calendar", "languages", "contact"],
+  sectionOrder: BASE_ORDER,
 };
 
 const MOCK_IMMOBILIER: GeneratedCard = {
-  title: "Agent Immobilier · Paris & IDF",
+  title: "Agent Immobilier · Paris & Île-de-France",
   accent: "gold",
-  bio: "Spécialiste de l'immobilier parisien depuis 10 ans, j'accompagne acheteurs et vendeurs avec rigueur et disponibilité. Estimation gratuite sous 48h.",
+  bio: "Spécialiste de l'immobilier parisien depuis 12 ans, j'accompagne acheteurs et vendeurs avec rigueur et disponibilité. Estimation gratuite en 48h, réseau exclusif de biens off-market.",
   aboutEnabled: true,
   badges: [
     { id: "b1", label: "Certifié FNAIM" },
     { id: "b2", label: "Top 1% Paris" },
     { id: "b3", label: "Mandataire exclusif" },
+    { id: "b4", label: "12 ans d'expérience" },
   ],
   statsEnabled: true,
   stats: [
-    { label: "Biens vendus", value: "200+" },
+    { label: "Biens vendus", value: "240+" },
     { label: "Satisfaction client", value: "4.9★" },
-    { label: "Délai moyen vente", value: "42 jours" },
+    { label: "Délai moyen vente", value: "38 jours" },
+    { label: "Prix obtenu vs estimé", value: "102%" },
   ],
   servicesEnabled: true,
   services: [
-    { id: "s1", title: "Estimation gratuite", description: "Évaluation précise de votre bien sous 48h, basée sur le marché local." },
-    { id: "s2", title: "Accompagnement vendeur", description: "De la mise en valeur à la signature chez le notaire, je gère tout." },
-    { id: "s3", title: "Chasse immobilière", description: "Recherche sur-mesure pour acquéreurs exigeants, accès aux biens off-market." },
+    { id: "s1", title: "Estimation gratuite", description: "Évaluation précise de votre bien sous 48h, basée sur les transactions réelles du quartier." },
+    { id: "s2", title: "Accompagnement vendeur", description: "De la mise en valeur à la signature chez le notaire — je gère tout, vous signez." },
+    { id: "s3", title: "Chasse immobilière", description: "Recherche sur-mesure pour acquéreurs exigeants, accès aux biens avant mise en marché." },
+    { id: "s4", title: "Investissement locatif", description: "Sélection, simulation de rendement, gestion locative — je suis à vos côtés de A à Z." },
   ],
   testimonialsEnabled: true,
   testimonials: [
-    { id: "t1", name: "Sophie M.", role: "Vendeuse — Paris 16e", text: "Vente conclue en 3 semaines, au prix souhaité. Professionnel et à l'écoute.", rating: 5, photo: "", link: "" },
-    { id: "t2", name: "Thomas R.", role: "Acquéreur — Neuilly", text: "Il a trouvé l'appartement parfait en moins d'un mois. Je recommande vivement.", rating: 5, photo: "", link: "" },
+    { id: "t1", name: "Sophie M.", role: "Vendeuse — Paris 16e", text: "Vente conclue en 3 semaines, au-dessus du prix demandé. Toujours disponible, vraiment à l'écoute.", rating: 5, photo: "", link: "" },
+    { id: "t2", name: "Thomas & Léa R.", role: "Acquéreurs — Neuilly", text: "Il nous a trouvé l'appartement parfait en 3 visites. Réactif, honnête, pas de pression commerciale.", rating: 5, photo: "", link: "" },
+    { id: "t3", name: "Patrick G.", role: "Investisseur — Levallois", text: "3 appartements acquis avec lui en 2 ans. Rendement conforme à ce qui était annoncé. Je recommande.", rating: 5, photo: "", link: "" },
   ],
   calendarEnabled: true,
-  calendarLabel: "Planifier une estimation gratuite",
+  calendarLabel: "Planifier mon estimation gratuite",
   galleryEnabled: false,
   gallery: [],
   listingsEnabled: true,
   listings: [],
   ctaEnabled: true,
   ctaTitle: "Vous vendez ou achetez ?",
-  ctaText: "Échangeons 20 minutes pour cadrer votre projet, sans engagement.",
+  ctaText: "Réservez 20 minutes d'échange. Je vous donne une estimation réaliste et une stratégie claire.",
   ctaButtonLabel: "Réserver un appel gratuit",
   actions: { call: true, whatsapp: true, email: true, website: false },
-  sectionOrder: ["identity", "actions", "stats", "testimonials", "services", "calendar", "listings", "about", "cta", "socials", "vcard", "theme", "video", "gallery", "languages", "contact"],
+  sectionOrder: [
+    "identity", "actions", "stats", "socials", "about", "vcard",
+    "cta", "services", "testimonials", "contact",
+    "calendar", "listings", "gallery", "video", "languages", "theme",
+  ],
 };
 
 const MOCK_COACH: GeneratedCard = {
   title: "Coach Bien-être & Performance",
   accent: "emerald",
-  bio: "J'accompagne les professionnels et entrepreneurs à retrouver équilibre et performance. Séances individuelles, en présentiel ou en ligne, sur mesure.",
+  bio: "J'accompagne les professionnels et entrepreneurs à retrouver clarté, énergie et performance. Méthode certifiée ICF, résultats mesurables dès la 2e séance.",
   aboutEnabled: true,
   badges: [
-    { id: "b1", label: "Certifié ICF" },
-    { id: "b2", label: "PNL praticien" },
+    { id: "b1", label: "Certifiée ICF" },
+    { id: "b2", label: "PNL praticienne" },
     { id: "b3", label: "200+ clients accompagnés" },
     { id: "b4", label: "10 ans d'expérience" },
   ],
@@ -185,57 +219,64 @@ const MOCK_COACH: GeneratedCard = {
     { label: "Clients accompagnés", value: "200+" },
     { label: "Satisfaction", value: "4.9/5" },
     { label: "Séances réalisées", value: "1 500+" },
+    { label: "Taux de transformation", value: "94%" },
   ],
   servicesEnabled: true,
   services: [
-    { id: "s1", title: "Coaching individuel", description: "Programme sur-mesure de 3 ou 6 mois pour atteindre vos objectifs." },
-    { id: "s2", title: "Bilan de vie gratuit", description: "30 minutes pour identifier vos blocages et définir votre cap. Offert." },
-    { id: "s3", title: "Ateliers collectifs", description: "Sessions en groupe sur la gestion du stress, la confiance en soi, la productivité." },
+    { id: "s1", title: "Programme coaching 3 mois", description: "8 séances individuelles pour atteindre vos objectifs de vie et de performance." },
+    { id: "s2", title: "Bilan de vie offert — 30 min", description: "On identifie ensemble vos blocages et définit votre cap. Offert, sans engagement." },
+    { id: "s3", title: "Ateliers collectifs", description: "Sessions thématiques en groupe : gestion du stress, confiance en soi, productivité." },
+    { id: "s4", title: "Suivi mensuel", description: "Accompagnement léger pour maintenir cap et momentum entre deux programmes." },
   ],
   testimonialsEnabled: true,
   testimonials: [
-    { id: "t1", name: "Claire B.", role: "Directrice commerciale", text: "En 3 mois j'ai retrouvé confiance et clarté. Un accompagnement qui change vraiment.", rating: 5, photo: "", link: "" },
-    { id: "t2", name: "Maxime L.", role: "Entrepreneur", text: "Le bilan gratuit m'a tout de suite convaincu. Résultats concrets dès la 2e séance.", rating: 5, photo: "", link: "" },
+    { id: "t1", name: "Claire B.", role: "Directrice commerciale — Paris", text: "En 3 mois j'ai retrouvé confiance et clarté totale. Un accompagnement qui change vraiment la donne.", rating: 5, photo: "", link: "" },
+    { id: "t2", name: "Maxime L.", role: "Entrepreneur — Lyon", text: "Le bilan gratuit m'a tout de suite convaincu. Résultats concrets dès la 2e séance. Je recommande.", rating: 5, photo: "", link: "" },
+    { id: "t3", name: "Nadia R.", role: "Cadre reconvertie — Bordeaux", text: "Elle m'a aidée à oser ma reconversion. Aujourd'hui j'exerce le métier que j'aime. Merci infiniment.", rating: 5, photo: "", link: "" },
   ],
   calendarEnabled: true,
-  calendarLabel: "Réserver mon bilan gratuit",
+  calendarLabel: "Réserver mon bilan gratuit — 30 min",
   galleryEnabled: false,
   gallery: [],
   listingsEnabled: false,
   ctaEnabled: true,
-  ctaTitle: "Première séance offerte",
-  ctaText: "30 min de bilan pour identifier vos blocages et définir votre cap.",
+  ctaTitle: "30 min offertes pour clarifier votre cap",
+  ctaText: "Bilan sans engagement — on identifie vos 3 blocages principaux et un plan d'action immédiat.",
   ctaButtonLabel: "Je réserve mon bilan gratuit",
   actions: { call: false, whatsapp: true, email: true, website: true },
-  sectionOrder: ["identity", "actions", "cta", "testimonials", "services", "stats", "about", "calendar", "socials", "vcard", "theme", "video", "gallery", "listings", "languages", "contact"],
+  sectionOrder: BASE_ORDER,
 };
 
 const MOCK_RESTAURANT: GeneratedCard = {
   title: "Chef Restaurateur · Cuisine du Marché",
   accent: "bordeaux",
-  bio: "Une cuisine généreuse et créative, élaborée chaque matin avec des produits frais et locaux. Réservations conseillées le week-end.",
+  bio: "Une cuisine généreuse et créative, élaborée chaque matin avec des producteurs locaux. Salle chaleureuse, 60 couverts, réservations conseillées le week-end.",
   aboutEnabled: true,
   badges: [
-    { id: "b1", label: "Produits locaux" },
-    { id: "b2", label: "Fait maison" },
+    { id: "b1", label: "Produits locaux & bio" },
+    { id: "b2", label: "Fait maison 100%" },
     { id: "b3", label: "Ouvert 7j/7" },
+    { id: "b4", label: "Salle privatisable" },
   ],
   statsEnabled: true,
   stats: [
     { label: "Note Google", value: "4.8★ (312 avis)" },
     { label: "Couverts / service", value: "60 places" },
-    { label: "Depuis", value: "2014" },
+    { label: "Ouvert depuis", value: "2014" },
+    { label: "Plats faits maison", value: "100%" },
   ],
   servicesEnabled: true,
   services: [
-    { id: "s1", title: "Menu déjeuner", description: "Entrée + plat + dessert à 19€. Formule express 13€. Midi en semaine." },
-    { id: "s2", title: "Menu du soir", description: "Carte renouvelée chaque semaine selon les arrivages du marché." },
-    { id: "s3", title: "Privatisation & séminaires", description: "Salle privatisable jusqu'à 60 personnes, forfaits sur devis." },
+    { id: "s1", title: "Menu déjeuner", description: "Entrée + plat + dessert à 19€ · Formule express 13€ · Du lundi au vendredi." },
+    { id: "s2", title: "Carte du soir", description: "Carte renouvelée chaque semaine selon les arrivages du marché et la saison." },
+    { id: "s3", title: "Brunch du dimanche", description: "Formule brunch convivial de 11h à 15h — tout en illimité à 29€ par personne." },
+    { id: "s4", title: "Privatisation & séminaires", description: "Salle disponible jusqu'à 60 personnes, forfaits cocktail ou dîner sur devis." },
   ],
   testimonialsEnabled: true,
   testimonials: [
-    { id: "t1", name: "Julie M.", role: "Cliente fidèle", text: "Toujours des produits frais et une cuisine qui change. Le meilleur rapport qualité-plaisir du quartier.", rating: 5, photo: "", link: "" },
-    { id: "t2", name: "Karim B.", role: "Client — séminaire", text: "Nous avons privatisé la salle pour 40 personnes. Tout était parfait, du menu au service.", rating: 5, photo: "", link: "" },
+    { id: "t1", name: "Julie M.", role: "Cliente fidèle — depuis 5 ans", text: "Toujours des saveurs nouvelles et des produits au top. Le meilleur rapport qualité-plaisir du quartier.", rating: 5, photo: "", link: "" },
+    { id: "t2", name: "Karim B.", role: "Event manager — Paris", text: "Soirée d'entreprise pour 40 personnes — du menu au service, tout était parfait. On revient.", rating: 5, photo: "", link: "" },
+    { id: "t3", name: "Émilie & Romain T.", role: "Clients réguliers", text: "Notre cantine favorite du dimanche. Le brunch est imbattable et l'équipe est adorable.", rating: 5, photo: "", link: "" },
   ],
   calendarEnabled: true,
   calendarLabel: "Réserver une table",
@@ -243,39 +284,43 @@ const MOCK_RESTAURANT: GeneratedCard = {
   gallery: [],
   listingsEnabled: false,
   ctaEnabled: true,
-  ctaTitle: "Privatisez notre salle",
-  ctaText: "Séminaires, anniversaires, repas d'affaires — jusqu'à 60 personnes. Devis sur mesure.",
-  ctaButtonLabel: "Demander un devis",
+  ctaTitle: "Privatisez notre salle pour votre événement",
+  ctaText: "Anniversaire, séminaire, repas d'affaires — jusqu'à 60 personnes. Devis personnalisé sous 24h.",
+  ctaButtonLabel: "Demander un devis privatisation",
   actions: { call: true, whatsapp: false, email: true, website: true },
-  sectionOrder: ["identity", "actions", "gallery", "stats", "services", "testimonials", "cta", "calendar", "about", "socials", "vcard", "theme", "video", "listings", "languages", "contact"],
+  sectionOrder: VISUAL_ORDER,
 };
 
 const MOCK_PHOTOGRAPHE: GeneratedCard = {
-  title: "Photographe · Portrait & Événement",
+  title: "Photographe · Portrait & Événement Pro",
   accent: "graphite",
-  bio: "Photographe professionnel spécialisé en portrait et événements d'entreprise. Je capture les instants qui comptent, avec une approche discrète et naturelle.",
+  bio: "Photographe professionnel spécialisé en portrait corporate et événements d'entreprise. J'immortalise vos moments avec une approche naturelle et discrète — retouches incluses, livraison en 72h.",
   aboutEnabled: true,
   badges: [
     { id: "b1", label: "Reportage entreprise" },
     { id: "b2", label: "Portrait professionnel" },
-    { id: "b3", label: "Mariage & événements" },
+    { id: "b3", label: "500+ événements couverts" },
+    { id: "b4", label: "Livraison 72h garantie" },
   ],
   statsEnabled: true,
   stats: [
     { label: "Événements couverts", value: "500+" },
     { label: "Photos livrées", value: "50 000+" },
     { label: "Délai livraison", value: "72h" },
+    { label: "Satisfaction", value: "4.9★" },
   ],
   servicesEnabled: true,
   services: [
-    { id: "s1", title: "Portrait professionnel", description: "Séance photo en studio ou en extérieur. Retouches incluses, livraison sous 72h." },
-    { id: "s2", title: "Reportage événement", description: "Couverture complète de vos séminaires, soirées et événements d'entreprise." },
-    { id: "s3", title: "Shooting produit", description: "Mise en valeur de vos produits pour vos supports web et print." },
+    { id: "s1", title: "Portrait professionnel", description: "Séance studio ou extérieur — retouches incluses, jusqu'à 10 photos HD livrées sous 72h." },
+    { id: "s2", title: "Reportage événement", description: "Couverture complète de vos séminaires, soirées et conférences. Pack à partir de 4h." },
+    { id: "s3", title: "Shooting produit & corporate", description: "Photos de produits, locaux, équipes — visuels pour votre site et réseaux sociaux." },
+    { id: "s4", title: "Shooting mariage", description: "Reportage complet du jour J — de la préparation à la soirée, 400+ photos livrées." },
   ],
   testimonialsEnabled: true,
   testimonials: [
-    { id: "t1", name: "Élise R.", role: "Dirigeante — Paris", text: "Des photos de dirigeante qui me ressemblent vraiment. Retouches soignées, livraison rapide.", rating: 5, photo: "", link: "" },
-    { id: "t2", name: "Samuel N.", role: "Event manager", text: "Couverture de notre soirée annuelle — 300 personnes. Discret, réactif et des shots magnifiques.", rating: 5, photo: "", link: "" },
+    { id: "t1", name: "Élise R.", role: "Dirigeante — cabinet conseil", text: "Des portraits qui me ressemblent vraiment — pro sans être figée. Retouches impeccables, livraison rapide.", rating: 5, photo: "", link: "" },
+    { id: "t2", name: "Samuel N.", role: "Event manager — Paris", text: "Couverture de notre soirée annuelle (300 personnes). Discret, réactif, des shots magnifiques.", rating: 5, photo: "", link: "" },
+    { id: "t3", name: "Marina & Loïc", role: "Mariés — juin 2025", text: "Les plus belles photos de notre vie. Il a capté chaque instant avec une sensibilité rare.", rating: 5, photo: "", link: "" },
   ],
   calendarEnabled: true,
   calendarLabel: "Réserver une séance",
@@ -283,97 +328,98 @@ const MOCK_PHOTOGRAPHE: GeneratedCard = {
   gallery: [],
   listingsEnabled: false,
   ctaEnabled: true,
-  ctaTitle: "Votre portrait pro, livré en 72h",
+  ctaTitle: "Votre portrait pro livré en 72h",
   ctaText: "Séance studio ou extérieur — retouches professionnelles incluses. Tarif fixe, sans mauvaise surprise.",
-  ctaButtonLabel: "Voir les tarifs & disponibilités",
+  ctaButtonLabel: "Voir les disponibilités & tarifs",
   actions: { call: false, whatsapp: true, email: true, website: true },
-  sectionOrder: ["identity", "actions", "gallery", "stats", "services", "testimonials", "cta", "calendar", "about", "socials", "vcard", "theme", "video", "listings", "languages", "contact"],
+  sectionOrder: VISUAL_ORDER,
 };
 
 const MOCK_AGENCE: GeneratedCard = {
   title: "Agence Web · Sites & Marketing Digital",
   accent: "violet",
-  bio: "Nous créons des sites web qui convertissent — design premium, référencement, publicité Meta & Google. Résultats mesurables garantis dès le premier mois.",
+  bio: "Nous créons des sites web qui convertissent — design premium, SEO, publicités Meta & Google. 150+ entrepreneurs accompagnés, résultats mesurables garantis dès le premier mois.",
   aboutEnabled: true,
   badges: [
     { id: "b1", label: "Google Partner" },
-    { id: "b2", label: "150+ sites livrés" },
-    { id: "b3", label: "Meta Business Partner" },
+    { id: "b2", label: "Meta Business Partner" },
+    { id: "b3", label: "150+ sites livrés" },
     { id: "b4", label: "Avis 4.9★ Trustpilot" },
   ],
   statsEnabled: true,
   stats: [
     { label: "Sites livrés", value: "150+" },
-    { label: "Satisfaction client", value: "4.9★" },
     { label: "Leads générés", value: "12 000+" },
-    { label: "ROI moyen annonceurs", value: "×4.2" },
+    { label: "ROI moyen annonceurs", value: "×4,2" },
+    { label: "Satisfaction client", value: "4.9★" },
   ],
   servicesEnabled: true,
   services: [
-    { id: "s1", title: "Site vitrine premium", description: "Design sur-mesure, mobile-first, SEO optimisé. Livré en 7 jours." },
-    { id: "s2", title: "Campagnes Meta & Google", description: "Publicités ciblées qui ramènent des prospects qualifiés — pas juste des clics." },
-    { id: "s3", title: "Audit & refonte", description: "Diagnostic complet de votre présence en ligne + plan d'action prioritaire." },
-    { id: "s4", title: "Carte de visite digitale", description: "Carte interactive avec prise de RDV, galerie et statistiques de partage." },
+    { id: "s1", title: "Site vitrine premium", description: "Design sur-mesure, mobile-first, SEO optimisé. Livré en 7 jours chrono." },
+    { id: "s2", title: "Campagnes Meta & Google Ads", description: "Publicités ciblées qui ramènent des prospects qualifiés — pas juste des clics." },
+    { id: "s3", title: "Carte de visite digitale", description: "Carte interactive avec prise de RDV, galerie et statistiques de partage en temps réel." },
+    { id: "s4", title: "Audit & refonte de site", description: "Diagnostic complet de votre présence en ligne + plan d'action prioritaire offert." },
   ],
   testimonialsEnabled: true,
   testimonials: [
-    { id: "t1", name: "Stéphanie V.", role: "Sophrologue — Lyon", text: "Site livré en 5 jours, +18 demandes de RDV le premier mois. Impressionnant.", rating: 5, photo: "", link: "" },
-    { id: "t2", name: "Rachid M.", role: "Plombier — Île-de-France", text: "Les pubs Meta ont doublé mes appels en 3 semaines. Investissement rentabilisé direct.", rating: 5, photo: "", link: "" },
-    { id: "t3", name: "Noémie C.", role: "Coach — Paris", text: "Agence réactive, à l'écoute et qui livre. On reste ensemble depuis 2 ans.", rating: 5, photo: "", link: "" },
+    { id: "t1", name: "Stéphanie V.", role: "Sophrologue — Lyon", text: "Site livré en 5 jours, 18 demandes de RDV le premier mois. Je n'aurais jamais pensé que ça irait si vite.", rating: 5, photo: "", link: "" },
+    { id: "t2", name: "Rachid M.", role: "Plombier — Île-de-France", text: "Les pubs Meta ont doublé mes appels en 3 semaines. Investissement rentabilisé dès le premier mois.", rating: 5, photo: "", link: "" },
+    { id: "t3", name: "Noémie C.", role: "Coach — Paris", text: "Agence réactive, à l'écoute, qui livre vraiment. On travaille ensemble depuis 2 ans maintenant.", rating: 5, photo: "", link: "" },
   ],
   calendarEnabled: true,
-  calendarLabel: "Réserver un audit gratuit",
+  calendarLabel: "Réserver mon audit gratuit",
   galleryEnabled: true,
   gallery: [],
   listingsEnabled: false,
   ctaEnabled: true,
   ctaTitle: "Audit de votre présence en ligne — Offert",
-  ctaText: "30 minutes pour identifier ce qui freine vos leads. Sans engagement, sans jargon.",
+  ctaText: "30 minutes pour identifier ce qui freine vos leads et repartir avec un plan d'action concret.",
   ctaButtonLabel: "Je veux mon audit gratuit",
   actions: { call: true, whatsapp: true, email: true, website: true },
-  sectionOrder: ["identity", "actions", "stats", "services", "testimonials", "cta", "calendar", "gallery", "about", "socials", "vcard", "theme", "video", "listings", "languages", "contact"],
+  sectionOrder: BASE_ORDER,
 };
 
 const MOCK_CONSULTANT: GeneratedCard = {
   title: "Consultant · Stratégie & Performance",
   accent: "sapphire",
-  bio: "J'accompagne les dirigeants et indépendants dans l'optimisation de leur activité. Diagnostic, stratégie, mise en œuvre — des résultats concrets et mesurables.",
+  bio: "J'accompagne dirigeants et indépendants dans l'optimisation de leur activité. Diagnostic précis, stratégie claire, mise en œuvre terrain — des résultats concrets et durables.",
   aboutEnabled: true,
   badges: [
     { id: "b1", label: "MBA HEC Paris" },
     { id: "b2", label: "15 ans d'expérience" },
-    { id: "b3", label: "Certifié en gestion de projet" },
-    { id: "b4", label: "Bilan gratuit offert" },
+    { id: "b3", label: "Certifié PMP" },
+    { id: "b4", label: "Bilan offert — 45 min" },
   ],
   statsEnabled: true,
   stats: [
     { label: "Clients accompagnés", value: "120+" },
+    { label: "Croissance moyenne", value: "+38%" },
     { label: "Satisfaction", value: "4.8/5" },
-    { label: "Croissance moyenne", value: "+35%" },
     { label: "Années d'expérience", value: "15 ans" },
   ],
   servicesEnabled: true,
   services: [
-    { id: "s1", title: "Diagnostic stratégique", description: "Analyse complète de votre activité — forces, faiblesses, opportunités à saisir." },
-    { id: "s2", title: "Optimisation commerciale", description: "Structuration de votre offre, pricing, prospection et process de vente." },
-    { id: "s3", title: "Accompagnement mensuel", description: "Suivi régulier, points de contrôle et ajustements en temps réel." },
+    { id: "s1", title: "Diagnostic stratégique", description: "Analyse complète de votre activité — forces, faiblesses, opportunités à saisir en priorité." },
+    { id: "s2", title: "Optimisation commerciale", description: "Structuration de l'offre, pricing, prospection et process de vente — des résultats rapides." },
+    { id: "s3", title: "Accompagnement mensuel", description: "Suivi régulier, points de contrôle et ajustements en temps réel pour tenir le cap." },
   ],
   testimonialsEnabled: true,
   testimonials: [
-    { id: "t1", name: "Pierre L.", role: "Gérant PME — Bordeaux", text: "En 6 mois, notre CA a augmenté de 40%. Le meilleur investissement de l'année.", rating: 5, photo: "", link: "" },
-    { id: "t2", name: "Amina T.", role: "Freelance — Paris", text: "Structuration complète de mon offre et de mes tarifs. Je me sens enfin professionnelle.", rating: 5, photo: "", link: "" },
+    { id: "t1", name: "Pierre L.", role: "Gérant PME — Bordeaux", text: "En 6 mois notre CA a augmenté de 40%. Le meilleur investissement que j'ai fait cette année.", rating: 5, photo: "", link: "" },
+    { id: "t2", name: "Amina T.", role: "Freelance — Paris", text: "Il a restructuré toute mon offre et mes tarifs. Je me sens enfin professionnelle et légitime.", rating: 5, photo: "", link: "" },
+    { id: "t3", name: "Bertrand G.", role: "Dirigeant — Toulouse", text: "Diagnostic en 2 semaines, plan d'action en 3. Méthode carrée, résultats au rendez-vous.", rating: 5, photo: "", link: "" },
   ],
   calendarEnabled: true,
-  calendarLabel: "Réserver un bilan stratégique gratuit",
+  calendarLabel: "Réserver un bilan stratégique — 45 min",
   galleryEnabled: false,
   gallery: [],
   listingsEnabled: false,
   ctaEnabled: true,
   ctaTitle: "Bilan stratégique offert — 45 min",
-  ctaText: "Identifions ensemble les 3 leviers prioritaires pour accélérer votre activité. Offert et sans engagement.",
+  ctaText: "Identifions ensemble les 3 leviers prioritaires pour accélérer votre activité. Offert, sans engagement.",
   ctaButtonLabel: "Je réserve mon bilan gratuit",
   actions: { call: false, whatsapp: true, email: true, website: true },
-  sectionOrder: ["identity", "actions", "cta", "stats", "services", "testimonials", "calendar", "about", "socials", "vcard", "theme", "video", "gallery", "listings", "languages", "contact"],
+  sectionOrder: BASE_ORDER,
 };
 
 function detectMock(input: string): GeneratedCard {
@@ -385,34 +431,35 @@ function detectMock(input: string): GeneratedCard {
   if (i.includes("consultant") || i.includes("conseil") || i.includes("stratégie") || i.includes("formateur") || i.includes("expert")) return MOCK_CONSULTANT;
   if (i.includes("restaur") || i.includes("chef") || i.includes("cuisine") || i.includes("traiteur") || i.includes("brasserie") || i.includes("bistro") || i.includes("café")) return MOCK_RESTAURANT;
   if (i.includes("photo") || i.includes("vidéo") || i.includes("vidéaste") || i.includes("cinéaste")) return MOCK_PHOTOGRAPHE;
-  // Fallback générique — version très enrichie
+  // Fallback générique — toutes sections Vitrine actives
   return {
-    title: "Expert · Service Premium",
+    title: "Expert · Accompagnement Sur-Mesure",
     accent: "sapphire",
-    bio: "Professionnel passionné, j'accompagne mes clients avec expertise et bienveillance. Mon objectif : des résultats concrets, mesurables et durables pour votre activité.",
+    bio: "Professionnel passionné, j'accompagne mes clients avec expertise et bienveillance. Mon objectif : des résultats concrets, mesurables et durables dès les premières semaines.",
     aboutEnabled: true,
     badges: [
       { id: "b1", label: "Expert certifié" },
-      { id: "b2", label: "Devis gratuit" },
-      { id: "b3", label: "10 ans d'expérience" },
+      { id: "b2", label: "10 ans d'expérience" },
+      { id: "b3", label: "Devis gratuit" },
     ],
     statsEnabled: true,
     stats: [
       { label: "Années d'expérience", value: "10+" },
-      { label: "Clients satisfaits", value: "200+" },
+      { label: "Clients accompagnés", value: "200+" },
       { label: "Satisfaction", value: "4.8/5" },
       { label: "Projets réalisés", value: "300+" },
     ],
     servicesEnabled: true,
     services: [
-      { id: "s1", title: "Consultation initiale", description: "Échangeons sur vos besoins et définissons ensemble la meilleure solution." },
-      { id: "s2", title: "Accompagnement sur-mesure", description: "Suivi personnalisé adapté à votre situation et vos objectifs." },
-      { id: "s3", title: "Suivi & optimisation", description: "Points réguliers et ajustements pour maximiser vos résultats." },
+      { id: "s1", title: "Consultation initiale", description: "30 minutes pour analyser votre situation et définir ensemble le meilleur plan d'action." },
+      { id: "s2", title: "Accompagnement sur-mesure", description: "Suivi personnalisé adapté à vos objectifs — à votre rythme, à votre niveau." },
+      { id: "s3", title: "Suivi & optimisation", description: "Points réguliers pour ajuster la stratégie et maximiser vos résultats." },
     ],
     testimonialsEnabled: true,
     testimonials: [
-      { id: "t1", name: "Marie-Claire D.", role: "Cliente fidèle", text: "Un professionnel à l'écoute qui délivre vraiment. Je recommande sans hésitation.", rating: 5, photo: "", link: "" },
-      { id: "t2", name: "Julien P.", role: "Client — Paris", text: "Résultats au-delà de mes attentes. Suivi sérieux et communication irréprochable.", rating: 5, photo: "", link: "" },
+      { id: "t1", name: "Marie-Claire D.", role: "Cliente — Paris", text: "Un professionnel à l'écoute qui délivre vraiment. Suivi impeccable, résultats au-delà de mes attentes.", rating: 5, photo: "", link: "" },
+      { id: "t2", name: "Julien P.", role: "Client — Lyon", text: "Communication claire, engagement réel. Je recommande sans hésitation à tous mes proches.", rating: 5, photo: "", link: "" },
+      { id: "t3", name: "Fatima K.", role: "Cliente — Toulouse", text: "Enfin un professionnel qui tient ses promesses. Méthode sérieuse et vraie bienveillance.", rating: 5, photo: "", link: "" },
     ],
     calendarEnabled: true,
     calendarLabel: "Réserver une consultation gratuite",
@@ -424,7 +471,7 @@ function detectMock(input: string): GeneratedCard {
     ctaText: "Discutons de votre projet sans engagement. Je vous donne mon avis d'expert gratuitement.",
     ctaButtonLabel: "Je réserve ma consultation",
     actions: { call: true, whatsapp: true, email: true, website: false },
-    sectionOrder: ["identity", "actions", "stats", "cta", "services", "testimonials", "calendar", "gallery", "about", "socials", "vcard", "theme", "video", "listings", "languages", "contact"],
+    sectionOrder: BASE_ORDER,
   };
 }
 
@@ -445,7 +492,7 @@ export const generateCard = createServerFn({ method: "POST" })
 
     const message = await client.messages.create({
       model: "claude-haiku-4-5-20251001",
-      max_tokens: 1200,
+      max_tokens: 1400,
       system: SYSTEM_PROMPT,
       messages: [
         {
@@ -453,6 +500,8 @@ export const generateCard = createServerFn({ method: "POST" })
           content: `L'utilisateur dit : "${data.input}"
 
 Génère la configuration complète de sa carte de visite digitale.
+Rappel : statsEnabled, servicesEnabled, testimonialsEnabled, ctaEnabled et aboutEnabled doivent TOUJOURS être true.
+L'ordre sectionOrder doit TOUJOURS suivre : identity → actions → stats → socials → about → vcard → cta → services → testimonials → contact (puis les sections inactives).
 Réponds UNIQUEMENT avec le JSON suivant, rien d'autre :
 ${JSON_SCHEMA}`,
         },
@@ -477,21 +526,26 @@ ${JSON_SCHEMA}`,
     const validBricks: BrickId[] = ["identity","actions","vcard","stats","about","video","services","listings","gallery","testimonials","calendar","languages","cta","contact","socials","theme"];
 
     const accent = validAccents.includes(parsed.accent as ThemeAccent) ? parsed.accent as ThemeAccent : "sapphire";
-    const sectionOrder = Array.isArray(parsed.sectionOrder)
+    const rawOrder = Array.isArray(parsed.sectionOrder)
       ? (parsed.sectionOrder as string[]).filter((s): s is BrickId => validBricks.includes(s as BrickId))
-      : validBricks;
+      : BASE_ORDER;
+    // Garantir que tous les bricks valides sont présents (append manquants à la fin)
+    const sectionOrder: BrickId[] = [
+      ...rawOrder,
+      ...validBricks.filter((b) => !rawOrder.includes(b)),
+    ];
 
     return {
       title: typeof parsed.title === "string" ? parsed.title : "",
       accent,
       bio: typeof parsed.bio === "string" ? parsed.bio : "",
-      aboutEnabled: !!parsed.aboutEnabled,
+      aboutEnabled: true,
       badges: Array.isArray(parsed.badges) ? parsed.badges as GeneratedCard["badges"] : [],
-      statsEnabled: !!parsed.statsEnabled,
+      statsEnabled: true,
       stats: Array.isArray(parsed.stats) ? parsed.stats as GeneratedCard["stats"] : [],
-      servicesEnabled: !!parsed.servicesEnabled,
+      servicesEnabled: true,
       services: Array.isArray(parsed.services) ? parsed.services as GeneratedCard["services"] : [],
-      testimonialsEnabled: !!parsed.testimonialsEnabled,
+      testimonialsEnabled: true,
       testimonials: Array.isArray(parsed.testimonials) ? parsed.testimonials as GeneratedCard["testimonials"] : [],
       calendarEnabled: !!parsed.calendarEnabled,
       calendarLabel: typeof parsed.calendarLabel === "string" ? parsed.calendarLabel : "Prendre rendez-vous",
@@ -499,7 +553,7 @@ ${JSON_SCHEMA}`,
       gallery: [],
       listingsEnabled: !!parsed.listingsEnabled,
       listings: [],
-      ctaEnabled: !!parsed.ctaEnabled,
+      ctaEnabled: true,
       ctaTitle: typeof parsed.ctaTitle === "string" ? parsed.ctaTitle : "",
       ctaText: typeof parsed.ctaText === "string" ? parsed.ctaText : "",
       ctaButtonLabel: typeof parsed.ctaButtonLabel === "string" ? parsed.ctaButtonLabel : "En savoir plus",
