@@ -218,7 +218,11 @@ function BuilderPage() {
         <AiGenerateButton
           setData={setData}
           currentData={data}
-          onApplied={() => advanceTo("essentials")}
+          onApplied={() => {
+            setCompletedThrough(6 as StepNum);
+            setStep("edit");
+            saveBuilderProgress("edit");
+          }}
         />
       )}
     </>

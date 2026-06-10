@@ -1,5 +1,5 @@
-import { useState, useRef, useEffect } from "react";
-import { Sparkles, X, Loader2, CheckCircle2, Wand2, ChevronRight } from "lucide-react";
+import { useState, useEffect, useRef } from "react";
+import { Sparkles, X, Loader2, Wand2 } from "lucide-react";
 import { generateCard, type GeneratedCard } from "@/fns/generate-card";
 import { DEFAULT_CARD, type CardData } from "@/lib/card-types";
 
@@ -9,82 +9,109 @@ type Props = {
   onApplied?: () => void;
 };
 
-const ACTION_LABELS: Record<string, string> = {
-  call: "📞 Appel",
-  whatsapp: "💬 WhatsApp",
-  email: "✉️ Email",
-  website: "🌐 Site web",
-};
+const BRICKS = [
+  { icon: "🪪", label: "Identité & photo" },
+  { icon: "⚡", label: "Boutons d'action" },
+  { icon: "📊", label: "Statistiques clés" },
+  { icon: "💼", label: "Services & prestations" },
+  { icon: "⭐", label: "Avis clients" },
+  { icon: "📅", label: "Prise de rendez-vous" },
+  { icon: "🖼", label: "Galerie de réalisations" },
+  { icon: "🎯", label: "Appel à l'action" },
+];
+
+type Phase = "idle" | "form" | "building" | "done";
 
 export function AiGenerateButton({ setData, currentData, onApplied }: Props) {
-  const [open, setOpen] = useState(false);
-  const [visible, setVisible] = useState(false);
+  const [phase, setPhase] = useState<Phase>("idle");
   const [input, setInput] = useState("");
-  const [loading, setLoading] = useState(false);
-  const [result, setResult] = useState<GeneratedCard | null>(null);
   const [error, setError] = useState("");
-  const [applied, setApplied] = useState(false);
+  const [buildStep, setBuildStep] = useState(0);
+  const [result, setResult] = useState<GeneratedCard | null>(null);
+  const [animDone, setAnimDone] = useState(false);
   const textareaRef = useRef<HTMLTextAreaElement>(null);
+  const resultRef = useRef<GeneratedCard | null>(null);
 
-  function openModal() {
-    setOpen(true);
-    requestAnimationFrame(() => requestAnimationFrame(() => setVisible(true)));
+  // Ouverture modale
+  function openForm() {
+    setPhase("form");
+    setTimeout(() => textareaRef.current?.focus(), 300);
   }
 
-  function closeModal() {
-    setVisible(false);
-    setTimeout(() => {
-      setOpen(false);
-      setResult(null);
-      setError("");
-      setApplied(false);
-    }, 350);
+  function closeForm() {
+    setPhase("idle");
+    setInput("");
+    setError("");
+  }
+
+  // Lancement génération
+  async function handleGenerate(e: React.FormEvent) {
+    e.preventDefault();
+    if (!input.trim()) return;
+    setPhase("building");
+    setBuildStep(0);
+    setAnimDone(false);
+    setResult(null);
+    resultRef.current = null;
+
+    // Appel IA en parallèle de l'animation
+    generateCard({ data: { input: input.trim() } })
+      .then((res) => {
+        resultRef.current = res;
+        setResult(res);
+        tryFinish();
+      })
+      .catch(() => {
+        setPhase("form");
+        setError("Une erreur est survenue, réessaie.");
+      });
+  }
+
+  // Animation brique par brique
+  useEffect(() => {
+    if (phase !== "building") return;
+    let current = 0;
+    const timer = setInterval(() => {
+      current++;
+      setBuildStep(current);
+      if (current >= BRICKS.length) {
+        clearInterval(timer);
+        setAnimDone(true);
+      }
+    }, 340);
+    return () => clearInterval(timer);
+  }, [phase]);
+
+  // Terminer quand les deux sont prêts (IA + animation)
+  function tryFinish() {
+    if (resultRef.current && animDone) finish();
   }
 
   useEffect(() => {
-    if (open && !result) setTimeout(() => textareaRef.current?.focus(), 400);
-  }, [open, result]);
+    if (animDone && result) finish();
+  }, [animDone, result]);
 
-  async function handleGenerate(e: React.FormEvent) {
-    e.preventDefault();
-    if (!input.trim() || loading) return;
-    setLoading(true);
-    setError("");
-    setResult(null);
-    try {
-      const res = await generateCard({ data: { input: input.trim() } });
-      setResult(res);
-    } catch {
-      setError("Une erreur est survenue, réessaie.");
-    } finally {
-      setLoading(false);
-    }
-  }
-
-  function handleApply() {
-    if (!result) return;
-    setData({
-      ...DEFAULT_CARD,
-      ...currentData,
-      ...result,
-    });
-    setApplied(true);
+  function finish() {
+    if (!resultRef.current) return;
+    setData({ ...DEFAULT_CARD, ...currentData, ...resultRef.current });
+    setPhase("done");
     setTimeout(() => {
-      closeModal();
+      setPhase("idle");
+      setInput("");
       onApplied?.();
-    }, 1000);
+    }, 800);
   }
 
-  const activeActions = result?.actions
-    ? Object.entries(result.actions).filter(([, v]) => v).map(([k]) => k)
-    : [];
+  const currentBrickLabel = buildStep > 0 && buildStep <= BRICKS.length
+    ? BRICKS[buildStep - 1].label
+    : "Initialisation…";
 
   return (
     <>
-      {/* Floating trigger — discret */}
+      {/* Bouton discret */}
       <button
         type="button"
-        onClick={openModal}
+        onClick={openForm}
         className="fixed bottom-5 right-5 z-40 flex items-center gap-1.5 rounded-full bg-background border border-border text-muted-foreground text-xs font-medium px-3 py-2 shadow-md hover:text-foreground hover:border-foreground/30 transition-all"
         aria-label="Générer avec l'IA"
       >
@@ -92,163 +119,132 @@ export function AiGenerateButton({ setData, currentData, onApplied }: Props) {
         <span>IA</span>
       </button>
 
-      {/* Backdrop */}
-      {open && (
-        <div
-          className={`fixed inset-0 z-50 bg-black/50 backdrop-blur-sm transition-opacity duration-300 ${
-            visible ? "opacity-100" : "opacity-0"
-          }`}
-          onClick={closeModal}
-        />
-      )}
-
-      {/* Modal */}
-      {open && (
-        <div
-          className={`fixed bottom-0 left-0 right-0 z-50 sm:bottom-auto sm:top-1/2 sm:left-1/2 sm:-translate-x-1/2 sm:-translate-y-1/2 sm:max-w-lg sm:w-full transition-all duration-350 ease-out ${
-            visible ? "translate-y-0 opacity-100 sm:scale-100" : "translate-y-10 opacity-0 sm:scale-95"
-          }`}
-        >
-          <div className="bg-background border border-border shadow-2xl rounded-t-3xl sm:rounded-2xl px-6 py-6">
-
-            {/* Header */}
-            <div className="flex items-center justify-between mb-5">
-              <div className="flex items-center gap-3">
-                <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#c026d3] to-[#7c3aed] flex items-center justify-center shadow-md">
-                  <Wand2 className="w-4 h-4 text-white" />
-                </div>
-                <div>
-                  <p className="font-semibold text-foreground">Générer avec l'IA</p>
-                  <p className="text-xs text-muted-foreground">Décris ton activité — l'IA configure ta carte complète</p>
-                </div>
-              </div>
-              <button
-                type="button"
-                onClick={closeModal}
-                className="text-muted-foreground hover:text-foreground transition p-1.5 rounded-lg hover:bg-muted"
-              >
-                <X className="w-4 h-4" />
-              </button>
-            </div>
-
-            {/* ── Applied ── */}
-            {applied && (
-              <div className="flex flex-col items-center gap-3 py-8">
-                <CheckCircle2 className="w-12 h-12 text-emerald-500" />
-                <p className="font-semibold text-foreground text-lg">Carte générée !</p>
-                <p className="text-sm text-muted-foreground text-center">
-                  Toutes les sections ont été configurées.<br />
-                  Tu peux maintenant personnaliser les détails.
-                </p>
-              </div>
-            )}
-
-            {/* ── Result ── */}
-            {result && !applied && (
-              <div className="space-y-3">
-                <p className="text-xs text-muted-foreground uppercase tracking-wide mb-1">Aperçu de ta carte générée</p>
-
-                <div className="rounded-xl bg-muted/40 border border-border px-4 py-3 flex items-start justify-between gap-3">
+      {/* Modal saisie */}
+      {phase === "form" && (
+        <>
+          <div className="fixed inset-0 z-50 bg-black/50 backdrop-blur-sm" onClick={closeForm} />
+          <div className="fixed bottom-0 left-0 right-0 z-50 sm:bottom-auto sm:top-1/2 sm:left-1/2 sm:-translate-x-1/2 sm:-translate-y-1/2 sm:max-w-lg sm:w-full animate-slide-up">
+            <div className="bg-background border border-border shadow-2xl rounded-t-3xl sm:rounded-2xl px-6 py-6">
+              <div className="flex items-center justify-between mb-5">
+                <div className="flex items-center gap-3">
+                  <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#c026d3] to-[#7c3aed] flex items-center justify-center shadow-md">
+                    <Wand2 className="w-4 h-4 text-white" />
+                  </div>
                   <div>
-                    <p className="text-xs text-muted-foreground mb-0.5">Titre</p>
-                    <p className="font-semibold text-foreground text-sm">{result.title}</p>
-                  </div>
-                  <span className="text-xs px-2 py-0.5 rounded-full bg-[#c026d3]/10 text-[#c026d3] font-medium border border-[#c026d3]/20 shrink-0">
-                    {result.accent}
-                  </span>
-                </div>
-
-                <div className="rounded-xl bg-muted/40 border border-border px-4 py-3">
-                  <p className="text-xs text-muted-foreground mb-0.5">Bio</p>
-                  <p className="text-sm text-foreground leading-relaxed">{result.bio}</p>
-                </div>
-
-                {/* Sections activées */}
-                <div className="rounded-xl bg-muted/40 border border-border px-4 py-3">
-                  <p className="text-xs text-muted-foreground mb-2">Sections activées</p>
-                  <div className="flex flex-wrap gap-1.5">
-                    {result.statsEnabled && <Chip label={`📊 Stats (${result.stats?.length})`} />}
-                    {result.servicesEnabled && <Chip label={`🛠 Services (${result.services?.length})`} />}
-                    {result.aboutEnabled && <Chip label={`👤 À propos`} />}
-                    {result.testimonialsEnabled && <Chip label={`⭐ Témoignages (${result.testimonials?.length})`} />}
-                    {result.calendarEnabled && <Chip label={`📅 Agenda`} />}
-                    {result.galleryEnabled && <Chip label={`🖼 Galerie`} />}
-                    {result.listingsEnabled && <Chip label={`🏠 Biens`} />}
-                    {result.ctaEnabled && <Chip label={`🎯 CTA`} />}
+                    <p className="font-semibold text-foreground">Générer avec l'IA</p>
+                    <p className="text-xs text-muted-foreground">Décris ton activité — ta carte complète en 10 secondes</p>
                   </div>
                 </div>
-
-                {/* Boutons d'action */}
-                <div className="rounded-xl bg-muted/40 border border-border px-4 py-3">
-                  <p className="text-xs text-muted-foreground mb-2">Boutons d'action</p>
-                  <div className="flex flex-wrap gap-1.5">
-                    {activeActions.map((a) => <Chip key={a} label={ACTION_LABELS[a] ?? a} />)}
-                  </div>
-                </div>
-
-                <div className="flex gap-2 pt-1">
-                  <button
-                    type="button"
-                    onClick={() => { setResult(null); setInput(""); }}
-                    className="flex-1 rounded-xl border border-border py-2.5 text-sm text-muted-foreground hover:text-foreground hover:border-foreground/30 transition"
-                  >
-                    Recommencer
-                  </button>
-                  <button
-                    type="button"
-                    onClick={handleApply}
-                    className="flex-[2] rounded-xl bg-gradient-to-r from-[#c026d3] to-[#7c3aed] text-white text-sm font-semibold py-2.5 hover:opacity-90 transition flex items-center justify-center gap-1.5"
-                  >
-                    Appliquer à ma carte
-                    <ChevronRight className="w-4 h-4" />
-                  </button>
-                </div>
+                <button type="button" onClick={closeForm} className="text-muted-foreground hover:text-foreground p-1.5 rounded-lg hover:bg-muted transition">
+                  <X className="w-4 h-4" />
+                </button>
               </div>
-            )}
 
-            {/* ── Form ── */}
-            {!result && !applied && (
               <form onSubmit={handleGenerate} className="space-y-4">
                 <textarea
                   ref={textareaRef}
                   value={input}
                   onChange={(e) => setInput(e.target.value)}
-                  placeholder="Ex: Je suis agent immobilier à Lyon, spécialisé dans les biens de prestige..."
+                  placeholder="Ex: Je suis agent immobilier à Lyon, spécialisé dans les biens de prestige…"
                   rows={3}
                   className="w-full rounded-xl border border-border bg-muted/30 px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-[#c026d3]/40 focus:border-[#c026d3] transition resize-none"
                 />
-
                 {error && <p className="text-xs text-destructive">{error}</p>}
-
-                <div className="space-y-2">
+                <div className="space-y-1.5">
                   <button
                     type="submit"
-                    disabled={loading || !input.trim()}
-                    className="w-full rounded-xl bg-gradient-to-r from-[#c026d3] to-[#7c3aed] text-white text-sm font-semibold px-5 py-3 hover:opacity-90 transition disabled:opacity-50 flex items-center justify-center gap-2"
+                    disabled={!input.trim()}
+                    className="w-full rounded-xl bg-gradient-to-r from-[#c026d3] to-[#7c3aed] text-white text-sm font-semibold px-5 py-3 hover:opacity-90 transition disabled:opacity-40 flex items-center justify-center gap-2"
                   >
-                    {loading ? (
-                      <><Loader2 className="w-4 h-4 animate-spin" /> Génération en cours…</>
-                    ) : (
-                      <><Sparkles className="w-4 h-4" /> Générer ma carte complète</>
-                    )}
+                    <Sparkles className="w-4 h-4" />
+                    Générer ma carte complète
                   </button>
                   <p className="text-center text-xs text-muted-foreground">
-                    Sections, thème, contenu — tout est généré automatiquement ✨
+                    Thème, sections, contenu — tout généré automatiquement ✨
                   </p>
                 </div>
               </form>
-            )}
+            </div>
+          </div>
+        </>
+      )}
+
+      {/* Plein écran — construction brique par brique */}
+      {(phase === "building" || phase === "done") && (
+        <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-gradient-to-br from-[#0d0014] via-[#12002a] to-[#0a0018]">
+          {/* Titre */}
+          <div className="mb-8 text-center px-4">
+            <p className="text-white/50 text-sm uppercase tracking-widest mb-2">IA en cours</p>
+            <h2 className="text-white text-2xl font-bold">
+              {phase === "done" ? "Carte prête ✨" : "Construction de ta carte…"}
+            </h2>
+          </div>
+
+          {/* Phone mockup */}
+          <div className="relative w-[220px] h-[420px] rounded-[2.5rem] border-2 border-white/15 bg-white/[0.04] shadow-[0_0_80px_rgba(192,38,211,0.3)] overflow-hidden">
+            {/* Barre statut */}
+            <div className="h-7 flex items-center justify-center border-b border-white/10">
+              <div className="w-16 h-1.5 bg-white/20 rounded-full" />
+            </div>
+
+            {/* Bricks */}
+            <div className="p-2.5 space-y-2 overflow-hidden">
+              {BRICKS.map((brick, i) => {
+                const visible = i < buildStep;
+                const isLast = i === buildStep - 1;
+                return (
+                  <div
+                    key={brick.label}
+                    style={{
+                      opacity: visible ? 1 : 0,
+                      transform: visible ? "translateX(0)" : "translateX(-16px)",
+                      transition: "opacity 0.35s ease-out, transform 0.35s ease-out",
+                      boxShadow: isLast ? "0 0 12px rgba(192,38,211,0.5)" : "none",
+                    }}
+                    className="flex items-center gap-2 bg-white/10 rounded-xl px-3 py-2 border border-white/10"
+                  >
+                    <span className="text-base leading-none">{brick.icon}</span>
+                    <span className="text-white/80 text-xs font-medium">{brick.label}</span>
+                    {isLast && phase === "building" && (
+                      <Loader2 className="w-3 h-3 text-[#c026d3] animate-spin ml-auto" />
+                    )}
+                    {visible && !isLast && (
+                      <span className="ml-auto text-emerald-400 text-xs">✓</span>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Glow en bas */}
+            <div className="absolute bottom-0 left-0 right-0 h-16 bg-gradient-to-t from-[#c026d3]/20 to-transparent pointer-events-none" />
+          </div>
+
+          {/* Label brique courante */}
+          <div className="mt-8 text-center">
+            <p className="text-white/40 text-xs uppercase tracking-wider mb-1">En cours</p>
+            <p className="text-white/80 text-sm font-medium min-h-[1.25rem] transition-all duration-300">
+              {phase === "done" ? "Finalisation…" : currentBrickLabel}
+            </p>
+          </div>
+
+          {/* Barre de progression */}
+          <div className="mt-5 w-48 h-1 bg-white/10 rounded-full overflow-hidden">
+            <div
+              className="h-full bg-gradient-to-r from-[#c026d3] to-[#7c3aed] rounded-full transition-all duration-300 ease-out"
+              style={{ width: `${(buildStep / BRICKS.length) * 100}%` }}
+            />
           </div>
         </div>
       )}
-    </>
-  );
-}
 
-function Chip({ label }: { label: string }) {
-  return (
-    <span className="text-xs px-2.5 py-1 rounded-full bg-[#c026d3]/10 text-[#c026d3] font-medium border border-[#c026d3]/20">
-      {label}
-    </span>
+      <style>{`
+        @keyframes slide-up {
+          from { opacity: 0; transform: translateY(20px); }
+          to { opacity: 1; transform: translateY(0); }
+        }
+        .animate-slide-up { animation: slide-up 0.3s ease-out both; }
+      `}</style>
+    </>
   );
 }
