@@ -1562,19 +1562,77 @@ function FinalCTA() {
 export function Footer() {
   return (
     <footer className="border-t border-border bg-card">
-      <div className="max-w-7xl mx-auto px-4 py-10 flex flex-col md:flex-row items-center justify-between gap-4 text-sm text-muted-foreground">
-        <div className="flex items-center gap-2">
-          <div className="w-7 h-7 rounded-lg bg-gradient-brand flex items-center justify-center">
-            <Zap className="w-4 h-4 text-primary-foreground" />
+      <div className="max-w-7xl mx-auto px-4 pt-14 pb-10">
+        {/* Colonnes principales */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-8 mb-12">
+          {/* Produit */}
+          <div>
+            <p className="font-display font-bold text-sm text-foreground mb-4">Produit</p>
+            <ul className="space-y-2 text-sm text-muted-foreground">
+              <li><Link to="/" className="hover:text-foreground transition">Accueil</Link></li>
+              <li><Link to="/pricing" className="hover:text-foreground transition">Tarifs</Link></li>
+              <li><Link to="/templates" className="hover:text-foreground transition">Templates</Link></li>
+              <li><Link to="/carte-physique" className="hover:text-foreground transition">Carte NFC physique</Link></li>
+              <li><Link to="/metiers" className="hover:text-foreground transition">Carte par métier</Link></li>
+            </ul>
           </div>
-          <span className="font-display font-bold text-sm leading-tight text-foreground">Carte Visite Digitale</span>
-          <span>© {new Date().getFullYear()}</span>
+
+          {/* Métiers — colonne 1 */}
+          <div>
+            <p className="font-display font-bold text-sm text-foreground mb-4">Par métier</p>
+            <ul className="space-y-2 text-sm text-muted-foreground">
+              <li><Link to="/metiers/coach" className="hover:text-foreground transition">Coach</Link></li>
+              <li><Link to="/metiers/consultant" className="hover:text-foreground transition">Consultant</Link></li>
+              <li><Link to="/metiers/avocat" className="hover:text-foreground transition">Avocat</Link></li>
+              <li><Link to="/metiers/notaire" className="hover:text-foreground transition">Notaire</Link></li>
+              <li><Link to="/metiers/agent-immobilier" className="hover:text-foreground transition">Agent immobilier</Link></li>
+              <li><Link to="/metiers/photographe" className="hover:text-foreground transition">Photographe</Link></li>
+              <li><Link to="/metiers/coach-sportif" className="hover:text-foreground transition">Coach sportif</Link></li>
+              <li><Link to="/metiers/osteopathe" className="hover:text-foreground transition">Ostéopathe</Link></li>
+              <li><Link to="/metiers/dentiste" className="hover:text-foreground transition">Dentiste</Link></li>
+              <li><Link to="/metiers/coiffeuse" className="hover:text-foreground transition">Coiffeuse</Link></li>
+            </ul>
+          </div>
+
+          {/* Métiers — colonne 2 */}
+          <div>
+            <p className="font-display font-bold text-sm text-foreground mb-4 md:invisible">Par métier</p>
+            <ul className="space-y-2 text-sm text-muted-foreground">
+              <li><Link to="/metiers/menuisier" className="hover:text-foreground transition">Menuisier</Link></li>
+              <li><Link to="/metiers/electricien" className="hover:text-foreground transition">Électricien</Link></li>
+              <li><Link to="/metiers/plombier" className="hover:text-foreground transition">Plombier</Link></li>
+              <li><Link to="/metiers/mecanicien" className="hover:text-foreground transition">Mécanicien</Link></li>
+              <li><Link to="/metiers/formateur" className="hover:text-foreground transition">Formateur</Link></li>
+              <li><Link to="/metiers/professeur-particulier" className="hover:text-foreground transition">Professeur particulier</Link></li>
+              <li><Link to="/metiers/chef-restaurateur" className="hover:text-foreground transition">Restaurateur</Link></li>
+              <li><Link to="/metiers/designer-freelance" className="hover:text-foreground transition">Designer freelance</Link></li>
+              <li><Link to="/metiers/kinesitherapeute" className="hover:text-foreground transition">Kinésithérapeute</Link></li>
+              <li><Link to="/metiers/yoga" className="hover:text-foreground transition">Professeur de yoga</Link></li>
+            </ul>
+          </div>
+
+          {/* Légal */}
+          <div>
+            <p className="font-display font-bold text-sm text-foreground mb-4">Informations</p>
+            <ul className="space-y-2 text-sm text-muted-foreground">
+              <li><a href="/mentions-legales" className="hover:text-foreground transition">Mentions légales</a></li>
+              <li><a href="/cgv" className="hover:text-foreground transition">CGV</a></li>
+              <li><a href="/confidentialite" className="hover:text-foreground transition">Confidentialité</a></li>
+              <li><a href="mailto:contact@cartevisitedigitale.fr" className="hover:text-foreground transition">Contact</a></li>
+            </ul>
+          </div>
         </div>
-        <div className="flex gap-6">
-          <a href="#" className="hover:text-foreground transition">Mentions légales</a>
-          <a href="#" className="hover:text-foreground transition">CGV</a>
-          <a href="#" className="hover:text-foreground transition">Confidentialité</a>
-          <a href="#" className="hover:text-foreground transition">Contact</a>
+
+        {/* Bas de footer */}
+        <div className="border-t border-border pt-6 flex flex-col sm:flex-row items-center justify-between gap-3 text-sm text-muted-foreground">
+          <div className="flex items-center gap-2">
+            <div className="w-7 h-7 rounded-lg bg-gradient-brand flex items-center justify-center">
+              <Zap className="w-4 h-4 text-primary-foreground" />
+            </div>
+            <span className="font-display font-bold text-sm text-foreground">Carte Visite Digitale</span>
+            <span>© {new Date().getFullYear()}</span>
+          </div>
+          <p className="text-xs text-center">Carte de visite digitale professionnelle — Compatible iPhone &amp; Android, sans application</p>
         </div>
       </div>
     </footer>
