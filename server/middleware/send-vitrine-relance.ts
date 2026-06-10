@@ -166,7 +166,6 @@ function buildEmail(step: number, p: P): { subject: string; html: string } {
 /* ─── Email 1 — J+1 : Offre 50% (72h) ──────────────────────────────── */
 
 function email1(p: P): { subject: string; html: string } {
-  const ent = p.entreprise ? ` pour ${p.entreprise}` : "";
   return {
     subject: p.prenom
       ? `${p.prenom}, voici une offre réservée 24h pour vous`
@@ -175,7 +174,7 @@ function email1(p: P): { subject: string; html: string } {
 ${logo()}
 ${badge("Offre exclusive · 72h seulement")}
 <tr><td style="padding:0 36px 22px;">
-<p style="margin:0;font-size:28px;font-weight:800;line-height:1.25;color:#0f0f14;letter-spacing:-0.4px;">Votre carte est créée${ent}.<br>Voici ce que vous ratez encore.</p>
+<p style="margin:0;font-size:28px;font-weight:800;line-height:1.25;color:#0f0f14;letter-spacing:-0.4px;">Votre carte est en ligne.<br>Voici ce que vous ratez encore.</p>
 </td></tr>
 <tr><td style="padding:0 36px 16px;">
 <p style="margin:0;font-size:15px;line-height:1.75;color:#374151;">${hi(p.prenom)} Votre carte digitale est en ligne. C'est déjà un bon début. Mais le plan Essentielle, c'est la version de base — celle qu'on donne gratuitement pour vous laisser tester.</p>
@@ -193,10 +192,10 @@ ${badge("Offre exclusive · 72h seulement")}
 </table>
 </td></tr>
 <tr><td style="padding:0 36px 8px;" align="center">
-<p style="margin:0;font-size:13px;color:#6b7280;">Prix normal : <span style="text-decoration:line-through;">9,90€/mois</span></p>
+<p style="margin:0;font-size:13px;color:#6b7280;">Prix normal : <span style="text-decoration:line-through;">4,80€/mois</span></p>
 </td></tr>
 <tr><td style="padding:0 36px 6px;" align="center">
-<p style="margin:0;font-size:36px;font-weight:900;color:#7c3aed;line-height:1;">4,95€ <span style="font-size:16px;font-weight:500;color:#6b7280;">le 1er mois</span></p>
+<p style="margin:0;font-size:36px;font-weight:900;color:#7c3aed;line-height:1;">2,40€ <span style="font-size:16px;font-weight:500;color:#6b7280;">le 1er mois</span></p>
 </td></tr>
 <tr><td style="padding:0 36px 24px;" align="center">
 <p style="margin:0;font-size:12px;color:#9ca3af;">Offre valable 72h · Sans engagement · Résiliable à tout moment</p>
@@ -248,7 +247,7 @@ ${badge("Ce que vous ne voyez pas")}
 </table>
 </td></tr>
 ${cta("Débloquer les analytics →", p.trackUrl)}
-<tr><td style="padding:8px 36px 28px;" align="center"><p style="margin:0;font-size:12px;color:#9ca3af;">Plan Vitrine · 9,90€/mois · Sans engagement</p></td></tr>
+<tr><td style="padding:8px 36px 28px;" align="center"><p style="margin:0;font-size:12px;color:#9ca3af;">Plan Vitrine · 4,80€/mois · Sans engagement</p></td></tr>
 ${footer()}
 `),
   };
@@ -301,7 +300,7 @@ ${badge("Fonctionnalités manquantes")}
 <p style="margin:0;font-size:15px;line-height:1.75;color:#374151;">Un prospect qui tombe sur votre carte Vitrine voit vos services, vos photos de travail, ce que disent vos clients — et peut prendre rendez-vous en un tap. C'est une carte qui convertit.</p>
 </td></tr>
 ${cta("Ajouter ces sections →", p.trackUrl)}
-<tr><td style="padding:8px 36px 28px;" align="center"><p style="margin:0;font-size:12px;color:#9ca3af;">Plan Vitrine · 9,90€/mois · Résiliable à tout moment</p></td></tr>
+<tr><td style="padding:8px 36px 28px;" align="center"><p style="margin:0;font-size:12px;color:#9ca3af;">Plan Vitrine · 4,80€/mois · Résiliable à tout moment</p></td></tr>
 ${footer()}
 `),
   };
@@ -311,12 +310,12 @@ ${footer()}
 
 function email4(p: P): { subject: string; html: string } {
   return {
-    subject: "9,90€/mois. Voici ce que ça représente vraiment.",
+    subject: "4,80€/mois. Voici ce que ça représente vraiment.",
     html: wrap(`
 ${logo()}
 ${badge("Le calcul honnête")}
 <tr><td style="padding:0 36px 22px;">
-<p style="margin:0;font-size:28px;font-weight:800;line-height:1.25;color:#0f0f14;letter-spacing:-0.4px;">9,90€ par mois.<br>0,33€ par jour.</p>
+<p style="margin:0;font-size:28px;font-weight:800;line-height:1.25;color:#0f0f14;letter-spacing:-0.4px;">4,80€ par mois.<br>0,16€ par jour.</p>
 </td></tr>
 <tr><td style="padding:0 36px 16px;">
 <p style="margin:0;font-size:15px;line-height:1.75;color:#374151;">${hi(p.prenom)} Je vais faire le calcul avec vous.</p>
@@ -324,8 +323,8 @@ ${badge("Le calcul honnête")}
 <tr><td style="padding:0 36px 24px;">
 <table cellpadding="0" cellspacing="0" border="0" width="100%" style="background:#0f0f14;border-radius:10px;">
 <tr><td style="padding:22px 24px;">
-<p style="margin:0 0 6px;font-size:14px;color:#a78bfa;font-weight:700;">Plan Vitrine = 9,90€/mois</p>
-<p style="margin:0 0 6px;font-size:14px;color:#e2e8f0;">÷ 30 jours = <strong style="color:#ffffff;">0,33€ par jour</strong></p>
+<p style="margin:0 0 6px;font-size:14px;color:#a78bfa;font-weight:700;">Plan Vitrine = 4,80€/mois</p>
+<p style="margin:0 0 6px;font-size:14px;color:#e2e8f0;">÷ 30 jours = <strong style="color:#ffffff;">0,16€ par jour</strong></p>
 <p style="margin:0 0 14px;font-size:14px;color:#9ca3af;">= moins qu'un café. Moins qu'un SMS. Moins qu'un timbre.</p>
 <p style="margin:0 0 6px;font-size:13px;color:#6b7280;font-style:italic;">Et si vous décrochez un seul client supplémentaire grâce à votre carte améliorée…</p>
 <p style="margin:0;font-size:18px;font-weight:800;color:#a78bfa;">L'abonnement est rentabilisé pour l'année entière.</p>
@@ -344,14 +343,14 @@ ${badge("Le calcul honnête")}
 </td>
 <td width="16px"></td>
 <td style="padding:14px;background:#faf5ff;border-radius:8px;text-align:center;border:1px solid #e9d5ff;">
-<p style="margin:0 0 4px;font-size:22px;font-weight:900;color:#7c3aed;">0,33€/j</p>
+<p style="margin:0 0 4px;font-size:22px;font-weight:900;color:#7c3aed;">0,16€/j</p>
 <p style="margin:0;font-size:12px;color:#6b7280;">Le coût réel</p>
 </td>
 </tr>
 </table>
 </td></tr>
 <tr><td style="padding:0 36px 16px;">
-<p style="margin:0;font-size:15px;line-height:1.75;color:#374151;">La vraie question n'est pas "est-ce que ça vaut 9,90€ ?" La vraie question : <strong style="color:#0f0f14;">est-ce que votre carte actuelle vous fait rater des opportunités ?</strong></p>
+<p style="margin:0;font-size:15px;line-height:1.75;color:#374151;">La vraie question n'est pas "est-ce que ça vaut 4,80€ ?" La vraie question : <strong style="color:#0f0f14;">est-ce que votre carte actuelle vous fait rater des opportunités ?</strong></p>
 </td></tr>
 ${cta("Passer au plan Vitrine →", p.trackUrl)}
 <tr><td style="padding:8px 36px 28px;" align="center"><p style="margin:0;font-size:12px;color:#9ca3af;">Sans engagement · Résiliable à tout moment · CB sécurisée</p></td></tr>
@@ -389,7 +388,7 @@ ${badge("Design & différenciation")}
 </table>
 </td></tr>
 <tr><td style="padding:0 36px 16px;">
-<p style="margin:0;font-size:15px;line-height:1.75;color:#374151;">En tant que ${p.metier}, votre image professionnelle vaut bien plus que 9,90€/mois. Une carte qui vous ressemble vraiment, c'est une carte dont on se souvient.</p>
+<p style="margin:0;font-size:15px;line-height:1.75;color:#374151;">En tant que ${p.metier}, votre image professionnelle vaut bien plus que 4,80€/mois. Une carte qui vous ressemble vraiment, c'est une carte dont on se souvient.</p>
 </td></tr>
 ${cta("Choisir mon thème Vitrine →", p.trackUrl)}
 <tr><td style="padding:8px 36px 28px;" align="center"><p style="margin:0;font-size:12px;color:#9ca3af;">15+ thèmes premium · Sans engagement</p></td></tr>
@@ -429,7 +428,7 @@ ${logo()}
 <p style="margin:0;font-size:15px;line-height:1.75;color:#374151;">${hi(p.prenom)} Vous avez déjà la carte. Il vous manque juste les sections qui transforment un visiteur en prospect.</p>
 </td></tr>
 ${cta("Construire ma carte Vitrine →", p.trackUrl)}
-<tr><td style="padding:8px 36px 28px;" align="center"><p style="margin:0;font-size:12px;color:#9ca3af;">Plan Vitrine · 9,90€/mois · Annulable à tout moment</p></td></tr>
+<tr><td style="padding:8px 36px 28px;" align="center"><p style="margin:0;font-size:12px;color:#9ca3af;">Plan Vitrine · 4,80€/mois · Annulable à tout moment</p></td></tr>
 ${footer()}
 `),
   };
@@ -474,7 +473,7 @@ ${badge("Analytics & pilotage")}
 </table>
 </td></tr>
 ${cta("Voir mes analytics →", p.trackUrl)}
-<tr><td style="padding:8px 36px 28px;" align="center"><p style="margin:0;font-size:12px;color:#9ca3af;">Plan Vitrine · 9,90€/mois · Données en temps réel</p></td></tr>
+<tr><td style="padding:8px 36px 28px;" align="center"><p style="margin:0;font-size:12px;color:#9ca3af;">Plan Vitrine · 4,80€/mois · Données en temps réel</p></td></tr>
 ${footer()}
 `),
   };
@@ -498,7 +497,7 @@ ${badge("Questions directes")}
 <table cellpadding="0" cellspacing="0" border="0" width="100%" style="background:#f9fafb;border-radius:10px;border:1px solid #f0f0f0;">
 <tr><td style="padding:20px 22px;">
 <p style="margin:0 0 14px;font-size:14px;font-weight:700;color:#374151;padding-bottom:12px;border-bottom:1px solid #e5e7eb;">"C'est cher pour ce que c'est."</p>
-<p style="margin:0 0 18px;font-size:14px;color:#374151;line-height:1.6;">→ 0,33€/jour. Moins qu'un café. Et une carte Vitrine qui décroche un seul client de plus rembourse l'abonnement pour toute l'année.</p>
+<p style="margin:0 0 18px;font-size:14px;color:#374151;line-height:1.6;">→ 0,16€/jour. Moins qu'un café. Et une carte Vitrine qui décroche un seul client de plus rembourse l'abonnement pour toute l'année.</p>
 
 <p style="margin:0 0 14px;font-size:14px;font-weight:700;color:#374151;padding-bottom:12px;border-bottom:1px solid #e5e7eb;">"Ma carte actuelle me convient."</p>
 <p style="margin:0 0 18px;font-size:14px;color:#374151;line-height:1.6;">→ Si vous ne savez pas combien de personnes visitent votre carte, ni ce qu'ils font dessus, elle ne vous "convient" pas — vous n'avez tout simplement pas les données pour le savoir.</p>
@@ -553,7 +552,7 @@ ${badge("Image professionnelle")}
 <p style="margin:0;font-size:15px;line-height:1.75;color:#374151;">En tant que ${p.metier}, votre crédibilité passe par les détails. Une carte avec votre galerie, vos témoignages, votre charte graphique — c'est une carte qui rassure avant même que vous parliez.</p>
 </td></tr>
 ${cta("Améliorer mon image →", p.trackUrl)}
-<tr><td style="padding:8px 36px 28px;" align="center"><p style="margin:0;font-size:12px;color:#9ca3af;">Plan Vitrine · 9,90€/mois · Sans engagement</p></td></tr>
+<tr><td style="padding:8px 36px 28px;" align="center"><p style="margin:0;font-size:12px;color:#9ca3af;">Plan Vitrine · 4,80€/mois · Sans engagement</p></td></tr>
 ${footer()}
 `),
   };
@@ -602,7 +601,7 @@ ${badge("Ce que vous ne montrez pas")}
 </table>
 </td></tr>
 ${cta("Ajouter ces 5 sections →", p.trackUrl)}
-<tr><td style="padding:8px 36px 28px;" align="center"><p style="margin:0;font-size:12px;color:#9ca3af;">Plan Vitrine · 9,90€/mois · Toutes les sections incluses</p></td></tr>
+<tr><td style="padding:8px 36px 28px;" align="center"><p style="margin:0;font-size:12px;color:#9ca3af;">Plan Vitrine · 4,80€/mois · Toutes les sections incluses</p></td></tr>
 ${footer()}
 `),
   };
@@ -635,10 +634,10 @@ ${badge("Benchmark concurrentiel")}
 <p style="margin:0;font-size:15px;line-height:1.75;color:#374151;">Ce n'est pas une question de talent. C'est une question de première impression. Et votre carte est votre première impression digitale.</p>
 </td></tr>
 <tr><td style="padding:0 36px 24px;">
-<p style="margin:0;font-size:15px;line-height:1.75;color:#374151;">9,90€/mois pour ne plus être le professionnel avec la carte basique — <strong style="color:#0f0f14;">c'est l'investissement le plus simple que vous pouvez faire aujourd'hui.</strong></p>
+<p style="margin:0;font-size:15px;line-height:1.75;color:#374151;">4,80€/mois pour ne plus être le professionnel avec la carte basique — <strong style="color:#0f0f14;">c'est l'investissement le plus simple que vous pouvez faire aujourd'hui.</strong></p>
 </td></tr>
 ${cta("Ne pas laisser le champ libre →", p.trackUrl)}
-<tr><td style="padding:8px 36px 28px;" align="center"><p style="margin:0;font-size:12px;color:#9ca3af;">Plan Vitrine · 9,90€/mois · Activé en 2 minutes</p></td></tr>
+<tr><td style="padding:8px 36px 28px;" align="center"><p style="margin:0;font-size:12px;color:#9ca3af;">Plan Vitrine · 4,80€/mois · Activé en 2 minutes</p></td></tr>
 ${footer()}
 `),
   };
@@ -667,12 +666,12 @@ ${badge("Offre finale · Dernière chance")}
 <p style="margin:0 0 6px;font-size:13px;font-weight:700;color:#7c3aed;text-transform:uppercase;letter-spacing:0.5px;">Offre d'essai exclusive</p>
 <p style="margin:0 0 10px;font-size:36px;font-weight:900;color:#0f0f14;line-height:1;">14 jours gratuits</p>
 <p style="margin:0 0 16px;font-size:15px;color:#374151;">Accès complet au plan Vitrine, toutes les fonctionnalités, sans renseigner de CB.</p>
-<p style="margin:0;font-size:13px;color:#9ca3af;">Après les 14 jours : 9,90€/mois, ou retour automatique sur Essentielle.</p>
+<p style="margin:0;font-size:13px;color:#9ca3af;">Après les 14 jours : 4,80€/mois, ou retour automatique sur Essentielle.</p>
 </td></tr>
 </table>
 </td></tr>
 <tr><td style="padding:0 36px 16px;">
-<p style="margin:0;font-size:15px;line-height:1.75;color:#374151;">En 14 jours, vous pourrez construire votre carte complète, voir vos analytics, choisir votre thème premium — et décider vous-même si ça vaut 9,90€/mois. Je suis convaincu que oui. Mais c'est vous qui décidez.</p>
+<p style="margin:0;font-size:15px;line-height:1.75;color:#374151;">En 14 jours, vous pourrez construire votre carte complète, voir vos analytics, choisir votre thème premium — et décider vous-même si ça vaut 4,80€/mois. Je suis convaincu que oui. Mais c'est vous qui décidez.</p>
 </td></tr>
 ${cta("Commencer mon essai gratuit →", p.trackUrl, "#7c3aed")}
 <tr><td style="padding:10px 36px 28px;">
