@@ -6,16 +6,18 @@ export function usePlan() {
   const cached = getProfileMeta();
   const [plan, setPlan] = useState<string>(cached?.plan ?? "free");
   const [loading, setLoading] = useState(true);
+  const [hasProfile, setHasProfile] = useState<boolean | null>(null);
 
   useEffect(() => {
     supabase.auth.getUser().then(async ({ data: { user } }) => {
-      if (!user) { setLoading(false); return; }
+      if (!user) { setLoading(false); setHasProfile(false); return; }
       const { data } = await supabase
         .from("nfc_profiles")
         .select("id, slug, plan, actif")
         .eq("user_id", user.id)
         .maybeSingle();
       if (data) {
+        setHasProfile(true);
         const realPlan = data.plan ?? "free";
         setPlan(realPlan);
         const meta = getProfileMeta();
@@ -24,10 +26,12 @@ export function usePlan() {
         } else {
           setProfileMeta({ id: data.id, slug: data.slug, plan: realPlan, actif: data.actif ?? true });
         }
+      } else {
+        setHasProfile(false);
       }
       setLoading(false);
     });
   }, []);
 
-  return { plan, loading };
+  return { plan, loading, hasProfile };
 }

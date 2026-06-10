@@ -11,6 +11,7 @@ import { useCardStore } from "@/lib/card-store";
 import { ExternalLink, Share2, Command, Circle, QrCode, HeadphonesIcon } from "lucide-react";
 import { useAuthStore } from "@/lib/auth-store";
 import { getProfileMeta } from "@/lib/profile-store";
+import { usePlan } from "@/lib/use-plan";
 
 export const Route = createFileRoute("/dashboard")({
   head: () => ({
@@ -52,23 +53,26 @@ function DashboardLayout() {
   const [shareOpen, setShareOpen] = useState(false);
   const [gateDismissed, setGateDismissed] = useState(false);
   const { user, loading } = useAuthStore();
+  const { hasProfile, loading: planLoading } = usePlan();
   const navigate = useNavigate();
 
   useEffect(() => {
-    if (!loading && !user) {
-      navigate({ to: "/connexion" });
-    }
+    if (!loading && !user) navigate({ to: "/connexion" });
   }, [user, loading, navigate]);
+
+  useEffect(() => {
+    if (!planLoading && hasProfile === false) navigate({ to: "/builder" });
+  }, [planLoading, hasProfile, navigate]);
 
   const profile = getProfileMeta();
   const origin = typeof window !== "undefined" ? window.location.origin : "https://www.cartevisitedigitale.fr";
   const publicUrl = profile ? `${origin}/${profile.slug}` : `${origin}/`;
   const isPublished = profile?.actif ?? false;
 
-  if (loading) {
+  if (loading || planLoading || !user || hasProfile === null) {
     return (
-      <div className="min-h-screen bg-background grid place-items-center">
-        <div className="animate-pulse text-muted-foreground text-sm">Chargement…</div>
+      <div className="min-h-screen bg-background flex items-center justify-center">
+        <div className="w-8 h-8 rounded-full border-2 border-primary border-t-transparent animate-spin" />
       </div>
     );
   }
