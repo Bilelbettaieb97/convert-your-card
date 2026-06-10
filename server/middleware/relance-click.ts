@@ -48,11 +48,11 @@ export default defineEventHandler(async (event) => {
       .eq("id", record.id);
   }
 
-  // Générer un nouveau magic link pour confirmer l'email + connecter l'utilisateur
+  // Générer un nouveau magic link — redirect vers /builder pour compléter le funnel
   const { data: linkData } = await admin.auth.admin.generateLink({
     type: "magiclink",
     email: record.email,
-    options: { redirectTo: `${appUrl}/bienvenue` },
+    options: { redirectTo: `${appUrl}/builder` },
   });
 
   const magicLink = (linkData as any)?.properties?.action_link;
@@ -63,7 +63,7 @@ export default defineEventHandler(async (event) => {
   // Fallback si génération échoue
   return sendRedirect(
     event,
-    `${appUrl}/connexion?email=${encodeURIComponent(record.email)}`,
+    `${appUrl}/builder`,
     302,
   );
 });
