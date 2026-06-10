@@ -63,11 +63,11 @@ export function CookieBanner() {
 
   return (
     <div
-      className={`fixed bottom-0 left-0 right-0 z-50 transition-all duration-500 ease-out ${
-        visible ? "translate-y-0 opacity-100" : "translate-y-full opacity-0"
+      className={`fixed bottom-4 left-4 z-50 w-[calc(100vw-2rem)] max-w-sm transition-all duration-500 ease-out ${
+        visible ? "translate-y-0 opacity-100" : "translate-y-8 opacity-0"
       }`}
     >
-      <div className="bg-background border-t border-border shadow-2xl px-5 py-5 md:px-8 md:py-6 max-w-3xl mx-auto md:mb-4 md:rounded-2xl md:border md:shadow-2xl">
+      <div className="bg-background border border-border shadow-2xl rounded-2xl px-5 py-5">
 
         {/* Header */}
         <div className="flex items-start justify-between gap-4 mb-3">
