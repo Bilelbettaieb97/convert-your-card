@@ -66,7 +66,7 @@ export default defineEventHandler(async (event) => {
   }
 
   // ── Série builder (J+1 / J+3 / J+6 / J+10 / J+14 / J+21) ─────────────
-  const builder = users.filter((r: any) => r.email_confirme_le && !r.plan);
+  const builder = users.filter((r: any) => r.email_confirme_le && !r.plan && r.builder_step >= 1);
 
   for (const [stepStr, minDays] of Object.entries(BR_DELAYS)) {
     const step = Number(stepStr);
