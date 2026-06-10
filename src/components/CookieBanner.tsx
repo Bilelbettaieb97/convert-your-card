@@ -99,7 +99,7 @@ export function CookieBanner() {
             onClick={() => dismiss("accepted")}
             className="shrink-0 rounded-xl bg-gradient-to-r from-[#c026d3] to-[#7c3aed] text-white text-sm font-semibold px-5 py-2.5 hover:opacity-90 transition-opacity"
           >
-            Accepter les cookies ✨
+            Ok pour moi ✨
           </button>
         </div>
 
