@@ -214,7 +214,13 @@ function BuilderPage() {
   return (
     <>
       {renderStep()}
-      {step !== "edit" && <AiGenerateButton setData={setData} currentData={data} />}
+      {step !== "edit" && (
+        <AiGenerateButton
+          setData={setData}
+          currentData={data}
+          onApplied={() => advanceTo("essentials")}
+        />
+      )}
     </>
   );
 }

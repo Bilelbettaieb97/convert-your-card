@@ -6,6 +6,7 @@ import { DEFAULT_CARD, type CardData } from "@/lib/card-types";
 type Props = {
   setData: (data: CardData) => void;
   currentData: CardData;
+  onApplied?: () => void;
 };
 
 const ACTION_LABELS: Record<string, string> = {
@@ -15,7 +16,7 @@ const ACTION_LABELS: Record<string, string> = {
   website: "🌐 Site web",
 };
 
-export function AiGenerateButton({ setData, currentData }: Props) {
+export function AiGenerateButton({ setData, currentData, onApplied }: Props) {
   const [open, setOpen] = useState(false);
   const [visible, setVisible] = useState(false);
   const [input, setInput] = useState("");
@@ -68,7 +69,10 @@ export function AiGenerateButton({ setData, currentData }: Props) {
       ...result,
     });
     setApplied(true);
-    setTimeout(() => closeModal(), 1400);
+    setTimeout(() => {
+      closeModal();
+      onApplied?.();
+    }, 1000);
   }
 
   const activeActions = result?.actions
