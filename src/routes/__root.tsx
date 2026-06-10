@@ -112,9 +112,6 @@ function RootShell({ children }: { children: ReactNode }) {
     <html lang="fr">
       <head>
         <HeadContent />
-        {/* Google Analytics — cartevisitedigitale.fr */}
-        <script async src="https://www.googletagmanager.com/gtag/js?id=G-97N9NYKHD0" />
-        <script dangerouslySetInnerHTML={{ __html: `window.dataLayer=window.dataLayer||[];function gtag(){dataLayer.push(arguments);}gtag('js',new Date());gtag('config','G-97N9NYKHD0');` }} />
       </head>
       <body>
         {children}
@@ -128,17 +125,27 @@ function RootComponent() {
   const { queryClient } = Route.useRouteContext();
 
   useEffect(() => {
+    // Google Analytics
     const w = window as any;
+    w.dataLayer = w.dataLayer || [];
+    w.gtag = function (...args: any[]) { w.dataLayer.push(args); };
+    w.gtag("js", new Date());
+    w.gtag("config", "G-97N9NYKHD0");
+    const ga = document.createElement("script");
+    ga.async = true;
+    ga.src = "https://www.googletagmanager.com/gtag/js?id=G-97N9NYKHD0";
+    document.head.appendChild(ga);
+    // Meta Pixel
     if (w.fbq) return;
     const n: any = (w.fbq = function () {
       n.callMethod ? n.callMethod.apply(n, arguments) : n.queue.push(arguments);
     });
     if (!w._fbq) w._fbq = n;
     n.push = n; n.loaded = true; n.version = "2.0"; n.queue = [];
-    const s = document.createElement("script");
-    s.async = true;
-    s.src = "https://connect.facebook.net/en_US/fbevents.js";
-    document.head.appendChild(s);
+    const fb = document.createElement("script");
+    fb.async = true;
+    fb.src = "https://connect.facebook.net/en_US/fbevents.js";
+    document.head.appendChild(fb);
     w.fbq("init", "2460619001098990");
     w.fbq("track", "PageView");
   }, []);
