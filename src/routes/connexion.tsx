@@ -244,6 +244,13 @@ function ConnexionPage() {
               Reçois un lien de connexion
             </Link>
           </p>
+
+          <p className="mt-3 text-center text-sm text-muted-foreground">
+            Pas encore de compte ?{" "}
+            <Link to="/inscription" className="text-[#c026d3] font-semibold hover:underline">
+              Inscris-toi ici
+            </Link>
+          </p>
         </div>
       </div>
     </>
