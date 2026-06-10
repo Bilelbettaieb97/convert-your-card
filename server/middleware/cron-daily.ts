@@ -12,6 +12,7 @@ const BR_DELAYS: Record<number, number> = {
   3: 3,       // 3 jours
   4: 5,       // 5 jours
   5: 7,       // 7 jours
+  6: 9,       // 9 jours
 };
 
 function daysSince(ts: string | null | undefined): number {
