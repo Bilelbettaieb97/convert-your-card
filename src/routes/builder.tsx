@@ -16,6 +16,7 @@ import { BuilderWelcome } from "@/components/builder/BuilderWelcome";
 import { BuilderTheme } from "@/components/builder/BuilderTheme";
 import { BuilderSections } from "@/components/builder/BuilderSections";
 import { StepHeader, type StepNum } from "@/components/builder/StepHeader";
+import { AiGenerateButton } from "@/components/builder/AiGenerateButton";
 import { buildPreviewCard, buildPreviewFromTheme, type VariantId } from "@/lib/profession-personas";
 
 
@@ -121,91 +122,101 @@ function BuilderPage() {
     return <div className="min-h-screen bg-background grid place-items-center text-muted-foreground">Chargement…</div>;
   }
 
-  if (step === "intro") {
+  function renderStep() {
+    if (step === "intro") {
+      return (
+        <BuilderIntro
+          completedThrough={completedThrough}
+          onGoToStep={goToStep}
+          onTemplate={() => advanceTo("welcome")}
+          onDirect={() => {
+            setCompletedThrough((c) => Math.max(c, 3) as StepNum);
+            setStep("theme");
+          }}
+        />
+      );
+    }
+    if (step === "welcome") {
+      return (
+        <BuilderWelcome
+          initialProfessionId={data.profession}
+          initialAccent={data.accent}
+          completedThrough={completedThrough}
+          onGoToStep={goToStep}
+          onChooseProfession={(p) => {
+            update("profession", p.id);
+            update("accent", p.themeId as CardData["accent"]);
+            setData(buildPreviewCard(p, "essentielle"));
+            setPlan("essentielle");
+            advanceTo("theme");
+          }}
+          onChooseTheme={(themeId) => {
+            setData(buildPreviewFromTheme(themeId));
+            advanceTo("theme");
+          }}
+        />
+      );
+    }
+    if (step === "theme") {
+      return (
+        <BuilderTheme
+          data={data}
+          update={update}
+          completedThrough={completedThrough}
+          onGoToStep={goToStep}
+          onBack={() => setStep(data.profession ? "welcome" : "intro")}
+          onNext={() => advanceTo("essentials")}
+        />
+      );
+    }
+    if (step === "essentials") {
+      return (
+        <BuilderSections
+          step="essentials"
+          data={data}
+          setData={setData}
+          update={update}
+          plan={plan}
+          setPlan={setPlan}
+          completedThrough={completedThrough}
+          onGoToStep={goToStep}
+          onBack={() => setStep("theme")}
+          onNext={() => advanceTo("extras")}
+        />
+      );
+    }
+    if (step === "extras") {
+      return (
+        <BuilderSections
+          step="extras"
+          data={data}
+          setData={setData}
+          update={update}
+          plan={plan}
+          setPlan={setPlan}
+          completedThrough={completedThrough}
+          onGoToStep={goToStep}
+          onBack={() => setStep("essentials")}
+          onNext={() => advanceTo("edit")}
+        />
+      );
+    }
     return (
-      <BuilderIntro
-        completedThrough={completedThrough}
-        onGoToStep={goToStep}
-        onTemplate={() => advanceTo("welcome")}
-        onDirect={() => {
-          setCompletedThrough((c) => Math.max(c, 3) as StepNum);
-          setStep("theme");
-        }}
-      />
-    );
-  }
-
-  if (step === "welcome") {
-    return (
-      <BuilderWelcome
-        initialProfessionId={data.profession}
-        initialAccent={data.accent}
-        completedThrough={completedThrough}
-        onGoToStep={goToStep}
-        onChooseProfession={(p) => {
-          update("profession", p.id);
-          update("accent", p.themeId as CardData["accent"]);
-          setData(buildPreviewCard(p, "essentielle"));
-          setPlan("essentielle");
-          advanceTo("theme");
-        }}
-        onChooseTheme={(themeId) => {
-          setData(buildPreviewFromTheme(themeId));
-          advanceTo("theme");
-        }}
-      />
-    );
-  }
-
-  if (step === "theme") {
-    return (
-      <BuilderTheme
+      <SuccessStep
         data={data}
-        update={update}
         completedThrough={completedThrough}
-        onGoToStep={goToStep}
-        onBack={() => setStep(data.profession ? "welcome" : "intro")}
-        onNext={() => advanceTo("essentials")}
+        goToStep={goToStep}
+        onEditAgain={() => setStep("extras")}
       />
     );
   }
 
-  if (step === "essentials") {
-    return (
-      <BuilderSections
-        step="essentials"
-        data={data}
-        setData={setData}
-        update={update}
-        plan={plan}
-        setPlan={setPlan}
-        completedThrough={completedThrough}
-        onGoToStep={goToStep}
-        onBack={() => setStep("theme")}
-        onNext={() => advanceTo("extras")}
-      />
-    );
-  }
-
-  if (step === "extras") {
-    return (
-      <BuilderSections
-        step="extras"
-        data={data}
-        setData={setData}
-        update={update}
-        plan={plan}
-        setPlan={setPlan}
-        completedThrough={completedThrough}
-        onGoToStep={goToStep}
-        onBack={() => setStep("essentials")}
-        onNext={() => advanceTo("edit")}
-      />
-    );
-  }
-
-  // Step 4 — Result / Success
-  return <SuccessStep data={data} completedThrough={completedThrough} goToStep={goToStep} onEditAgain={() => setStep("extras")} />;
+  return (
+    <>
+      {renderStep()}
+      {step !== "edit" && <AiGenerateButton setData={setData} currentData={data} />}
+    </>
+  );
 }
 
 /* -------------------------------------------------------------------------- */
