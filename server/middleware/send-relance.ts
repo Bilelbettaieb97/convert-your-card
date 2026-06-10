@@ -159,8 +159,6 @@ export default defineEventHandler(async (event) => {
   const supabaseUrl =
     process.env.SUPABASE_URL ?? process.env.VITE_SUPABASE_URL ?? "";
   const resendKey = process.env.RESEND_API_KEY ?? "";
-  const appUrl =
-    process.env.VITE_APP_URL ?? "https://www.cartevisitedigitale.fr";
 
   const admin = createClient(supabaseUrl, serviceKey, {
     auth: { autoRefreshToken: false, persistSession: false },
