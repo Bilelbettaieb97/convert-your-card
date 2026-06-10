@@ -39,8 +39,8 @@ const PLAN_META: Record<string, { label: string; price: string; gradient: string
   starter: { label: "Starter",  price: "6 €/mois",   gradient: "linear-gradient(135deg,#1d4ed8,#3b82f6)", color: "#3b82f6" },
   pro:     { label: "Pro",      price: "13 €/mois",  gradient: "linear-gradient(135deg,#7c3aed,#EC4899)", color: "#8B5CF6" },
   premium: { label: "Premium",  price: "32 €/mois",  gradient: "linear-gradient(135deg,#b45309,#F59E0B)", color: "#F59E0B" },
-  essentielle: { label: "Essentielle", price: "9,80 €/mois", gradient: "linear-gradient(135deg,#0f766e,#0ea5e9)", color: "#0ea5e9" },
-  vitrine: { label: "Vitrine",  price: "15,80 €/mois", gradient: "linear-gradient(135deg,#7c3aed,#EC4899)", color: "#8B5CF6" },
+  essentielle: { label: "Essentielle", price: "Gratuit", gradient: "linear-gradient(135deg,#0f766e,#0ea5e9)", color: "#0ea5e9" },
+  vitrine: { label: "Vitrine",  price: "4,80 €/mois", gradient: "linear-gradient(135deg,#7c3aed,#EC4899)", color: "#8B5CF6" },
 };
 
 function fmtDate(ts: number) {
