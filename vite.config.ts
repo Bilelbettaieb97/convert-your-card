@@ -28,6 +28,8 @@ export default defineConfig(async ({ command }) => {
           { middleware: true, handler: "./server/middleware/send-relance" },
           { middleware: true, handler: "./server/middleware/builder-relance-click" },
           { middleware: true, handler: "./server/middleware/send-builder-relance" },
+          { middleware: true, handler: "./server/middleware/cron-relance" },
+          { middleware: true, handler: "./server/middleware/cron-builder-relance" },
         ],
       })
     );

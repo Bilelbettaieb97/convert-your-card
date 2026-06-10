@@ -111,7 +111,7 @@ const EMAIL_TEMPLATES: Record<
         </a>
       </div>
       <p style="margin:0;color:#9ca3af;font-size:13px;line-height:1.6;text-align:center">
-        — Bilel, fondateur de Carte Visite Digitale<br>
+        — L'équipe Carte Visite Digitale<br>
         <a href="mailto:bilel@convertilab.com?subject=Désabonnement" style="color:#9ca3af">Me désabonner définitivement</a>
       </p>
     </div>
