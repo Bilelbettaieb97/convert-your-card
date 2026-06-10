@@ -126,7 +126,7 @@ export default defineEventHandler(async (event) => {
 
   // CORS — autorise les appels depuis le dashboard local (file://)
   setResponseHeaders(event, {
-    "Access-Control-Allow-Origin": "*",
+    "Access-Control-Allow-Origin": process.env.VITE_APP_URL ?? "https://www.cartevisitedigitale.fr",
     "Access-Control-Allow-Methods": "POST, OPTIONS",
     "Access-Control-Allow-Headers": "Content-Type, Authorization",
   });
