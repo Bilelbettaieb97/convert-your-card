@@ -33,7 +33,7 @@ async function sendTrialEndingEmail(email: string, nom: string, trialEndDate: Da
   const resendKey = process.env.RESEND_API_KEY;
   if (!resendKey) return;
   const appUrl = process.env.VITE_APP_URL ?? "https://www.cartevisitedigitale.fr";
-  const firstName = nom.split(" ")[0];
+  const firstName = getFirstName(nom, email);
   const dateStr = trialEndDate.toLocaleDateString("fr-FR", { weekday: "long", day: "numeric", month: "long" });
 
   await fetch("https://api.resend.com/emails", {
@@ -84,6 +84,16 @@ async function sendAdminNotification(email: string, plan: string, slug: string) 
   });
 }
 
+function getFirstName(nom: string, email: string): string {
+  const trimmed = (nom || "").trim();
+  const first = trimmed.split(" ")[0] || "";
+  if (!first || (first === first.toLowerCase() && !trimmed.includes(" "))) {
+    const prefix = email.split("@")[0];
+    return prefix.charAt(0).toUpperCase() + prefix.slice(1);
+  }
+  return first.charAt(0).toUpperCase() + first.slice(1);
+}
+
 async function sendWelcomeEmail(
   email: string,
   nom: string,
@@ -95,8 +105,8 @@ async function sendWelcomeEmail(
   const appUrl = process.env.VITE_APP_URL ?? "https://www.cartevisitedigitale.fr";
   const cardUrl = `${appUrl}/${slug}`;
   const dashboardUrl = `${appUrl}/dashboard`;
-  const planLabel = plan.charAt(0).toUpperCase() + plan.slice(1);
-  const firstName = nom.split(" ")[0];
+  const planLabel = plan === "essentielle" ? "Essentielle (gratuit)" : plan.charAt(0).toUpperCase() + plan.slice(1);
+  const firstName = getFirstName(nom, email);
 
   await fetch("https://api.resend.com/emails", {
     method: "POST",

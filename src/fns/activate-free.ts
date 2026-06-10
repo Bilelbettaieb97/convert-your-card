@@ -7,13 +7,24 @@ const schema = z.object({
   userId: z.string(),
 });
 
+function getFirstName(nom: string, email: string): string {
+  const trimmed = (nom || "").trim();
+  const first = trimmed.split(" ")[0] || "";
+  // If single all-lowercase word (likely a test/placeholder), fall back to email prefix
+  if (!first || (first === first.toLowerCase() && !trimmed.includes(" "))) {
+    const prefix = email.split("@")[0];
+    return prefix.charAt(0).toUpperCase() + prefix.slice(1);
+  }
+  return first.charAt(0).toUpperCase() + first.slice(1);
+}
+
 async function sendWelcomeEmail(email: string, nom: string, slug: string) {
   const resendKey = process.env.RESEND_API_KEY;
   if (!resendKey) return;
   const appUrl = process.env.VITE_APP_URL ?? "https://www.cartevisitedigitale.fr";
   const cardUrl = `${appUrl}/${slug}`;
   const dashboardUrl = `${appUrl}/dashboard`;
-  const firstName = nom.split(" ")[0];
+  const firstName = getFirstName(nom, email);
 
   await fetch("https://api.resend.com/emails", {
     method: "POST",
@@ -34,7 +45,7 @@ async function sendWelcomeEmail(email: string, nom: string, slug: string) {
     </div>
     <div style="background:#ffffff;padding:40px;border-radius:0 0 16px 16px;box-shadow:0 4px 24px rgba(0,0,0,0.06)">
       <p style="margin:0 0 24px;color:#374151;font-size:15px;line-height:1.7">
-        Félicitations — tu fais maintenant partie des professionnels qui partagent leur profil en 1 tap. 🚀
+        Félicitations pour ton plan <strong style="color:#c026d3">Essentielle (gratuit)</strong> — tu fais maintenant partie des professionnels qui partagent leur profil en 1 tap. 🚀
       </p>
       <div style="background:linear-gradient(135deg,#fdf4ff,#f5f3ff);border:1px solid #e9d5ff;border-radius:12px;padding:24px;margin-bottom:28px;text-align:center">
         <p style="margin:0 0 6px;font-size:12px;color:#6b7280;text-transform:uppercase;letter-spacing:0.8px">🔗 Ton lien public</p>
