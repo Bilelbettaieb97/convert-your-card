@@ -106,6 +106,9 @@ function BuilderIAPage() {
           name: userName || DEFAULT_CARD.name,
           photo: user?.user_metadata?.avatar_url || DEFAULT_CARD.photo,
           email: user?.email || DEFAULT_CARD.email,
+          agency: "",
+          phone: "",
+          website: "",
         };
         setGeneratedCard(merged);
         resultReady.current = true;
