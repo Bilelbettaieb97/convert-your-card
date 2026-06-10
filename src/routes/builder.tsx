@@ -1,6 +1,7 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useEffect, useMemo, useState } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useAuthStore } from "@/lib/auth-store";
+import { supabase } from "@/integrations/supabase/client";
 import { Button } from "@/components/ui/button";
 import {
   CheckCircle2, Sparkles, Rocket, ArrowRight, Lock, QrCode,
@@ -37,16 +38,39 @@ export const Route = createFileRoute("/builder")({
   component: BuilderPage,
 });
 
+const STEP_LABELS: Record<Step, string> = {
+  intro:      "Intro",
+  welcome:    "Choix profession",
+  theme:      "Thème",
+  essentials: "Infos essentielles",
+  extras:     "Extras",
+  edit:       "Finalisation",
+};
+
 function BuilderPage() {
   const { data, setData, update, hydrated } = useCardStore();
+  const { user } = useAuthStore();
   const [step, setStep] = useState<Step>("intro");
   const [plan, setPlan] = useState<VariantId>("vitrine");
   const [completedThrough, setCompletedThrough] = useState<StepNum>(1);
+  const saveTimeoutRef = useRef<ReturnType<typeof setTimeout> | null>(null);
+
+  const saveBuilderProgress = (s: Step) => {
+    if (!user?.id) return;
+    if (saveTimeoutRef.current) clearTimeout(saveTimeoutRef.current);
+    saveTimeoutRef.current = setTimeout(() => {
+      supabase.from("builder_progress").upsert(
+        { user_id: user.id, step: STEP_NUM[s], step_name: s, updated_at: new Date().toISOString() },
+        { onConflict: "user_id" }
+      ).then(() => {});
+    }, 500);
+  };
 
   const advanceTo = (next: Step) => {
     const n = STEP_NUM[next];
     setCompletedThrough((c) => (n > c ? n : c));
     setStep(next);
+    saveBuilderProgress(next);
   };
 
   const goToStep = (n: StepNum) => {
