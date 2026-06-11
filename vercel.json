@@ -3,6 +3,10 @@
     {
       "path": "/api/cron-daily",
       "schedule": "0 * * * *"
+    },
+    {
+      "path": "/api/cron-nc-fast",
+      "schedule": "*/10 * * * *"
     }
   ],
   "headers": [
