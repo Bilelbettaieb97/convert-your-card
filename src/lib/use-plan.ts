@@ -13,15 +13,26 @@ export function usePlan() {
   const [hasProfile, setHasProfile] = useState<boolean | null>(null);
   const [actif, setActif] = useState<boolean>(cached?.actif ?? true);
   const [createdAt, setCreatedAt] = useState<string | null>(null);
+  const [subStatus, setSubStatus] = useState<string | null>(null);
+  const [trialEnd, setTrialEnd] = useState<string | null>(null);
 
   useEffect(() => {
     supabase.auth.getUser().then(async ({ data: { user } }) => {
       if (!user) { setLoading(false); setHasProfile(false); return; }
-      const { data } = await supabase
-        .from("nfc_profiles")
-        .select("id, slug, plan, actif, created_at")
-        .eq("user_id", user.id)
-        .maybeSingle();
+
+      const [{ data }, { data: sub }] = await Promise.all([
+        supabase
+          .from("nfc_profiles")
+          .select("id, slug, plan, actif, created_at")
+          .eq("user_id", user.id)
+          .maybeSingle(),
+        supabase
+          .from("subscriptions")
+          .select("status, current_period_end")
+          .eq("user_id", user.id)
+          .maybeSingle(),
+      ]);
+
       if (data) {
         setHasProfile(true);
         const realPlan = data.plan ?? "free";
@@ -34,6 +45,12 @@ export function usePlan() {
       } else {
         setHasProfile(false);
       }
+
+      if (sub) {
+        setSubStatus(sub.status ?? null);
+        setTrialEnd((sub as any).current_period_end ?? null);
+      }
+
       setLoading(false);
     });
   }, []);
@@ -43,8 +60,17 @@ export function usePlan() {
     : 0;
   const daysLeft = Math.max(0, TRIAL_DAYS - daysOld);
   const trialExpired = daysOld >= TRIAL_DAYS && plan !== "vitrine";
-  const isInTrial = plan === "essentielle" && daysLeft > 0;
-  const trialDaysLeft = isInTrial ? daysLeft : 0;
+
+  // isInTrial : basé sur subscriptions.status (Stripe), pas sur le plan
+  const isInTrial = subStatus === "trialing";
+
+  // trialDaysLeft : depuis current_period_end Stripe si disponible,
+  // sinon fallback sur created_at + 3 jours (juste après checkout, avant webhook subscription.updated)
+  const trialDaysLeft = isInTrial
+    ? trialEnd
+      ? Math.max(0, Math.ceil((new Date(trialEnd).getTime() - Date.now()) / 86_400_000))
+      : daysLeft
+    : 0;
 
   return { plan, loading, hasProfile, actif, daysLeft, trialExpired, slug, profileId, isInTrial, trialDaysLeft };
 }
