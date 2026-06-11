@@ -1,5 +1,5 @@
 import * as React from "react";
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import {
   Eye, MousePointerClick, Smartphone, QrCode, ArrowRight, Sparkles,
   CheckCircle2, Circle, TrendingUp, Zap, CreditCard, Palette, Share2,
@@ -16,7 +16,13 @@ import { supabase } from "@/integrations/supabase/client";
 import { getProfileMeta } from "@/lib/profile-store";
 import { usePlan } from "@/lib/use-plan";
 
-export const Route = createFileRoute("/dashboard/")({ component: OverviewPage });
+export const Route = createFileRoute("/dashboard/")({
+  component: () => {
+    const navigate = useNavigate();
+    useEffect(() => { navigate({ to: "/dashboard/card", replace: true }); }, []);
+    return null;
+  },
+});
 
 type Kpis = { vues: number; clics: number; vcards: number; scans: number };
 
