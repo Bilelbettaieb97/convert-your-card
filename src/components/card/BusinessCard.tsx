@@ -1150,20 +1150,23 @@ const SOCIAL_BRAND: Record<string, string> = {
   Pinterest: "oklch(0.55 0.22 20)",
 };
 
+const toHref = (v: string, wrap?: (s: string) => string) =>
+  !v || v === "#" ? null : wrap ? wrap(v) : v;
+
 function SocialsSection({ data, profileId }: { data: CardData; profileId?: string }) {
   if (!data.socialsEnabled) return null;
   const v = data.variants.socials;
   const items = [
-    data.linkedin       && { icon: Linkedin,      label: "LinkedIn",   href: data.linkedin },
-    data.instagram      && { icon: Instagram,     label: "Instagram",  href: data.instagram },
-    data.facebook       && { icon: Facebook,      label: "Facebook",   href: data.facebook },
-    data.tiktok         && { icon: TikTokIcon,    label: "TikTok",     href: data.tiktok },
-    data.youtube        && { icon: Youtube,       label: "YouTube",    href: data.youtube },
-    data.twitter        && { icon: Twitter,       label: "Twitter/X",  href: data.twitter },
-    data.snapchat       && { icon: SnapchatIcon,  label: "Snapchat",   href: data.snapchat },
-    data.pinterest      && { icon: PinterestIcon, label: "Pinterest",  href: data.pinterest },
-    data.whatsappSocial && { icon: MessageCircle, label: "WhatsApp",   href: `https://wa.me/${data.whatsappSocial}` },
-  ].filter(Boolean) as Array<{ icon: any; label: string; href: string }>;
+    data.linkedin       && { icon: Linkedin,      label: "LinkedIn",  href: toHref(data.linkedin) },
+    data.instagram      && { icon: Instagram,     label: "Instagram", href: toHref(data.instagram) },
+    data.facebook       && { icon: Facebook,      label: "Facebook",  href: toHref(data.facebook) },
+    data.tiktok         && { icon: TikTokIcon,    label: "TikTok",    href: toHref(data.tiktok) },
+    data.youtube        && { icon: Youtube,       label: "YouTube",   href: toHref(data.youtube) },
+    data.twitter        && { icon: Twitter,       label: "Twitter/X", href: toHref(data.twitter) },
+    data.snapchat       && { icon: SnapchatIcon,  label: "Snapchat",  href: toHref(data.snapchat) },
+    data.pinterest      && { icon: PinterestIcon, label: "Pinterest", href: toHref(data.pinterest) },
+    data.whatsappSocial && data.whatsappSocial !== "#" && { icon: MessageCircle, label: "WhatsApp", href: `https://wa.me/${data.whatsappSocial}` },
+  ].filter(Boolean) as Array<{ icon: any; label: string; href: string | null }>;
   if (items.length === 0) return null;
 
   const track = (label: string) => profileId && logEvent(profileId, "click_social", { type: label.toLowerCase() });
@@ -1171,15 +1174,22 @@ function SocialsSection({ data, profileId }: { data: CardData; profileId?: strin
   if (v === "pills") {
     return (
       <section className="px-5 space-y-2">
-        {items.map((it, i) => (
-          <a key={i} href={it.href} target="_blank" rel="noopener noreferrer"
-            onClick={() => track(it.label)}
-            className="flex items-center gap-3 rounded-2xl bg-card-surface border border-card-border px-4 py-3 active:scale-[0.99] transition">
-            <it.icon className="h-4 w-4" style={{ color: "var(--card-accent)" }} />
-            <span className="text-sm font-medium flex-1">{it.label}</span>
-            <ExternalLink className="h-3.5 w-3.5 text-card-muted" />
-          </a>
-        ))}
+        {items.map((it, i) =>
+          it.href ? (
+            <a key={i} href={it.href} target="_blank" rel="noopener noreferrer"
+              onClick={() => track(it.label)}
+              className="flex items-center gap-3 rounded-2xl bg-card-surface border border-card-border px-4 py-3 active:scale-[0.99] transition">
+              <it.icon className="h-4 w-4" style={{ color: "var(--card-accent)" }} />
+              <span className="text-sm font-medium flex-1">{it.label}</span>
+              <ExternalLink className="h-3.5 w-3.5 text-card-muted" />
+            </a>
+          ) : (
+            <div key={i} className="flex items-center gap-3 rounded-2xl bg-card-surface border border-card-border px-4 py-3 opacity-60">
+              <it.icon className="h-4 w-4" style={{ color: "var(--card-accent)" }} />
+              <span className="text-sm font-medium flex-1">{it.label}</span>
+            </div>
+          )
+        )}
       </section>
     );
   }
@@ -1187,27 +1197,42 @@ function SocialsSection({ data, profileId }: { data: CardData; profileId?: strin
   if (v === "branded") {
     return (
       <section className="px-5 flex justify-center gap-3">
-        {items.map((it, i) => (
-          <a key={i} href={it.href} target="_blank" rel="noopener noreferrer" aria-label={it.label}
-            onClick={() => track(it.label)}
-            className="h-12 w-12 grid place-items-center rounded-2xl active:scale-95 transition"
-            style={{ background: SOCIAL_BRAND[it.label] }}>
-            <it.icon className="h-5 w-5 text-white" />
-          </a>
-        ))}
+        {items.map((it, i) =>
+          it.href ? (
+            <a key={i} href={it.href} target="_blank" rel="noopener noreferrer" aria-label={it.label}
+              onClick={() => track(it.label)}
+              className="h-12 w-12 grid place-items-center rounded-2xl active:scale-95 transition"
+              style={{ background: SOCIAL_BRAND[it.label] }}>
+              <it.icon className="h-5 w-5 text-white" />
+            </a>
+          ) : (
+            <div key={i} aria-label={it.label}
+              className="h-12 w-12 grid place-items-center rounded-2xl opacity-60"
+              style={{ background: SOCIAL_BRAND[it.label] }}>
+              <it.icon className="h-5 w-5 text-white" />
+            </div>
+          )
+        )}
       </section>
     );
   }
 
   return (
     <section className="px-5 flex justify-center gap-3">
-      {items.map((it, i) => (
-        <a key={i} href={it.href} target="_blank" rel="noopener noreferrer" aria-label={it.label}
-          onClick={() => track(it.label)}
-          className="h-11 w-11 grid place-items-center rounded-full bg-card-surface border border-card-border active:scale-95 transition">
-          <it.icon className="h-5 w-5" style={{ color: "var(--card-accent)" }} />
-        </a>
-      ))}
+      {items.map((it, i) =>
+        it.href ? (
+          <a key={i} href={it.href} target="_blank" rel="noopener noreferrer" aria-label={it.label}
+            onClick={() => track(it.label)}
+            className="h-11 w-11 grid place-items-center rounded-full bg-card-surface border border-card-border active:scale-95 transition">
+            <it.icon className="h-5 w-5" style={{ color: "var(--card-accent)" }} />
+          </a>
+        ) : (
+          <div key={i} aria-label={it.label}
+            className="h-11 w-11 grid place-items-center rounded-full bg-card-surface border border-card-border opacity-60">
+            <it.icon className="h-5 w-5" style={{ color: "var(--card-accent)" }} />
+          </div>
+        )
+      )}
     </section>
   );
 }

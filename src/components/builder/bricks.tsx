@@ -494,6 +494,8 @@ const SOCIAL_LIST: Array<{ key: SocialKey; label: string; placeholder: string }>
   { key: "whatsappSocial",label: "WhatsApp",    placeholder: "33612345678" },
 ];
 
+const SOCIAL_SENTINEL = "#";
+
 export function SocialsBrick({ data, update }: BrickProps) {
   const [enabled, setEnabled] = useState<Record<SocialKey, boolean>>(() => {
     const init = {} as Record<SocialKey, boolean>;
@@ -503,29 +505,42 @@ export function SocialsBrick({ data, update }: BrickProps) {
 
   const toggle = (key: SocialKey, on: boolean) => {
     setEnabled((prev) => ({ ...prev, [key]: on }));
+    // ON without value → write sentinel so the icon appears immediately in preview
+    if (on && !((data[key] as string) ?? "")) update(key, SOCIAL_SENTINEL);
     if (!on) update(key, "");
+  };
+
+  const handleChange = (key: SocialKey, v: string) => {
+    update(key, v || SOCIAL_SENTINEL);
   };
 
   return (
     <div className="space-y-1">
-      {SOCIAL_LIST.map(({ key, label, placeholder }) => (
-        <div key={key}>
-          <div className="flex items-center justify-between py-2">
-            <span className="text-sm font-medium">{label}</span>
-            <Switch checked={enabled[key]} onCheckedChange={(v) => toggle(key, v)} />
-          </div>
-          {enabled[key] && (
-            <div className="pb-2">
-              <Input
-                value={(data[key] as string) ?? ""}
-                onChange={(e) => update(key, e.target.value)}
-                placeholder={placeholder}
-                autoFocus
-              />
+      {SOCIAL_LIST.map(({ key, label, placeholder }) => {
+        const raw = (data[key] as string) ?? "";
+        const displayValue = raw === SOCIAL_SENTINEL ? "" : raw;
+        return (
+          <div key={key}>
+            <div className="flex items-center justify-between py-2">
+              <span className="text-sm font-medium">{label}</span>
+              <Switch checked={enabled[key]} onCheckedChange={(v) => toggle(key, v)} />
             </div>
-          )}
-        </div>
-      ))}
+            {enabled[key] && (
+              <div className="pb-2">
+                <Input
+                  value={displayValue}
+                  onChange={(e) => handleChange(key, e.target.value)}
+                  placeholder={placeholder}
+                  autoFocus={displayValue === ""}
+                />
+                {displayValue === "" && (
+                  <p className="text-xs text-muted-foreground mt-1">L'icône est déjà visible — ajoutez le lien pour le rendre cliquable.</p>
+                )}
+              </div>
+            )}
+          </div>
+        );
+      })}
     </div>
   );
 }
