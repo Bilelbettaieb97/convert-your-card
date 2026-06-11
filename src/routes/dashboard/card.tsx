@@ -6,8 +6,9 @@ import { ShareGrid, QrCard, PublicLinkBar } from "@/components/dashboard/ShareGr
 import { useCardStore } from "@/lib/card-store";
 import { loadMyCard } from "@/lib/card-actions";
 import { getProfileMeta } from "@/lib/profile-store";
+import { usePlan } from "@/lib/use-plan";
 import type { CardData } from "@/lib/card-types";
-import { Layers, Palette, Sparkles, ArrowRight, ExternalLink } from "lucide-react";
+import { Layers, Palette, Sparkles, ArrowRight, ExternalLink, Wifi, WifiOff } from "lucide-react";
 
 export const Route = createFileRoute("/dashboard/card")({
   component: CardOverviewPage,
@@ -15,6 +16,7 @@ export const Route = createFileRoute("/dashboard/card")({
 
 function CardOverviewPage() {
   const { data, setData, hydrated } = useCardStore();
+  const { actif } = usePlan();
   const profile = getProfileMeta();
   const origin = typeof window !== "undefined" ? window.location.origin : "https://www.cartevisitedigitale.fr";
   const publicUrl = profile ? `${origin}/${profile.slug}` : `${origin}/`;
@@ -48,6 +50,21 @@ function CardOverviewPage() {
         {/* RIGHT — link, QR, share, edit buttons */}
         <div className="space-y-5">
 
+          {/* Statut carte */}
+          {actif ? (
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/30">
+              <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
+              <Wifi className="w-3.5 h-3.5 text-emerald-400" />
+              <span className="text-xs font-semibold text-emerald-400">Carte en ligne</span>
+            </div>
+          ) : (
+            <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-red-500/10 border border-red-500/30">
+              <span className="w-2 h-2 rounded-full bg-red-400" />
+              <WifiOff className="w-3.5 h-3.5 text-red-400" />
+              <span className="text-xs font-semibold text-red-400">Carte hors ligne</span>
+            </div>
+          )}
+
           {/* Public link */}
           <div className="rounded-2xl border border-border bg-card/40 p-4 space-y-3">
             <div className="flex items-center justify-between">
@@ -78,6 +95,7 @@ function CardOverviewPage() {
               icon={<Layers className="h-6 w-6" />}
               label="Modifier le contenu"
               hint="Sections, textes, boutons d'action"
+              primary
             />
             <EditButton
               to="/dashboard/theme"
@@ -98,17 +116,26 @@ function CardOverviewPage() {
   );
 }
 
-function EditButton({ to, icon, label, hint }: { to: string; icon: React.ReactNode; label: string; hint: string }) {
+function EditButton({ to, icon, label, hint, primary }: { to: string; icon: React.ReactNode; label: string; hint: string; primary?: boolean }) {
   return (
-    <Link to={to} className="group flex items-center gap-4 rounded-2xl border border-border bg-card/40 hover:border-primary/50 hover:bg-card p-4 transition-all hover:-translate-y-0.5">
-      <span className="h-12 w-12 rounded-xl bg-primary/10 text-primary grid place-items-center shrink-0 group-hover:bg-primary/15 transition-colors">
+    <Link
+      to={to}
+      className={`group flex items-center gap-4 rounded-2xl border p-4 transition-all hover:-translate-y-0.5 ${
+        primary
+          ? "border-primary/50 bg-gradient-to-r from-primary to-primary/80 hover:opacity-90 shadow-[0_4px_20px_-4px] shadow-primary/40"
+          : "border-border bg-card/40 hover:border-primary/50 hover:bg-card"
+      }`}
+    >
+      <span className={`h-12 w-12 rounded-xl grid place-items-center shrink-0 transition-colors ${
+        primary ? "bg-white/15 text-white" : "bg-primary/10 text-primary group-hover:bg-primary/15"
+      }`}>
         {icon}
       </span>
       <div className="flex-1 text-left min-w-0">
-        <div className="font-medium">{label}</div>
-        <div className="text-xs text-muted-foreground">{hint}</div>
+        <div className={`font-semibold ${primary ? "text-white" : ""}`}>{label}</div>
+        <div className={`text-xs ${primary ? "text-white/70" : "text-muted-foreground"}`}>{hint}</div>
       </div>
-      <ArrowRight className="h-4 w-4 text-muted-foreground group-hover:text-primary group-hover:translate-x-0.5 transition-all shrink-0" />
+      <ArrowRight className={`h-4 w-4 group-hover:translate-x-0.5 transition-all shrink-0 ${primary ? "text-white/80" : "text-muted-foreground group-hover:text-primary"}`} />
     </Link>
   );
 }
