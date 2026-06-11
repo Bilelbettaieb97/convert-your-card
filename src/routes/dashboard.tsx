@@ -173,23 +173,13 @@ function DashboardLayout() {
               </Link>
             </div>
           )}
-          {actif !== false && trialExpired && plan !== "vitrine" && (
+          {actif !== false && plan !== "vitrine" && (
             <div className="bg-amber-500/10 border-b border-amber-500/30 px-6 py-3 flex items-center justify-between gap-4">
               <p className="text-sm text-amber-400 font-medium">
-                Votre essai gratuit est terminé — votre carte affiche le branding ConvertiLab.
+                Plan Essentielle — votre carte affiche le branding ConvertiLab et vos statistiques sont verrouillées.
               </p>
               <Link to="/dashboard/account" className="shrink-0 px-4 py-1.5 rounded-full bg-amber-500 text-white text-xs font-semibold hover:bg-amber-600 transition">
                 Passer à Vitrine — 4,80€/mois
-              </Link>
-            </div>
-          )}
-          {actif !== false && !trialExpired && plan !== "vitrine" && daysLeft <= 3 && daysLeft > 0 && (
-            <div className="bg-blue-500/10 border-b border-blue-500/30 px-6 py-3 flex items-center justify-between gap-4">
-              <p className="text-sm text-blue-400 font-medium">
-                Il vous reste <strong>{daysLeft} jour{daysLeft > 1 ? "s" : ""}</strong> d'essai gratuit avant l'affichage du branding.
-              </p>
-              <Link to="/dashboard/account" className="shrink-0 px-4 py-1.5 rounded-full bg-blue-500 text-white text-xs font-semibold hover:bg-blue-600 transition">
-                Passer à Vitrine
               </Link>
             </div>
           )}

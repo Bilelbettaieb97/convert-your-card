@@ -103,12 +103,7 @@ function ProfilePage() {
 
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const profilePlan = (profile as any).plan as string | null;
-  // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const profileCreatedAt = (profile as any).created_at as string | null;
-  const daysOld = profileCreatedAt
-    ? Math.floor((Date.now() - new Date(profileCreatedAt).getTime()) / 86_400_000)
-    : 0;
-  const showBranding = daysOld >= 14 && profilePlan !== "vitrine";
+  const showBranding = profilePlan !== "vitrine";
 
   // If card_data is available (saved via builder), use the exact same BusinessCard component
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
