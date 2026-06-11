@@ -236,7 +236,8 @@ export default defineEventHandler(async (event) => {
     }
 
     // ── Série upgrade Vitrine (J+1 → J+50, 12 emails) ───────────────────────
-    const vitrineUsers = users.filter((r: any) => r.plan === "essentielle");
+    // Inclut les anciens trials expirés (plan=free, had_trial=true) pour leur envoyer la série upgrade
+    const vitrineUsers = users.filter((r: any) => r.plan === "essentielle" || (r.plan === "free" && r.had_trial));
 
     for (const [stepStr, minDays] of Object.entries(VU_DELAYS)) {
       const step = Number(stepStr);

@@ -313,13 +313,16 @@ export default defineEventHandler(async (event) => {
       .eq("stripe_subscription_id", sub.id)
       .maybeSingle();
 
+    const updatePayload: Record<string, unknown> = {
+      plan: isInactive ? "free" : (sub.metadata?.plan ?? "essentielle"),
+      status: sub.status,
+      current_period_end: sub.current_period_end ? new Date(sub.current_period_end * 1000).toISOString() : null,
+      updated_at: new Date().toISOString(),
+    };
+    if (sub.trial_end) updatePayload.had_trial = true;
+
     await adminSupabase.from("subscriptions")
-      .update({
-        plan: isInactive ? "free" : (sub.metadata?.plan ?? "essentielle"),
-        status: sub.status,
-        current_period_end: sub.current_period_end ? new Date(sub.current_period_end * 1000).toISOString() : null,
-        updated_at: new Date().toISOString(),
-      })
+      .update(updatePayload)
       .eq("stripe_subscription_id", sub.id);
 
     if (isInactive && subRow?.user_id) {
