@@ -283,7 +283,7 @@ export default defineEventHandler(async (event) => {
     // Upsert subscription
     if (userId) {
       await adminSupabase.from("subscriptions").upsert(
-        { user_id: userId, stripe_customer_id: stripeCustomerId, stripe_subscription_id: stripeSubscriptionId, plan, status: subscriptionStatus, current_period_end: trialEnd, updated_at: new Date().toISOString() },
+        { user_id: userId, stripe_customer_id: stripeCustomerId, stripe_subscription_id: stripeSubscriptionId, plan, status: subscriptionStatus, current_period_end: trialEnd, had_trial: trialEnd !== null, updated_at: new Date().toISOString() },
         { onConflict: "user_id" },
       );
     }
