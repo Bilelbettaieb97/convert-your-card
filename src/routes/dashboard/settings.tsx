@@ -1,5 +1,5 @@
 import { createFileRoute } from "@tanstack/react-router";
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Switch } from "@/components/ui/switch";
@@ -10,7 +10,8 @@ import { toast } from "sonner";
 import { useNavigate } from "@tanstack/react-router";
 import { useCardStore } from "@/lib/card-store";
 import { getProfileMeta } from "@/lib/profile-store";
-import { updateCard } from "@/lib/card-actions";
+import { loadMyCard, updateCard } from "@/lib/card-actions";
+import type { CardData } from "@/lib/card-types";
 
 export const Route = createFileRoute("/dashboard/settings")({
   head: () => ({ meta: [{ title: "Paramètres — Dashboard" }] }),
@@ -20,13 +21,19 @@ export const Route = createFileRoute("/dashboard/settings")({
 function SettingsPage() {
   const { user } = useAuthStore();
   const navigate = useNavigate();
-  const { data, update } = useCardStore();
+  const { data, setData, update } = useCardStore();
   const profile = getProfileMeta();
 
   const [newPassword, setNewPassword] = useState("");
   const [editEmail, setEditEmail] = useState(false);
   const [newEmail, setNewEmail] = useState("");
   const [signOutAllLoading, setSignOutAllLoading] = useState(false);
+
+  useEffect(() => {
+    loadMyCard().then((row) => {
+      if ((row as any)?.card_data) setData((row as any).card_data as CardData);
+    });
+  }, []);
 
   async function handlePasswordChange(e: React.FormEvent) {
     e.preventDefault();
