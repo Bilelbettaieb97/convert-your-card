@@ -16,9 +16,12 @@ export const createCheckoutSession = createServerFn({ method: "POST" })
 
     if (!priceId) throw new Error(`Prix introuvable pour ${data.plan}/${data.billing}`);
 
+    const isVitrine = data.plan === "vitrine";
+
     const session = await stripe.checkout.sessions.create({
       mode: "subscription",
       payment_method_types: ["card"],
+      payment_method_collection: isVitrine ? "if_required" : "always",
       customer_email: data.email,
       line_items: [{ price: priceId, quantity: 1 }],
       metadata: { plan: data.plan, billing: data.billing, email: data.email },
@@ -27,9 +30,14 @@ export const createCheckoutSession = createServerFn({ method: "POST" })
       allow_promotion_codes: true,
       subscription_data: {
         metadata: { plan: data.plan, email: data.email },
-        ...(data.plan === "vitrine" ? { trial_period_days: 3 } : {}),
+        ...(isVitrine ? {
+          trial_period_days: 3,
+          trial_settings: {
+            end_behavior: { missing_payment_method: "cancel" },
+          },
+        } : {}),
       },
-    });
+    } as Parameters<typeof stripe.checkout.sessions.create>[0]);
 
     return { url: session.url };
   });
