@@ -565,20 +565,29 @@ type PreviewPhaseProps = {
   onCopy: () => void;
 };
 
+const QUICK_THEMES: Array<{ accent: ThemeAccent; label: string; bg: string; ring: string }> = [
+  { accent: "noir",  label: "Noir & Or",   bg: "#1c1c1c", ring: "#c9a430" },
+  { accent: "navy",  label: "Marine",      bg: "#0d1929", ring: "#4a7fd4" },
+  { accent: "cream", label: "Crème",       bg: "#f5eedf", ring: "#b07040" },
+  { accent: "mint",  label: "Menthe",      bg: "#edf8f3", ring: "#3a9e78" },
+];
+
 function PreviewPhase({
   generatedCard, score, tips, shareUrl, sharing, copied,
   onActivate, onFree, onShare, onCopy,
 }: PreviewPhaseProps) {
   const [revealed, setRevealed] = useState(false);
+  const [selectedAccent, setSelectedAccent] = useState<ThemeAccent>(generatedCard.accent);
 
   useEffect(() => {
     const t = setTimeout(() => setRevealed(true), 40);
     return () => clearTimeout(t);
   }, []);
 
-  // Carte complète — toutes les sections Vitrine activées pour l'aperçu
+  // Carte complète — toutes les sections Vitrine activées + thème sélectionné
   const fullCard: CardData = {
     ...generatedCard,
+    accent: selectedAccent,
     statsEnabled: true,
     servicesEnabled: !!(generatedCard.services?.length),
     testimonialsEnabled: !!(generatedCard.testimonials?.length),
@@ -617,6 +626,30 @@ function PreviewPhase({
         {/* ── Gauche : phone Vitrine complet ── */}
         <div className="flex flex-col items-center gap-4">
           <p className="text-xs uppercase tracking-widest text-primary">Aperçu Vitrine complet</p>
+
+          {/* Sélecteur de thème */}
+          <div className="flex items-center gap-3">
+            {QUICK_THEMES.map((t) => {
+              const isSelected = selectedAccent === t.accent;
+              return (
+                <button
+                  key={t.accent}
+                  title={t.label}
+                  onClick={() => setSelectedAccent(t.accent)}
+                  style={{
+                    backgroundColor: t.bg,
+                    boxShadow: isSelected ? `0 0 0 2px ${t.ring}, 0 0 0 4px white` : "none",
+                    border: `2px solid ${isSelected ? t.ring : "transparent"}`,
+                    outline: isSelected ? `2px solid ${t.ring}` : "none",
+                    outlineOffset: "2px",
+                  }}
+                  className="w-8 h-8 rounded-full transition-all duration-200 hover:scale-110 focus:outline-none"
+                  aria-label={t.label}
+                />
+              );
+            })}
+            <span className="text-[11px] text-muted-foreground ml-1">Changer de thème</span>
+          </div>
 
           <div style={{
             perspective: "900px",
