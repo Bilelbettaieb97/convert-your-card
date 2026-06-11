@@ -1,11 +1,11 @@
-import { defineEventHandler, getQuery } from "h3";
+import { defineEventHandler, getQuery, sendRedirect } from "h3";
 import { createClient } from "@supabase/supabase-js";
 
 export default defineEventHandler(async (event) => {
   if (!event.path?.startsWith("/api/builder-relance-click") || event.method !== "GET") return;
 
   const { t: token } = getQuery(event);
-  if (!token) return new Response("Missing token", { status: 400 });
+  if (!token) return sendRedirect(event, process.env.VITE_APP_URL ?? "https://www.cartevisitedigitale.fr", 302);
 
   const supabaseUrl = process.env.SUPABASE_URL ?? process.env.VITE_SUPABASE_URL ?? "";
   const serviceKey  = process.env.SUPABASE_SERVICE_ROLE_KEY ?? "";
@@ -20,7 +20,7 @@ export default defineEventHandler(async (event) => {
     .maybeSingle();
 
   if (error || !row) {
-    return Response.redirect(`${appUrl}/pricing`, 302);
+    return sendRedirect(event, `${appUrl}/pricing`, 302);
   }
 
   if (!row.clicked_at) {
@@ -35,9 +35,9 @@ export default defineEventHandler(async (event) => {
       options: { redirectTo: `${appUrl}/pricing` },
     });
     if (linkData?.properties?.action_link) {
-      return Response.redirect(linkData.properties.action_link, 302);
+      return sendRedirect(event, linkData.properties.action_link, 302);
     }
   } catch (_) {}
 
-  return Response.redirect(`${appUrl}/pricing`, 302);
+  return sendRedirect(event, `${appUrl}/pricing`, 302);
 });
