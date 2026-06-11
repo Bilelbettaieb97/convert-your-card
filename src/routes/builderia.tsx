@@ -1,8 +1,8 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useState, useEffect, useRef, useMemo, useCallback } from "react";
+import { useState, useEffect, useRef } from "react";
 import {
-  Sparkles, Loader2, ArrowRight, CheckCircle2, Lock, Rocket,
-  ChevronRight, Share2, Copy, Check, TrendingUp,
+  Sparkles, Loader2, ArrowRight, Rocket,
+  Share2, Copy, Check,
 } from "lucide-react";
 import { useAuthStore } from "@/lib/auth-store";
 import { useCardStore } from "@/lib/card-store";
@@ -40,51 +40,9 @@ const BRICKS = [
   { icon: "🎯", label: "Appel à l'action" },
 ];
 
-const VITRINE_SECTIONS = [
-  { key: "statsEnabled" as const, label: "Statistiques clés", icon: "📊" },
-  { key: "servicesEnabled" as const, label: "Services & prestations", icon: "💼" },
-  { key: "testimonialsEnabled" as const, label: "Témoignages clients", icon: "⭐" },
-  { key: "calendarEnabled" as const, label: "Prise de rendez-vous", icon: "📅" },
-  { key: "galleryEnabled" as const, label: "Galerie de réalisations", icon: "🖼" },
-  { key: "listingsEnabled" as const, label: "Portefeuille immobilier", icon: "🏠" },
-  { key: "ctaEnabled" as const, label: "Appel à l'action fort", icon: "🎯" },
-  { key: "videoEnabled" as const, label: "Vidéo de présentation", icon: "🎥" },
-];
-
-const FREE_SECTIONS = [
-  { label: "Identité & photo de profil", icon: "🪪" },
-  { label: "Boutons d'action (appel, email…)", icon: "⚡" },
-  { label: "Bio & présentation", icon: "👤" },
-  { label: "Réseaux sociaux", icon: "🔗" },
-  { label: "Export contact (vCard)", icon: "📇" },
-];
 
 type Phase = "prompt" | "building" | "preview";
 
-// ─── Score ───────────────────────────────────────────────────────────────────
-
-function calcScore(card: CardData): { score: number; tips: Array<{ label: string; impact: string }> } {
-  let score = 35;
-  const tips: Array<{ label: string; impact: string }> = [];
-
-  if (card.photo && card.photo.startsWith("http")) score += 15;
-  else tips.push({ label: "Ajoutez une photo professionnelle", impact: "+23% de contacts" });
-
-  if (card.calendarEnabled && card.calendarUrl) score += 12;
-  else tips.push({ label: "Connectez votre agenda Calendly", impact: "+31% de RDV" });
-
-  if ((card.testimonials?.length ?? 0) >= 3) score += 12;
-
-  if (card.ctaEnabled && card.ctaTitle) score += 8;
-
-  if (card.coverPhoto) score += 8;
-  else tips.push({ label: "Ajoutez une photo de couverture", impact: "+12% d'engagement" });
-
-  const actionsCount = Object.values(card.actions ?? {}).filter(Boolean).length;
-  score += Math.min(actionsCount * 3, 10);
-
-  return { score: Math.min(score, 100), tips: tips.slice(0, 3) };
-}
 
 // ─── Apply SSE field ──────────────────────────────────────────────────────────
 
@@ -106,34 +64,6 @@ function applyField(card: Partial<CardData>, f: string, v: unknown) {
   }
 }
 
-// ─── Score circle SVG ────────────────────────────────────────────────────────
-
-function ScoreCircle({ score }: { score: number }) {
-  const r = 44;
-  const circ = 2 * Math.PI * r;
-  const offset = circ - (score / 100) * circ;
-  const color = score >= 80 ? "#22c55e" : score >= 60 ? "#f59e0b" : "#f97316";
-
-  return (
-    <svg width="120" height="120" className="rotate-[-90deg]">
-      <circle cx="60" cy="60" r={r} fill="none" stroke="currentColor" strokeWidth="8" className="text-muted/20" />
-      <circle
-        cx="60" cy="60" r={r} fill="none" stroke={color} strokeWidth="8"
-        strokeDasharray={circ} strokeDashoffset={offset}
-        strokeLinecap="round"
-        style={{ transition: "stroke-dashoffset 1s cubic-bezier(0.4,0,0.2,1)" }}
-      />
-      <text x="60" y="60" textAnchor="middle" dominantBaseline="middle"
-        style={{ rotate: "90deg", transformOrigin: "60px 60px", fill: color, fontSize: 24, fontWeight: 700, fontFamily: "system-ui" }}>
-        {score}
-      </text>
-      <text x="60" y="78" textAnchor="middle" dominantBaseline="middle"
-        style={{ rotate: "90deg", transformOrigin: "60px 60px", fill: "#888", fontSize: 10, fontFamily: "system-ui" }}>
-        /100
-      </text>
-    </svg>
-  );
-}
 
 // ─── Page ────────────────────────────────────────────────────────────────────
 
@@ -323,17 +253,10 @@ function BuilderIAPage() {
     setTimeout(() => setCopied(false), 2000);
   }
 
-  const { score, tips } = useMemo(
-    () => (generatedCard ? calcScore(generatedCard) : { score: 0, tips: [] }),
-    [generatedCard]
-  );
-
   const currentBrickLabel =
     buildStep > 0 && buildStep <= BRICKS.length
       ? BRICKS[buildStep - 1].label
       : "Initialisation…";
-
-  const enabledVitrineSections = VITRINE_SECTIONS.filter((s) => generatedCard?.[s.key]);
 
   if (loading || !user || !hydrated) {
     return (
@@ -548,12 +471,9 @@ function BuilderIAPage() {
   if (phase === "preview" && generatedCard) {
     return <PreviewPhase
       generatedCard={generatedCard}
-      score={score}
-      tips={tips}
       shareUrl={shareUrl}
       sharing={sharing}
       copied={copied}
-      enabledVitrineSections={enabledVitrineSections}
       onActivate={handleActivateVitrine}
       onFree={handleContinueFree}
       onShare={handleShare}
@@ -568,12 +488,9 @@ function BuilderIAPage() {
 
 type PreviewPhaseProps = {
   generatedCard: CardData;
-  score: number;
-  tips: Array<{ label: string; impact: string }>;
   shareUrl: string;
   sharing: boolean;
   copied: boolean;
-  enabledVitrineSections: typeof VITRINE_SECTIONS;
   onActivate: () => void;
   onFree: () => void;
   onShare: () => void;
@@ -581,16 +498,38 @@ type PreviewPhaseProps = {
 };
 
 function PreviewPhase({
-  generatedCard, score, tips, shareUrl, sharing, copied,
-  enabledVitrineSections, onActivate, onFree, onShare, onCopy,
+  generatedCard, shareUrl, sharing, copied,
+  onActivate, onFree, onShare, onCopy,
 }: PreviewPhaseProps) {
   const [revealed, setRevealed] = useState(false);
 
-  // Flip reveal au montage : part de -90deg, revient à 0
   useEffect(() => {
     const t = setTimeout(() => setRevealed(true), 40);
     return () => clearTimeout(t);
   }, []);
+
+  // Carte complète — toutes les sections Vitrine activées pour l'aperçu
+  const fullCard: CardData = {
+    ...generatedCard,
+    statsEnabled: true,
+    servicesEnabled: !!(generatedCard.services?.length),
+    testimonialsEnabled: !!(generatedCard.testimonials?.length),
+    ctaEnabled: true,
+    calendarEnabled: true,
+    aboutEnabled: true,
+    galleryEnabled: false,
+    listingsEnabled: false,
+  };
+
+  const vitrineFeatures: string[] = [
+    fullCard.servicesEnabled && "Services & prestations personnalisés",
+    fullCard.testimonialsEnabled && "Témoignages clients",
+    "Statistiques & chiffres clés",
+    "Prise de rendez-vous intégrée",
+    "Appel à l'action fort (CTA)",
+    "Thème premium · sans badge CVD",
+    "Analytics visiteurs",
+  ].filter(Boolean) as string[];
 
   return (
     <div className="min-h-screen bg-background text-foreground">
@@ -607,22 +546,21 @@ function PreviewPhase({
 
       <div className="max-w-5xl mx-auto px-4 py-10 grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
 
-        {/* ── Gauche : aperçu phone ── */}
+        {/* ── Gauche : phone Vitrine complet ── */}
         <div className="flex flex-col items-center gap-4">
-          <p className="text-xs uppercase tracking-widest text-primary">Aperçu de ta carte</p>
+          <p className="text-xs uppercase tracking-widest text-primary">Aperçu Vitrine complet</p>
 
-          {/* Flip reveal */}
           <div style={{
             perspective: "900px",
             transform: revealed ? "rotateY(0deg)" : "rotateY(-90deg)",
             transition: "transform 0.55s cubic-bezier(0.4, 0, 0.2, 1)",
           }}>
             <PhoneFrame>
-              <BusinessCard data={generatedCard} />
+              <BusinessCard data={fullCard} />
             </PhoneFrame>
           </div>
 
-          {/* Partage compact sous le phone */}
+          {/* Partage discret sous le phone */}
           <div className="w-full max-w-[280px]">
             {shareUrl ? (
               <div className="flex gap-2">
@@ -649,85 +587,46 @@ function PreviewPhase({
           </div>
         </div>
 
-        {/* ── Droite : score + plan + CTAs ── */}
-        <div className="space-y-5 lg:pt-4">
-          {/* Titre */}
+        {/* ── Droite : features Vitrine + CTA ── */}
+        <div className="space-y-6 lg:pt-4">
           <div>
             <h1 className="font-bold text-2xl text-foreground mb-1">
-              {generatedCard.title || "Ta carte est prête"}
+              Votre carte Vitrine est prête
             </h1>
             <p className="text-muted-foreground text-sm">
-              L'IA a configuré {enabledVitrineSections.length + FREE_SECTIONS.length} sections pour ton métier.
+              L'IA a activé {vitrineFeatures.length} fonctionnalités Vitrine pour votre métier.
             </p>
           </div>
 
-          {/* Score de conversion */}
-          <div className="rounded-2xl border border-border bg-card p-4">
-            <div className="flex items-center gap-2 mb-3">
-              <TrendingUp className="w-4 h-4 text-primary" />
-              <p className="text-sm font-semibold">Score de conversion</p>
-            </div>
-            <div className="flex items-center gap-4">
-              <ScoreCircle score={score} />
-              <div className="flex-1 space-y-2">
-                {tips.length === 0 ? (
-                  <p className="text-xs text-emerald-500 font-medium">Carte très bien optimisée !</p>
-                ) : (
-                  tips.map((tip) => (
-                    <div key={tip.label} className="flex flex-col gap-0.5">
-                      <p className="text-xs text-foreground leading-snug">{tip.label}</p>
-                      <p className="text-[10px] text-emerald-500 font-medium">{tip.impact}</p>
-                    </div>
-                  ))
-                )}
-              </div>
-            </div>
-          </div>
-
-          {/* Sections gratuites */}
-          <div className="rounded-2xl border border-border bg-card p-4 space-y-2">
-            <p className="text-xs font-semibold text-foreground uppercase tracking-wide mb-3">
-              ✅ Inclus dans le plan gratuit
+          {/* Liste des features Vitrine */}
+          <div className="rounded-2xl border border-[#c026d3]/30 bg-[#c026d3]/[0.04] p-5 space-y-3">
+            <p className="text-xs font-semibold text-[#c026d3] uppercase tracking-wide">
+              Inclus dans votre carte
             </p>
-            {FREE_SECTIONS.map((s) => (
-              <div key={s.label} className="flex items-center gap-2.5 text-sm text-foreground">
-                <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
-                <span>{s.label}</span>
+            {vitrineFeatures.map((feat) => (
+              <div key={feat} className="flex items-center gap-3 text-sm text-foreground">
+                <span className="text-[#c026d3] font-bold text-base leading-none">✦</span>
+                <span>{feat}</span>
               </div>
             ))}
           </div>
 
-          {/* Sections vitrine */}
-          {enabledVitrineSections.length > 0 && (
-            <div className="rounded-2xl border border-[#c026d3]/30 bg-[#c026d3]/[0.04] p-4 space-y-2">
-              <p className="text-xs font-semibold text-[#c026d3] uppercase tracking-wide mb-3">
-                🔒 Sections Vitrine générées ({enabledVitrineSections.length})
-              </p>
-              {enabledVitrineSections.map((s) => (
-                <div key={s.key} className="flex items-center gap-2.5 text-sm text-foreground">
-                  <Lock className="w-4 h-4 text-[#c026d3] shrink-0" />
-                  <span>{s.label}</span>
-                </div>
-              ))}
-              <p className="text-xs text-muted-foreground pt-1">
-                Visibles dans l'aperçu, nécessitent le plan Vitrine pour être publiées.
-              </p>
-            </div>
-          )}
-
           {/* CTAs */}
-          <div className="space-y-3 pt-1">
+          <div className="space-y-3">
             <button
               type="button"
               onClick={onActivate}
-              className="w-full flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-[#c026d3] to-[#7c3aed] text-white font-semibold py-4 text-sm hover:opacity-90 transition shadow-lg"
+              className="w-full flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-[#c026d3] to-[#7c3aed] text-white font-semibold py-4 text-sm hover:opacity-90 transition shadow-lg shadow-[#c026d3]/20"
             >
               <Rocket className="w-4 h-4" />
-              Activer avec toutes les sections — 7 jours gratuits
+              Essayer 7 jours gratuit
             </button>
-            <p className="text-center text-xs text-muted-foreground">
-              Puis 4,80€/mois · Sans engagement · Annulable en 1 clic
-            </p>
+            <div className="text-center">
+              <p className="text-xs font-medium text-foreground">Sans carte bleue</p>
+              <p className="text-xs text-muted-foreground mt-0.5">
+                Puis 4,80€/mois · Résiliable à tout moment
+              </p>
+            </div>
 
             <div className="relative flex items-center gap-3 py-1">
               <div className="flex-1 h-px bg-border" />
@@ -738,14 +637,13 @@ function PreviewPhase({
             <button
               type="button"
               onClick={onFree}
-              className="w-full flex items-center justify-center gap-2 rounded-2xl border border-border py-3 text-sm text-muted-foreground hover:text-foreground hover:border-foreground/30 transition"
+              className="w-full text-center text-xs text-muted-foreground hover:text-foreground transition py-2"
             >
-              Continuer avec le plan gratuit
-              <ChevronRight className="w-4 h-4" />
+              continuer gratuitement
+              <span className="block text-[10px] opacity-60 mt-0.5">
+                (carte sans les fonctions Vitrine)
+              </span>
             </button>
-            <p className="text-center text-xs text-muted-foreground">
-              Les sections Vitrine seront supprimées de ta carte
-            </p>
           </div>
         </div>
       </div>
