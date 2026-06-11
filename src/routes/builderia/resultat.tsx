@@ -1,6 +1,6 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState, useEffect, useMemo, useRef } from "react";
-import { Sparkles, Loader2, Rocket, Share2, Copy, Check } from "lucide-react";
+import { Sparkles, Loader2, Rocket, Share2, Copy, Check, RotateCcw } from "lucide-react";
 import { useAuthStore } from "@/lib/auth-store";
 import { useCardStore } from "@/lib/card-store";
 import { supabase } from "@/integrations/supabase/client";
@@ -424,6 +424,15 @@ function BuilderIAResultatPage() {
               <span className="block text-[10px] opacity-50 mt-0.5">
                 (carte sans les fonctions Vitrine)
               </span>
+            </button>
+
+            <button
+              type="button"
+              onClick={() => navigate({ to: "/builderia" })}
+              className="w-full flex items-center justify-center gap-2 text-xs text-muted-foreground hover:text-foreground transition py-1.5"
+            >
+              <RotateCcw className="w-3 h-3" />
+              Refaire le prompt
             </button>
           </div>
         </div>
