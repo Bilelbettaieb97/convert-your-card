@@ -32,7 +32,7 @@ function HelpPage() {
     { done: true, label: "Créer votre compte", desc: "Bienvenue sur CVD" },
     { done: !!data.name, label: "Compléter votre profil", desc: "Nom, photo, bio, liens", to: "/dashboard/card" },
     { done: !!data.accent, label: "Choisir un thème", desc: "Personnalisez l'apparence", to: "/dashboard/style" },
-    { done: !!profile?.actif, label: "Activer votre carte", desc: "Passez au plan payant", to: "/pricing" },
+    { done: !!profile?.actif, label: "Activer votre carte", desc: "Passez au plan payant", to: "/dashboard/account" },
     { done: false, label: "Commander une carte NFC", desc: "À partir de 29 €", to: "/carte-physique" },
     { done: false, label: "Partager votre carte", desc: "Premier contact sauvegardé" },
   ];

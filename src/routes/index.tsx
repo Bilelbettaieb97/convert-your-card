@@ -1570,7 +1570,7 @@ export function Footer() {
             <p className="font-display font-bold text-sm text-foreground mb-4">Produit</p>
             <ul className="space-y-2 text-sm text-muted-foreground">
               <li><Link to="/" className="hover:text-foreground transition">Accueil</Link></li>
-              <li><Link to="/pricing" className="hover:text-foreground transition">Tarifs</Link></li>
+              
               <li><Link to="/templates" className="hover:text-foreground transition">Templates</Link></li>
               <li><Link to="/carte-physique" className="hover:text-foreground transition">Carte NFC physique</Link></li>
               <li><Link to="/metiers" className="hover:text-foreground transition">Carte par métier</Link></li>

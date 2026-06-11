@@ -160,7 +160,7 @@ function SectionHeader({ title, subtitle }: { title: string; subtitle: string })
         <h2 className="font-display text-2xl font-medium">{title}</h2>
         <p className="text-sm text-muted-foreground mt-1">{subtitle}</p>
       </div>
-      <Link to="/builder" className="hidden sm:inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-primary transition">
+      <Link to="/dashboard/content" className="hidden sm:inline-flex items-center gap-1 text-xs text-muted-foreground hover:text-primary transition">
         Ouvrir le builder <ArrowRight className="h-3 w-3" />
       </Link>
     </div>

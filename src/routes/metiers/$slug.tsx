@@ -189,7 +189,7 @@ function MetierPage() {
                 <ArrowRight className="w-4 h-4" />
               </Link>
               <Link
-                to="/pricing"
+                to="/builderia"
                 className="inline-flex items-center justify-center gap-2 border border-border bg-card text-foreground px-7 py-3.5 rounded-full text-sm font-semibold hover:bg-muted transition-all"
               >
                 Voir les tarifs

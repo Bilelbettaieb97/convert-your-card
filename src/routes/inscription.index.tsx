@@ -152,7 +152,7 @@ function InscriptionPage() {
     }
     setSubmitting(true);
     try {
-      const redirectPath = search.redirect ?? "/builder";
+      const redirectPath = search.redirect ?? "/builderia";
       const appUrl = typeof window !== "undefined" ? window.location.origin : "https://www.cartevisitedigitale.fr";
       const emailRedirectTo = `${appUrl}${redirectPath}`;
 
@@ -176,7 +176,7 @@ function InscriptionPage() {
   async function handleResend() {
     setSubmitting(true);
     try {
-      const redirectPath = search.redirect ?? "/builder";
+      const redirectPath = search.redirect ?? "/builderia";
       const appUrl = typeof window !== "undefined" ? window.location.origin : "https://www.cartevisitedigitale.fr";
       const { error } = await supabase.auth.signInWithOtp({
         email: email.trim().toLowerCase(),

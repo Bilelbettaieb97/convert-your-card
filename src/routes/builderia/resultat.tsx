@@ -189,7 +189,7 @@ function BuilderIAResultatPage() {
       languagesEnabled: false,
     };
     setData(freeCard);
-    navigate({ to: "/builder" });
+    navigate({ to: "/builderia" });
   }
 
   async function handleShare() {

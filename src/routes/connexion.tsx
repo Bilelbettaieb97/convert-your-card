@@ -67,7 +67,7 @@ function ConnexionPage() {
           .select("id")
           .eq("user_id", userId)
           .maybeSingle();
-        navigate({ to: profile ? "/dashboard" : "/builder" });
+        navigate({ to: profile ? "/dashboard" : "/builderia" });
       } else {
         navigate({ to: "/dashboard" });
       }

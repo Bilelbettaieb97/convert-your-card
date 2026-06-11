@@ -286,7 +286,7 @@ function OverviewPage() {
             <h3 className="font-display text-2xl font-semibold">Allez plus loin</h3>
             <p className="text-sm text-muted-foreground mt-1">Deux upgrades premium qui transforment votre carte en machine à convertir.</p>
           </div>
-          <Link to="/pricing" className="text-sm text-primary hover:underline font-medium">Tout voir →</Link>
+          <Link to="/dashboard/account" className="text-sm text-primary hover:underline font-medium">Tout voir →</Link>
         </div>
         <UpsellSection variant="compact" />
       </section>

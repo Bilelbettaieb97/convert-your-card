@@ -1,4 +1,8 @@
 {
+  "redirects": [
+    { "source": "/pricing", "destination": "/", "permanent": false },
+    { "source": "/builder", "destination": "/builderia", "permanent": false }
+  ],
   "crons": [
     {
       "path": "/api/cron-daily",

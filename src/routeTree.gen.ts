@@ -12,7 +12,6 @@ import { Route as rootRouteImport } from './routes/__root'
 import { Route as UnsubscribeRouteImport } from './routes/unsubscribe'
 import { Route as TemplatesRouteImport } from './routes/templates'
 import { Route as ResetPasswordRouteImport } from './routes/reset-password'
-import { Route as PricingRouteImport } from './routes/pricing'
 import { Route as OnboardingRouteImport } from './routes/onboarding'
 import { Route as OffresRouteImport } from './routes/offres'
 import { Route as MetiersRouteImport } from './routes/metiers'
@@ -26,7 +25,6 @@ import { Route as CgvRouteImport } from './routes/cgv'
 import { Route as CguRouteImport } from './routes/cgu'
 import { Route as CartePhysiqueRouteImport } from './routes/carte-physique'
 import { Route as BuilderiaRouteImport } from './routes/builderia'
-import { Route as BuilderRouteImport } from './routes/builder'
 import { Route as BienvenueRouteImport } from './routes/bienvenue'
 import { Route as SlugRouteImport } from './routes/$slug'
 import { Route as IndexRouteImport } from './routes/index'
@@ -76,11 +74,6 @@ const TemplatesRoute = TemplatesRouteImport.update({
 const ResetPasswordRoute = ResetPasswordRouteImport.update({
   id: '/reset-password',
   path: '/reset-password',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const PricingRoute = PricingRouteImport.update({
-  id: '/pricing',
-  path: '/pricing',
   getParentRoute: () => rootRouteImport,
 } as any)
 const OnboardingRoute = OnboardingRouteImport.update({
@@ -146,11 +139,6 @@ const CartePhysiqueRoute = CartePhysiqueRouteImport.update({
 const BuilderiaRoute = BuilderiaRouteImport.update({
   id: '/builderia',
   path: '/builderia',
-  getParentRoute: () => rootRouteImport,
-} as any)
-const BuilderRoute = BuilderRouteImport.update({
-  id: '/builder',
-  path: '/builder',
   getParentRoute: () => rootRouteImport,
 } as any)
 const BienvenueRoute = BienvenueRouteImport.update({
@@ -335,7 +323,6 @@ export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/$slug': typeof SlugRoute
   '/bienvenue': typeof BienvenueRoute
-  '/builder': typeof BuilderRoute
   '/builderia': typeof BuilderiaRouteWithChildren
   '/carte-physique': typeof CartePhysiqueRoute
   '/cgu': typeof CguRoute
@@ -349,7 +336,6 @@ export interface FileRoutesByFullPath {
   '/metiers': typeof MetiersRouteWithChildren
   '/offres': typeof OffresRoute
   '/onboarding': typeof OnboardingRoute
-  '/pricing': typeof PricingRoute
   '/reset-password': typeof ResetPasswordRoute
   '/templates': typeof TemplatesRoute
   '/unsubscribe': typeof UnsubscribeRoute
@@ -390,7 +376,6 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/$slug': typeof SlugRoute
   '/bienvenue': typeof BienvenueRoute
-  '/builder': typeof BuilderRoute
   '/carte-physique': typeof CartePhysiqueRoute
   '/cgu': typeof CguRoute
   '/cgv': typeof CgvRoute
@@ -400,7 +385,6 @@ export interface FileRoutesByTo {
   '/mentions-legales': typeof MentionsLegalesRoute
   '/offres': typeof OffresRoute
   '/onboarding': typeof OnboardingRoute
-  '/pricing': typeof PricingRoute
   '/reset-password': typeof ResetPasswordRoute
   '/templates': typeof TemplatesRoute
   '/unsubscribe': typeof UnsubscribeRoute
@@ -442,7 +426,6 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/$slug': typeof SlugRoute
   '/bienvenue': typeof BienvenueRoute
-  '/builder': typeof BuilderRoute
   '/builderia': typeof BuilderiaRouteWithChildren
   '/carte-physique': typeof CartePhysiqueRoute
   '/cgu': typeof CguRoute
@@ -456,7 +439,6 @@ export interface FileRoutesById {
   '/metiers': typeof MetiersRouteWithChildren
   '/offres': typeof OffresRoute
   '/onboarding': typeof OnboardingRoute
-  '/pricing': typeof PricingRoute
   '/reset-password': typeof ResetPasswordRoute
   '/templates': typeof TemplatesRoute
   '/unsubscribe': typeof UnsubscribeRoute
@@ -499,7 +481,6 @@ export interface FileRouteTypes {
     | '/'
     | '/$slug'
     | '/bienvenue'
-    | '/builder'
     | '/builderia'
     | '/carte-physique'
     | '/cgu'
@@ -513,7 +494,6 @@ export interface FileRouteTypes {
     | '/metiers'
     | '/offres'
     | '/onboarding'
-    | '/pricing'
     | '/reset-password'
     | '/templates'
     | '/unsubscribe'
@@ -554,7 +534,6 @@ export interface FileRouteTypes {
     | '/'
     | '/$slug'
     | '/bienvenue'
-    | '/builder'
     | '/carte-physique'
     | '/cgu'
     | '/cgv'
@@ -564,7 +543,6 @@ export interface FileRouteTypes {
     | '/mentions-legales'
     | '/offres'
     | '/onboarding'
-    | '/pricing'
     | '/reset-password'
     | '/templates'
     | '/unsubscribe'
@@ -605,7 +583,6 @@ export interface FileRouteTypes {
     | '/'
     | '/$slug'
     | '/bienvenue'
-    | '/builder'
     | '/builderia'
     | '/carte-physique'
     | '/cgu'
@@ -619,7 +596,6 @@ export interface FileRouteTypes {
     | '/metiers'
     | '/offres'
     | '/onboarding'
-    | '/pricing'
     | '/reset-password'
     | '/templates'
     | '/unsubscribe'
@@ -661,7 +637,6 @@ export interface RootRouteChildren {
   IndexRoute: typeof IndexRoute
   SlugRoute: typeof SlugRoute
   BienvenueRoute: typeof BienvenueRoute
-  BuilderRoute: typeof BuilderRoute
   BuilderiaRoute: typeof BuilderiaRouteWithChildren
   CartePhysiqueRoute: typeof CartePhysiqueRoute
   CguRoute: typeof CguRoute
@@ -675,7 +650,6 @@ export interface RootRouteChildren {
   MetiersRoute: typeof MetiersRouteWithChildren
   OffresRoute: typeof OffresRoute
   OnboardingRoute: typeof OnboardingRoute
-  PricingRoute: typeof PricingRoute
   ResetPasswordRoute: typeof ResetPasswordRoute
   TemplatesRoute: typeof TemplatesRoute
   UnsubscribeRoute: typeof UnsubscribeRoute
@@ -704,13 +678,6 @@ declare module '@tanstack/react-router' {
       path: '/reset-password'
       fullPath: '/reset-password'
       preLoaderRoute: typeof ResetPasswordRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/pricing': {
-      id: '/pricing'
-      path: '/pricing'
-      fullPath: '/pricing'
-      preLoaderRoute: typeof PricingRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/onboarding': {
@@ -802,13 +769,6 @@ declare module '@tanstack/react-router' {
       path: '/builderia'
       fullPath: '/builderia'
       preLoaderRoute: typeof BuilderiaRouteImport
-      parentRoute: typeof rootRouteImport
-    }
-    '/builder': {
-      id: '/builder'
-      path: '/builder'
-      fullPath: '/builder'
-      preLoaderRoute: typeof BuilderRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/bienvenue': {
@@ -1162,7 +1122,6 @@ const rootRouteChildren: RootRouteChildren = {
   IndexRoute: IndexRoute,
   SlugRoute: SlugRoute,
   BienvenueRoute: BienvenueRoute,
-  BuilderRoute: BuilderRoute,
   BuilderiaRoute: BuilderiaRouteWithChildren,
   CartePhysiqueRoute: CartePhysiqueRoute,
   CguRoute: CguRoute,
@@ -1176,7 +1135,6 @@ const rootRouteChildren: RootRouteChildren = {
   MetiersRoute: MetiersRouteWithChildren,
   OffresRoute: OffresRoute,
   OnboardingRoute: OnboardingRoute,
-  PricingRoute: PricingRoute,
   ResetPasswordRoute: ResetPasswordRoute,
   TemplatesRoute: TemplatesRoute,
   UnsubscribeRoute: UnsubscribeRoute,
