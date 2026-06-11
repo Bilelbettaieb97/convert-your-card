@@ -68,17 +68,17 @@ async function fetchUnsplashPhoto(keyword: string): Promise<string> {
 }
 
 export default defineEventHandler(async (event) => {
-  if (event.node.req.method !== "POST") return;
-  if (!event.path?.startsWith("/api/generate-card-stream")) return;
+  if (event.path !== "/api/generate-card-stream" || event.method !== "POST") return;
 
   const body = (await readBody(event)) as { input?: string; name?: string; email?: string };
 
-  const { res } = event.node;
+  const res = event.node?.res;
+  if (!res) return;
   res.setHeader("Content-Type", "text/event-stream; charset=utf-8");
   res.setHeader("Cache-Control", "no-cache, no-transform");
   res.setHeader("Connection", "keep-alive");
   res.setHeader("X-Accel-Buffering", "no");
-  res.flushHeaders?.();
+  if (typeof res.flushHeaders === "function") res.flushHeaders();
 
   const send = (data: unknown) => {
     try {
