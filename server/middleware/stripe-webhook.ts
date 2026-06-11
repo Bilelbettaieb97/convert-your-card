@@ -263,10 +263,27 @@ export default defineEventHandler(async (event) => {
       console.log("[stripe-webhook] Created profile (no user):", profileSlug);
     }
 
+    // Fetch real subscription status + trial_end from Stripe
+    let subscriptionStatus = "active";
+    let trialEnd: string | null = null;
+    if (stripeSubscriptionId) {
+      try {
+        const stripeKey = process.env.STRIPE_SECRET_KEY ?? "";
+        const subRes = await fetch(`https://api.stripe.com/v1/subscriptions/${stripeSubscriptionId}`, {
+          headers: { Authorization: `Bearer ${stripeKey}` },
+        });
+        const stripeSub = await subRes.json() as { status?: string; trial_end?: number };
+        if (stripeSub.status) subscriptionStatus = stripeSub.status;
+        if (stripeSub.trial_end) trialEnd = new Date(stripeSub.trial_end * 1000).toISOString();
+      } catch (e) {
+        console.error("[stripe-webhook] Could not fetch subscription:", e);
+      }
+    }
+
     // Upsert subscription
     if (userId) {
       await adminSupabase.from("subscriptions").upsert(
-        { user_id: userId, stripe_customer_id: stripeCustomerId, stripe_subscription_id: stripeSubscriptionId, plan, status: "active", updated_at: new Date().toISOString() },
+        { user_id: userId, stripe_customer_id: stripeCustomerId, stripe_subscription_id: stripeSubscriptionId, plan, status: subscriptionStatus, current_period_end: trialEnd, updated_at: new Date().toISOString() },
         { onConflict: "user_id" },
       );
     }
