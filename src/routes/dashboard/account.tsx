@@ -1,5 +1,5 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
 import { Check, Crown, Loader2, Mail, LogOut, Settings } from "lucide-react";
@@ -8,6 +8,7 @@ import { useAuthStore } from "@/lib/auth-store";
 import { supabase } from "@/integrations/supabase/client";
 import { usePlan } from "@/lib/use-plan";
 import { createCheckoutSession } from "@/fns/checkout";
+import { createPortalSession } from "@/fns/billing-portal";
 import { clearProfileMeta } from "@/lib/profile-store";
 
 export const Route = createFileRoute("/dashboard/account")({
@@ -39,8 +40,22 @@ const PLANS = [
 function AccountPage() {
   const { user } = useAuthStore();
   const navigate = useNavigate();
-  const { plan, loading } = usePlan();
+  const { plan, loading, isInTrial, trialDaysLeft } = usePlan();
   const [upgrading, setUpgrading] = useState(false);
+  const [managing, setManaging] = useState(false);
+  const [customerId, setCustomerId] = useState<string | null>(null);
+
+  useEffect(() => {
+    supabase.auth.getUser().then(async ({ data: { user } }) => {
+      if (!user) return;
+      const { data } = await supabase
+        .from("subscriptions")
+        .select("stripe_customer_id")
+        .eq("user_id", user.id)
+        .maybeSingle();
+      setCustomerId((data as any)?.stripe_customer_id ?? null);
+    });
+  }, []);
 
   async function handleUpgrade() {
     if (!user?.email) return;
@@ -55,6 +70,19 @@ function AccountPage() {
     }
   }
 
+  async function handleManageSubscription() {
+    if (!customerId) return;
+    setManaging(true);
+    try {
+      const { url } = await createPortalSession({
+        data: { customerId, returnUrl: window.location.href },
+      });
+      if (url) window.location.href = url;
+    } catch {
+      setManaging(false);
+    }
+  }
+
   async function handleSignOut() {
     clearProfileMeta();
     await supabase.auth.signOut();
@@ -65,20 +93,31 @@ function AccountPage() {
     <div className="mx-auto max-w-5xl px-5 py-8 space-y-10">
       <section>
         <h2 className="font-display text-2xl font-medium">Plan</h2>
-        <p className="text-sm text-muted-foreground mt-1 mb-5">
-          Vous pouvez changer de plan à tout moment, sans engagement.
-        </p>
+        {isInTrial ? (
+          <p className="text-sm text-amber-500 font-medium mt-1 mb-5">
+            Période d'essai en cours — {trialDaysLeft} jour{trialDaysLeft > 1 ? "s" : ""} restant{trialDaysLeft > 1 ? "s" : ""}. Activez votre abonnement pour ne pas perdre votre carte.
+          </p>
+        ) : (
+          <p className="text-sm text-muted-foreground mt-1 mb-5">
+            Vous pouvez changer de plan à tout moment, sans engagement.
+          </p>
+        )}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {PLANS.map((p) => {
             const current = !loading && (plan === p.id || (p.id === "essentielle" && (plan === "free" || !plan)));
             return (
-              <Card key={p.id} className={`p-5 relative ${current ? "border-primary shadow-[var(--shadow-elegant)]" : p.highlight ? "border-primary/60" : ""}`}>
-                {current && (
+              <Card key={p.id} className={`p-5 relative ${current && !isInTrial ? "border-primary shadow-[var(--shadow-elegant)]" : p.highlight ? "border-primary/60" : ""}`}>
+                {current && !isInTrial && (
                   <span className="absolute -top-2 left-4 inline-flex items-center gap-1 text-[10px] uppercase tracking-wider bg-primary text-primary-foreground px-2 py-0.5 rounded-full">
                     Plan actuel
                   </span>
                 )}
-                {!current && p.highlight && (
+                {isInTrial && p.id === "vitrine" && (
+                  <span className="absolute -top-2 left-4 inline-flex items-center gap-1 text-[10px] uppercase tracking-wider bg-amber-500 text-white px-2 py-0.5 rounded-full">
+                    Période d'essai
+                  </span>
+                )}
+                {!current && p.highlight && !isInTrial && (
                   <span className="absolute -top-2 right-4 inline-flex items-center gap-1 text-[10px] uppercase tracking-wider bg-primary text-primary-foreground px-2 py-0.5 rounded-full">
                     <Crown className="h-3 w-3" /> Recommandé
                   </span>
@@ -96,8 +135,14 @@ function AccountPage() {
                     </li>
                   ))}
                 </ul>
-                {current ? (
-                  <Button variant="outline" disabled className="w-full">Plan actuel</Button>
+                {/* Vitrine card en trial → bouton activer via Billing Portal */}
+                {p.id === "vitrine" && isInTrial ? (
+                  <Button className="w-full bg-amber-500 hover:bg-amber-600" onClick={handleManageSubscription} disabled={managing}>
+                    {managing ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
+                    {managing ? "Redirection…" : "Activer mon abonnement — 4,80€/mois"}
+                  </Button>
+                ) : current ? (
+                  <Button variant="outline" disabled className="w-full">Plan actuel ✓</Button>
                 ) : p.id === "vitrine" ? (
                   <Button className="w-full" onClick={handleUpgrade} disabled={upgrading}>
                     {upgrading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
