@@ -1,4 +1,4 @@
-import { defineEventHandler, readBody } from "h3";
+import { defineEventHandler, readBody, createEventStream } from "h3";
 
 const SYSTEM_PROMPT = `Tu es un expert en création de contenu pour cartes de visite digitales françaises.
 Tu génères le contenu d'une carte de visite professionnelle, UN CHAMP PAR LIGNE, en NDJSON strict.
@@ -31,7 +31,7 @@ RÈGLES :
 - badges : 3-4 labels de crédibilité propres au secteur
 - cta : offre irrésistible adaptée (bilan gratuit, devis 24h, 1ère séance offerte...)
 - actions : call+whatsapp pour urgence/artisan ; whatsapp+email+website pour coach/créatif
-- coverKeyword : 2 mots anglais simples (ex: "plumber tools", "yoga meditation", "restaurant food", "business meeting")
+- coverKeyword : 2 mots anglais simples (ex: "plumber tools", "yoga meditation", "restaurant food")
 
 SORTIR UNIQUEMENT LES 13 LIGNES NDJSON, RIEN D'AUTRE, PAS DE MARKDOWN.`;
 
@@ -58,9 +58,7 @@ async function fetchUnsplashPhoto(keyword: string): Promise<string> {
     const timeout = setTimeout(() => controller.abort(), 5000);
     const res = await fetch(url, { signal: controller.signal, redirect: "follow" });
     clearTimeout(timeout);
-    if (res.ok && res.url && !res.url.includes("source.unsplash.com")) {
-      return res.url;
-    }
+    if (res.ok && res.url && !res.url.includes("source.unsplash.com")) return res.url;
     return "";
   } catch {
     return "";
@@ -72,101 +70,96 @@ export default defineEventHandler(async (event) => {
 
   const body = (await readBody(event)) as { input?: string; name?: string; email?: string };
 
-  const res = event.node?.res;
-  if (!res) return;
-  res.setHeader("Content-Type", "text/event-stream; charset=utf-8");
-  res.setHeader("Cache-Control", "no-cache, no-transform");
-  res.setHeader("Connection", "keep-alive");
-  res.setHeader("X-Accel-Buffering", "no");
-  if (typeof res.flushHeaders === "function") res.flushHeaders();
+  const stream = createEventStream(event);
 
-  const send = (data: unknown) => {
-    try {
+  // Run generation in background, return stream immediately
+  (async () => {
+    const send = (data: unknown) => {
       const str = typeof data === "string" ? data : JSON.stringify(data);
-      res.write(`data: ${str}\n\n`);
-    } catch {}
-  };
+      return stream.push(str);
+    };
 
-  const apiKey = process.env.ANTHROPIC_API_KEY;
+    try {
+      const apiKey = process.env.ANTHROPIC_API_KEY;
 
-  // Mock mode
-  if (!apiKey || apiKey === "REPLACE_WITH_YOUR_KEY") {
-    for (const field of MOCK_FIELDS) {
-      await new Promise((r) => setTimeout(r, 250));
-      send(field);
-    }
-    // Mock cover photo
-    await new Promise((r) => setTimeout(r, 300));
-    send({ f: "coverPhoto", v: "" });
-    send("[DONE]");
-    res.end();
-    return;
-  }
+      // Mock mode
+      if (!apiKey || apiKey === "REPLACE_WITH_YOUR_KEY") {
+        for (const field of MOCK_FIELDS) {
+          await new Promise((r) => setTimeout(r, 250));
+          await send(field);
+        }
+        await send("[DONE]");
+        await stream.close();
+        return;
+      }
 
-  // Real Anthropic streaming
-  try {
-    const { default: Anthropic } = await import("@anthropic-ai/sdk");
-    const client = new Anthropic({ apiKey });
+      // Real Anthropic streaming
+      const { default: Anthropic } = await import("@anthropic-ai/sdk");
+      const client = new Anthropic({ apiKey });
 
-    const userCtx = body.name ? `Le professionnel s'appelle ${body.name}. ` : "";
+      const userCtx = body.name ? `Le professionnel s'appelle ${body.name}. ` : "";
 
-    const stream = client.messages.stream({
-      model: "claude-haiku-4-5-20251001",
-      max_tokens: 1500,
-      system: SYSTEM_PROMPT,
-      messages: [{
-        role: "user",
-        content: `${userCtx}Description de l'activité : "${body.input ?? ""}"\n\nGénère le contenu NDJSON maintenant, 13 lignes exactement :`,
-      }],
-    });
+      const anthropicStream = client.messages.stream({
+        model: "claude-haiku-4-5-20251001",
+        max_tokens: 1500,
+        system: SYSTEM_PROMPT,
+        messages: [{
+          role: "user",
+          content: `${userCtx}Description de l'activité : "${body.input ?? ""}"\n\nGénère le contenu NDJSON maintenant, 13 lignes exactement :`,
+        }],
+      });
 
-    let buffer = "";
-    let coverKeyword = "";
+      let buffer = "";
+      let coverKeyword = "";
 
-    for await (const evt of stream) {
-      if (evt.type === "content_block_delta" && evt.delta.type === "text_delta") {
-        buffer += evt.delta.text;
-        const lines = buffer.split("\n");
-        buffer = lines.pop() ?? "";
+      for await (const evt of anthropicStream) {
+        if (evt.type === "content_block_delta" && evt.delta.type === "text_delta") {
+          buffer += evt.delta.text;
+          const lines = buffer.split("\n");
+          buffer = lines.pop() ?? "";
 
-        for (const line of lines) {
-          const trimmed = line.trim();
-          if (!trimmed) continue;
-          try {
-            const parsed = JSON.parse(trimmed) as { f: string; v: unknown };
-            if (parsed.f && parsed.v !== undefined) {
-              if (parsed.f === "coverKeyword" && typeof parsed.v === "string") {
-                coverKeyword = parsed.v;
+          for (const line of lines) {
+            const trimmed = line.trim();
+            if (!trimmed) continue;
+            try {
+              const parsed = JSON.parse(trimmed) as { f: string; v: unknown };
+              if (parsed.f && parsed.v !== undefined) {
+                if (parsed.f === "coverKeyword" && typeof parsed.v === "string") {
+                  coverKeyword = parsed.v;
+                }
+                await send(parsed);
               }
-              send(parsed);
-            }
-          } catch {}
+            } catch {}
+          }
         }
       }
-    }
 
-    // Process remaining buffer
-    if (buffer.trim()) {
-      try {
-        const parsed = JSON.parse(buffer.trim()) as { f: string; v: unknown };
-        if (parsed.f && parsed.v !== undefined) {
-          if (parsed.f === "coverKeyword" && typeof parsed.v === "string") {
-            coverKeyword = parsed.v;
+      // Remaining buffer
+      if (buffer.trim()) {
+        try {
+          const parsed = JSON.parse(buffer.trim()) as { f: string; v: unknown };
+          if (parsed.f && parsed.v !== undefined) {
+            if (parsed.f === "coverKeyword" && typeof parsed.v === "string") {
+              coverKeyword = parsed.v;
+            }
+            await send(parsed);
           }
-          send(parsed);
-        }
-      } catch {}
+        } catch {}
+      }
+
+      // Unsplash cover photo
+      if (coverKeyword) {
+        const photoUrl = await fetchUnsplashPhoto(coverKeyword);
+        if (photoUrl) await send({ f: "coverPhoto", v: photoUrl });
+      }
+
+    } catch {
+      await send({ f: "error", v: "Génération échouée" });
     }
 
-    // Fetch Unsplash cover photo
-    if (coverKeyword) {
-      const photoUrl = await fetchUnsplashPhoto(coverKeyword);
-      if (photoUrl) send({ f: "coverPhoto", v: photoUrl });
-    }
-  } catch {
-    send({ f: "error", v: "Génération échouée" });
-  }
+    await send("[DONE]");
+    await stream.close();
+  })();
 
-  send("[DONE]");
-  res.end();
+  return stream.send();
 });
