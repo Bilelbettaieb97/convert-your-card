@@ -241,10 +241,14 @@ export default defineEventHandler(async (event) => {
 
     for (const [stepStr, minDays] of Object.entries(VU_DELAYS)) {
       const step = Number(stepStr);
-      const toSend = vitrineUsers.filter((r: any) =>
-        msSince(r.profil_cree_le) >= minDays * 86_400_000 &&
-        (!r.vitrine_relance_step || r.vitrine_relance_step < step)
-      ).slice(0, 200);
+      const toSend = vitrineUsers.filter((r: any) => {
+        // Pour les anciens trials : délai depuis trial_end (pas profil_cree_le)
+        // Évite le double-fire : à l'expiration du trial J+3, steps 1 et 2 auraient
+        // tous les deux leur seuil dépassé depuis profil_cree_le → 2 emails simultanés
+        const ref = (r.had_trial && r.trial_end) ? r.trial_end : r.profil_cree_le;
+        return msSince(ref) >= minDays * 86_400_000 &&
+          (!r.vitrine_relance_step || r.vitrine_relance_step < step);
+      }).slice(0, 200);
       if (toSend.length === 0) continue;
 
       console.log(`[cron-daily] Vitrine upgrade step ${step}: ${toSend.length} destinataire(s)`);

@@ -218,10 +218,9 @@ export default defineEventHandler(async (event) => {
       });
     }
 
-    // Find user by email
-    const { data: { users } } = await adminSupabase.auth.admin.listUsers();
-    const user = users?.find((u: { email?: string }) => u.email === email);
-    const userId = user?.id ?? null;
+    // Find user by email via RPC — évite la limite de pagination listUsers() (50 max par défaut)
+    const { data: userIdData } = await adminSupabase.rpc("get_user_id_by_email", { email_param: email });
+    const userId: string | null = userIdData ?? null;
     console.log("[stripe-webhook] User found:", userId ? "yes" : "no (email: " + email + ")");
 
     // Generate unique slug
