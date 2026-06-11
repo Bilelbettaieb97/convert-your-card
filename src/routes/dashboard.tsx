@@ -213,16 +213,10 @@ function DashboardLayout() {
             </div>
           )}
           {isInTrial && paymentMethodSet && (
-            <div className="bg-emerald-500/10 border-b border-emerald-500/30 px-6 py-3 flex items-center justify-between gap-4">
+            <div className="bg-emerald-500/10 border-b border-emerald-500/30 px-6 py-3 flex items-center justify-center gap-4">
               <p className="text-sm text-emerald-400 font-medium">
                 Abonnement confirmé ✓ — vous serez débité automatiquement à la fin de votre essai gratuit.
               </p>
-              <Link
-                to="/dashboard/account"
-                className="shrink-0 px-4 py-1.5 rounded-full bg-emerald-600 text-white text-xs font-semibold hover:bg-emerald-700 transition"
-              >
-                Gérer
-              </Link>
             </div>
           )}
           {actif === false && (

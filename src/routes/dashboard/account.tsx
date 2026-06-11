@@ -40,7 +40,7 @@ const PLANS = [
 function AccountPage() {
   const { user } = useAuthStore();
   const navigate = useNavigate();
-  const { plan, loading, isInTrial, trialDaysLeft } = usePlan();
+  const { plan, loading, isInTrial, trialDaysLeft, paymentMethodSet } = usePlan();
   const [upgrading, setUpgrading] = useState(false);
   const [managing, setManaging] = useState(false);
   const [customerId, setCustomerId] = useState<string | null>(null);
@@ -93,9 +93,13 @@ function AccountPage() {
     <div className="mx-auto max-w-5xl px-5 py-8 space-y-10">
       <section>
         <h2 className="font-display text-2xl font-medium">Plan</h2>
-        {isInTrial ? (
+        {isInTrial && !paymentMethodSet ? (
           <p className="text-sm text-amber-500 font-medium mt-1 mb-5">
             Période d'essai en cours — {trialDaysLeft} jour{trialDaysLeft > 1 ? "s" : ""} restant{trialDaysLeft > 1 ? "s" : ""}. Activez votre abonnement pour ne pas perdre votre carte.
+          </p>
+        ) : isInTrial && paymentMethodSet ? (
+          <p className="text-sm text-emerald-500 font-medium mt-1 mb-5">
+            Abonnement confirmé ✓ — vous serez débité automatiquement à la fin de votre essai.
           </p>
         ) : (
           <p className="text-sm text-muted-foreground mt-1 mb-5">
@@ -106,13 +110,13 @@ function AccountPage() {
           {PLANS.map((p) => {
             const current = !loading && (plan === p.id || (p.id === "essentielle" && (plan === "free" || !plan)));
             return (
-              <Card key={p.id} className={`p-5 relative ${current && !isInTrial ? "border-primary shadow-[var(--shadow-elegant)]" : p.highlight ? "border-primary/60" : ""}`}>
-                {current && !isInTrial && (
+              <Card key={p.id} className={`p-5 relative ${(current && !isInTrial) || (p.id === "vitrine" && isInTrial && paymentMethodSet) ? "border-primary shadow-[var(--shadow-elegant)]" : p.highlight ? "border-primary/60" : ""}`}>
+                {((current && !isInTrial) || (p.id === "vitrine" && isInTrial && paymentMethodSet)) && (
                   <span className="absolute -top-2 left-4 inline-flex items-center gap-1 text-[10px] uppercase tracking-wider bg-primary text-primary-foreground px-2 py-0.5 rounded-full">
                     Plan actuel
                   </span>
                 )}
-                {isInTrial && p.id === "vitrine" && (
+                {isInTrial && p.id === "vitrine" && !paymentMethodSet && (
                   <span className="absolute -top-2 left-4 inline-flex items-center gap-1 text-[10px] uppercase tracking-wider bg-amber-500 text-white px-2 py-0.5 rounded-full">
                     Période d'essai
                   </span>
@@ -135,13 +139,13 @@ function AccountPage() {
                     </li>
                   ))}
                 </ul>
-                {/* Vitrine card en trial → bouton activer via Billing Portal */}
-                {p.id === "vitrine" && isInTrial ? (
+                {/* Vitrine card en trial sans CB → bouton activer via Billing Portal */}
+                {p.id === "vitrine" && isInTrial && !paymentMethodSet ? (
                   <Button className="w-full bg-amber-500 hover:bg-amber-600" onClick={handleManageSubscription} disabled={managing}>
                     {managing ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
                     {managing ? "Redirection…" : "Activer mon abonnement — 4,80€/mois"}
                   </Button>
-                ) : current ? (
+                ) : (p.id === "vitrine" && isInTrial && paymentMethodSet) || current ? (
                   <Button variant="outline" disabled className="w-full">Plan actuel ✓</Button>
                 ) : p.id === "vitrine" ? (
                   <Button className="w-full" onClick={handleUpgrade} disabled={upgrading}>
