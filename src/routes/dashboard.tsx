@@ -30,7 +30,6 @@ const META: Record<string, { title: string; subtitle?: string }> = {
   "/dashboard/content":       { title: "Contenu",               subtitle: "Sections, textes et boutons d'action" },
   "/dashboard/theme":         { title: "Apparence",             subtitle: "Thème et palette de couleurs" },
   "/dashboard/style":         { title: "Style des sections",     subtitle: "Variantes visuelles par section" },
-  "/dashboard/links":         { title: "Liens & réseaux",       subtitle: "Coordonnées, boutons et réseaux sociaux" },
   "/dashboard/media":         { title: "Médias",                subtitle: "Logo, photos et bibliothèque" },
   "/dashboard/statistiques":  { title: "Statistiques",          subtitle: "Vues, clics et engagement" },
   "/dashboard/contacts":      { title: "Contacts",              subtitle: "CRM des personnes qui vous ont scanné" },

@@ -6,7 +6,7 @@ import {
   useSidebar,
 } from "@/components/ui/sidebar";
 import {
-  LayoutDashboard, CreditCard, Layers, Palette, Sparkles, Link2, Image,
+  LayoutDashboard, CreditCard, Layers, Palette, Sparkles, Image,
   Users, TrendingUp, BarChart2, Bell, UserCog, Package, Plug, Receipt,
   Settings, HelpCircle, LogOut, Zap,
 } from "lucide-react";
@@ -20,8 +20,7 @@ const CARD_SUB = [
 ];
 
 const NAV_EXTRAS = [
-  { to: "/dashboard/links", label: "Liens & réseaux", icon: Link2  },
-  { to: "/dashboard/media", label: "Médias",           icon: Image  },
+  { to: "/dashboard/media", label: "Médias", icon: Image },
 ];
 
 const NAV_DATA = [
@@ -110,7 +109,7 @@ export function DashboardSidebar() {
                 </SidebarMenuSub>
               </SidebarMenuItem>
 
-              {/* Liens & réseaux + Médias */}
+              {/* Médias */}
               {NAV_EXTRAS.map((item) => (
                 <SidebarMenuItem key={item.to}>
                   <SidebarMenuButton asChild isActive={isActive(item.to)} size="lg">

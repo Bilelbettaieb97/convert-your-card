@@ -86,11 +86,11 @@ function isEnabled(data: CardData, key: SectionKey): boolean {
 function applyToggle(data: CardData, key: SectionKey, value: boolean): CardData {
   if (key === "identity") return data;
   if (key === "actions") {
-    if (!value) return { ...data, actions: { call: false, whatsapp: false, email: false, website: false } };
+    if (!value) return { ...data, actions: { call: false, whatsapp: false, email: false, website: false, rdv: false } };
     const anyOn = data.actions.call || data.actions.whatsapp || data.actions.email || data.actions.website;
     return {
       ...data,
-      actions: anyOn ? data.actions : { call: true, whatsapp: true, email: true, website: true },
+      actions: anyOn ? data.actions : { call: true, whatsapp: true, email: true, website: true, rdv: false },
     };
   }
   return { ...data, [key]: value } as CardData;

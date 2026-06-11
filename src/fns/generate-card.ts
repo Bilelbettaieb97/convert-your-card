@@ -125,7 +125,7 @@ const MOCK_DEFAULT: GeneratedCard = {
   ctaTitle: "Audit stratégique offert — 45 min",
   ctaText: "Identifions ensemble les 3 leviers prioritaires pour accélérer votre activité. Offert, sans engagement.",
   ctaButtonLabel: "Je réserve mon audit",
-  actions: { call: false, whatsapp: true, email: true, website: true },
+  actions: { call: false, whatsapp: true, email: true, website: true, rdv: false },
   sectionOrder: [...BASE_ORDER],
 };
 
@@ -212,7 +212,7 @@ ${JSON_SCHEMA}`,
       ctaButtonLabel: typeof parsed.ctaButtonLabel === "string" ? parsed.ctaButtonLabel : "En savoir plus",
       actions: parsed.actions && typeof parsed.actions === "object"
         ? parsed.actions as CardData["actions"]
-        : { call: true, whatsapp: true, email: true, website: false },
+        : { call: true, whatsapp: true, email: true, website: false, rdv: false },
       sectionOrder: BASE_ORDER,
     };
   });

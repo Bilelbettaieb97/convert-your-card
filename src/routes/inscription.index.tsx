@@ -20,7 +20,7 @@ const DEMO_CARD: CardData = {
   photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=face",
   coverPhoto: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&h=300&fit=crop",
   accent: "navy",
-  actions: { call: true, whatsapp: true, email: true, website: false },
+  actions: { call: true, whatsapp: true, email: true, website: false, rdv: false },
   statsEnabled: true,
   stats: [
     { label: "Interventions", value: "1 200+" },
