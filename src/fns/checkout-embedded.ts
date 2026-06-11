@@ -47,7 +47,7 @@ export const createEmbeddedCheckout = createServerFn({ method: "POST" })
       allow_promotion_codes: true,
       subscription_data: {
         metadata: { plan, email },
-        ...(hasTrial ? { trial_period_days: 7 } : {}),
+        ...(hasTrial ? { trial_period_days: 3 } : {}),
       },
     } as unknown as Parameters<typeof stripe.checkout.sessions.create>[0]);
 

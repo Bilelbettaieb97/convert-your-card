@@ -27,7 +27,7 @@ export const createCheckoutSession = createServerFn({ method: "POST" })
       allow_promotion_codes: true,
       subscription_data: {
         metadata: { plan: data.plan, email: data.email },
-        ...(data.plan === "vitrine" ? { trial_period_days: 7 } : {}),
+        ...(data.plan === "vitrine" ? { trial_period_days: 3 } : {}),
       },
     });
 

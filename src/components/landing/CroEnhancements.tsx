@@ -137,7 +137,7 @@ export function ExitIntent() {
             Démarrer ma période d'essai
           </a>
           <p className="text-[11px] text-muted-foreground text-center">
-            Essai gratuit 7 jours · Sans carte bancaire · Annulable à tout moment
+            Essai gratuit 3 jours · Sans carte bancaire · Annulable à tout moment
           </p>
         </div>
       </div>
