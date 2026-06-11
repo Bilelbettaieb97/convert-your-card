@@ -5,7 +5,6 @@ import { PhoneFrame } from "@/components/card/PhoneFrame";
 import { ShareGrid, QrCard, PublicLinkBar } from "@/components/dashboard/ShareGrid";
 import { useCardStore } from "@/lib/card-store";
 import { loadMyCard } from "@/lib/card-actions";
-import { getProfileMeta } from "@/lib/profile-store";
 import { usePlan } from "@/lib/use-plan";
 import type { CardData } from "@/lib/card-types";
 import { Layers, Palette, Sparkles, ArrowRight, ExternalLink, Wifi, WifiOff } from "lucide-react";
@@ -16,16 +15,15 @@ export const Route = createFileRoute("/dashboard/card")({
 
 function CardOverviewPage() {
   const { data, setData, hydrated } = useCardStore();
-  const { actif } = usePlan();
-  const profile = getProfileMeta();
+  const { actif, slug } = usePlan();
   const origin = typeof window !== "undefined" ? window.location.origin : "https://www.cartevisitedigitale.fr";
-  const publicUrl = profile ? `${origin}/${profile.slug}` : `${origin}/`;
+  const publicUrl = slug ? `${origin}/${slug}` : "";
   const [supabaseReady, setSupabaseReady] = useState(false);
   const skipInit = useRef(false);
 
   useEffect(() => {
     if (!hydrated) return;
-    if (!profile) { setSupabaseReady(true); return; }
+    if (!slug) { setSupabaseReady(true); return; }
     loadMyCard().then((row) => {
       if ((row as any)?.card_data) {
         skipInit.current = true;

@@ -7,6 +7,8 @@ export const TRIAL_DAYS = 3;
 export function usePlan() {
   const cached = getProfileMeta();
   const [plan, setPlan] = useState<string>(cached?.plan ?? "free");
+  const [slug, setSlug] = useState<string>(cached?.slug ?? "");
+  const [profileId, setProfileId] = useState<string>(cached?.id ?? "");
   const [loading, setLoading] = useState(true);
   const [hasProfile, setHasProfile] = useState<boolean | null>(null);
   const [actif, setActif] = useState<boolean>(cached?.actif ?? true);
@@ -24,6 +26,8 @@ export function usePlan() {
         setHasProfile(true);
         const realPlan = data.plan ?? "free";
         setPlan(realPlan);
+        setSlug(data.slug);
+        setProfileId(data.id);
         setActif(data.actif ?? true);
         setCreatedAt((data as any).created_at ?? null);
         setProfileMeta({ id: data.id, slug: data.slug, plan: realPlan, actif: data.actif ?? true });
@@ -40,5 +44,5 @@ export function usePlan() {
   const daysLeft = Math.max(0, TRIAL_DAYS - daysOld);
   const trialExpired = daysOld >= TRIAL_DAYS && plan !== "vitrine";
 
-  return { plan, loading, hasProfile, actif, daysLeft, trialExpired };
+  return { plan, loading, hasProfile, actif, daysLeft, trialExpired, slug, profileId };
 }

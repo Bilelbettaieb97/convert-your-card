@@ -9,7 +9,7 @@ import { useCardStore } from "@/lib/card-store";
 import { CARD_THEMES } from "@/lib/card-themes";
 import type { CardData } from "@/lib/card-types";
 import { updateCard } from "@/lib/card-actions";
-import { getProfileMeta } from "@/lib/profile-store";
+import { usePlan } from "@/lib/use-plan";
 import { Sparkles, Check, ArrowRight, Layers, Palette, Share2, Smartphone } from "lucide-react";
 
 export const Route = createFileRoute("/dashboard/carte")({
@@ -18,18 +18,18 @@ export const Route = createFileRoute("/dashboard/carte")({
 
 function MyCardPage() {
   const { data, setData, update, hydrated } = useCardStore();
-  const profile = getProfileMeta();
+  const { slug, profileId } = usePlan();
   const origin = typeof window !== "undefined" ? window.location.origin : "";
-  const publicUrl = profile ? `${origin}/${profile.slug}` : `${origin}/`;
+  const publicUrl = slug ? `${origin}/${slug}` : "";
 
   // Auto-save Supabase avec debounce 1.5s
   useEffect(() => {
-    if (!hydrated || !profile) return;
+    if (!hydrated || !profileId) return;
     const timer = setTimeout(() => {
-      updateCard(profile.id, data).catch(console.error);
+      updateCard(profileId, data).catch(console.error);
     }, 1500);
     return () => clearTimeout(timer);
-  }, [data, hydrated]);
+  }, [data, hydrated, profileId]);
 
   if (!hydrated) {
     return <div className="p-8 text-muted-foreground">Chargement…</div>;
