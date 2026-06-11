@@ -112,7 +112,22 @@ function ProfilePage() {
 
   // If card_data is available (saved via builder), use the exact same BusinessCard component
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
-  const cardData = (profile as any).card_data as CardData | null;
+  const rawCardData = (profile as any).card_data as CardData | null;
+  // Force les sections Vitrine à false si le profil n'est pas sur ce plan
+  const cardData: CardData | null = rawCardData && profilePlan !== "vitrine"
+    ? {
+        ...rawCardData,
+        servicesEnabled: false,
+        testimonialsEnabled: false,
+        calendarEnabled: false,
+        languagesEnabled: false,
+        statsEnabled: false,
+        listingsEnabled: false,
+        galleryEnabled: false,
+        videoEnabled: false,
+        ctaEnabled: false,
+      }
+    : rawCardData;
   if (cardData) {
     const themePalette = (THEMES_BY_ID[cardData.accent ?? "gold"] ?? THEMES_BY_ID.gold).palette;
     return (
