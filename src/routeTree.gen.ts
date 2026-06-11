@@ -33,6 +33,7 @@ import { Route as IndexRouteImport } from './routes/index'
 import { Route as MetiersIndexRouteImport } from './routes/metiers/index'
 import { Route as InscriptionIndexRouteImport } from './routes/inscription.index'
 import { Route as DashboardIndexRouteImport } from './routes/dashboard/index'
+import { Route as BuilderiaIndexRouteImport } from './routes/builderia/index'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as PreviewTokenRouteImport } from './routes/preview.$token'
 import { Route as MetiersCoachRouteImport } from './routes/metiers/coach'
@@ -59,6 +60,7 @@ import { Route as DashboardCardRouteImport } from './routes/dashboard/card'
 import { Route as DashboardBillingRouteImport } from './routes/dashboard/billing'
 import { Route as DashboardAnalyticsRouteImport } from './routes/dashboard/analytics'
 import { Route as DashboardAccountRouteImport } from './routes/dashboard/account'
+import { Route as BuilderiaResultatRouteImport } from './routes/builderia/resultat'
 import { Route as AuthCallbackRouteImport } from './routes/auth.callback'
 import { Route as InscriptionOffrePlanRouteImport } from './routes/inscription.offre.$plan'
 
@@ -181,6 +183,11 @@ const DashboardIndexRoute = DashboardIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => DashboardRoute,
+} as any)
+const BuilderiaIndexRoute = BuilderiaIndexRouteImport.update({
+  id: '/',
+  path: '/',
+  getParentRoute: () => BuilderiaRoute,
 } as any)
 const AdminIndexRoute = AdminIndexRouteImport.update({
   id: '/admin/',
@@ -314,6 +321,11 @@ const DashboardAccountRoute = DashboardAccountRouteImport.update({
   path: '/account',
   getParentRoute: () => DashboardRoute,
 } as any)
+const BuilderiaResultatRoute = BuilderiaResultatRouteImport.update({
+  id: '/resultat',
+  path: '/resultat',
+  getParentRoute: () => BuilderiaRoute,
+} as any)
 const AuthCallbackRoute = AuthCallbackRouteImport.update({
   id: '/auth/callback',
   path: '/auth/callback',
@@ -330,7 +342,7 @@ export interface FileRoutesByFullPath {
   '/$slug': typeof SlugRoute
   '/bienvenue': typeof BienvenueRoute
   '/builder': typeof BuilderRoute
-  '/builderia': typeof BuilderiaRoute
+  '/builderia': typeof BuilderiaRouteWithChildren
   '/carte-physique': typeof CartePhysiqueRoute
   '/cgu': typeof CguRoute
   '/cgv': typeof CgvRoute
@@ -348,6 +360,7 @@ export interface FileRoutesByFullPath {
   '/templates': typeof TemplatesRoute
   '/unsubscribe': typeof UnsubscribeRoute
   '/auth/callback': typeof AuthCallbackRoute
+  '/builderia/resultat': typeof BuilderiaResultatRoute
   '/dashboard/account': typeof DashboardAccountRoute
   '/dashboard/analytics': typeof DashboardAnalyticsRoute
   '/dashboard/billing': typeof DashboardBillingRoute
@@ -374,6 +387,7 @@ export interface FileRoutesByFullPath {
   '/metiers/coach': typeof MetiersCoachRoute
   '/preview/$token': typeof PreviewTokenRoute
   '/admin/': typeof AdminIndexRoute
+  '/builderia/': typeof BuilderiaIndexRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/inscription/': typeof InscriptionIndexRoute
   '/metiers/': typeof MetiersIndexRoute
@@ -384,7 +398,6 @@ export interface FileRoutesByTo {
   '/$slug': typeof SlugRoute
   '/bienvenue': typeof BienvenueRoute
   '/builder': typeof BuilderRoute
-  '/builderia': typeof BuilderiaRoute
   '/carte-physique': typeof CartePhysiqueRoute
   '/cgu': typeof CguRoute
   '/cgv': typeof CgvRoute
@@ -399,6 +412,7 @@ export interface FileRoutesByTo {
   '/templates': typeof TemplatesRoute
   '/unsubscribe': typeof UnsubscribeRoute
   '/auth/callback': typeof AuthCallbackRoute
+  '/builderia/resultat': typeof BuilderiaResultatRoute
   '/dashboard/account': typeof DashboardAccountRoute
   '/dashboard/analytics': typeof DashboardAnalyticsRoute
   '/dashboard/billing': typeof DashboardBillingRoute
@@ -425,6 +439,7 @@ export interface FileRoutesByTo {
   '/metiers/coach': typeof MetiersCoachRoute
   '/preview/$token': typeof PreviewTokenRoute
   '/admin': typeof AdminIndexRoute
+  '/builderia': typeof BuilderiaIndexRoute
   '/dashboard': typeof DashboardIndexRoute
   '/inscription': typeof InscriptionIndexRoute
   '/metiers': typeof MetiersIndexRoute
@@ -436,7 +451,7 @@ export interface FileRoutesById {
   '/$slug': typeof SlugRoute
   '/bienvenue': typeof BienvenueRoute
   '/builder': typeof BuilderRoute
-  '/builderia': typeof BuilderiaRoute
+  '/builderia': typeof BuilderiaRouteWithChildren
   '/carte-physique': typeof CartePhysiqueRoute
   '/cgu': typeof CguRoute
   '/cgv': typeof CgvRoute
@@ -454,6 +469,7 @@ export interface FileRoutesById {
   '/templates': typeof TemplatesRoute
   '/unsubscribe': typeof UnsubscribeRoute
   '/auth/callback': typeof AuthCallbackRoute
+  '/builderia/resultat': typeof BuilderiaResultatRoute
   '/dashboard/account': typeof DashboardAccountRoute
   '/dashboard/analytics': typeof DashboardAnalyticsRoute
   '/dashboard/billing': typeof DashboardBillingRoute
@@ -480,6 +496,7 @@ export interface FileRoutesById {
   '/metiers/coach': typeof MetiersCoachRoute
   '/preview/$token': typeof PreviewTokenRoute
   '/admin/': typeof AdminIndexRoute
+  '/builderia/': typeof BuilderiaIndexRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/inscription/': typeof InscriptionIndexRoute
   '/metiers/': typeof MetiersIndexRoute
@@ -510,6 +527,7 @@ export interface FileRouteTypes {
     | '/templates'
     | '/unsubscribe'
     | '/auth/callback'
+    | '/builderia/resultat'
     | '/dashboard/account'
     | '/dashboard/analytics'
     | '/dashboard/billing'
@@ -536,6 +554,7 @@ export interface FileRouteTypes {
     | '/metiers/coach'
     | '/preview/$token'
     | '/admin/'
+    | '/builderia/'
     | '/dashboard/'
     | '/inscription/'
     | '/metiers/'
@@ -546,7 +565,6 @@ export interface FileRouteTypes {
     | '/$slug'
     | '/bienvenue'
     | '/builder'
-    | '/builderia'
     | '/carte-physique'
     | '/cgu'
     | '/cgv'
@@ -561,6 +579,7 @@ export interface FileRouteTypes {
     | '/templates'
     | '/unsubscribe'
     | '/auth/callback'
+    | '/builderia/resultat'
     | '/dashboard/account'
     | '/dashboard/analytics'
     | '/dashboard/billing'
@@ -587,6 +606,7 @@ export interface FileRouteTypes {
     | '/metiers/coach'
     | '/preview/$token'
     | '/admin'
+    | '/builderia'
     | '/dashboard'
     | '/inscription'
     | '/metiers'
@@ -615,6 +635,7 @@ export interface FileRouteTypes {
     | '/templates'
     | '/unsubscribe'
     | '/auth/callback'
+    | '/builderia/resultat'
     | '/dashboard/account'
     | '/dashboard/analytics'
     | '/dashboard/billing'
@@ -641,6 +662,7 @@ export interface FileRouteTypes {
     | '/metiers/coach'
     | '/preview/$token'
     | '/admin/'
+    | '/builderia/'
     | '/dashboard/'
     | '/inscription/'
     | '/metiers/'
@@ -652,7 +674,7 @@ export interface RootRouteChildren {
   SlugRoute: typeof SlugRoute
   BienvenueRoute: typeof BienvenueRoute
   BuilderRoute: typeof BuilderRoute
-  BuilderiaRoute: typeof BuilderiaRoute
+  BuilderiaRoute: typeof BuilderiaRouteWithChildren
   CartePhysiqueRoute: typeof CartePhysiqueRoute
   CguRoute: typeof CguRoute
   CgvRoute: typeof CgvRoute
@@ -844,6 +866,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardIndexRouteImport
       parentRoute: typeof DashboardRoute
     }
+    '/builderia/': {
+      id: '/builderia/'
+      path: '/'
+      fullPath: '/builderia/'
+      preLoaderRoute: typeof BuilderiaIndexRouteImport
+      parentRoute: typeof BuilderiaRoute
+    }
     '/admin/': {
       id: '/admin/'
       path: '/admin'
@@ -1026,6 +1055,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardAccountRouteImport
       parentRoute: typeof DashboardRoute
     }
+    '/builderia/resultat': {
+      id: '/builderia/resultat'
+      path: '/resultat'
+      fullPath: '/builderia/resultat'
+      preLoaderRoute: typeof BuilderiaResultatRouteImport
+      parentRoute: typeof BuilderiaRoute
+    }
     '/auth/callback': {
       id: '/auth/callback'
       path: '/auth/callback'
@@ -1042,6 +1078,20 @@ declare module '@tanstack/react-router' {
     }
   }
 }
+
+interface BuilderiaRouteChildren {
+  BuilderiaResultatRoute: typeof BuilderiaResultatRoute
+  BuilderiaIndexRoute: typeof BuilderiaIndexRoute
+}
+
+const BuilderiaRouteChildren: BuilderiaRouteChildren = {
+  BuilderiaResultatRoute: BuilderiaResultatRoute,
+  BuilderiaIndexRoute: BuilderiaIndexRoute,
+}
+
+const BuilderiaRouteWithChildren = BuilderiaRoute._addFileChildren(
+  BuilderiaRouteChildren,
+)
 
 interface DashboardRouteChildren {
   DashboardAccountRoute: typeof DashboardAccountRoute
@@ -1133,7 +1183,7 @@ const rootRouteChildren: RootRouteChildren = {
   SlugRoute: SlugRoute,
   BienvenueRoute: BienvenueRoute,
   BuilderRoute: BuilderRoute,
-  BuilderiaRoute: BuilderiaRoute,
+  BuilderiaRoute: BuilderiaRouteWithChildren,
   CartePhysiqueRoute: CartePhysiqueRoute,
   CguRoute: CguRoute,
   CgvRoute: CgvRoute,
