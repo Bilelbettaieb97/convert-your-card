@@ -54,7 +54,7 @@ export const createCheckoutSession = createServerFn({ method: "POST" })
       line_items: [{ price: priceId, quantity: 1 }],
       metadata: { plan: data.plan, billing: data.billing, email: data.email },
       success_url: `${appUrl}/bienvenue?session_id={CHECKOUT_SESSION_ID}`,
-      cancel_url: `${appUrl}/dashboard/account`,
+      cancel_url: hadTrial ? `${appUrl}/dashboard/account` : `${appUrl}/builderia/resultat`,
       allow_promotion_codes: true,
       subscription_data: {
         metadata: { plan: data.plan, email: data.email },
