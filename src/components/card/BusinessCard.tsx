@@ -411,13 +411,14 @@ function StatsSection({ data }: { data: CardData }) {
     );
   }
 
+  const valueSize = data.stats.length >= 4 ? "text-lg" : data.stats.length === 3 ? "text-xl" : "text-2xl";
   return (
     <section className="px-5">
       <div className="grid rounded-2xl bg-card-surface border border-card-border overflow-hidden" style={{ gridTemplateColumns: `repeat(${data.stats.length}, minmax(0,1fr))` }}>
         {data.stats.map((s, i) => (
-          <div key={i} className={`py-4 px-2 text-center ${i < data.stats.length - 1 ? "border-r border-card-border" : ""}`}>
-            <div className="font-display text-2xl" style={{ color: "var(--card-accent)" }}>{s.value}</div>
-            <div className="mt-0.5 text-[10px] uppercase tracking-wider text-card-muted">{s.label}</div>
+          <div key={i} className={`py-3 px-1 text-center overflow-hidden ${i < data.stats.length - 1 ? "border-r border-card-border" : ""}`}>
+            <div className={`font-display ${valueSize} leading-none truncate`} style={{ color: "var(--card-accent)" }}>{s.value}</div>
+            <div className="mt-1 text-[9px] uppercase tracking-wide text-card-muted leading-tight break-words">{s.label}</div>
           </div>
         ))}
       </div>
