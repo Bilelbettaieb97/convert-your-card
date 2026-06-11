@@ -94,7 +94,6 @@ function BuilderIAResultatPage() {
       navigate({ to: "/builderia", replace: true });
       return;
     }
-    localStorage.removeItem("cyk.builderia.generated");
     setSelectedAccent(data.accent ?? "gold");
     const t = setTimeout(() => setRevealed(true), 40);
     if (user) {
