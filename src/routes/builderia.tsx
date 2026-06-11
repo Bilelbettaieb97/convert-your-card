@@ -599,13 +599,10 @@ function PreviewPhase({
   };
 
   const vitrineFeatures: string[] = [
-    fullCard.servicesEnabled && "Services & prestations personnalisés",
-    fullCard.testimonialsEnabled && "Témoignages clients",
-    "Statistiques & chiffres clés",
-    "Prise de rendez-vous intégrée",
-    "Appel à l'action fort (CTA)",
-    "Thème premium · sans badge CVD",
-    "Analytics visiteurs",
+    fullCard.servicesEnabled && "Vos offres présentées en détail",
+    fullCard.testimonialsEnabled && "Avis clients qui rassurent et convertissent",
+    "Vos chiffres clés qui inspirent confiance",
+    "Carte sans publicité Carte Visite Digitale",
   ].filter(Boolean) as string[];
 
   return (
@@ -688,15 +685,34 @@ function PreviewPhase({
           </div>
         </div>
 
-        {/* ── Droite : features Vitrine + score + CTA ── */}
-        <div className="space-y-5 lg:pt-4">
+        {/* ── Droite : outcomes + features + CTA ── */}
+        <div className="space-y-4 lg:pt-4">
+
+          {/* Titre orienté outcome */}
           <div>
             <h1 className="font-bold text-2xl text-foreground mb-1">
-              Votre carte Vitrine est prête
+              Votre carte est prête à être partagée
             </h1>
             <p className="text-muted-foreground text-sm">
-              L'IA a activé {vitrineFeatures.length} fonctionnalités Vitrine pour votre métier.
+              Un lien professionnel que vos clients ouvrent depuis WhatsApp, Instagram ou votre email.
             </p>
+          </div>
+
+          {/* 3 outcomes concrets — "ça sert à quoi ?" */}
+          <div className="space-y-2">
+            {[
+              { icon: "🔗", title: "Un lien à partager partout", desc: "WhatsApp · Instagram · Email · QR code" },
+              { icon: "📅", title: "Vos clients réservent directement", desc: "Calendly intégré · Zéro appel manqué" },
+              { icon: "📊", title: "Voyez qui a vu votre carte", desc: "Analytics · Visites · Clics en temps réel" },
+            ].map(({ icon, title, desc }) => (
+              <div key={title} className="flex items-center gap-3 rounded-xl bg-card border border-border px-4 py-3">
+                <span className="text-xl shrink-0">{icon}</span>
+                <div>
+                  <p className="text-sm font-semibold text-foreground leading-snug">{title}</p>
+                  <p className="text-xs text-muted-foreground">{desc}</p>
+                </div>
+              </div>
+            ))}
           </div>
 
           {/* Score de conversion compact */}
@@ -717,21 +733,23 @@ function PreviewPhase({
             );
           })()}
 
-          {/* Liste des features Vitrine */}
-          <div className="rounded-2xl border border-[#c026d3]/30 bg-[#c026d3]/[0.04] p-5 space-y-2.5">
-            <p className="text-xs font-semibold text-[#c026d3] uppercase tracking-wide mb-1">
-              Inclus dans votre carte
-            </p>
-            {vitrineFeatures.map((feat) => (
-              <div key={feat} className="flex items-center gap-3 text-sm text-foreground">
-                <span className="text-[#c026d3] font-bold text-base leading-none shrink-0">✦</span>
-                <span>{feat}</span>
-              </div>
-            ))}
-          </div>
+          {/* Features Vitrine — réduites et reformulées */}
+          {vitrineFeatures.length > 0 && (
+            <div className="rounded-2xl border border-[#c026d3]/30 bg-[#c026d3]/[0.04] px-5 py-4 space-y-2">
+              <p className="text-xs font-semibold text-[#c026d3] uppercase tracking-wide">
+                Aussi inclus dans votre carte
+              </p>
+              {vitrineFeatures.map((feat) => (
+                <div key={feat} className="flex items-center gap-3 text-sm text-foreground">
+                  <span className="text-[#c026d3] font-bold text-base leading-none shrink-0">✦</span>
+                  <span>{feat}</span>
+                </div>
+              ))}
+            </div>
+          )}
 
           {/* CTAs */}
-          <div className="space-y-3">
+          <div className="space-y-3 pt-1">
             <button
               type="button"
               onClick={onActivate}
@@ -741,10 +759,10 @@ function PreviewPhase({
               Essayer 7 jours gratuit
             </button>
 
-            {/* Garanties sous le bouton — visibles */}
-            <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/[0.06] px-4 py-2.5 text-center space-y-0.5">
-              <p className="text-sm font-semibold text-emerald-400">Sans carte bleue</p>
-              <p className="text-xs text-foreground/70">Puis 4,80€/mois · Résiliable à tout moment en 1 clic</p>
+            <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/[0.06] px-4 py-3 space-y-1">
+              <p className="text-sm font-semibold text-emerald-400">Sans carte bleue · Aucun engagement</p>
+              <p className="text-xs text-foreground/80 font-medium">→ Votre carte est publiée et partageable immédiatement</p>
+              <p className="text-xs text-muted-foreground">Puis 4,80€/mois · Résiliable à tout moment en 1 clic</p>
             </div>
 
             <div className="relative flex items-center gap-3">
