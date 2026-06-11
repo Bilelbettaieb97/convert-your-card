@@ -61,11 +61,18 @@ export function usePlan() {
   const daysLeft = Math.max(0, TRIAL_DAYS - daysOld);
   const trialExpired = daysOld >= TRIAL_DAYS && plan !== "vitrine";
 
-  // isInTrial : basé sur subscriptions.status (Stripe), pas sur le plan
-  const isInTrial = subStatus === "trialing";
+  // isInTrial : "trialing" OU "active" avec current_period_end proche de created_at
+  // (Stripe peut envoyer status="active" même pendant le trial quand payment_method_collection="if_required")
+  const trialEndDate = trialEnd ? new Date(trialEnd) : null;
+  const accountCreated = createdAt ? new Date(createdAt) : null;
+  const isInTrialPeriod = !!(
+    trialEndDate &&
+    accountCreated &&
+    trialEndDate > new Date() &&
+    (trialEndDate.getTime() - accountCreated.getTime()) <= (TRIAL_DAYS + 1) * 86_400_000
+  );
+  const isInTrial = subStatus === "trialing" || isInTrialPeriod;
 
-  // trialDaysLeft : depuis current_period_end Stripe si disponible,
-  // sinon fallback sur created_at + 3 jours (juste après checkout, avant webhook subscription.updated)
   const trialDaysLeft = isInTrial
     ? trialEnd
       ? Math.max(0, Math.ceil((new Date(trialEnd).getTime() - Date.now()) / 86_400_000))
