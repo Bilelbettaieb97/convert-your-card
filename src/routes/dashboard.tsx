@@ -53,6 +53,14 @@ function DashboardLayout() {
   const [gateDismissed, setGateDismissed] = useState(false);
   const { user, loading } = useAuthStore();
   const { hasProfile, loading: planLoading, actif, daysLeft, trialExpired, plan } = usePlan();
+
+  const ESSENTIELLE_ALLOWED = [
+    "/dashboard/content",
+    "/dashboard/account",
+    "/dashboard/billing",
+    "/dashboard/settings",
+    "/dashboard/help",
+  ];
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -62,6 +70,12 @@ function DashboardLayout() {
   useEffect(() => {
     if (!planLoading && hasProfile === false) navigate({ to: "/builderia" });
   }, [planLoading, hasProfile, navigate]);
+
+  useEffect(() => {
+    if (!planLoading && plan !== "vitrine" && !ESSENTIELLE_ALLOWED.some(p => pathname.startsWith(p))) {
+      navigate({ to: "/dashboard/content", replace: true });
+    }
+  }, [planLoading, plan, pathname, navigate]);
 
   const profile = getProfileMeta();
   const origin = typeof window !== "undefined" ? window.location.origin : "https://www.cartevisitedigitale.fr";
@@ -176,7 +190,7 @@ function DashboardLayout() {
           {actif !== false && plan !== "vitrine" && (
             <div className="bg-amber-500/10 border-b border-amber-500/30 px-6 py-3 flex items-center justify-between gap-4">
               <p className="text-sm text-amber-400 font-medium">
-                Plan Essentielle — votre carte affiche le branding ConvertiLab et vos statistiques sont verrouillées.
+                Plan Essentielle — votre carte affiche le branding cartevisitedigitale.fr et vos statistiques sont verrouillées.
               </p>
               <Link to="/dashboard/account" className="shrink-0 px-4 py-1.5 rounded-full bg-amber-500 text-white text-xs font-semibold hover:bg-amber-600 transition">
                 Passer à Vitrine — 4,80€/mois

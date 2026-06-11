@@ -193,15 +193,19 @@ function ProfilePage() {
 
 function BrandingFooter({ color }: { color?: string }) {
   return (
-    <div className="py-5 text-center">
+    <div className="px-4 pb-6 pt-2">
       <a
         href="https://www.cartevisitedigitale.fr"
         target="_blank"
         rel="noopener noreferrer"
-        className="inline-flex items-center gap-1 text-xs hover:opacity-80 transition"
-        style={{ color: color ?? "rgba(255,255,255,0.4)" }}
+        className="flex items-center justify-center gap-2 w-full py-3 rounded-2xl text-sm font-semibold transition hover:opacity-90"
+        style={{
+          backgroundColor: "rgba(255,255,255,0.1)",
+          border: "1px solid rgba(255,255,255,0.18)",
+          color: color ?? "#fff",
+        }}
       >
-        Créez votre carte sur <span className="font-semibold">cartevisitedigitale.fr</span> →
+        Créez votre carte sur <span style={{ textDecoration: "underline" }}>cartevisitedigitale.fr</span> →
       </a>
     </div>
   );
