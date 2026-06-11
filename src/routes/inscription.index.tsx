@@ -339,7 +339,7 @@ function InscriptionPage() {
             <div className="shrink-0 relative self-stretch flex items-center">
               {/* Container à taille fixe : clip le phone scaled */}
               <div className="relative overflow-hidden rounded-[28px] shadow-[0_0_60px_rgba(192,38,211,0.25)]"
-                style={{ width: 218, height: 448 }}>
+                style={{ width: 218, height: 448, pointerEvents: "none" }}>
                 <div style={{ transform: "scale(0.605)", transformOrigin: "top left", width: 360 }}>
                   <PhoneFrame>
                     <BusinessCard data={DEMO_CARD} />
