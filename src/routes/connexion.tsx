@@ -67,7 +67,8 @@ function ConnexionPage() {
           .select("id")
           .eq("user_id", userId)
           .maybeSingle();
-        navigate({ to: profile ? "/dashboard" : "/builderia" });
+        const hasGenerated = typeof window !== "undefined" && !!localStorage.getItem("cyk.builderia.generated");
+        navigate({ to: profile ? "/dashboard" : (hasGenerated ? "/builderia/resultat" : "/builderia") });
       } else {
         navigate({ to: "/dashboard" });
       }

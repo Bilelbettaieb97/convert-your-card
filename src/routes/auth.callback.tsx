@@ -61,7 +61,8 @@ function AuthCallbackPage() {
         } catch {}
       }
 
-      navigate({ to: "/builderia", replace: true });
+      const hasGenerated = typeof window !== "undefined" && !!localStorage.getItem("cyk.builderia.generated");
+      navigate({ to: hasGenerated ? "/builderia/resultat" : "/builderia", replace: true });
     }
 
     handleCallback();
