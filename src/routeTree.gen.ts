@@ -34,7 +34,6 @@ import { Route as MetiersIndexRouteImport } from './routes/metiers/index'
 import { Route as InscriptionIndexRouteImport } from './routes/inscription.index'
 import { Route as DashboardIndexRouteImport } from './routes/dashboard/index'
 import { Route as BuilderiaIndexRouteImport } from './routes/builderia/index'
-import { Route as AdminIndexRouteImport } from './routes/admin/index'
 import { Route as PreviewTokenRouteImport } from './routes/preview.$token'
 import { Route as MetiersCoachRouteImport } from './routes/metiers/coach'
 import { Route as MetiersSlugRouteImport } from './routes/metiers/$slug'
@@ -188,11 +187,6 @@ const BuilderiaIndexRoute = BuilderiaIndexRouteImport.update({
   id: '/',
   path: '/',
   getParentRoute: () => BuilderiaRoute,
-} as any)
-const AdminIndexRoute = AdminIndexRouteImport.update({
-  id: '/admin/',
-  path: '/admin/',
-  getParentRoute: () => rootRouteImport,
 } as any)
 const PreviewTokenRoute = PreviewTokenRouteImport.update({
   id: '/preview/$token',
@@ -386,7 +380,6 @@ export interface FileRoutesByFullPath {
   '/metiers/$slug': typeof MetiersSlugRoute
   '/metiers/coach': typeof MetiersCoachRoute
   '/preview/$token': typeof PreviewTokenRoute
-  '/admin/': typeof AdminIndexRoute
   '/builderia/': typeof BuilderiaIndexRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/inscription/': typeof InscriptionIndexRoute
@@ -438,7 +431,6 @@ export interface FileRoutesByTo {
   '/metiers/$slug': typeof MetiersSlugRoute
   '/metiers/coach': typeof MetiersCoachRoute
   '/preview/$token': typeof PreviewTokenRoute
-  '/admin': typeof AdminIndexRoute
   '/builderia': typeof BuilderiaIndexRoute
   '/dashboard': typeof DashboardIndexRoute
   '/inscription': typeof InscriptionIndexRoute
@@ -495,7 +487,6 @@ export interface FileRoutesById {
   '/metiers/$slug': typeof MetiersSlugRoute
   '/metiers/coach': typeof MetiersCoachRoute
   '/preview/$token': typeof PreviewTokenRoute
-  '/admin/': typeof AdminIndexRoute
   '/builderia/': typeof BuilderiaIndexRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/inscription/': typeof InscriptionIndexRoute
@@ -553,7 +544,6 @@ export interface FileRouteTypes {
     | '/metiers/$slug'
     | '/metiers/coach'
     | '/preview/$token'
-    | '/admin/'
     | '/builderia/'
     | '/dashboard/'
     | '/inscription/'
@@ -605,7 +595,6 @@ export interface FileRouteTypes {
     | '/metiers/$slug'
     | '/metiers/coach'
     | '/preview/$token'
-    | '/admin'
     | '/builderia'
     | '/dashboard'
     | '/inscription'
@@ -661,7 +650,6 @@ export interface FileRouteTypes {
     | '/metiers/$slug'
     | '/metiers/coach'
     | '/preview/$token'
-    | '/admin/'
     | '/builderia/'
     | '/dashboard/'
     | '/inscription/'
@@ -693,7 +681,6 @@ export interface RootRouteChildren {
   UnsubscribeRoute: typeof UnsubscribeRoute
   AuthCallbackRoute: typeof AuthCallbackRoute
   PreviewTokenRoute: typeof PreviewTokenRoute
-  AdminIndexRoute: typeof AdminIndexRoute
 }
 
 declare module '@tanstack/react-router' {
@@ -872,13 +859,6 @@ declare module '@tanstack/react-router' {
       fullPath: '/builderia/'
       preLoaderRoute: typeof BuilderiaIndexRouteImport
       parentRoute: typeof BuilderiaRoute
-    }
-    '/admin/': {
-      id: '/admin/'
-      path: '/admin'
-      fullPath: '/admin/'
-      preLoaderRoute: typeof AdminIndexRouteImport
-      parentRoute: typeof rootRouteImport
     }
     '/preview/$token': {
       id: '/preview/$token'
@@ -1202,7 +1182,6 @@ const rootRouteChildren: RootRouteChildren = {
   UnsubscribeRoute: UnsubscribeRoute,
   AuthCallbackRoute: AuthCallbackRoute,
   PreviewTokenRoute: PreviewTokenRoute,
-  AdminIndexRoute: AdminIndexRoute,
 }
 export const routeTree = rootRouteImport
   ._addFileChildren(rootRouteChildren)
