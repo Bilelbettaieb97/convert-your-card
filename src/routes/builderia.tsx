@@ -698,9 +698,10 @@ function PreviewPhase({
             </p>
           </div>
 
-          {/* 3 outcomes concrets — "ça sert à quoi ?" */}
+          {/* Outcomes concrets — "ça sert à quoi ?" */}
           <div className="space-y-2">
             {[
+              { icon: "✏️", title: "Modifiez votre carte quand vous voulez", desc: "Dashboard complet · Sections · Liens · Contenu · Thème — en illimité" },
               { icon: "🔗", title: "Un lien à partager partout", desc: "WhatsApp · Instagram · Email · QR code" },
               { icon: "📅", title: "Vos clients réservent directement", desc: "Calendly intégré · Zéro appel manqué" },
               { icon: "📊", title: "Voyez qui a vu votre carte", desc: "Analytics · Visites · Clics en temps réel" },
