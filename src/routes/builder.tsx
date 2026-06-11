@@ -275,7 +275,7 @@ function SuccessStep({
       (data.contactEnabled ? 1 : 0) +
       (data.socialsEnabled ? 1 : 0);
 
-    const socials = [data.linkedin, data.instagram, data.whatsappSocial].filter(Boolean).length;
+    const socials = [data.linkedin, data.instagram, data.facebook, data.tiktok, data.youtube, data.twitter, data.snapchat, data.pinterest, data.whatsappSocial].filter(Boolean).length;
     return {
       bricks,
       services: data.servicesEnabled ? data.services.length : 0,

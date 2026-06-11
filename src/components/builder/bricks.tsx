@@ -484,13 +484,31 @@ export function SocialsBrick({ data, update }: BrickProps) {
   return (
     <div className="space-y-3">
       <Field label="LinkedIn (URL complète)">
-        <Input value={data.linkedin} onChange={(e) => update("linkedin", e.target.value)} />
+        <Input value={data.linkedin} onChange={(e) => update("linkedin", e.target.value)} placeholder="https://linkedin.com/in/votre-profil" />
       </Field>
       <Field label="Instagram (URL complète)">
-        <Input value={data.instagram} onChange={(e) => update("instagram", e.target.value)} />
+        <Input value={data.instagram} onChange={(e) => update("instagram", e.target.value)} placeholder="https://instagram.com/votre-compte" />
+      </Field>
+      <Field label="Facebook (URL complète)">
+        <Input value={data.facebook ?? ""} onChange={(e) => update("facebook", e.target.value)} placeholder="https://facebook.com/votre-page" />
+      </Field>
+      <Field label="TikTok (URL complète)">
+        <Input value={data.tiktok ?? ""} onChange={(e) => update("tiktok", e.target.value)} placeholder="https://tiktok.com/@votre-compte" />
+      </Field>
+      <Field label="YouTube (URL de la chaîne)">
+        <Input value={data.youtube ?? ""} onChange={(e) => update("youtube", e.target.value)} placeholder="https://youtube.com/@votre-chaine" />
+      </Field>
+      <Field label="Twitter / X (URL complète)">
+        <Input value={data.twitter ?? ""} onChange={(e) => update("twitter", e.target.value)} placeholder="https://x.com/votre-compte" />
+      </Field>
+      <Field label="Snapchat (URL complète)">
+        <Input value={data.snapchat ?? ""} onChange={(e) => update("snapchat", e.target.value)} placeholder="https://snapchat.com/add/votre-compte" />
+      </Field>
+      <Field label="Pinterest (URL complète)">
+        <Input value={data.pinterest ?? ""} onChange={(e) => update("pinterest", e.target.value)} placeholder="https://pinterest.com/votre-compte" />
       </Field>
       <Field label="WhatsApp (numéro sans +)">
-        <Input value={data.whatsappSocial} onChange={(e) => update("whatsappSocial", e.target.value)} />
+        <Input value={data.whatsappSocial} onChange={(e) => update("whatsappSocial", e.target.value)} placeholder="33612345678" />
       </Field>
     </div>
   );
@@ -976,7 +994,7 @@ export const BRICK_META: Record<BrickId, { title: string; subtitle: string }> = 
   languages: { title: "Langues parlées", subtitle: "Idiomes & niveau" },
   cta: { title: "Bannière CTA", subtitle: "Encart d'appel à l'action" },
   contact: { title: "Coordonnées", subtitle: "Téléphone, mail, site, secteur" },
-  socials: { title: "Réseaux sociaux", subtitle: "LinkedIn, Instagram, WhatsApp" },
+  socials: { title: "Réseaux sociaux", subtitle: "LinkedIn, Instagram, TikTok, Facebook…" },
   theme: { title: "Thème", subtitle: "Couleur d'accent" },
 };
 

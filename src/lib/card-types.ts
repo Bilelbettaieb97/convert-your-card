@@ -130,6 +130,12 @@ export interface CardData {
   linkedin: string;
   instagram: string;
   whatsappSocial: string;
+  facebook: string;
+  tiktok: string;
+  youtube: string;
+  twitter: string;
+  snapchat: string;
+  pinterest: string;
 
   // Theme
   accent: ThemeAccent;
@@ -208,6 +214,12 @@ export const DEFAULT_CARD: CardData = {
   linkedin: "https://linkedin.com",
   instagram: "https://instagram.com",
   whatsappSocial: "33612345678",
+  facebook: "",
+  tiktok: "",
+  youtube: "",
+  twitter: "",
+  snapchat: "",
+  pinterest: "",
   accent: "gold",
   sectionOrder: DEFAULT_SECTION_ORDER,
   variants: { ...DEFAULT_VARIANTS },

@@ -2,9 +2,34 @@ import * as React from "react";
 import { useState } from "react";
 import {
   Phone, Mail, MessageCircle, MapPin, Globe, Linkedin, Instagram,
+  Facebook, Youtube, Twitter,
   Share2, Download, BadgeCheck, Award, ChevronRight, Building2, ImageIcon,
   Star, Calendar, Languages as LangIcon, Sparkles, PlayCircle, ArrowRight, Quote, ExternalLink,
 } from "lucide-react";
+
+function TikTokIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path d="M19.59 6.69a4.83 4.83 0 0 1-3.77-4.25V2h-3.45v13.67a2.89 2.89 0 0 1-2.88 2.5 2.89 2.89 0 0 1-2.89-2.89 2.89 2.89 0 0 1 2.89-2.89c.28 0 .54.04.79.1V9.01a6.27 6.27 0 0 0-.79-.05 6.34 6.34 0 0 0-6.34 6.34 6.34 6.34 0 0 0 6.34 6.34 6.34 6.34 0 0 0 6.33-6.34V8.69a8.18 8.18 0 0 0 4.84 1.55V6.79a4.84 4.84 0 0 1-1.07-.1z" />
+    </svg>
+  );
+}
+
+function SnapchatIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path d="M12.166 2C9.495 2 8.29 3.613 8.29 4.977v.268c0 .101.008.2.012.3-.614-.157-1.202-.211-1.648-.455-.178-.097-.47-.063-.474.246-.005.326.24.476.524.583.346.13.868.197 1.14.227-.038.21-.058.427-.058.65 0 3.176 2.037 4.844 4.38 4.844 2.344 0 4.38-1.668 4.38-4.843 0-.224-.02-.44-.058-.651.272-.03.795-.097 1.14-.227.285-.107.529-.257.524-.584-.004-.308-.296-.342-.474-.245-.447.244-1.034.298-1.648.455.003-.1.012-.199.012-.3V4.977C16.042 3.613 14.836 2 12.166 2zm-7.01 14.14c-.075-.147-.037-.325.082-.43.12-.105.288-.128.433-.06.176.082.352.127.527.127.32 0 .584-.127.835-.256.415-.21.845-.427 1.603-.427.759 0 1.19.217 1.604.427.252.13.516.256.836.256.32 0 .583-.127.835-.256.415-.21.845-.427 1.603-.427.759 0 1.19.217 1.604.427.252.13.516.256.836.256.175 0 .35-.045.527-.127.145-.068.313-.045.432.06.12.105.158.283.082.43-.342.667-1.04 1.09-1.773 1.21-.143.023-.258.122-.293.26l-.087.34c-.036.142-.163.24-.31.24h-.004a.317.317 0 0 1-.308-.24l-.087-.34a.317.317 0 0 0-.293-.26c-.733-.12-1.43-.543-1.772-1.21a.317.317 0 0 0-.432-.06c-.145.068-.313.045-.433-.06-.12-.105-.158-.283-.082-.43z" />
+    </svg>
+  );
+}
+
+function PinterestIcon({ className }: { className?: string }) {
+  return (
+    <svg className={className} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true">
+      <path d="M12 0C5.373 0 0 5.373 0 12c0 5.084 3.163 9.426 7.627 11.174-.105-.949-.2-2.405.042-3.441.218-.937 1.407-5.965 1.407-5.965s-.359-.719-.359-1.782c0-1.668.967-2.914 2.171-2.914 1.023 0 1.518.769 1.518 1.69 0 1.029-.655 2.568-.994 3.995-.283 1.194.599 2.169 1.777 2.169 2.133 0 3.772-2.249 3.772-5.495 0-2.873-2.064-4.882-5.012-4.882-3.414 0-5.418 2.561-5.418 5.207 0 1.031.397 2.138.893 2.738a.36.36 0 0 1 .083.345l-.333 1.36c-.053.22-.174.267-.402.161-1.499-.698-2.436-2.889-2.436-4.649 0-3.785 2.75-7.262 7.929-7.262 4.163 0 7.398 2.967 7.398 6.931 0 4.136-2.607 7.464-6.227 7.464-1.216 0-2.359-.632-2.75-1.378l-.748 2.853c-.271 1.043-1.002 2.35-1.492 3.146C9.57 23.812 10.763 24 12 24c6.627 0 12-5.373 12-12S18.627 0 12 0z" />
+    </svg>
+  );
+}
 import type { CardData, Testimonial, TestimonialsStyle, Listing, Service, Language, Stat, Badge } from "@/lib/card-types";
 import { THEMES_BY_ID } from "@/lib/card-themes";
 import { downloadVCard } from "@/lib/vcard";
@@ -1117,15 +1142,27 @@ const SOCIAL_BRAND: Record<string, string> = {
   LinkedIn:  "oklch(0.55 0.13 245)",
   Instagram: "oklch(0.65 0.2 15)",
   WhatsApp:  "oklch(0.7 0.17 150)",
+  Facebook:  "oklch(0.55 0.15 255)",
+  TikTok:    "oklch(0.15 0 0)",
+  YouTube:   "oklch(0.6 0.22 27)",
+  "Twitter/X": "oklch(0.2 0 0)",
+  Snapchat:  "oklch(0.88 0.18 95)",
+  Pinterest: "oklch(0.55 0.22 20)",
 };
 
 function SocialsSection({ data, profileId }: { data: CardData; profileId?: string }) {
   if (!data.socialsEnabled) return null;
   const v = data.variants.socials;
   const items = [
-    data.linkedin       && { icon: Linkedin,      label: "LinkedIn",  href: data.linkedin },
-    data.instagram      && { icon: Instagram,     label: "Instagram", href: data.instagram },
-    data.whatsappSocial && { icon: MessageCircle, label: "WhatsApp",  href: `https://wa.me/${data.whatsappSocial}` },
+    data.linkedin       && { icon: Linkedin,      label: "LinkedIn",   href: data.linkedin },
+    data.instagram      && { icon: Instagram,     label: "Instagram",  href: data.instagram },
+    data.facebook       && { icon: Facebook,      label: "Facebook",   href: data.facebook },
+    data.tiktok         && { icon: TikTokIcon,    label: "TikTok",     href: data.tiktok },
+    data.youtube        && { icon: Youtube,       label: "YouTube",    href: data.youtube },
+    data.twitter        && { icon: Twitter,       label: "Twitter/X",  href: data.twitter },
+    data.snapchat       && { icon: SnapchatIcon,  label: "Snapchat",   href: data.snapchat },
+    data.pinterest      && { icon: PinterestIcon, label: "Pinterest",  href: data.pinterest },
+    data.whatsappSocial && { icon: MessageCircle, label: "WhatsApp",   href: `https://wa.me/${data.whatsappSocial}` },
   ].filter(Boolean) as Array<{ icon: any; label: string; href: string }>;
   if (items.length === 0) return null;
 

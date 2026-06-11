@@ -19,8 +19,8 @@ function ContentPage() {
   const [supabaseReady, setSupabaseReady] = useState(false);
   const [saveStatus, setSaveStatus] = useState<"idle" | "saving" | "saved">("idle");
   const skipNextSave = useRef(false);
-  const saveTimerRef = useRef<ReturnType<typeof setTimeout>>();
-  const resetTimerRef = useRef<ReturnType<typeof setTimeout>>();
+  const saveTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  const resetTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
 
   useEffect(() => {
     if (!hydrated) return;
