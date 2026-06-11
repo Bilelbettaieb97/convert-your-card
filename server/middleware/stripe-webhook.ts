@@ -308,6 +308,29 @@ export default defineEventHandler(async (event) => {
       console.error("[stripe-webhook] Admin notification error:", e);
     }
 
+  } else if (stripeEvent.type === "customer.subscription.created") {
+    // Corrige le statut immédiatement après checkout — sans appel API secondaire
+    // Stripe fire cet event AVANT checkout.session.completed, donc il s'exécute en dernier
+    // et écrase le statut potentiellement incorrect écrit par checkout.session.completed
+    const sub = stripeEvent.data.object;
+    const trialEnd = sub.trial_end ? new Date(sub.trial_end * 1000).toISOString() : null;
+    const { data: subRow } = await adminSupabase
+      .from("subscriptions")
+      .select("user_id")
+      .eq("stripe_customer_id", sub.customer)
+      .maybeSingle();
+
+    if (subRow?.user_id) {
+      await adminSupabase.from("subscriptions").update({
+        stripe_subscription_id: sub.id,
+        status: sub.status,
+        current_period_end: trialEnd,
+        had_trial: trialEnd !== null,
+        updated_at: new Date().toISOString(),
+      }).eq("user_id", subRow.user_id);
+      console.log(`[stripe-webhook] subscription.created — status: ${sub.status}, trial_end: ${trialEnd}`);
+    }
+
   } else if (stripeEvent.type === "customer.subscription.updated") {
     const sub = stripeEvent.data.object;
     const inactiveStatuses = ["past_due", "canceled", "incomplete_expired", "unpaid"];
