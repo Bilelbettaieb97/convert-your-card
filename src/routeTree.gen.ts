@@ -34,6 +34,7 @@ import { Route as MetiersIndexRouteImport } from './routes/metiers/index'
 import { Route as InscriptionIndexRouteImport } from './routes/inscription.index'
 import { Route as DashboardIndexRouteImport } from './routes/dashboard/index'
 import { Route as AdminIndexRouteImport } from './routes/admin/index'
+import { Route as PreviewTokenRouteImport } from './routes/preview.$token'
 import { Route as MetiersCoachRouteImport } from './routes/metiers/coach'
 import { Route as MetiersSlugRouteImport } from './routes/metiers/$slug'
 import { Route as InscriptionSelectionDePlanRouteImport } from './routes/inscription.selection-de-plan'
@@ -184,6 +185,11 @@ const DashboardIndexRoute = DashboardIndexRouteImport.update({
 const AdminIndexRoute = AdminIndexRouteImport.update({
   id: '/admin/',
   path: '/admin/',
+  getParentRoute: () => rootRouteImport,
+} as any)
+const PreviewTokenRoute = PreviewTokenRouteImport.update({
+  id: '/preview/$token',
+  path: '/preview/$token',
   getParentRoute: () => rootRouteImport,
 } as any)
 const MetiersCoachRoute = MetiersCoachRouteImport.update({
@@ -366,6 +372,7 @@ export interface FileRoutesByFullPath {
   '/inscription/selection-de-plan': typeof InscriptionSelectionDePlanRoute
   '/metiers/$slug': typeof MetiersSlugRoute
   '/metiers/coach': typeof MetiersCoachRoute
+  '/preview/$token': typeof PreviewTokenRoute
   '/admin/': typeof AdminIndexRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/inscription/': typeof InscriptionIndexRoute
@@ -416,6 +423,7 @@ export interface FileRoutesByTo {
   '/inscription/selection-de-plan': typeof InscriptionSelectionDePlanRoute
   '/metiers/$slug': typeof MetiersSlugRoute
   '/metiers/coach': typeof MetiersCoachRoute
+  '/preview/$token': typeof PreviewTokenRoute
   '/admin': typeof AdminIndexRoute
   '/dashboard': typeof DashboardIndexRoute
   '/inscription': typeof InscriptionIndexRoute
@@ -470,6 +478,7 @@ export interface FileRoutesById {
   '/inscription/selection-de-plan': typeof InscriptionSelectionDePlanRoute
   '/metiers/$slug': typeof MetiersSlugRoute
   '/metiers/coach': typeof MetiersCoachRoute
+  '/preview/$token': typeof PreviewTokenRoute
   '/admin/': typeof AdminIndexRoute
   '/dashboard/': typeof DashboardIndexRoute
   '/inscription/': typeof InscriptionIndexRoute
@@ -525,6 +534,7 @@ export interface FileRouteTypes {
     | '/inscription/selection-de-plan'
     | '/metiers/$slug'
     | '/metiers/coach'
+    | '/preview/$token'
     | '/admin/'
     | '/dashboard/'
     | '/inscription/'
@@ -575,6 +585,7 @@ export interface FileRouteTypes {
     | '/inscription/selection-de-plan'
     | '/metiers/$slug'
     | '/metiers/coach'
+    | '/preview/$token'
     | '/admin'
     | '/dashboard'
     | '/inscription'
@@ -628,6 +639,7 @@ export interface FileRouteTypes {
     | '/inscription/selection-de-plan'
     | '/metiers/$slug'
     | '/metiers/coach'
+    | '/preview/$token'
     | '/admin/'
     | '/dashboard/'
     | '/inscription/'
@@ -658,6 +670,7 @@ export interface RootRouteChildren {
   TemplatesRoute: typeof TemplatesRoute
   UnsubscribeRoute: typeof UnsubscribeRoute
   AuthCallbackRoute: typeof AuthCallbackRoute
+  PreviewTokenRoute: typeof PreviewTokenRoute
   AdminIndexRoute: typeof AdminIndexRoute
 }
 
@@ -836,6 +849,13 @@ declare module '@tanstack/react-router' {
       path: '/admin'
       fullPath: '/admin/'
       preLoaderRoute: typeof AdminIndexRouteImport
+      parentRoute: typeof rootRouteImport
+    }
+    '/preview/$token': {
+      id: '/preview/$token'
+      path: '/preview/$token'
+      fullPath: '/preview/$token'
+      preLoaderRoute: typeof PreviewTokenRouteImport
       parentRoute: typeof rootRouteImport
     }
     '/metiers/coach': {
@@ -1131,6 +1151,7 @@ const rootRouteChildren: RootRouteChildren = {
   TemplatesRoute: TemplatesRoute,
   UnsubscribeRoute: UnsubscribeRoute,
   AuthCallbackRoute: AuthCallbackRoute,
+  PreviewTokenRoute: PreviewTokenRoute,
   AdminIndexRoute: AdminIndexRoute,
 }
 export const routeTree = rootRouteImport
