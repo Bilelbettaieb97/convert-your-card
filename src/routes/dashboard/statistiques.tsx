@@ -39,9 +39,10 @@ function timeAgo(iso: string): string {
 
 const FEED_CLICK_LABELS: Record<string, string> = {
   call: "Appeler", whatsapp: "WhatsApp", email: "Email",
-  website: "Site web", calendar: "Calendrier", cta: "CTA",
+  website: "Site web", calendar: "Calendrier", cta: "CTA", rdv: "Prise de RDV",
   linkedin: "LinkedIn", instagram: "Instagram", facebook: "Facebook",
   twitter: "Twitter / X", tiktok: "TikTok", youtube: "YouTube",
+  snapchat: "Snapchat", pinterest: "Pinterest",
 };
 
 function eventToNotif(row: { id: string; event_type: string; created_at: string; event_data?: Record<string, string> | null }): NotifItem {
@@ -67,12 +68,15 @@ const CLICK_TYPE_LABELS: Record<string, string> = {
   website: "Site web",
   calendar: "Calendrier",
   cta: "CTA",
+  rdv: "Prise de RDV",
   linkedin: "LinkedIn",
   instagram: "Instagram",
   facebook: "Facebook",
   twitter: "Twitter / X",
   tiktok: "TikTok",
   youtube: "YouTube",
+  snapchat: "Snapchat",
+  pinterest: "Pinterest",
 };
 
 function StatistiquesPage() {
