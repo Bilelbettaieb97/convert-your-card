@@ -281,8 +281,8 @@ function ActionsSection({ data, profileId }: { data: CardData; profileId?: strin
     data.actions.call     && { icon: Phone,          label: "Appeler",  href: `tel:${data.phone}`,             type: "call" },
     data.actions.whatsapp && { icon: MessageCircle,  label: "WhatsApp", href: `https://wa.me/${data.whatsapp}`, type: "whatsapp" },
     data.actions.email    && { icon: Mail,           label: "Mail",     href: `mailto:${data.email}`,           type: "email" },
-    data.actions.website  && { icon: Globe,          label: "Site",     href: `https://${data.website}`,        type: "website" },
-    (data.actions.rdv && data.calendarUrl) && { icon: CalendarCheck, label: "RDV",   href: data.calendarUrl,              type: "rdv" },
+    data.actions.website  && { icon: Globe,          label: "Site",     href: normalizeUrl(data.website)!,      type: "website" },
+    (data.actions.rdv && data.calendarUrl) && { icon: CalendarCheck, label: "RDV",   href: normalizeUrl(data.calendarUrl)!, type: "rdv" },
   ].filter(Boolean) as Array<{ icon: any; label: string; href: string; type: string }>;
 
   const v = data.variants.actions;
@@ -651,8 +651,9 @@ function ServicesSection({ data, profileId }: { data: CardData; profileId?: stri
         <SectionTitle>Services</SectionTitle>
         <ul className="mt-3 space-y-2">
           {data.services.map((s, i) => {
-            const Tag = s.url ? "a" : "div";
-            const linkProps = s.url ? { href: s.url, target: "_blank", rel: "noopener noreferrer", onClick: track } : {};
+            const href = normalizeUrl(s.url);
+            const Tag = href ? "a" : "div";
+            const linkProps = href ? { href, target: "_blank", rel: "noopener noreferrer", onClick: track } : {};
             return (
               <li key={s.id}>
                 <Tag {...linkProps} className="rounded-2xl bg-card-surface border border-card-border p-4 flex gap-3 active:scale-[0.99] transition">
@@ -681,8 +682,9 @@ function ServicesSection({ data, profileId }: { data: CardData; profileId?: stri
         <div className="px-5"><SectionTitle>Services</SectionTitle></div>
         <div className="mt-3 flex gap-3 overflow-x-auto px-5 pb-2 snap-x snap-mandatory [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {data.services.map((s) => {
-            const Tag = s.url ? "a" : "article";
-            const linkProps = s.url ? { href: s.url, target: "_blank", rel: "noopener noreferrer", onClick: track } : {};
+            const href = normalizeUrl(s.url);
+            const Tag = href ? "a" : "article";
+            const linkProps = href ? { href, target: "_blank", rel: "noopener noreferrer", onClick: track } : {};
             return (
               <Tag key={s.id} {...linkProps} className="snap-start shrink-0 w-[72%] rounded-2xl bg-card-surface border border-card-border p-4 active:scale-[0.99] transition">
                 <div className="flex items-start justify-between">
@@ -706,8 +708,9 @@ function ServicesSection({ data, profileId }: { data: CardData; profileId?: stri
       <SectionTitle>Services</SectionTitle>
       <ul className="mt-3 space-y-2">
         {data.services.map((s) => {
-          const Tag = s.url ? "a" : "div";
-          const linkProps = s.url ? { href: s.url, target: "_blank", rel: "noopener noreferrer", onClick: track } : {};
+          const href = normalizeUrl(s.url);
+          const Tag = href ? "a" : "div";
+          const linkProps = href ? { href, target: "_blank", rel: "noopener noreferrer", onClick: track } : {};
           return (
             <li key={s.id}>
               <Tag {...linkProps} className="rounded-2xl bg-card-surface border border-card-border p-4 flex gap-3 active:scale-[0.99] transition">
@@ -746,8 +749,9 @@ function GallerySection({ data, profileId }: { data: CardData; profileId?: strin
         <SectionTitle>Galerie</SectionTitle>
         <div className="mt-3 flex gap-2 overflow-x-auto pb-2 snap-x snap-mandatory [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {gallery.map((p) => {
-            const Tag = p.url ? "a" : "div";
-            const linkProps = p.url ? { href: p.url, target: "_blank", rel: "noopener noreferrer", onClick: track } : {};
+            const href = normalizeUrl(p.url);
+            const Tag = href ? "a" : "div";
+            const linkProps = href ? { href, target: "_blank", rel: "noopener noreferrer", onClick: track } : {};
             return (
               <Tag key={p.id} {...linkProps} className="snap-start shrink-0 w-[calc(50%-4px)] rounded-xl overflow-hidden bg-card-surface border border-card-border active:scale-[0.98] transition">
                 <div className="aspect-square overflow-hidden bg-card-surface-alt relative">
@@ -769,8 +773,9 @@ function GallerySection({ data, profileId }: { data: CardData; profileId?: strin
       <section className="px-5 space-y-3">
         <SectionTitle>Galerie</SectionTitle>
         {gallery.map((p) => {
-          const Tag = p.url ? "a" : "div";
-          const linkProps = p.url ? { href: p.url, target: "_blank", rel: "noopener noreferrer", onClick: track } : {};
+          const href = normalizeUrl(p.url);
+          const Tag = href ? "a" : "div";
+          const linkProps = href ? { href, target: "_blank", rel: "noopener noreferrer", onClick: track } : {};
           return (
             <Tag key={p.id} {...linkProps} className="rounded-2xl overflow-hidden bg-card-surface border border-card-border active:scale-[0.99] transition">
               <div className="aspect-[4/3] overflow-hidden bg-card-surface-alt relative">
@@ -792,8 +797,9 @@ function GallerySection({ data, profileId }: { data: CardData; profileId?: strin
       <SectionTitle>Galerie</SectionTitle>
       <div className="mt-3 grid grid-cols-2 gap-2">
         {gallery.map((p) => {
-          const Tag = p.url ? "a" : "div";
-          const linkProps = p.url ? { href: p.url, target: "_blank", rel: "noopener noreferrer", onClick: track } : {};
+          const href = normalizeUrl(p.url);
+          const Tag = href ? "a" : "div";
+          const linkProps = href ? { href, target: "_blank", rel: "noopener noreferrer", onClick: track } : {};
           return (
             <Tag key={p.id} {...linkProps} className="rounded-xl overflow-hidden bg-card-surface border border-card-border active:scale-[0.98] transition">
               <div className="aspect-square overflow-hidden bg-card-surface-alt relative">
@@ -820,8 +826,9 @@ function ListingsSection({ data, profileId }: { data: CardData; profileId?: stri
       <section className="px-5 space-y-3">
         <SectionTitle>Sélection en vente</SectionTitle>
         {data.listings.map((l) => {
-          const Tag = l.url ? "a" : "article";
-          const linkProps = l.url ? { href: l.url, target: "_blank", rel: "noopener noreferrer", onClick: track } : {};
+          const href = normalizeUrl(l.url);
+          const Tag = href ? "a" : "article";
+          const linkProps = href ? { href, target: "_blank", rel: "noopener noreferrer", onClick: track } : {};
           return (
             <Tag key={l.id} {...linkProps} className="rounded-2xl overflow-hidden bg-card-surface border border-card-border active:scale-[0.99] transition">
               <div className="aspect-[16/9] overflow-hidden bg-card-surface-alt">
@@ -849,8 +856,9 @@ function ListingsSection({ data, profileId }: { data: CardData; profileId?: stri
         <SectionTitle>Sélection en vente</SectionTitle>
         <ul className="mt-3 space-y-2">
           {data.listings.map((l) => {
-            const Tag = l.url ? "a" : "div";
-            const linkProps = l.url ? { href: l.url, target: "_blank", rel: "noopener noreferrer", onClick: track } : {};
+            const href = normalizeUrl(l.url);
+            const Tag = href ? "a" : "div";
+            const linkProps = href ? { href, target: "_blank", rel: "noopener noreferrer", onClick: track } : {};
             return (
               <li key={l.id}>
                 <Tag {...linkProps} className="flex gap-3 rounded-xl bg-card-surface border border-card-border p-2 pr-3 items-center active:scale-[0.99] transition">
@@ -878,8 +886,9 @@ function ListingsSection({ data, profileId }: { data: CardData; profileId?: stri
       <div className="px-5"><SectionTitle>Sélection en vente</SectionTitle></div>
       <div className="mt-3 flex gap-3 overflow-x-auto px-5 pb-2 snap-x snap-mandatory [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {data.listings.map((l) => {
-          const Tag = l.url ? "a" : "article";
-          const linkProps = l.url ? { href: l.url, target: "_blank", rel: "noopener noreferrer", onClick: track } : {};
+          const href = normalizeUrl(l.url);
+          const Tag = href ? "a" : "article";
+          const linkProps = href ? { href, target: "_blank", rel: "noopener noreferrer", onClick: track } : {};
           return (
             <Tag key={l.id} {...linkProps} className="snap-start shrink-0 w-[78%] rounded-2xl overflow-hidden bg-card-surface border border-card-border active:scale-[0.99] transition">
               <div className="aspect-[4/3] overflow-hidden bg-card-surface-alt">
@@ -929,7 +938,7 @@ function CalendarSection({ data, profileId }: { data: CardData; profileId?: stri
   if (v === "cta") {
     return (
       <section className="px-5">
-        <a href={data.calendarUrl} target="_blank" rel="noopener noreferrer" onClick={track}
+        <a href={normalizeUrl(data.calendarUrl)!} target="_blank" rel="noopener noreferrer" onClick={track}
           className="w-full flex items-center justify-center gap-2 rounded-2xl py-3.5 font-medium text-card-on-accent active:scale-[0.99] transition"
           style={{ background: "var(--card-accent-gradient)" }}>
           <Calendar className="h-4 w-4" />
@@ -942,7 +951,7 @@ function CalendarSection({ data, profileId }: { data: CardData; profileId?: stri
   if (v === "block") {
     return (
       <section className="px-5">
-        <a href={data.calendarUrl} target="_blank" rel="noopener noreferrer" onClick={track}
+        <a href={normalizeUrl(data.calendarUrl)!} target="_blank" rel="noopener noreferrer" onClick={track}
           className="block rounded-2xl bg-card-surface border border-card-border p-5 text-center active:scale-[0.99] transition">
           <span className="mx-auto h-12 w-12 grid place-items-center rounded-2xl" style={{ background: "var(--card-accent-gradient)" }}>
             <Calendar className="h-6 w-6 text-card-on-accent" />
@@ -956,7 +965,7 @@ function CalendarSection({ data, profileId }: { data: CardData; profileId?: stri
 
   return (
     <section className="px-5">
-      <a href={data.calendarUrl} target="_blank" rel="noopener noreferrer" onClick={track}
+      <a href={normalizeUrl(data.calendarUrl)!} target="_blank" rel="noopener noreferrer" onClick={track}
         className="flex items-center gap-3 rounded-2xl bg-card-surface border border-card-border p-4 active:scale-[0.99] transition">
         <span className="h-11 w-11 grid place-items-center rounded-xl" style={{ background: "var(--card-accent-gradient)" }}>
           <Calendar className="h-5 w-5 text-card-on-accent" />
@@ -1062,7 +1071,7 @@ function CtaSection({ data, profileId }: { data: CardData; profileId?: string })
           <h3 className="font-display text-lg leading-tight">{data.ctaTitle}</h3>
           {data.ctaText && <p className="mt-1.5 text-sm text-card-muted">{data.ctaText}</p>}
           {hasBtn && (
-            <a href={data.ctaButtonUrl} target="_blank" rel="noopener noreferrer" onClick={track}
+            <a href={normalizeUrl(data.ctaButtonUrl)!} target="_blank" rel="noopener noreferrer" onClick={track}
               className="mt-4 inline-flex items-center gap-1.5 text-sm font-medium" style={{ color: "var(--card-accent)" }}>
               {data.ctaButtonLabel} <ArrowRight className="h-4 w-4" />
             </a>
@@ -1079,7 +1088,7 @@ function CtaSection({ data, profileId }: { data: CardData; profileId?: string })
           <h3 className="font-display text-xl leading-tight">{data.ctaTitle}</h3>
           {data.ctaText && <p className="mt-1.5 text-sm opacity-90">{data.ctaText}</p>}
           {hasBtn && (
-            <a href={data.ctaButtonUrl} target="_blank" rel="noopener noreferrer" onClick={track}
+            <a href={normalizeUrl(data.ctaButtonUrl)!} target="_blank" rel="noopener noreferrer" onClick={track}
               className="mt-4 w-full flex items-center justify-center gap-2 rounded-xl py-3 text-sm font-semibold bg-card-bg  active:scale-[0.99] transition">
               {data.ctaButtonLabel} <ArrowRight className="h-4 w-4" />
             </a>
@@ -1096,7 +1105,7 @@ function CtaSection({ data, profileId }: { data: CardData; profileId?: string })
         <h3 className="font-display text-lg leading-tight">{data.ctaTitle}</h3>
         {data.ctaText && <p className="mt-1.5 text-sm text-card-muted">{data.ctaText}</p>}
         {hasBtn && (
-          <a href={data.ctaButtonUrl} target="_blank" rel="noopener noreferrer" onClick={track}
+          <a href={normalizeUrl(data.ctaButtonUrl)!} target="_blank" rel="noopener noreferrer" onClick={track}
             className="mt-4 w-full flex items-center justify-center gap-2 rounded-xl py-3 text-sm font-medium text-card-on-accent active:scale-[0.99] transition"
             style={{ background: "var(--card-accent-gradient)" }}>
             {data.ctaButtonLabel} <ArrowRight className="h-4 w-4" />
@@ -1122,7 +1131,7 @@ function ContactSection({ data, profileId }: { data: CardData; profileId?: strin
   const rows = [
     { icon: Phone, label: "Téléphone", value: data.phoneDisplay || data.phone, href: data.phone ? `tel:${data.phone}` : undefined },
     { icon: Mail,  label: "Email",     value: data.email,                       href: data.email ? `mailto:${data.email}` : undefined },
-    { icon: Globe, label: "Site web",  value: data.website,                     href: data.website ? `https://${data.website}` : undefined },
+    { icon: Globe, label: "Site web",  value: data.website,                     href: data.website ? normalizeUrl(data.website)! : undefined },
     { icon: MapPin, label: "Secteur",  value: data.area,                        href: undefined as string | undefined },
   ].filter((r) => r.value);
 
@@ -1175,7 +1184,7 @@ function ContactSection({ data, profileId }: { data: CardData; profileId?: strin
       <ul className="mt-3 rounded-2xl bg-card-surface border border-card-border divide-y divide-card-border overflow-hidden">
         <ContactRow icon={Phone}  label="Téléphone" value={data.phoneDisplay || data.phone} href={`tel:${data.phone}`}   onTrack={() => track("Téléphone")} />
         <ContactRow icon={Mail}   label="Email"     value={data.email}   href={`mailto:${data.email}`}                   onTrack={() => track("Email")} />
-        <ContactRow icon={Globe}  label="Site web"  value={data.website} href={`https://${data.website}`}                onTrack={() => track("Site web")} />
+        <ContactRow icon={Globe}  label="Site web"  value={data.website} href={normalizeUrl(data.website) ?? undefined}  onTrack={() => track("Site web")} />
         <ContactRow icon={MapPin} label="Secteur"   value={data.area} />
       </ul>
     </section>
@@ -1215,8 +1224,7 @@ const SOCIAL_BRAND: Record<string, string> = {
   Pinterest: "oklch(0.55 0.22 20)",
 };
 
-const toHref = (v: string, wrap?: (s: string) => string) =>
-  !v || v === "#" ? null : wrap ? wrap(v) : v;
+const toHref = (v: string) => normalizeUrl(v);
 
 function SocialsSection({ data, profileId }: { data: CardData; profileId?: string }) {
   if (!data.socialsEnabled) return null;
@@ -1308,6 +1316,14 @@ function SocialsSection({ data, profileId }: { data: CardData; profileId?: strin
 
 function SectionTitle({ children }: { children: React.ReactNode }) {
   return <h2 className="font-display text-xs uppercase tracking-[0.18em]" style={{ color: "var(--card-accent)" }}>{children}</h2>;
+}
+
+function normalizeUrl(url: string | null | undefined): string | null {
+  if (!url) return null;
+  const t = url.trim();
+  if (!t || t === "#") return null;
+  if (/^(https?|tel|mailto|whatsapp):/.test(t)) return t;
+  return `https://${t}`;
 }
 
 function parseYoutubeId(url: string): string | null {
