@@ -1,11 +1,13 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Check, Crown, Mail, LogOut, Settings } from "lucide-react";
+import { Check, Crown, Loader2, Mail, LogOut, Settings } from "lucide-react";
 import { UpsellSection } from "@/components/dashboard/UpsellSection";
 import { useAuthStore } from "@/lib/auth-store";
 import { supabase } from "@/integrations/supabase/client";
 import { usePlan } from "@/lib/use-plan";
+import { createCheckoutSession } from "@/fns/checkout";
 
 export const Route = createFileRoute("/dashboard/account")({
   component: AccountPage,
@@ -37,6 +39,20 @@ function AccountPage() {
   const { user } = useAuthStore();
   const navigate = useNavigate();
   const { plan, loading } = usePlan();
+  const [upgrading, setUpgrading] = useState(false);
+
+  async function handleUpgrade() {
+    if (!user?.email) return;
+    setUpgrading(true);
+    try {
+      const { url } = await createCheckoutSession({
+        data: { plan: "vitrine", billing: "monthly", email: user.email },
+      });
+      if (url) window.location.href = url;
+    } catch {
+      setUpgrading(false);
+    }
+  }
 
   async function handleSignOut() {
     await supabase.auth.signOut();
@@ -80,10 +96,13 @@ function AccountPage() {
                 </ul>
                 {current ? (
                   <Button variant="outline" disabled className="w-full">Plan actuel</Button>
+                ) : p.id === "vitrine" ? (
+                  <Button className="w-full" onClick={handleUpgrade} disabled={upgrading}>
+                    {upgrading ? <Loader2 className="h-4 w-4 animate-spin mr-2" /> : null}
+                    {upgrading ? "Redirection…" : "Passer à Vitrine — 4,80€/mois"}
+                  </Button>
                 ) : (
-                  <Link to="/pricing">
-                    <Button className="w-full">Passer à {p.label}</Button>
-                  </Link>
+                  <Button variant="outline" disabled className="w-full">Plan actuel</Button>
                 )}
               </Card>
             );

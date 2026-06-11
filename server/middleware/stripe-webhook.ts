@@ -279,12 +279,16 @@ export default defineEventHandler(async (event) => {
       }
     }
 
-    // Upsert subscription
+    // Upsert subscription — CRITIQUE : retourne 500 si échec → Stripe retry automatique
     if (userId) {
-      await adminSupabase.from("subscriptions").upsert(
+      const { error: upsertErr } = await adminSupabase.from("subscriptions").upsert(
         { user_id: userId, stripe_customer_id: stripeCustomerId, stripe_subscription_id: stripeSubscriptionId, plan, status: subscriptionStatus, current_period_end: trialEnd, had_trial: trialEnd !== null, updated_at: new Date().toISOString() },
         { onConflict: "user_id" },
       );
+      if (upsertErr) {
+        console.error("[stripe-webhook] CRITICAL: subscription upsert failed:", upsertErr.message);
+        return new Response("DB write failed", { status: 500 });
+      }
     }
 
     // Send welcome email + admin notification
