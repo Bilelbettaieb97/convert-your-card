@@ -100,6 +100,7 @@ function BillingPage() {
       setLoadingSub(false);
 
       // Fetch card info — use stored customer ID if available, otherwise look up by email
+      let resolvedCustomerId = s?.stripe_customer_id ?? null;
       try {
         const cardInfo = await getStripeCard({
           data: {
@@ -109,22 +110,23 @@ function BillingPage() {
         });
         if (cardInfo) {
           setCard(cardInfo as CardInfo);
-          // Backfill customerId so portal works even without a subscriptions row
-          if (!s?.stripe_customer_id && cardInfo.customerId) {
-            setSub((prev) => ({
-              plan: prev?.plan ?? null,
-              status: prev?.status ?? null,
-              current_period_end: prev?.current_period_end ?? null,
-              stripe_subscription_id: prev?.stripe_subscription_id ?? null,
-              stripe_customer_id: cardInfo.customerId,
-            }));
+          if (cardInfo.customerId) {
+            resolvedCustomerId = cardInfo.customerId;
+            if (!s?.stripe_customer_id) {
+              setSub((prev) => ({
+                plan: prev?.plan ?? null,
+                status: prev?.status ?? null,
+                current_period_end: prev?.current_period_end ?? null,
+                stripe_subscription_id: prev?.stripe_subscription_id ?? null,
+                stripe_customer_id: cardInfo.customerId,
+              }));
+            }
           }
         }
       } catch {
         // Stripe unreachable or no card yet
       }
 
-      const resolvedCustomerId = s?.stripe_customer_id ?? (cardInfo as CardInfo | null)?.customerId;
       if (resolvedCustomerId) {
         setLoadingInvoices(true);
         try {
