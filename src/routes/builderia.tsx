@@ -122,6 +122,7 @@ function BuilderIAPage() {
   const [sharing, setSharing] = useState(false);
   const [copied, setCopied] = useState(false);
   const [activating, setActivating] = useState(false);
+  const [selectedAccent, setSelectedAccent] = useState<ThemeAccent>("gold");
 
   const animDoneRef = useRef(false);
   const resultReady = useRef(false);
@@ -221,6 +222,7 @@ function BuilderIAPage() {
       };
 
       setGeneratedCard(merged);
+      setSelectedAccent(merged.accent ?? "gold");
       resultReady.current = true;
       if (animDoneRef.current) triggerFlip();
 
@@ -252,13 +254,14 @@ function BuilderIAPage() {
     setActivating(true);
     setError("");
     try {
+      const cardWithTheme: CardData = { ...generatedCard, accent: selectedAccent };
       const existing = await loadMyCard();
       if (!existing) {
-        await createCard(generatedCard);
+        await createCard(cardWithTheme);
       } else {
-        await updateCard(existing.id, generatedCard);
+        await updateCard(existing.id, cardWithTheme);
       }
-      setData(generatedCard);
+      setData(cardWithTheme);
       const { url } = await createCheckoutSession({
         data: { plan: "vitrine", billing: "monthly", email: user.email! },
       });
@@ -291,7 +294,8 @@ function BuilderIAPage() {
     if (!generatedCard || sharing) return;
     setSharing(true);
     try {
-      const { token } = await saveCardPreview({ data: { cardData: generatedCard as unknown as Record<string, unknown> } });
+      const cardWithTheme = { ...generatedCard, accent: selectedAccent };
+      const { token } = await saveCardPreview({ data: { cardData: cardWithTheme as unknown as Record<string, unknown> } });
       const url = `${window.location.origin}/preview/${token}`;
       setShareUrl(url);
       await navigator.clipboard.writeText(url).catch(() => {});
@@ -560,6 +564,8 @@ function BuilderIAPage() {
       sharing={sharing}
       copied={copied}
       activating={activating}
+      selectedAccent={selectedAccent}
+      onAccentChange={setSelectedAccent}
       onActivate={handleActivateVitrine}
       onFree={handleContinueFree}
       onShare={handleShare}
@@ -580,6 +586,8 @@ type PreviewPhaseProps = {
   sharing: boolean;
   copied: boolean;
   activating: boolean;
+  selectedAccent: ThemeAccent;
+  onAccentChange: (a: ThemeAccent) => void;
   onActivate: () => void;
   onFree: () => void;
   onShare: () => void;
@@ -595,10 +603,10 @@ const QUICK_THEMES: Array<{ accent: ThemeAccent; label: string; bg: string; ring
 
 function PreviewPhase({
   generatedCard, score, tips, shareUrl, sharing, copied, activating,
+  selectedAccent, onAccentChange,
   onActivate, onFree, onShare, onCopy,
 }: PreviewPhaseProps) {
   const [revealed, setRevealed] = useState(false);
-  const [selectedAccent, setSelectedAccent] = useState<ThemeAccent>(generatedCard.accent);
 
   useEffect(() => {
     const t = setTimeout(() => setRevealed(true), 40);
@@ -653,7 +661,7 @@ function PreviewPhase({
                 <button
                   key={t.accent}
                   title={t.label}
-                  onClick={() => setSelectedAccent(t.accent)}
+                  onClick={() => onAccentChange(t.accent)}
                   style={{
                     backgroundColor: t.bg,
                     boxShadow: isSelected ? `0 0 0 2px ${t.ring}, 0 0 0 4px white` : "none",
