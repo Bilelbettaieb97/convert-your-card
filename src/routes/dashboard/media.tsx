@@ -27,7 +27,10 @@ function MediaPage() {
   const { data, setData, update, hydrated } = useCardStore();
   const profile = getProfileMeta();
   const [supabaseReady, setSupabaseReady] = useState(false);
+  const [saveStatus, setSaveStatus] = useState<"idle" | "saving" | "saved">("idle");
   const skipNextSave = useRef(false);
+  const saveTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
+  const resetTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const [photos, setPhotos] = useState<Photo[]>([]);
   const [loading, setLoading] = useState(false);
   const [uploading, setUploading] = useState<"profile" | "cover" | "library" | null>(null);
@@ -58,10 +61,22 @@ function MediaPage() {
   useEffect(() => {
     if (!hydrated || !supabaseReady || !profile) return;
     if (skipNextSave.current) { skipNextSave.current = false; return; }
-    const timer = setTimeout(() => {
-      updateCard(profile.id, data).catch(console.error);
+    setSaveStatus("saving");
+    clearTimeout(saveTimerRef.current);
+    clearTimeout(resetTimerRef.current);
+    saveTimerRef.current = setTimeout(async () => {
+      try {
+        await updateCard(profile.id, data);
+        setSaveStatus("saved");
+        resetTimerRef.current = setTimeout(() => setSaveStatus("idle"), 2000);
+      } catch {
+        setSaveStatus("idle");
+      }
     }, 1500);
-    return () => clearTimeout(timer);
+    return () => {
+      clearTimeout(saveTimerRef.current);
+      clearTimeout(resetTimerRef.current);
+    };
   }, [data, hydrated, supabaseReady]); // eslint-disable-line react-hooks/exhaustive-deps
 
   const loadLibrary = useCallback(async () => {
@@ -153,7 +168,21 @@ function MediaPage() {
     <div className="mx-auto max-w-[1400px] px-5 sm:px-8 py-8 grid grid-cols-1 xl:grid-cols-[1fr_380px] gap-8 items-start">
       <section className="space-y-8">
         <div>
-          <h2 className="font-display text-2xl font-medium">Médias</h2>
+          <div className="flex items-center gap-3">
+            <h2 className="font-display text-2xl font-medium">Médias</h2>
+            {saveStatus === "saving" && (
+              <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                <Loader2 className="h-3 w-3 animate-spin" />
+                Sauvegarde…
+              </span>
+            )}
+            {saveStatus === "saved" && (
+              <span className="flex items-center gap-1.5 text-xs text-emerald-500">
+                <Check className="h-3 w-3" />
+                Sauvegardé
+              </span>
+            )}
+          </div>
           <p className="text-sm text-muted-foreground mt-1">Gérez vos photos et appliquez-les directement à votre carte.</p>
         </div>
 
