@@ -7,6 +7,73 @@ import { supabase } from "@/integrations/supabase/client";
 import { isDisposableEmail } from "@/lib/is-disposable-email";
 import { Toaster } from "@/components/ui/sonner";
 import { Zap, ShieldCheck, Lock, Users, Mail, ArrowRight, RefreshCw } from "lucide-react";
+import { BusinessCard } from "@/components/card/BusinessCard";
+import { PhoneFrame } from "@/components/card/PhoneFrame";
+import { DEFAULT_CARD, type CardData } from "@/lib/card-types";
+
+const DEMO_CARD: CardData = {
+  ...DEFAULT_CARD,
+  name: "Marc Brun",
+  title: "Plombier · Dépannage 24h/24",
+  agency: "",
+  area: "Paris & Île-de-France",
+  photo: "https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=200&h=200&fit=crop&crop=face",
+  coverPhoto: "https://images.unsplash.com/photo-1558618666-fcd25c85cd64?w=800&h=300&fit=crop",
+  accent: "navy",
+  actions: { call: true, whatsapp: true, email: true, website: false },
+  statsEnabled: true,
+  stats: [
+    { label: "Interventions", value: "1 200+" },
+    { label: "Note clients", value: "4.9 ★" },
+    { label: "Disponible", value: "24h/24" },
+  ],
+  aboutEnabled: true,
+  bio: "Plombier certifié à Paris depuis 10 ans. Dépannage urgent, rénovation salle de bain, installation sanitaire. Devis gratuit sous 2h.",
+  badges: [
+    { id: "b1", label: "Certifié RGE" },
+    { id: "b2", label: "Devis gratuit" },
+    { id: "b3", label: "Urgence 24h" },
+  ],
+  servicesEnabled: true,
+  services: [
+    { id: "s1", title: "Dépannage urgent", description: "Intervention en moins d'1 heure, 7j/7, 24h/24." },
+    { id: "s2", title: "Rénovation salle de bain", description: "Conception et pose complète, carrelage inclus." },
+    { id: "s3", title: "Détection de fuites", description: "Caméra thermique, sans destruction." },
+  ],
+  testimonialsEnabled: true,
+  testimonials: [
+    { id: "t1", name: "Sophie M.", role: "Paris 15e", text: "Intervention en 45 min un dimanche soir. Tarif honnête et travail soigné.", rating: 5, photo: "", link: "" },
+    { id: "t2", name: "Karim B.", role: "Boulogne", text: "A détecté une fuite que deux autres plombiers avaient ratée. Excellent.", rating: 5, photo: "", link: "" },
+  ],
+  calendarEnabled: true,
+  calendarLabel: "Prendre RDV",
+  calendarUrl: "https://calendly.com/demo",
+  ctaEnabled: true,
+  ctaTitle: "Urgence plomberie ?",
+  ctaText: "Disponible maintenant. Devis gratuit en 2 minutes.",
+  ctaButtonLabel: "Appeler maintenant",
+  ctaButtonUrl: "tel:+33600000000",
+  phone: "+33600000000",
+  phoneDisplay: "06 00 00 00 00",
+  email: "marc@plomberie-brun.fr",
+  website: "",
+  whatsapp: "33600000000",
+  socialsEnabled: false,
+  linkedin: "",
+  instagram: "",
+  whatsappSocial: "",
+  videoEnabled: false,
+  videoTitle: "",
+  videoUrl: "",
+  galleryEnabled: false,
+  gallery: [],
+  listingsEnabled: false,
+  listings: [],
+  languagesEnabled: false,
+  languages: [],
+  vcardEnabled: true,
+  contactEnabled: true,
+};
 
 function GoogleIcon() {
   return (
@@ -275,61 +342,16 @@ function InscriptionPage() {
               </h2>
             </div>
 
-            {/* Phone mockup */}
+            {/* Phone mockup — vrai produit */}
             <div className="flex justify-center">
-              <div className="relative w-[200px]">
-                {/* Phone shell */}
-                <div className="w-[200px] rounded-[2rem] border-2 border-white/20 bg-[#0d001a] shadow-[0_0_60px_rgba(192,38,211,0.3)] overflow-hidden">
-                  {/* Notch */}
-                  <div className="h-6 flex items-center justify-center border-b border-white/10">
-                    <div className="w-12 h-1 bg-white/20 rounded-full" />
-                  </div>
-                  {/* Cover */}
-                  <div className="h-16 bg-gradient-to-r from-[#c026d3]/40 to-[#7c3aed]/40 flex items-end px-3 pb-2">
-                    <div className="w-24 h-1.5 bg-white/20 rounded-full" />
-                  </div>
-                  {/* Avatar + name */}
-                  <div className="px-3 pt-2 pb-1 flex items-center gap-2">
-                    <div className="w-9 h-9 rounded-full bg-gradient-to-br from-[#c026d3] to-[#7c3aed] flex items-center justify-center text-white text-[10px] font-bold shrink-0">MB</div>
-                    <div>
-                      <div className="text-white text-[11px] font-bold">Marc Brun</div>
-                      <div className="text-white/50 text-[9px]">Plombier · Paris 15e</div>
-                    </div>
-                  </div>
-                  {/* Bio */}
-                  <div className="px-3 py-1.5 space-y-1">
-                    <div className="w-full h-1.5 bg-white/10 rounded-full" />
-                    <div className="w-4/5 h-1.5 bg-white/10 rounded-full" />
-                  </div>
-                  {/* Action buttons */}
-                  <div className="px-3 py-2 flex gap-1.5">
-                    {["📞 Appeler", "💬 WhatsApp", "📅 RDV"].map((btn) => (
-                      <div key={btn} className="flex-1 rounded-lg bg-white/10 py-1.5 text-center text-[7px] text-white/60 font-medium">{btn}</div>
-                    ))}
-                  </div>
-                  {/* Stats row */}
-                  <div className="mx-3 mb-2 rounded-xl bg-white/5 border border-white/10 px-2 py-2 flex justify-between">
-                    {[["142", "visites"], ["38", "clics"], ["4.9★", "avis"]].map(([v, l]) => (
-                      <div key={l} className="text-center">
-                        <p className="text-white text-[10px] font-bold">{v}</p>
-                        <p className="text-white/40 text-[7px]">{l}</p>
-                      </div>
-                    ))}
-                  </div>
-                  {/* Services teaser */}
-                  <div className="px-3 pb-3 space-y-1">
-                    {["Dépannage urgent 24h/24", "Rénovation salle de bain"].map((s) => (
-                      <div key={s} className="flex items-center gap-1.5">
-                        <div className="w-1 h-1 rounded-full bg-magenta/80 shrink-0" />
-                        <div className="text-[8px] text-white/50">{s}</div>
-                      </div>
-                    ))}
-                  </div>
+              <div className="relative">
+                <div style={{ transform: "scale(0.62)", transformOrigin: "top center", height: "370px", width: "230px" }}>
+                  <PhoneFrame>
+                    <BusinessCard data={DEMO_CARD} />
+                  </PhoneFrame>
                 </div>
-
-                {/* Floating badge */}
-                <div className="absolute -top-3 -right-4 bg-emerald-500 text-white text-[10px] font-bold px-2.5 py-1 rounded-full shadow-lg">
-                  ✓ En ligne
+                <div className="absolute -top-2 -right-2 bg-emerald-500 text-white text-[10px] font-bold px-2.5 py-1 rounded-full shadow-lg whitespace-nowrap">
+                  ✓ En ligne maintenant
                 </div>
               </div>
             </div>
