@@ -137,6 +137,8 @@ function BuilderIAResultatPage() {
     try {
       const cardWithTheme: CardData = { ...generatedCard, accent: selectedAccent };
       setData(cardWithTheme);
+      // Remettre le flag pour qu'un retour depuis Stripe repasse par /builderia/resultat
+      sessionStorage.setItem("cyk.builderia.generated", "1");
       await supabase.rpc("track_builderia_step", { p_user_id: user.id, p_step: 3, p_step_name: "stripe-checkout" });
       const { url } = await createCheckoutSession({
         data: { plan: "vitrine", billing: "monthly", email: user.email!, userId: user.id },
