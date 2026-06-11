@@ -27,9 +27,11 @@ interface BrickListProps {
   setData: (d: CardData) => void;
   /** When true, only show the per-brick style picker (no content editor). */
   styleOnly?: boolean;
+  /** When true, hide disabled sections (used by the Style page). */
+  filterEnabled?: boolean;
 }
 
-export function BrickList({ data, update, setData, styleOnly = false }: BrickListProps) {
+export function BrickList({ data, update, setData, styleOnly = false, filterEnabled = false }: BrickListProps) {
   // Merge any new bricks added to DEFAULT_SECTION_ORDER that the user's saved order doesn't have yet
   const sectionOrder: BrickId[] = [
     ...data.sectionOrder,
@@ -104,11 +106,18 @@ export function BrickList({ data, update, setData, styleOnly = false }: BrickLis
     }
   };
 
+  const visibleOrder = filterEnabled
+    ? sectionOrder.filter((id) => {
+        const alwaysOn = id === "identity" || id === "theme";
+        return alwaysOn || enabledOf(id) === true;
+      })
+    : sectionOrder;
+
   return (
     <DndContext sensors={sensors} collisionDetection={closestCenter} onDragEnd={onDragEnd}>
       <SortableContext items={sectionOrder} strategy={verticalListSortingStrategy}>
-        <Accordion type="single" collapsible defaultValue={sectionOrder[0]} className="space-y-3">
-          {sectionOrder.map((id) => {
+        <Accordion type="single" collapsible defaultValue={visibleOrder[0]} className="space-y-3">
+          {visibleOrder.map((id) => {
             const meta = BRICK_META[id];
             const alwaysOn = id === "identity" || id === "theme";
             return (
