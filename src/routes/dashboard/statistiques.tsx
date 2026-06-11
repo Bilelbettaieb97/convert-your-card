@@ -48,12 +48,19 @@ const FEED_CLICK_LABELS: Record<string, string> = {
 function eventToNotif(row: { id: string; event_type: string; created_at: string; event_data?: Record<string, string> | null }): NotifItem {
   const clickType = row.event_data?.type;
   const clickLabel = clickType ? (FEED_CLICK_LABELS[clickType] ?? clickType) : null;
+  const SECTION_LABELS: Record<string, string> = {
+    service: "Service", gallery: "Photo galerie", listing: "Annonce", testimonial: "Témoignage",
+  };
+  const sectionType = row.event_data?.type;
+  const sectionLabel = sectionType ? (SECTION_LABELS[sectionType] ?? sectionType) : null;
+
   const MAP: Record<string, { icon: typeof Eye; color: string; title: string }> = {
     view:           { icon: Eye,               color: "text-blue-400 bg-blue-500/10",       title: "Carte consultée" },
     scan:           { icon: QrCode,            color: "text-violet-400 bg-violet-500/10",   title: "Nouveau scan" },
     qr_scan:        { icon: QrCode,            color: "text-violet-400 bg-violet-500/10",   title: "Scan via QR code" },
     click_button:   { icon: MousePointerClick, color: "text-amber-400 bg-amber-500/10",     title: clickLabel ? `Clic « ${clickLabel} »` : "Clic bouton d'action" },
     click_social:   { icon: MousePointerClick, color: "text-sky-400 bg-sky-500/10",         title: clickLabel ? `Réseau — ${clickLabel}` : "Clic réseau social" },
+    click_section:  { icon: Share2,            color: "text-teal-400 bg-teal-500/10",       title: sectionLabel ? `Lien section — ${sectionLabel}` : "Lien de section cliqué" },
     vcard_download: { icon: UserPlus,          color: "text-emerald-400 bg-emerald-500/10", title: "Contact enregistré" },
     save_contact:   { icon: UserPlus,          color: "text-emerald-400 bg-emerald-500/10", title: "Contact enregistré" },
   };
@@ -77,6 +84,10 @@ const CLICK_TYPE_LABELS: Record<string, string> = {
   youtube: "YouTube",
   snapchat: "Snapchat",
   pinterest: "Pinterest",
+  service: "Lien service",
+  gallery: "Lien galerie",
+  listing: "Lien annonce",
+  testimonial: "Lien témoignage",
 };
 
 function StatistiquesPage() {
@@ -163,13 +174,13 @@ function StatistiquesPage() {
   const filtered = analytics.filter((e) => e.created_at && new Date(e.created_at) >= from);
   const views = filtered.filter((e) => e.event_type === "view");
   const scans = filtered.filter((e) => e.event_type === "scan");
-  const clicks = filtered.filter((e) => e.event_type === "click_button" || e.event_type === "click_social");
+  const clicks = filtered.filter((e) => e.event_type === "click_button" || e.event_type === "click_social" || e.event_type === "click_section");
   const contacts = filtered.filter((e) => e.event_type === "vcard_download");
   const convRate = scans.length > 0 ? Math.round((contacts.length / scans.length) * 100) : 0;
   const clickRate = scans.length > 0 ? Math.round((clicks.length / scans.length) * 100) : 0;
 
   const clickBreakdown = clicks.reduce<Record<string, number>>((acc, e) => {
-    const type = (e.event_data as any)?.type ?? "other";
+    const type = (e.event_data as any)?.type ?? (e.event_type === "click_section" ? "section" : "other");
     acc[type] = (acc[type] ?? 0) + 1;
     return acc;
   }, {});

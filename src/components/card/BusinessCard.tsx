@@ -137,10 +137,10 @@ export function BusinessCard({ data, profileId }: { data: CardData; profileId?: 
                 case "stats":        return <StatsSection data={data} />;
                 case "about":        return <AboutSection data={data} />;
                 case "video":        return <VideoSection data={data} />;
-                case "services":     return <ServicesSection data={data} />;
-                case "listings":     return <ListingsSection data={data} />;
-                case "gallery":      return <GallerySection data={data} />;
-                case "testimonials": return <TestimonialsSection data={data} />;
+                case "services":     return <ServicesSection data={data} profileId={profileId} />;
+                case "listings":     return <ListingsSection data={data} profileId={profileId} />;
+                case "gallery":      return <GallerySection data={data} profileId={profileId} />;
+                case "testimonials": return <TestimonialsSection data={data} profileId={profileId} />;
                 case "calendar":     return <CalendarSection data={data} profileId={profileId} />;
                 case "languages":    return <LanguagesSection data={data} />;
                 case "cta":          return <CtaSection data={data} profileId={profileId} />;
@@ -640,9 +640,10 @@ function YoutubeLite({ id, title }: { id: string; title?: string }) {
    SERVICES
    ============================================================ */
 
-function ServicesSection({ data }: { data: CardData }) {
+function ServicesSection({ data, profileId }: { data: CardData; profileId?: string }) {
   if (!data.servicesEnabled || data.services.length === 0) return null;
   const v = data.variants.services;
+  const track = () => profileId && logEvent(profileId, "click_section", { type: "service" });
 
   if (v === "numbered") {
     return (
@@ -651,7 +652,7 @@ function ServicesSection({ data }: { data: CardData }) {
         <ul className="mt-3 space-y-2">
           {data.services.map((s, i) => {
             const Tag = s.url ? "a" : "div";
-            const linkProps = s.url ? { href: s.url, target: "_blank", rel: "noopener noreferrer" } : {};
+            const linkProps = s.url ? { href: s.url, target: "_blank", rel: "noopener noreferrer", onClick: track } : {};
             return (
               <li key={s.id}>
                 <Tag {...linkProps} className="rounded-2xl bg-card-surface border border-card-border p-4 flex gap-3 active:scale-[0.99] transition">
@@ -681,7 +682,7 @@ function ServicesSection({ data }: { data: CardData }) {
         <div className="mt-3 flex gap-3 overflow-x-auto px-5 pb-2 snap-x snap-mandatory [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {data.services.map((s) => {
             const Tag = s.url ? "a" : "article";
-            const linkProps = s.url ? { href: s.url, target: "_blank", rel: "noopener noreferrer" } : {};
+            const linkProps = s.url ? { href: s.url, target: "_blank", rel: "noopener noreferrer", onClick: track } : {};
             return (
               <Tag key={s.id} {...linkProps} className="snap-start shrink-0 w-[72%] rounded-2xl bg-card-surface border border-card-border p-4 active:scale-[0.99] transition">
                 <div className="flex items-start justify-between">
@@ -706,7 +707,7 @@ function ServicesSection({ data }: { data: CardData }) {
       <ul className="mt-3 space-y-2">
         {data.services.map((s) => {
           const Tag = s.url ? "a" : "div";
-          const linkProps = s.url ? { href: s.url, target: "_blank", rel: "noopener noreferrer" } : {};
+          const linkProps = s.url ? { href: s.url, target: "_blank", rel: "noopener noreferrer", onClick: track } : {};
           return (
             <li key={s.id}>
               <Tag {...linkProps} className="rounded-2xl bg-card-surface border border-card-border p-4 flex gap-3 active:scale-[0.99] transition">
@@ -733,10 +734,11 @@ function ServicesSection({ data }: { data: CardData }) {
    LISTINGS
    ============================================================ */
 
-function GallerySection({ data }: { data: CardData }) {
+function GallerySection({ data, profileId }: { data: CardData; profileId?: string }) {
   const gallery = data.gallery ?? [];
   if (!data.galleryEnabled || gallery.length === 0) return null;
   const v = data.variants?.gallery;
+  const track = () => profileId && logEvent(profileId, "click_section", { type: "gallery" });
 
   if (v === "carousel") {
     return (
@@ -745,7 +747,7 @@ function GallerySection({ data }: { data: CardData }) {
         <div className="mt-3 flex gap-2 overflow-x-auto pb-2 snap-x snap-mandatory [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
           {gallery.map((p) => {
             const Tag = p.url ? "a" : "div";
-            const linkProps = p.url ? { href: p.url, target: "_blank", rel: "noopener noreferrer" } : {};
+            const linkProps = p.url ? { href: p.url, target: "_blank", rel: "noopener noreferrer", onClick: track } : {};
             return (
               <Tag key={p.id} {...linkProps} className="snap-start shrink-0 w-[calc(50%-4px)] rounded-xl overflow-hidden bg-card-surface border border-card-border active:scale-[0.98] transition">
                 <div className="aspect-square overflow-hidden bg-card-surface-alt relative">
@@ -768,7 +770,7 @@ function GallerySection({ data }: { data: CardData }) {
         <SectionTitle>Galerie</SectionTitle>
         {gallery.map((p) => {
           const Tag = p.url ? "a" : "div";
-          const linkProps = p.url ? { href: p.url, target: "_blank", rel: "noopener noreferrer" } : {};
+          const linkProps = p.url ? { href: p.url, target: "_blank", rel: "noopener noreferrer", onClick: track } : {};
           return (
             <Tag key={p.id} {...linkProps} className="rounded-2xl overflow-hidden bg-card-surface border border-card-border active:scale-[0.99] transition">
               <div className="aspect-[4/3] overflow-hidden bg-card-surface-alt relative">
@@ -791,7 +793,7 @@ function GallerySection({ data }: { data: CardData }) {
       <div className="mt-3 grid grid-cols-2 gap-2">
         {gallery.map((p) => {
           const Tag = p.url ? "a" : "div";
-          const linkProps = p.url ? { href: p.url, target: "_blank", rel: "noopener noreferrer" } : {};
+          const linkProps = p.url ? { href: p.url, target: "_blank", rel: "noopener noreferrer", onClick: track } : {};
           return (
             <Tag key={p.id} {...linkProps} className="rounded-xl overflow-hidden bg-card-surface border border-card-border active:scale-[0.98] transition">
               <div className="aspect-square overflow-hidden bg-card-surface-alt relative">
@@ -808,9 +810,10 @@ function GallerySection({ data }: { data: CardData }) {
   );
 }
 
-function ListingsSection({ data }: { data: CardData }) {
+function ListingsSection({ data, profileId }: { data: CardData; profileId?: string }) {
   if (!data.listingsEnabled || data.listings.length === 0) return null;
   const v = data.variants.listings;
+  const track = () => profileId && logEvent(profileId, "click_section", { type: "listing" });
 
   if (v === "stacked") {
     return (
@@ -818,7 +821,7 @@ function ListingsSection({ data }: { data: CardData }) {
         <SectionTitle>Sélection en vente</SectionTitle>
         {data.listings.map((l) => {
           const Tag = l.url ? "a" : "article";
-          const linkProps = l.url ? { href: l.url, target: "_blank", rel: "noopener noreferrer" } : {};
+          const linkProps = l.url ? { href: l.url, target: "_blank", rel: "noopener noreferrer", onClick: track } : {};
           return (
             <Tag key={l.id} {...linkProps} className="rounded-2xl overflow-hidden bg-card-surface border border-card-border active:scale-[0.99] transition">
               <div className="aspect-[16/9] overflow-hidden bg-card-surface-alt">
@@ -847,7 +850,7 @@ function ListingsSection({ data }: { data: CardData }) {
         <ul className="mt-3 space-y-2">
           {data.listings.map((l) => {
             const Tag = l.url ? "a" : "div";
-            const linkProps = l.url ? { href: l.url, target: "_blank", rel: "noopener noreferrer" } : {};
+            const linkProps = l.url ? { href: l.url, target: "_blank", rel: "noopener noreferrer", onClick: track } : {};
             return (
               <li key={l.id}>
                 <Tag {...linkProps} className="flex gap-3 rounded-xl bg-card-surface border border-card-border p-2 pr-3 items-center active:scale-[0.99] transition">
@@ -876,7 +879,7 @@ function ListingsSection({ data }: { data: CardData }) {
       <div className="mt-3 flex gap-3 overflow-x-auto px-5 pb-2 snap-x snap-mandatory [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {data.listings.map((l) => {
           const Tag = l.url ? "a" : "article";
-          const linkProps = l.url ? { href: l.url, target: "_blank", rel: "noopener noreferrer" } : {};
+          const linkProps = l.url ? { href: l.url, target: "_blank", rel: "noopener noreferrer", onClick: track } : {};
           return (
             <Tag key={l.id} {...linkProps} className="snap-start shrink-0 w-[78%] rounded-2xl overflow-hidden bg-card-surface border border-card-border active:scale-[0.99] transition">
               <div className="aspect-[4/3] overflow-hidden bg-card-surface-alt">
@@ -903,12 +906,12 @@ function ListingsSection({ data }: { data: CardData }) {
    TESTIMONIALS (reuse testimonialsStyle for backwards compat)
    ============================================================ */
 
-function TestimonialsSection({ data }: { data: CardData }) {
+function TestimonialsSection({ data, profileId }: { data: CardData; profileId?: string }) {
   if (!data.testimonialsEnabled || data.testimonials.length === 0) return null;
   return (
     <section className="">
       <div className="px-5"><SectionTitle>Ils en parlent</SectionTitle></div>
-      <TestimonialsBlock testimonials={data.testimonials} style={data.testimonialsStyle} />
+      <TestimonialsBlock testimonials={data.testimonials} style={data.testimonialsStyle} profileId={profileId} />
     </section>
   );
 }
@@ -1350,22 +1353,23 @@ function Avatar({ photo, name, size = 40 }: { photo: string; name: string; size?
   );
 }
 
-function TestimonialLinkWrap({ link, children }: { link?: string; children: React.ReactNode }) {
+function TestimonialLinkWrap({ link, children, onTrack }: { link?: string; children: React.ReactNode; onTrack?: () => void }) {
   if (!link) return <>{children}</>;
   return (
-    <a href={link} target="_blank" rel="noopener noreferrer" className="block active:opacity-90 transition">
+    <a href={link} target="_blank" rel="noopener noreferrer" onClick={onTrack} className="block active:opacity-90 transition">
       {children}
     </a>
   );
 }
 
-function TestimonialsBlock({ testimonials, style }: { testimonials: Testimonial[]; style: TestimonialsStyle }) {
+function TestimonialsBlock({ testimonials, style, profileId }: { testimonials: Testimonial[]; style: TestimonialsStyle; profileId?: string }) {
+  const track = () => profileId && logEvent(profileId, "click_section", { type: "testimonial" });
   if (style === "stacked") {
     return (
       <ul className="mt-3 px-5 space-y-3">
         {testimonials.map((t) => (
           <li key={t.id}>
-            <TestimonialLinkWrap link={t.link}>
+            <TestimonialLinkWrap link={t.link} onTrack={track}>
               <article className="rounded-2xl bg-card-surface border border-card-border p-4">
                 <div className="flex items-start gap-3">
                   <Avatar photo={t.photo} name={t.name} size={44} />
@@ -1397,7 +1401,7 @@ function TestimonialsBlock({ testimonials, style }: { testimonials: Testimonial[
     return (
       <div className="mt-3 flex gap-2 overflow-x-auto px-5 pb-2 snap-x snap-mandatory [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
         {testimonials.map((t) => (
-          <TestimonialLinkWrap key={t.id} link={t.link}>
+          <TestimonialLinkWrap key={t.id} link={t.link} onTrack={track}>
             <article className="snap-start shrink-0 w-[68%] rounded-xl bg-card-surface border border-card-border p-3">
               <div className="flex items-center gap-2">
                 <Avatar photo={t.photo} name={t.name} size={32} />
