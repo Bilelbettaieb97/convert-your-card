@@ -1,5 +1,5 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useState, useEffect, useMemo } from "react";
+import { useState, useEffect, useMemo, useRef } from "react";
 import { Sparkles, Loader2, Rocket, Share2, Copy, Check } from "lucide-react";
 import { useAuthStore } from "@/lib/auth-store";
 import { useCardStore } from "@/lib/card-store";
@@ -72,6 +72,26 @@ function BuilderIAResultatPage() {
   const { user, loading } = useAuthStore();
   const { data, setData, hydrated } = useCardStore();
   const navigate = useNavigate();
+
+  const phoneRef = useRef<HTMLDivElement>(null);
+  const overlayRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const overlay = overlayRef.current;
+    if (!overlay) return;
+    const handleWheel = (e: WheelEvent) => {
+      e.preventDefault();
+      const scroller = phoneRef.current?.querySelector(".overflow-y-auto") as HTMLElement | null;
+      if (scroller) scroller.scrollTop += e.deltaY;
+    };
+    const handleClick = (e: MouseEvent) => e.stopPropagation();
+    overlay.addEventListener("wheel", handleWheel, { passive: false });
+    overlay.addEventListener("click", handleClick, true);
+    return () => {
+      overlay.removeEventListener("wheel", handleWheel);
+      overlay.removeEventListener("click", handleClick, true);
+    };
+  }, []);
 
   const [revealed, setRevealed] = useState(false);
   const [selectedAccent, setSelectedAccent] = useState<ThemeAccent>("gold");
@@ -245,9 +265,13 @@ function BuilderIAResultatPage() {
             transform: revealed ? "rotateY(0deg)" : "rotateY(-90deg)",
             transition: "transform 0.55s cubic-bezier(0.4, 0, 0.2, 1)",
           }}>
-            <PhoneFrame>
-              <BusinessCard data={fullCard} />
-            </PhoneFrame>
+            <div ref={phoneRef} className="relative">
+              <PhoneFrame>
+                <BusinessCard data={fullCard} />
+              </PhoneFrame>
+              {/* Overlay : scroll autorisé, clics bloqués */}
+              <div ref={overlayRef} className="absolute inset-0 z-10 cursor-default rounded-[44px]" />
+            </div>
           </div>
 
           {/* Partage */}
