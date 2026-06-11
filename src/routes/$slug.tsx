@@ -77,6 +77,8 @@ export const Route = createFileRoute("/$slug")({
   head: ({ loaderData }) => {
     const p = loaderData?.profile;
     if (!p) return {};
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    const cardData = (p as any).card_data as CardData | null;
     return {
       meta: [
         { title: `${p.nom} — ${p.fonction || "Carte de visite digitale"}` },
@@ -84,6 +86,7 @@ export const Route = createFileRoute("/$slug")({
         { property: "og:title", content: p.nom },
         { property: "og:description", content: p.bio ?? `${p.nom} · ${p.entreprise}` },
         ...(p.photo_url ? [{ property: "og:image", content: p.photo_url }] : []),
+        ...(cardData?.noIndex ? [{ name: "robots", content: "noindex,nofollow" }] : []),
       ],
     };
   },

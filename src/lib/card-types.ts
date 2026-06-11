@@ -146,6 +146,9 @@ export interface CardData {
 
   // Per-brick design variants
   variants: BrickVariants;
+
+  // Privacy
+  noIndex?: boolean;
 }
 
 
