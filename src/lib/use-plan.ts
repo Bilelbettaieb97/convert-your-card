@@ -15,6 +15,7 @@ export function usePlan() {
   const [createdAt, setCreatedAt] = useState<string | null>(null);
   const [subStatus, setSubStatus] = useState<string | null>(null);
   const [trialEnd, setTrialEnd] = useState<string | null>(null);
+  const [paymentMethodSet, setPaymentMethodSet] = useState<boolean>(false);
 
   useEffect(() => {
     supabase.auth.getUser().then(async ({ data: { user } }) => {
@@ -26,11 +27,11 @@ export function usePlan() {
           .select("id, slug, plan, actif, created_at")
           .eq("user_id", user.id)
           .maybeSingle(),
-        supabase
+        (supabase
           .from("subscriptions")
-          .select("status, current_period_end")
+          .select("status, current_period_end, payment_method_set")
           .eq("user_id", user.id)
-          .maybeSingle(),
+          .maybeSingle()) as any,
       ]);
 
       if (data) {
@@ -48,7 +49,8 @@ export function usePlan() {
 
       if (sub) {
         setSubStatus(sub.status ?? null);
-        setTrialEnd((sub as any).current_period_end ?? null);
+        setTrialEnd(sub.current_period_end ?? null);
+        setPaymentMethodSet(!!(sub.payment_method_set));
       }
 
       setLoading(false);
@@ -79,5 +81,5 @@ export function usePlan() {
       : daysLeft
     : 0;
 
-  return { plan, loading, hasProfile, actif, daysLeft, trialExpired, slug, profileId, isInTrial, trialDaysLeft };
+  return { plan, loading, hasProfile, actif, daysLeft, trialExpired, slug, profileId, isInTrial, trialDaysLeft, paymentMethodSet };
 }

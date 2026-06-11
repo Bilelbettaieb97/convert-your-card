@@ -312,6 +312,7 @@ export default defineEventHandler(async (event) => {
       updated_at: new Date().toISOString(),
     };
     if (sub.trial_end) updatePayload.had_trial = true;
+    if ((sub as any).default_payment_method) updatePayload.payment_method_set = true;
 
     await adminSupabase.from("subscriptions")
       .update(updatePayload)
