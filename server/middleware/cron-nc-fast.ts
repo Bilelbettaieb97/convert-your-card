@@ -1,10 +1,10 @@
 import { defineEventHandler, getHeader } from "h3";
 import { createClient } from "@supabase/supabase-js";
 
-// Cron rapide toutes les 10 minutes — NC step 1 uniquement
-// L'email "confirme ton adresse" part dans les 10-20 min après inscription
-// au lieu d'attendre jusqu'à 70 min avec le cron horaire.
-// Le cron horaire garde le step 1 dans sa boucle : la contrainte UNIQUE
+// Cron rapide toutes les 10 minutes — NC step 1 + BR step 1
+// NC step 1 : "confirme ton adresse" dans les 10-20 min après inscription
+// BR step 1 : "décris ton activité" dans les 10 min après le délai de 1h
+// Le cron horaire garde ces steps dans sa boucle : la contrainte UNIQUE
 // sur (email, step) empêche tout doublon.
 export default defineEventHandler(async (event) => {
   if (!event.path?.startsWith("/api/cron-nc-fast")) return;
@@ -28,41 +28,57 @@ export default defineEventHandler(async (event) => {
     auth: { autoRefreshToken: false, persistSession: false },
   });
 
-  // Récupère uniquement les candidats NC step 1 (RPC léger, pas get_user_funnel)
-  const { data: candidates, error } = await admin.rpc("get_nc_step1_candidates");
-  if (error) {
-    console.error("[cron-nc-fast] RPC error:", error.message);
-    return new Response(JSON.stringify({ ok: false, error: error.message }), { status: 500 });
-  }
+  const authHeader = { "Content-Type": "application/json", Authorization: `Bearer ${serviceKey}` };
+  let ncSent = 0;
+  let brSent = 0;
 
-  if (!candidates?.length) {
-    return new Response(JSON.stringify({ ok: true, sent: 0 }), {
-      headers: { "Content-Type": "application/json" },
+  // ── NC step 1 ────────────────────────────────────────────────────────────────
+  const { data: ncCandidates, error: ncError } = await admin.rpc("get_nc_step1_candidates");
+  if (ncError) {
+    console.error("[cron-nc-fast] NC RPC error:", ncError.message);
+  } else if (ncCandidates?.length) {
+    console.log(`[cron-nc-fast] ${ncCandidates.length} candidat(s) NC step 1`);
+    const resp = await fetch(`${appUrl}/api/send-relance`, {
+      method: "POST",
+      headers: authHeader,
+      body: JSON.stringify({
+        users: ncCandidates.map((r: { user_id: string; email: string }) => ({
+          user_id: r.user_id,
+          email: r.email,
+        })),
+        step: 1,
+      }),
     });
+    const result = await resp.json().catch(() => ({}));
+    ncSent = result.sent ?? 0;
+    console.log(`[cron-nc-fast] NC: sent=${ncSent}, skipped=${result.skipped ?? 0}`);
   }
 
-  console.log(`[cron-nc-fast] ${candidates.length} candidat(s) NC step 1`);
-
-  const resp = await fetch(`${appUrl}/api/send-relance`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${serviceKey}`,
-    },
-    body: JSON.stringify({
-      users: candidates.map((r: { user_id: string; email: string }) => ({
-        user_id: r.user_id,
-        email: r.email,
-      })),
-      step: 1,
-    }),
-  });
-
-  const result = await resp.json().catch(() => ({}));
-  console.log(`[cron-nc-fast] Résultat: sent=${result.sent ?? 0}, skipped=${result.skipped ?? 0}`);
+  // ── BR step 1 ────────────────────────────────────────────────────────────────
+  const { data: brCandidates, error: brError } = await admin.rpc("get_br_step1_candidates");
+  if (brError) {
+    console.error("[cron-nc-fast] BR RPC error:", brError.message);
+  } else if (brCandidates?.length) {
+    console.log(`[cron-nc-fast] ${brCandidates.length} candidat(s) BR step 1`);
+    const resp = await fetch(`${appUrl}/api/send-builder-relance`, {
+      method: "POST",
+      headers: authHeader,
+      body: JSON.stringify({
+        users: brCandidates.map((r: { user_id: string; email: string; builder_step_name: string }) => ({
+          user_id: r.user_id,
+          email: r.email,
+          builder_step_name: r.builder_step_name,
+        })),
+        step: 1,
+      }),
+    });
+    const result = await resp.json().catch(() => ({}));
+    brSent = result.sent ?? 0;
+    console.log(`[cron-nc-fast] BR: sent=${brSent}, skipped=${result.skipped ?? 0}`);
+  }
 
   return new Response(
-    JSON.stringify({ ok: true, sent: result.sent ?? 0, skipped: result.skipped ?? 0 }),
+    JSON.stringify({ ok: true, nc_sent: ncSent, br_sent: brSent }),
     { headers: { "Content-Type": "application/json" } },
   );
 });
