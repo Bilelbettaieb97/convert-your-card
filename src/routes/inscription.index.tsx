@@ -326,87 +326,95 @@ function InscriptionPage() {
         </div>
 
         {/* Colonne Droite */}
-        <div className="hidden lg:flex flex-1 relative items-center justify-center px-12 py-16 overflow-hidden bg-gradient-to-br from-[#1a0b2e]/90 via-[#2d1b4e]/80 to-[#1a0b2e]/90">
+        <div className="hidden lg:flex flex-1 relative items-center justify-center px-10 py-12 overflow-hidden bg-gradient-to-br from-[#1a0b2e]/90 via-[#2d1b4e]/80 to-[#1a0b2e]/90">
           <div className="absolute inset-0 opacity-20 pointer-events-none">
             <div className="absolute top-20 left-20 w-72 h-72 bg-magenta rounded-full blur-[120px]" />
             <div className="absolute bottom-20 right-20 w-96 h-96 bg-violet rounded-full blur-[140px]" />
           </div>
 
-          <div className="relative z-10 w-full max-w-md space-y-8">
+          {/* Layout 2 colonnes : phone gauche · contenu droite */}
+          <div className="relative z-10 w-full flex gap-8 items-center">
 
-            {/* Titre */}
-            <div>
-              <p className="text-xs uppercase tracking-widest text-magenta/80 font-semibold mb-2">Ce que tu vas obtenir</p>
-              <h2 className="text-2xl font-bold text-white leading-snug">
-                Ta carte pro, partageable en 1 lien,<br />créée par l'IA en 30 secondes.
-              </h2>
-            </div>
-
-            {/* Phone mockup — vrai produit */}
-            <div className="flex justify-center">
-              <div className="relative">
-                <div style={{ transform: "scale(0.62)", transformOrigin: "top center", height: "370px", width: "230px" }}>
+            {/* ── Phone (gauche) ── */}
+            <div className="shrink-0 relative self-stretch flex items-center">
+              {/* Container à taille fixe : clip le phone scaled */}
+              <div className="relative overflow-hidden rounded-[28px] shadow-[0_0_60px_rgba(192,38,211,0.25)]"
+                style={{ width: 218, height: 448 }}>
+                <div style={{ transform: "scale(0.605)", transformOrigin: "top left", width: 360 }}>
                   <PhoneFrame>
                     <BusinessCard data={DEMO_CARD} />
                   </PhoneFrame>
                 </div>
-                <div className="absolute -top-2 -right-2 bg-emerald-500 text-white text-[10px] font-bold px-2.5 py-1 rounded-full shadow-lg whitespace-nowrap">
-                  ✓ En ligne maintenant
-                </div>
+              </div>
+              {/* Badge flottant */}
+              <div className="absolute -top-2 -right-3 bg-emerald-500 text-white text-[10px] font-bold px-2.5 py-1 rounded-full shadow-lg whitespace-nowrap z-10">
+                ✓ En ligne
               </div>
             </div>
 
-            {/* 3 étapes */}
-            <div className="space-y-3">
-              <p className="text-xs uppercase tracking-widest text-white/40 font-semibold">Ce qui se passe après ton inscription</p>
-              {[
-                { num: "1", label: "Décris ton activité en 1 phrase", detail: "L'IA comprend ton métier et génère tout." },
-                { num: "2", label: "Ta carte est créée en 30 secondes", detail: "Bio, services, avis clients, agenda — automatiquement." },
-                { num: "3", label: "Tu partages ton lien, tes clients te contactent", detail: "WhatsApp, Instagram, email, QR code." },
-              ].map(({ num, label, detail }, i) => (
-                <div key={num} className="flex gap-3 items-start">
-                  <div className="w-6 h-6 rounded-full bg-gradient-to-br from-[#c026d3] to-[#7c3aed] flex items-center justify-center text-white text-[10px] font-bold shrink-0 mt-0.5">
-                    {num}
-                  </div>
-                  <div>
-                    <p className="text-white text-sm font-semibold leading-snug">{label}</p>
-                    <p className="text-white/45 text-xs mt-0.5">{detail}</p>
-                  </div>
-                  {i < 2 && (
-                    <div className="absolute left-[1.75rem] mt-7 w-px h-4 bg-white/10" style={{ position: "relative", marginLeft: "-1.25rem", marginTop: "0.25rem", flexShrink: 0 }} />
-                  )}
-                </div>
-              ))}
-            </div>
+            {/* ── Contenu (droite) ── */}
+            <div className="flex-1 min-w-0 flex flex-col gap-6">
 
-            {/* 3 mini témoignages */}
-            <div className="space-y-2.5">
-              {[
-                { initials: "MB", name: "Marc B.", role: "Plombier · Paris", text: "Mes clients m'appellent directement depuis la carte. +40% de contacts en 2 semaines." },
-                { initials: "CL", name: "Céline L.", role: "Coach bien-être · Lyon", text: "J'ai arrêté les cartes papier. Mon lien CVD est dans ma bio Instagram, ça convertit." },
-                { initials: "TK", name: "Thomas K.", role: "Photographe · Bordeaux", text: "Créé en 3 minutes. Mes mariés réservent directement via mon agenda intégré." },
-              ].map(({ initials, name, role, text }) => (
-                <div key={name} className="flex gap-3 bg-white/5 border border-white/10 rounded-xl px-4 py-3">
-                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#c026d3]/60 to-[#7c3aed]/60 flex items-center justify-center text-white text-[10px] font-bold shrink-0">
-                    {initials}
-                  </div>
-                  <div className="min-w-0">
-                    <div className="flex items-center gap-2 mb-0.5">
-                      <span className="text-white text-xs font-semibold">{name}</span>
-                      <span className="text-white/40 text-[10px]">{role}</span>
-                      <span className="ml-auto text-amber-400 text-[10px]">★★★★★</span>
+              {/* Titre */}
+              <div>
+                <p className="text-[11px] uppercase tracking-widest text-magenta/80 font-semibold mb-2">Ce que tu vas obtenir</p>
+                <h2 className="text-xl font-bold text-white leading-snug">
+                  Ta carte pro partageable en&nbsp;1 lien,<br />créée par l'IA en 30 secondes.
+                </h2>
+              </div>
+
+              {/* 3 étapes */}
+              <div className="space-y-3">
+                <p className="text-[10px] uppercase tracking-widest text-white/35 font-semibold">Après ton inscription</p>
+                {[
+                  { num: "1", label: "Décris ton activité en 1 phrase", detail: "L'IA génère bio, services, avis et thème." },
+                  { num: "2", label: "Ta carte est prête en 30 sec", detail: "Photo, agenda Calendly, stats — tout automatique." },
+                  { num: "3", label: "Tu partages, tes clients t'appellent", detail: "WhatsApp · Instagram · Email · QR code." },
+                ].map(({ num, label, detail }) => (
+                  <div key={num} className="flex gap-3 items-start">
+                    <div className="w-5 h-5 rounded-full bg-gradient-to-br from-[#c026d3] to-[#7c3aed] flex items-center justify-center text-white text-[9px] font-bold shrink-0 mt-0.5">
+                      {num}
                     </div>
-                    <p className="text-white/60 text-[11px] leading-relaxed">{text}</p>
+                    <div>
+                      <p className="text-white text-[13px] font-semibold leading-snug">{label}</p>
+                      <p className="text-white/45 text-[11px] mt-0.5">{detail}</p>
+                    </div>
                   </div>
-                </div>
-              ))}
-            </div>
+                ))}
+              </div>
 
-            {/* Badges sécurité */}
-            <div className="flex items-center justify-center gap-6 text-white/35 text-xs pt-2 border-t border-white/10">
-              <span className="flex items-center gap-1.5"><ShieldCheck className="w-3.5 h-3.5" />RGPD conforme</span>
-              <span className="flex items-center gap-1.5"><Lock className="w-3.5 h-3.5" />Chiffrement SSL</span>
-              <span className="flex items-center gap-1.5"><Users className="w-3.5 h-3.5" />+2 400 pros</span>
+              {/* Séparateur */}
+              <div className="h-px bg-white/10" />
+
+              {/* 3 mini témoignages */}
+              <div className="space-y-2">
+                {[
+                  { initials: "MB", name: "Marc B.", role: "Plombier · Paris", text: "+40% de contacts en 2 semaines. Mes clients appellent direct depuis la carte." },
+                  { initials: "CL", name: "Céline L.", role: "Coach · Lyon", text: "Mon lien CVD en bio Instagram. Ça convertit bien mieux que les cartes papier." },
+                  { initials: "TK", name: "Thomas K.", role: "Photographe · Bordeaux", text: "Créé en 3 min. Les mariés réservent directement via mon agenda intégré." },
+                ].map(({ initials, name, role, text }) => (
+                  <div key={name} className="flex gap-2.5 bg-white/5 border border-white/10 rounded-xl px-3 py-2.5">
+                    <div className="w-7 h-7 rounded-full bg-gradient-to-br from-[#c026d3]/60 to-[#7c3aed]/60 flex items-center justify-center text-white text-[9px] font-bold shrink-0">
+                      {initials}
+                    </div>
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-1.5 mb-0.5">
+                        <span className="text-white text-[11px] font-semibold">{name}</span>
+                        <span className="text-white/35 text-[10px]">{role}</span>
+                        <span className="ml-auto text-amber-400 text-[9px]">★★★★★</span>
+                      </div>
+                      <p className="text-white/55 text-[10px] leading-relaxed">{text}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+
+              {/* Badges sécurité */}
+              <div className="flex items-center gap-5 text-white/30 text-[11px] pt-1 border-t border-white/10">
+                <span className="flex items-center gap-1"><ShieldCheck className="w-3 h-3" />RGPD</span>
+                <span className="flex items-center gap-1"><Lock className="w-3 h-3" />SSL</span>
+                <span className="flex items-center gap-1"><Users className="w-3 h-3" />+2 400 pros</span>
+              </div>
             </div>
           </div>
         </div>
