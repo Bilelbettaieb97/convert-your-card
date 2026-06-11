@@ -75,10 +75,10 @@ function DashboardLayout() {
   }, [planLoading, hasProfile, navigate]);
 
   useEffect(() => {
-    if (!planLoading && plan !== "vitrine" && !ESSENTIELLE_ALLOWED.some(p => pathname.startsWith(p))) {
+    if (!planLoading && hasProfile === true && plan !== "vitrine" && !ESSENTIELLE_ALLOWED.some(p => pathname.startsWith(p))) {
       navigate({ to: "/dashboard/content", replace: true });
     }
-  }, [planLoading, plan, pathname, navigate]);
+  }, [planLoading, hasProfile, plan, pathname, navigate]);
 
   const profile = getProfileMeta();
   const origin = typeof window !== "undefined" ? window.location.origin : "https://www.cartevisitedigitale.fr";
