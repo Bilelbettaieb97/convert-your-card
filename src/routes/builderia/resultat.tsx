@@ -75,46 +75,6 @@ function BuilderIAResultatPage() {
   const navigate = useNavigate();
 
   const phoneRef = useRef<HTMLDivElement>(null);
-  const overlayRef = useRef<HTMLDivElement>(null);
-
-  useEffect(() => {
-    const overlay = overlayRef.current;
-    if (!overlay) return;
-
-    const getScroller = () =>
-      phoneRef.current?.querySelector(".overflow-y-auto") as HTMLElement | null;
-
-    const handleWheel = (e: WheelEvent) => {
-      e.preventDefault();
-      const scroller = getScroller();
-      if (scroller) scroller.scrollTop += e.deltaY;
-    };
-    const handleClick = (e: MouseEvent) => e.stopPropagation();
-
-    let touchStartY = 0;
-    const handleTouchStart = (e: TouchEvent) => {
-      touchStartY = e.touches[0].clientY;
-    };
-    const handleTouchMove = (e: TouchEvent) => {
-      e.preventDefault();
-      const scroller = getScroller();
-      if (!scroller) return;
-      const deltaY = touchStartY - e.touches[0].clientY;
-      touchStartY = e.touches[0].clientY;
-      scroller.scrollTop += deltaY;
-    };
-
-    overlay.addEventListener("wheel", handleWheel, { passive: false });
-    overlay.addEventListener("click", handleClick, true);
-    overlay.addEventListener("touchstart", handleTouchStart, { passive: false });
-    overlay.addEventListener("touchmove", handleTouchMove, { passive: false });
-    return () => {
-      overlay.removeEventListener("wheel", handleWheel);
-      overlay.removeEventListener("click", handleClick, true);
-      overlay.removeEventListener("touchstart", handleTouchStart);
-      overlay.removeEventListener("touchmove", handleTouchMove);
-    };
-  }, []);
 
   const [revealed, setRevealed] = useState(false);
   const [selectedAccent, setSelectedAccent] = useState<ThemeAccent>("gold");
@@ -275,10 +235,10 @@ function BuilderIAResultatPage() {
           }}>
             <div ref={phoneRef} className="relative">
               <PhoneFrame>
-                <BusinessCard data={fullCard} />
+                <div style={{ pointerEvents: "none" }}>
+                  <BusinessCard data={fullCard} />
+                </div>
               </PhoneFrame>
-              {/* Overlay : scroll autorisé, clics bloqués */}
-              <div ref={overlayRef} className="absolute inset-0 z-10 cursor-default rounded-[44px] touch-none" />
             </div>
           </div>
 
