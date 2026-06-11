@@ -26,12 +26,7 @@ export function usePlan() {
         setPlan(realPlan);
         setActif(data.actif ?? true);
         setCreatedAt((data as any).created_at ?? null);
-        const meta = getProfileMeta();
-        if (meta) {
-          setProfileMeta({ ...meta, plan: realPlan });
-        } else {
-          setProfileMeta({ id: data.id, slug: data.slug, plan: realPlan, actif: data.actif ?? true });
-        }
+        setProfileMeta({ id: data.id, slug: data.slug, plan: realPlan, actif: data.actif ?? true });
       } else {
         setHasProfile(false);
       }

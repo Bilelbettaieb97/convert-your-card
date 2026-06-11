@@ -9,7 +9,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { toast } from "sonner";
 import { useNavigate } from "@tanstack/react-router";
 import { useCardStore } from "@/lib/card-store";
-import { getProfileMeta } from "@/lib/profile-store";
+import { getProfileMeta, clearProfileMeta } from "@/lib/profile-store";
 import { loadMyCard, updateCard } from "@/lib/card-actions";
 import type { CardData } from "@/lib/card-types";
 
@@ -56,6 +56,7 @@ function SettingsPage() {
   }
 
   async function handleSignOut() {
+    clearProfileMeta();
     await supabase.auth.signOut();
     navigate({ to: "/" });
   }
@@ -63,6 +64,7 @@ function SettingsPage() {
   async function handleSignOutAll() {
     setSignOutAllLoading(true);
     try {
+      clearProfileMeta();
       await supabase.auth.signOut({ scope: "global" });
       navigate({ to: "/" });
     } finally {

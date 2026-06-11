@@ -5,6 +5,7 @@ import { verifyUpgrade } from "@/fns/verify-upgrade";
 import { createCard, updateCard, loadMyCard } from "@/lib/card-actions";
 import { loadCard } from "@/lib/card-store";
 import { DEFAULT_CARD } from "@/lib/card-types";
+import { setProfileMeta } from "@/lib/profile-store";
 import { CheckCircle, Zap } from "lucide-react";
 
 export const Route = createFileRoute("/bienvenue")({
@@ -62,6 +63,12 @@ function BienvenePage() {
           if (cardData?.name) await createCard(cardData);
         } else if (cardData?.name) {
           await updateCard(existingProfile.id, cardData);
+          setProfileMeta({
+            id: existingProfile.id,
+            slug: existingProfile.slug,
+            plan: existingProfile.plan ?? "free",
+            actif: existingProfile.actif ?? true,
+          });
         }
         localStorage.removeItem("cyk.card.pending");
         localStorage.removeItem("cyk.builderia.generated");

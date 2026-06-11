@@ -8,6 +8,7 @@ import { useAuthStore } from "@/lib/auth-store";
 import { supabase } from "@/integrations/supabase/client";
 import { usePlan } from "@/lib/use-plan";
 import { createCheckoutSession } from "@/fns/checkout";
+import { clearProfileMeta } from "@/lib/profile-store";
 
 export const Route = createFileRoute("/dashboard/account")({
   component: AccountPage,
@@ -55,6 +56,7 @@ function AccountPage() {
   }
 
   async function handleSignOut() {
+    clearProfileMeta();
     await supabase.auth.signOut();
     navigate({ to: "/" });
   }

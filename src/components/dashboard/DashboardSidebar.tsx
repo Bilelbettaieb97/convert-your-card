@@ -13,6 +13,7 @@ import {
 import { useAuthStore } from "@/lib/auth-store";
 import { supabase } from "@/integrations/supabase/client";
 import { usePlan } from "@/lib/use-plan";
+import { clearProfileMeta } from "@/lib/profile-store";
 
 const CARD_SUB = [
   { to: "/dashboard/content", label: "Contenu",    icon: Layers   },
@@ -65,6 +66,7 @@ export function DashboardSidebar() {
   const closeOnMobile = () => { if (isMobile) setOpenMobile(false); };
 
   async function handleSignOut() {
+    clearProfileMeta();
     await supabase.auth.signOut();
     navigate({ to: "/", replace: true });
   }
