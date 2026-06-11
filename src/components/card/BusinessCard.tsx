@@ -649,17 +649,26 @@ function ServicesSection({ data }: { data: CardData }) {
       <section className="px-5">
         <SectionTitle>Services</SectionTitle>
         <ul className="mt-3 space-y-2">
-          {data.services.map((s, i) => (
-            <li key={s.id} className="rounded-2xl bg-card-surface border border-card-border p-4 flex gap-3">
-              <span className="font-display text-2xl shrink-0 w-9 text-right" style={{ color: "var(--card-accent)" }}>
-                {String(i + 1).padStart(2, "0")}
-              </span>
-              <div className="min-w-0 border-l border-card-border pl-3">
-                <h3 className="text-sm font-medium">{s.title}</h3>
-                {s.description && <p className="mt-0.5 text-xs text-card-muted leading-relaxed">{s.description}</p>}
-              </div>
-            </li>
-          ))}
+          {data.services.map((s, i) => {
+            const Tag = s.url ? "a" : "div";
+            const linkProps = s.url ? { href: s.url, target: "_blank", rel: "noopener noreferrer" } : {};
+            return (
+              <li key={s.id}>
+                <Tag {...linkProps} className="rounded-2xl bg-card-surface border border-card-border p-4 flex gap-3 active:scale-[0.99] transition">
+                  <span className="font-display text-2xl shrink-0 w-9 text-right" style={{ color: "var(--card-accent)" }}>
+                    {String(i + 1).padStart(2, "0")}
+                  </span>
+                  <div className="min-w-0 border-l border-card-border pl-3 flex-1">
+                    <div className="flex items-start justify-between gap-2">
+                      <h3 className="text-sm font-medium">{s.title}</h3>
+                      {s.url && <ExternalLink className="h-3 w-3 text-card-muted shrink-0 mt-0.5" />}
+                    </div>
+                    {s.description && <p className="mt-0.5 text-xs text-card-muted leading-relaxed">{s.description}</p>}
+                  </div>
+                </Tag>
+              </li>
+            );
+          })}
         </ul>
       </section>
     );
@@ -670,15 +679,22 @@ function ServicesSection({ data }: { data: CardData }) {
       <section className="">
         <div className="px-5"><SectionTitle>Services</SectionTitle></div>
         <div className="mt-3 flex gap-3 overflow-x-auto px-5 pb-2 snap-x snap-mandatory [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-          {data.services.map((s) => (
-            <article key={s.id} className="snap-start shrink-0 w-[72%] rounded-2xl bg-card-surface border border-card-border p-4">
-              <span className="h-9 w-9 grid place-items-center rounded-xl" style={{ background: "var(--card-accent-gradient)" }}>
-                <Sparkles className="h-4 w-4 text-card-on-accent" />
-              </span>
-              <h3 className="mt-3 text-sm font-medium">{s.title}</h3>
-              {s.description && <p className="mt-1 text-xs text-card-muted leading-relaxed">{s.description}</p>}
-            </article>
-          ))}
+          {data.services.map((s) => {
+            const Tag = s.url ? "a" : "article";
+            const linkProps = s.url ? { href: s.url, target: "_blank", rel: "noopener noreferrer" } : {};
+            return (
+              <Tag key={s.id} {...linkProps} className="snap-start shrink-0 w-[72%] rounded-2xl bg-card-surface border border-card-border p-4 active:scale-[0.99] transition">
+                <div className="flex items-start justify-between">
+                  <span className="h-9 w-9 grid place-items-center rounded-xl" style={{ background: "var(--card-accent-gradient)" }}>
+                    <Sparkles className="h-4 w-4 text-card-on-accent" />
+                  </span>
+                  {s.url && <ExternalLink className="h-3.5 w-3.5 text-card-muted" />}
+                </div>
+                <h3 className="mt-3 text-sm font-medium">{s.title}</h3>
+                {s.description && <p className="mt-1 text-xs text-card-muted leading-relaxed">{s.description}</p>}
+              </Tag>
+            );
+          })}
         </div>
       </section>
     );
@@ -688,17 +704,26 @@ function ServicesSection({ data }: { data: CardData }) {
     <section className="px-5">
       <SectionTitle>Services</SectionTitle>
       <ul className="mt-3 space-y-2">
-        {data.services.map((s) => (
-          <li key={s.id} className="rounded-2xl bg-card-surface border border-card-border p-4 flex gap-3">
-            <span className="h-9 w-9 grid place-items-center rounded-xl shrink-0" style={{ background: "var(--card-accent-gradient)" }}>
-              <Sparkles className="h-4 w-4 text-card-on-accent" />
-            </span>
-            <div className="min-w-0">
-              <h3 className="text-sm font-medium">{s.title}</h3>
-              {s.description && <p className="mt-0.5 text-xs text-card-muted leading-relaxed">{s.description}</p>}
-            </div>
-          </li>
-        ))}
+        {data.services.map((s) => {
+          const Tag = s.url ? "a" : "div";
+          const linkProps = s.url ? { href: s.url, target: "_blank", rel: "noopener noreferrer" } : {};
+          return (
+            <li key={s.id}>
+              <Tag {...linkProps} className="rounded-2xl bg-card-surface border border-card-border p-4 flex gap-3 active:scale-[0.99] transition">
+                <span className="h-9 w-9 grid place-items-center rounded-xl shrink-0" style={{ background: "var(--card-accent-gradient)" }}>
+                  <Sparkles className="h-4 w-4 text-card-on-accent" />
+                </span>
+                <div className="min-w-0 flex-1">
+                  <div className="flex items-start justify-between gap-2">
+                    <h3 className="text-sm font-medium">{s.title}</h3>
+                    {s.url && <ExternalLink className="h-3 w-3 text-card-muted shrink-0 mt-0.5" />}
+                  </div>
+                  {s.description && <p className="mt-0.5 text-xs text-card-muted leading-relaxed">{s.description}</p>}
+                </div>
+              </Tag>
+            </li>
+          );
+        })}
       </ul>
     </section>
   );
@@ -718,15 +743,20 @@ function GallerySection({ data }: { data: CardData }) {
       <section className="px-5">
         <SectionTitle>Galerie</SectionTitle>
         <div className="mt-3 flex gap-2 overflow-x-auto pb-2 snap-x snap-mandatory [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-          {gallery.map((p) => (
-            <div key={p.id} className="snap-start shrink-0 w-[calc(50%-4px)] rounded-xl overflow-hidden bg-card-surface border border-card-border">
-              <div className="aspect-square overflow-hidden bg-card-surface-alt">
-                {p.img ? <img src={p.img} alt={p.caption} className="h-full w-full object-cover" /> :
-                  <div className="h-full w-full grid place-items-center"><ImageIcon className="h-6 w-6 text-card-muted" /></div>}
-              </div>
-              {p.caption && <p className="text-[10px] text-card-muted px-2 py-1.5 truncate">{p.caption}</p>}
-            </div>
-          ))}
+          {gallery.map((p) => {
+            const Tag = p.url ? "a" : "div";
+            const linkProps = p.url ? { href: p.url, target: "_blank", rel: "noopener noreferrer" } : {};
+            return (
+              <Tag key={p.id} {...linkProps} className="snap-start shrink-0 w-[calc(50%-4px)] rounded-xl overflow-hidden bg-card-surface border border-card-border active:scale-[0.98] transition">
+                <div className="aspect-square overflow-hidden bg-card-surface-alt relative">
+                  {p.img ? <img src={p.img} alt={p.caption} className="h-full w-full object-cover" /> :
+                    <div className="h-full w-full grid place-items-center"><ImageIcon className="h-6 w-6 text-card-muted" /></div>}
+                  {p.url && <div className="absolute top-1.5 right-1.5 h-5 w-5 rounded-full bg-black/40 grid place-items-center"><ExternalLink className="h-2.5 w-2.5 text-white" /></div>}
+                </div>
+                {p.caption && <p className="text-[10px] text-card-muted px-2 py-1.5 truncate">{p.caption}</p>}
+              </Tag>
+            );
+          })}
         </div>
       </section>
     );
@@ -736,15 +766,20 @@ function GallerySection({ data }: { data: CardData }) {
     return (
       <section className="px-5 space-y-3">
         <SectionTitle>Galerie</SectionTitle>
-        {gallery.map((p) => (
-          <div key={p.id} className="rounded-2xl overflow-hidden bg-card-surface border border-card-border">
-            <div className="aspect-[4/3] overflow-hidden bg-card-surface-alt">
-              {p.img ? <img src={p.img} alt={p.caption} className="h-full w-full object-cover" /> :
-                <div className="h-full w-full grid place-items-center"><ImageIcon className="h-8 w-8 text-card-muted" /></div>}
-            </div>
-            {p.caption && <p className="text-xs text-card-muted px-4 py-2">{p.caption}</p>}
-          </div>
-        ))}
+        {gallery.map((p) => {
+          const Tag = p.url ? "a" : "div";
+          const linkProps = p.url ? { href: p.url, target: "_blank", rel: "noopener noreferrer" } : {};
+          return (
+            <Tag key={p.id} {...linkProps} className="rounded-2xl overflow-hidden bg-card-surface border border-card-border active:scale-[0.99] transition">
+              <div className="aspect-[4/3] overflow-hidden bg-card-surface-alt relative">
+                {p.img ? <img src={p.img} alt={p.caption} className="h-full w-full object-cover" /> :
+                  <div className="h-full w-full grid place-items-center"><ImageIcon className="h-8 w-8 text-card-muted" /></div>}
+                {p.url && <div className="absolute top-2 right-2 h-6 w-6 rounded-full bg-black/40 grid place-items-center"><ExternalLink className="h-3 w-3 text-white" /></div>}
+              </div>
+              {p.caption && <p className="text-xs text-card-muted px-4 py-2">{p.caption}</p>}
+            </Tag>
+          );
+        })}
       </section>
     );
   }
@@ -754,15 +789,20 @@ function GallerySection({ data }: { data: CardData }) {
     <section className="px-5">
       <SectionTitle>Galerie</SectionTitle>
       <div className="mt-3 grid grid-cols-2 gap-2">
-        {gallery.map((p) => (
-          <div key={p.id} className="rounded-xl overflow-hidden bg-card-surface border border-card-border">
-            <div className="aspect-square overflow-hidden bg-card-surface-alt">
-              {p.img ? <img src={p.img} alt={p.caption} className="h-full w-full object-cover" /> :
-                <div className="h-full w-full grid place-items-center"><ImageIcon className="h-6 w-6 text-card-muted" /></div>}
-            </div>
-            {p.caption && <p className="text-[10px] text-card-muted px-2 py-1.5 truncate">{p.caption}</p>}
-          </div>
-        ))}
+        {gallery.map((p) => {
+          const Tag = p.url ? "a" : "div";
+          const linkProps = p.url ? { href: p.url, target: "_blank", rel: "noopener noreferrer" } : {};
+          return (
+            <Tag key={p.id} {...linkProps} className="rounded-xl overflow-hidden bg-card-surface border border-card-border active:scale-[0.98] transition">
+              <div className="aspect-square overflow-hidden bg-card-surface-alt relative">
+                {p.img ? <img src={p.img} alt={p.caption} className="h-full w-full object-cover" /> :
+                  <div className="h-full w-full grid place-items-center"><ImageIcon className="h-6 w-6 text-card-muted" /></div>}
+                {p.url && <div className="absolute top-1.5 right-1.5 h-5 w-5 rounded-full bg-black/40 grid place-items-center"><ExternalLink className="h-2.5 w-2.5 text-white" /></div>}
+              </div>
+              {p.caption && <p className="text-[10px] text-card-muted px-2 py-1.5 truncate">{p.caption}</p>}
+            </Tag>
+          );
+        })}
       </div>
     </section>
   );
@@ -776,19 +816,26 @@ function ListingsSection({ data }: { data: CardData }) {
     return (
       <section className="px-5 space-y-3">
         <SectionTitle>Sélection en vente</SectionTitle>
-        {data.listings.map((l) => (
-          <article key={l.id} className="rounded-2xl overflow-hidden bg-card-surface border border-card-border">
-            <div className="aspect-[16/9] overflow-hidden bg-card-surface-alt">
-              {l.img ? <img src={l.img} alt={l.title} className="h-full w-full object-cover" /> :
-                <div className="h-full w-full grid place-items-center"><ImageIcon className="h-8 w-8 text-card-muted" /></div>}
-            </div>
-            <div className="p-4">
-              <h3 className="font-display text-lg leading-tight">{l.title || "Sans titre"}</h3>
-              {l.meta && <p className="mt-0.5 text-xs text-card-muted">{l.meta}</p>}
-              {l.price && <p className="mt-2 font-medium" style={{ color: "var(--card-accent)" }}>{l.price}</p>}
-            </div>
-          </article>
-        ))}
+        {data.listings.map((l) => {
+          const Tag = l.url ? "a" : "article";
+          const linkProps = l.url ? { href: l.url, target: "_blank", rel: "noopener noreferrer" } : {};
+          return (
+            <Tag key={l.id} {...linkProps} className="rounded-2xl overflow-hidden bg-card-surface border border-card-border active:scale-[0.99] transition">
+              <div className="aspect-[16/9] overflow-hidden bg-card-surface-alt">
+                {l.img ? <img src={l.img} alt={l.title} className="h-full w-full object-cover" /> :
+                  <div className="h-full w-full grid place-items-center"><ImageIcon className="h-8 w-8 text-card-muted" /></div>}
+              </div>
+              <div className="p-4">
+                <h3 className="font-display text-lg leading-tight">{l.title || "Sans titre"}</h3>
+                {l.meta && <p className="mt-0.5 text-xs text-card-muted">{l.meta}</p>}
+                <div className="mt-2 flex items-center justify-between">
+                  {l.price && <p className="font-medium" style={{ color: "var(--card-accent)" }}>{l.price}</p>}
+                  {l.url && <span className="text-xs text-card-muted flex items-center gap-1">Voir l'annonce <ExternalLink className="h-3 w-3" /></span>}
+                </div>
+              </div>
+            </Tag>
+          );
+        })}
       </section>
     );
   }
@@ -798,19 +845,26 @@ function ListingsSection({ data }: { data: CardData }) {
       <section className="px-5">
         <SectionTitle>Sélection en vente</SectionTitle>
         <ul className="mt-3 space-y-2">
-          {data.listings.map((l) => (
-            <li key={l.id} className="flex gap-3 rounded-xl bg-card-surface border border-card-border p-2 pr-3 items-center">
-              <div className="h-16 w-20 rounded-lg overflow-hidden bg-card-surface-alt shrink-0">
-                {l.img ? <img src={l.img} alt={l.title} className="h-full w-full object-cover" /> :
-                  <div className="h-full w-full grid place-items-center"><ImageIcon className="h-5 w-5 text-card-muted" /></div>}
-              </div>
-              <div className="min-w-0 flex-1">
-                <h3 className="text-sm font-medium truncate">{l.title || "Sans titre"}</h3>
-                {l.meta && <p className="text-[11px] text-card-muted truncate">{l.meta}</p>}
-              </div>
-              {l.price && <span className="text-sm font-medium shrink-0" style={{ color: "var(--card-accent)" }}>{l.price}</span>}
-            </li>
-          ))}
+          {data.listings.map((l) => {
+            const Tag = l.url ? "a" : "div";
+            const linkProps = l.url ? { href: l.url, target: "_blank", rel: "noopener noreferrer" } : {};
+            return (
+              <li key={l.id}>
+                <Tag {...linkProps} className="flex gap-3 rounded-xl bg-card-surface border border-card-border p-2 pr-3 items-center active:scale-[0.99] transition">
+                  <div className="h-16 w-20 rounded-lg overflow-hidden bg-card-surface-alt shrink-0">
+                    {l.img ? <img src={l.img} alt={l.title} className="h-full w-full object-cover" /> :
+                      <div className="h-full w-full grid place-items-center"><ImageIcon className="h-5 w-5 text-card-muted" /></div>}
+                  </div>
+                  <div className="min-w-0 flex-1">
+                    <h3 className="text-sm font-medium truncate">{l.title || "Sans titre"}</h3>
+                    {l.meta && <p className="text-[11px] text-card-muted truncate">{l.meta}</p>}
+                    {l.url && <p className="text-[10px] text-card-muted mt-0.5 flex items-center gap-0.5">Voir <ExternalLink className="h-2.5 w-2.5" /></p>}
+                  </div>
+                  {l.price && <span className="text-sm font-medium shrink-0" style={{ color: "var(--card-accent)" }}>{l.price}</span>}
+                </Tag>
+              </li>
+            );
+          })}
         </ul>
       </section>
     );
@@ -820,19 +874,26 @@ function ListingsSection({ data }: { data: CardData }) {
     <section className="">
       <div className="px-5"><SectionTitle>Sélection en vente</SectionTitle></div>
       <div className="mt-3 flex gap-3 overflow-x-auto px-5 pb-2 snap-x snap-mandatory [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-        {data.listings.map((l) => (
-          <article key={l.id} className="snap-start shrink-0 w-[78%] rounded-2xl overflow-hidden bg-card-surface border border-card-border">
-            <div className="aspect-[4/3] overflow-hidden bg-card-surface-alt">
-              {l.img ? <img src={l.img} alt={l.title} className="h-full w-full object-cover" /> :
-                <div className="h-full w-full grid place-items-center"><ImageIcon className="h-8 w-8 text-card-muted" /></div>}
-            </div>
-            <div className="p-4">
-              <h3 className="font-display text-lg leading-tight">{l.title || "Sans titre"}</h3>
-              {l.meta && <p className="mt-0.5 text-xs text-card-muted">{l.meta}</p>}
-              {l.price && <p className="mt-2 font-medium" style={{ color: "var(--card-accent)" }}>{l.price}</p>}
-            </div>
-          </article>
-        ))}
+        {data.listings.map((l) => {
+          const Tag = l.url ? "a" : "article";
+          const linkProps = l.url ? { href: l.url, target: "_blank", rel: "noopener noreferrer" } : {};
+          return (
+            <Tag key={l.id} {...linkProps} className="snap-start shrink-0 w-[78%] rounded-2xl overflow-hidden bg-card-surface border border-card-border active:scale-[0.99] transition">
+              <div className="aspect-[4/3] overflow-hidden bg-card-surface-alt">
+                {l.img ? <img src={l.img} alt={l.title} className="h-full w-full object-cover" /> :
+                  <div className="h-full w-full grid place-items-center"><ImageIcon className="h-8 w-8 text-card-muted" /></div>}
+              </div>
+              <div className="p-4">
+                <h3 className="font-display text-lg leading-tight">{l.title || "Sans titre"}</h3>
+                {l.meta && <p className="mt-0.5 text-xs text-card-muted">{l.meta}</p>}
+                <div className="mt-2 flex items-center justify-between">
+                  {l.price && <p className="font-medium" style={{ color: "var(--card-accent)" }}>{l.price}</p>}
+                  {l.url && <span className="text-xs text-card-muted flex items-center gap-1">Voir l'annonce <ExternalLink className="h-3 w-3" /></span>}
+                </div>
+              </div>
+            </Tag>
+          );
+        })}
       </div>
     </section>
   );

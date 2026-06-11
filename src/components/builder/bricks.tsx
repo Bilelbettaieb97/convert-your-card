@@ -387,6 +387,11 @@ export function ListingsBrick({ data, update }: BrickProps) {
               <Trash2 className="h-4 w-4" />
             </Button>
           </div>
+          <Input
+            placeholder="Lien de l'annonce (optionnel) — https://…"
+            value={l.url ?? ""}
+            onChange={(e) => setListing(l.id, { url: e.target.value })}
+          />
         </div>
       ))}
       <Button type="button" variant="outline" size="sm" onClick={add}>
@@ -443,6 +448,11 @@ export function GalleryBrick({ data, update }: BrickProps) {
               placeholder="Légende (optionnel)"
               value={p.caption}
               onChange={(e) => setPhoto(p.id, { caption: e.target.value })}
+            />
+            <Input
+              placeholder="Lien au clic (optionnel) — https://…"
+              value={p.url ?? ""}
+              onChange={(e) => setPhoto(p.id, { url: e.target.value })}
             />
             <Button type="button" variant="ghost" size="sm" className="text-muted-foreground hover:text-destructive px-0" onClick={() => remove(p.id)}>
               <Trash2 className="h-4 w-4 mr-1" /> Supprimer
@@ -604,6 +614,11 @@ export function ServicesBrick({ data, update }: BrickProps) {
             placeholder="Description courte"
             value={s.description}
             onChange={(e) => set(s.id, { description: e.target.value })}
+          />
+          <Input
+            placeholder="Lien au clic (optionnel) — https://…"
+            value={s.url ?? ""}
+            onChange={(e) => set(s.id, { url: e.target.value })}
           />
           <div className="flex justify-end">
             <Button type="button" variant="ghost" size="icon" onClick={() => remove(s.id)}>

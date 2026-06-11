@@ -44,10 +44,10 @@ export const DEFAULT_SECTION_ORDER: BrickId[] = [
 ];
 
 export interface Stat { label: string; value: string }
-export interface Listing { id: string; img: string; title: string; meta: string; price: string }
-export interface GalleryPhoto { id: string; img: string; caption: string }
+export interface Listing { id: string; img: string; title: string; meta: string; price: string; url?: string }
+export interface GalleryPhoto { id: string; img: string; caption: string; url?: string }
 export interface Badge { id: string; label: string }
-export interface Service { id: string; title: string; description: string }
+export interface Service { id: string; title: string; description: string; url?: string }
 export interface Testimonial { id: string; name: string; role: string; text: string; rating: number; photo: string; link: string }
 export interface Language { id: string; name: string; level: string }
 
