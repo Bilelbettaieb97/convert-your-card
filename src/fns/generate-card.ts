@@ -10,11 +10,18 @@ const schema = z.object({
 
 export type GeneratedCard = Partial<CardData>;
 
-// Ordre canonique fixe — ne change jamais
+// Ordre canonique fixe — toujours respecté, jamais négligé
 const BASE_ORDER: BrickId[] = [
-  "identity", "actions", "stats", "socials", "about", "vcard",
-  "cta", "services", "testimonials", "contact",
-  "calendar", "gallery", "listings", "video", "languages", "theme",
+  "identity",      // 1. Identité
+  "actions",       // 2. Boutons d'action (call, whatsapp, email, site)
+  "socials",       // 3. Réseaux sociaux (linkedin, instagram)
+  "about",         // 4. À propos
+  "vcard",         // 5. Ajouter au répertoire
+  "calendar",      // 6. Agenda / prise de RDV
+  "services",      // 7. Services & prestations
+  "testimonials",  // 8. Témoignages
+  "cta",           // 9. Bannière d'appel à l'action
+  "stats", "contact", "gallery", "listings", "video", "languages", "theme",
 ];
 
 const SYSTEM_PROMPT = `Tu es un expert en création de contenu pour cartes de visite digitales françaises.
@@ -34,6 +41,10 @@ THÈMES disponibles :
 - forest → nature, agriculture, jardinage, écologie, bien-être nature
 - crimson → sport, coaching sportif, fitness, nutrition sportive
 - copper → artisan d'art, décoration intérieure, céramique
+
+ORDRE DES SECTIONS — TOUJOURS RESPECTER EXACTEMENT :
+identity → actions → socials → about → vcard → calendar → services → testimonials → cta
+(puis stats, contact, gallery, listings, video, languages, theme à la fin)
 
 RÈGLES ABSOLUES :
 - stats : EXACTEMENT 4 chiffres ultra-spécifiques au métier (délai d'intervention, note, volume, années, taux...)
@@ -69,7 +80,8 @@ const JSON_SCHEMA = `{
   "ctaText": "Texte d'accompagnement court, 1 phrase max",
   "ctaButtonLabel": "Libellé bouton (5 mots max)",
   "calendarLabel": "Libellé bouton prise de RDV",
-  "actions": {"call":true,"whatsapp":true,"email":false,"website":false}
+  "actions": {"call":true,"whatsapp":true,"email":false,"website":false},
+  "sectionOrder": ["identity","actions","socials","about","vcard","calendar","services","testimonials","cta","stats","contact","gallery","listings","video","languages","theme"]
 }`;
 
 // ─── Mock unique pour les tests dev (sans clé API) ───────────────────────────
@@ -114,7 +126,7 @@ const MOCK_DEFAULT: GeneratedCard = {
   ctaText: "Identifions ensemble les 3 leviers prioritaires pour accélérer votre activité. Offert, sans engagement.",
   ctaButtonLabel: "Je réserve mon audit",
   actions: { call: false, whatsapp: true, email: true, website: true },
-  sectionOrder: BASE_ORDER,
+  sectionOrder: [...BASE_ORDER],
 };
 
 // ─── Server function ──────────────────────────────────────────────────────────
