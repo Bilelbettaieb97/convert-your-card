@@ -546,178 +546,209 @@ function BuilderIAPage() {
   // PHASE 3 — Aperçu & choix du plan
   // ════════════════════════════════════════════════════════
   if (phase === "preview" && generatedCard) {
-    return (
-      <div className="min-h-screen bg-background text-foreground">
-        {/* Header */}
-        <div className="border-b border-border px-5 py-4 flex items-center justify-between">
-          <div className="flex items-center gap-2">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#c026d3] to-[#7c3aed] flex items-center justify-center">
-              <Sparkles className="w-4 h-4 text-white" />
-            </div>
-            <span className="font-semibold text-sm">Carte Visite Digitale</span>
-          </div>
-          <span className="text-xs text-muted-foreground">Ta carte est prête ✨</span>
-        </div>
-
-        <div className="max-w-5xl mx-auto px-4 py-10 grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
-
-          {/* ── Gauche : aperçu + score + partage ── */}
-          <div className="flex flex-col items-center gap-6">
-            <p className="text-xs uppercase tracking-widest text-primary">Aperçu de ta carte</p>
-
-            {/* Phone avec flip reveal */}
-            <div style={{
-              perspective: "900px",
-              transform: isFlipping ? "rotateY(-90deg)" : "rotateY(0deg)",
-              transition: "transform 0.4s cubic-bezier(0.4, 0, 0.6, 1)",
-            }}>
-              <PhoneFrame>
-                <BusinessCard data={generatedCard} />
-              </PhoneFrame>
-            </div>
-
-            {/* Score de conversion */}
-            <div className="w-full rounded-2xl border border-border bg-card p-5">
-              <div className="flex items-center gap-3 mb-4">
-                <TrendingUp className="w-4 h-4 text-primary" />
-                <p className="text-sm font-semibold">Score de conversion</p>
-              </div>
-              <div className="flex items-center gap-5">
-                <ScoreCircle score={score} />
-                <div className="flex-1 space-y-2">
-                  {tips.length === 0 ? (
-                    <p className="text-xs text-emerald-500 font-medium">
-                      Excellent ! Carte très bien optimisée.
-                    </p>
-                  ) : (
-                    tips.map((tip) => (
-                      <div key={tip.label} className="flex flex-col gap-0.5">
-                        <p className="text-xs text-foreground">{tip.label}</p>
-                        <p className="text-[10px] text-emerald-500 font-medium">{tip.impact}</p>
-                      </div>
-                    ))
-                  )}
-                </div>
-              </div>
-            </div>
-
-            {/* Partage */}
-            <div className="w-full rounded-2xl border border-border bg-card p-5 space-y-3">
-              <div className="flex items-center gap-3">
-                <Share2 className="w-4 h-4 text-primary" />
-                <p className="text-sm font-semibold">Partager l'aperçu</p>
-              </div>
-              <p className="text-xs text-muted-foreground">
-                Génère un lien valable 24h pour recueillir les avis de tes proches.
-              </p>
-              {shareUrl ? (
-                <div className="flex gap-2">
-                  <div className="flex-1 rounded-xl border border-border bg-muted/30 px-3 py-2 text-xs text-muted-foreground truncate">
-                    {shareUrl}
-                  </div>
-                  <button
-                    onClick={handleCopy}
-                    className="shrink-0 w-9 h-9 flex items-center justify-center rounded-xl border border-border hover:bg-muted/50 transition"
-                  >
-                    {copied ? <Check className="w-4 h-4 text-emerald-500" /> : <Copy className="w-4 h-4" />}
-                  </button>
-                </div>
-              ) : (
-                <button
-                  onClick={handleShare}
-                  disabled={sharing}
-                  className="w-full flex items-center justify-center gap-2 rounded-xl border border-border py-2.5 text-sm text-muted-foreground hover:text-foreground hover:border-foreground/30 transition disabled:opacity-50"
-                >
-                  {sharing ? (
-                    <Loader2 className="w-4 h-4 animate-spin" />
-                  ) : (
-                    <Share2 className="w-4 h-4" />
-                  )}
-                  Générer un lien de partage
-                </button>
-              )}
-            </div>
-          </div>
-
-          {/* ── Droite : plan & CTA ── */}
-          <div className="space-y-5 lg:pt-8">
-            <div>
-              <h1 className="font-bold text-2xl text-foreground mb-1">
-                {generatedCard.title || "Ta carte est prête"}
-              </h1>
-              <p className="text-muted-foreground text-sm">
-                L'IA a configuré {enabledVitrineSections.length + FREE_SECTIONS.length} sections pour ton métier.
-              </p>
-            </div>
-
-            {/* Sections gratuites */}
-            <div className="rounded-2xl border border-border bg-card p-4 space-y-2">
-              <p className="text-xs font-semibold text-foreground uppercase tracking-wide mb-3">
-                ✅ Inclus dans le plan gratuit
-              </p>
-              {FREE_SECTIONS.map((s) => (
-                <div key={s.label} className="flex items-center gap-2.5 text-sm text-foreground">
-                  <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
-                  <span>{s.label}</span>
-                </div>
-              ))}
-            </div>
-
-            {/* Sections vitrine générées */}
-            {enabledVitrineSections.length > 0 && (
-              <div className="rounded-2xl border border-[#c026d3]/30 bg-[#c026d3]/[0.04] p-4 space-y-2">
-                <p className="text-xs font-semibold text-[#c026d3] uppercase tracking-wide mb-3">
-                  🔒 Sections Vitrine générées ({enabledVitrineSections.length})
-                </p>
-                {enabledVitrineSections.map((s) => (
-                  <div key={s.key} className="flex items-center gap-2.5 text-sm text-foreground">
-                    <Lock className="w-4 h-4 text-[#c026d3] shrink-0" />
-                    <span>{s.label}</span>
-                  </div>
-                ))}
-                <p className="text-xs text-muted-foreground pt-1">
-                  Ces sections sont visibles dans l'aperçu mais nécessitent le plan Vitrine pour être publiées.
-                </p>
-              </div>
-            )}
-
-            {/* CTAs */}
-            <div className="space-y-3 pt-2">
-              <button
-                type="button"
-                onClick={handleActivateVitrine}
-                className="w-full flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-[#c026d3] to-[#7c3aed] text-white font-semibold py-4 text-sm hover:opacity-90 transition shadow-lg"
-              >
-                <Rocket className="w-4 h-4" />
-                Activer avec toutes les sections — 7 jours gratuits
-              </button>
-              <p className="text-center text-xs text-muted-foreground">
-                Puis 4,80€/mois · Sans engagement · Annulable en 1 clic
-              </p>
-
-              <div className="relative flex items-center gap-3 py-1">
-                <div className="flex-1 h-px bg-border" />
-                <span className="text-xs text-muted-foreground">ou</span>
-                <div className="flex-1 h-px bg-border" />
-              </div>
-
-              <button
-                type="button"
-                onClick={handleContinueFree}
-                className="w-full flex items-center justify-center gap-2 rounded-2xl border border-border py-3 text-sm text-muted-foreground hover:text-foreground hover:border-foreground/30 transition"
-              >
-                Continuer avec le plan gratuit
-                <ChevronRight className="w-4 h-4" />
-              </button>
-              <p className="text-center text-xs text-muted-foreground">
-                Les sections Vitrine seront supprimées de ta carte
-              </p>
-            </div>
-          </div>
-        </div>
-      </div>
-    );
+    return <PreviewPhase
+      generatedCard={generatedCard}
+      score={score}
+      tips={tips}
+      shareUrl={shareUrl}
+      sharing={sharing}
+      copied={copied}
+      enabledVitrineSections={enabledVitrineSections}
+      onActivate={handleActivateVitrine}
+      onFree={handleContinueFree}
+      onShare={handleShare}
+      onCopy={handleCopy}
+    />;
   }
 
   return null;
+}
+
+// ─── PreviewPhase — composant séparé pour avoir son propre état revealed ─────
+
+type PreviewPhaseProps = {
+  generatedCard: CardData;
+  score: number;
+  tips: Array<{ label: string; impact: string }>;
+  shareUrl: string;
+  sharing: boolean;
+  copied: boolean;
+  enabledVitrineSections: typeof VITRINE_SECTIONS;
+  onActivate: () => void;
+  onFree: () => void;
+  onShare: () => void;
+  onCopy: () => void;
+};
+
+function PreviewPhase({
+  generatedCard, score, tips, shareUrl, sharing, copied,
+  enabledVitrineSections, onActivate, onFree, onShare, onCopy,
+}: PreviewPhaseProps) {
+  const [revealed, setRevealed] = useState(false);
+
+  // Flip reveal au montage : part de -90deg, revient à 0
+  useEffect(() => {
+    const t = setTimeout(() => setRevealed(true), 40);
+    return () => clearTimeout(t);
+  }, []);
+
+  return (
+    <div className="min-h-screen bg-background text-foreground">
+      {/* Header */}
+      <div className="border-b border-border px-5 py-4 flex items-center justify-between">
+        <div className="flex items-center gap-2">
+          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#c026d3] to-[#7c3aed] flex items-center justify-center">
+            <Sparkles className="w-4 h-4 text-white" />
+          </div>
+          <span className="font-semibold text-sm">Carte Visite Digitale</span>
+        </div>
+        <span className="text-xs text-muted-foreground">Ta carte est prête ✨</span>
+      </div>
+
+      <div className="max-w-5xl mx-auto px-4 py-10 grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
+
+        {/* ── Gauche : aperçu phone ── */}
+        <div className="flex flex-col items-center gap-4">
+          <p className="text-xs uppercase tracking-widest text-primary">Aperçu de ta carte</p>
+
+          {/* Flip reveal */}
+          <div style={{
+            perspective: "900px",
+            transform: revealed ? "rotateY(0deg)" : "rotateY(-90deg)",
+            transition: "transform 0.55s cubic-bezier(0.4, 0, 0.2, 1)",
+          }}>
+            <PhoneFrame>
+              <BusinessCard data={generatedCard} />
+            </PhoneFrame>
+          </div>
+
+          {/* Partage compact sous le phone */}
+          <div className="w-full max-w-[280px]">
+            {shareUrl ? (
+              <div className="flex gap-2">
+                <div className="flex-1 rounded-xl border border-border bg-muted/30 px-3 py-2 text-[11px] text-muted-foreground truncate">
+                  {shareUrl}
+                </div>
+                <button
+                  onClick={onCopy}
+                  className="shrink-0 w-9 h-9 flex items-center justify-center rounded-xl border border-border hover:bg-muted/50 transition"
+                >
+                  {copied ? <Check className="w-4 h-4 text-emerald-500" /> : <Copy className="w-4 h-4" />}
+                </button>
+              </div>
+            ) : (
+              <button
+                onClick={onShare}
+                disabled={sharing}
+                className="w-full flex items-center justify-center gap-2 rounded-xl border border-border py-2 text-xs text-muted-foreground hover:text-foreground hover:border-foreground/30 transition disabled:opacity-50"
+              >
+                {sharing ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <Share2 className="w-3.5 h-3.5" />}
+                Partager l'aperçu — lien 24h
+              </button>
+            )}
+          </div>
+        </div>
+
+        {/* ── Droite : score + plan + CTAs ── */}
+        <div className="space-y-5 lg:pt-4">
+          {/* Titre */}
+          <div>
+            <h1 className="font-bold text-2xl text-foreground mb-1">
+              {generatedCard.title || "Ta carte est prête"}
+            </h1>
+            <p className="text-muted-foreground text-sm">
+              L'IA a configuré {enabledVitrineSections.length + FREE_SECTIONS.length} sections pour ton métier.
+            </p>
+          </div>
+
+          {/* Score de conversion */}
+          <div className="rounded-2xl border border-border bg-card p-4">
+            <div className="flex items-center gap-2 mb-3">
+              <TrendingUp className="w-4 h-4 text-primary" />
+              <p className="text-sm font-semibold">Score de conversion</p>
+            </div>
+            <div className="flex items-center gap-4">
+              <ScoreCircle score={score} />
+              <div className="flex-1 space-y-2">
+                {tips.length === 0 ? (
+                  <p className="text-xs text-emerald-500 font-medium">Carte très bien optimisée !</p>
+                ) : (
+                  tips.map((tip) => (
+                    <div key={tip.label} className="flex flex-col gap-0.5">
+                      <p className="text-xs text-foreground leading-snug">{tip.label}</p>
+                      <p className="text-[10px] text-emerald-500 font-medium">{tip.impact}</p>
+                    </div>
+                  ))
+                )}
+              </div>
+            </div>
+          </div>
+
+          {/* Sections gratuites */}
+          <div className="rounded-2xl border border-border bg-card p-4 space-y-2">
+            <p className="text-xs font-semibold text-foreground uppercase tracking-wide mb-3">
+              ✅ Inclus dans le plan gratuit
+            </p>
+            {FREE_SECTIONS.map((s) => (
+              <div key={s.label} className="flex items-center gap-2.5 text-sm text-foreground">
+                <CheckCircle2 className="w-4 h-4 text-emerald-500 shrink-0" />
+                <span>{s.label}</span>
+              </div>
+            ))}
+          </div>
+
+          {/* Sections vitrine */}
+          {enabledVitrineSections.length > 0 && (
+            <div className="rounded-2xl border border-[#c026d3]/30 bg-[#c026d3]/[0.04] p-4 space-y-2">
+              <p className="text-xs font-semibold text-[#c026d3] uppercase tracking-wide mb-3">
+                🔒 Sections Vitrine générées ({enabledVitrineSections.length})
+              </p>
+              {enabledVitrineSections.map((s) => (
+                <div key={s.key} className="flex items-center gap-2.5 text-sm text-foreground">
+                  <Lock className="w-4 h-4 text-[#c026d3] shrink-0" />
+                  <span>{s.label}</span>
+                </div>
+              ))}
+              <p className="text-xs text-muted-foreground pt-1">
+                Visibles dans l'aperçu, nécessitent le plan Vitrine pour être publiées.
+              </p>
+            </div>
+          )}
+
+          {/* CTAs */}
+          <div className="space-y-3 pt-1">
+            <button
+              type="button"
+              onClick={onActivate}
+              className="w-full flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-[#c026d3] to-[#7c3aed] text-white font-semibold py-4 text-sm hover:opacity-90 transition shadow-lg"
+            >
+              <Rocket className="w-4 h-4" />
+              Activer avec toutes les sections — 7 jours gratuits
+            </button>
+            <p className="text-center text-xs text-muted-foreground">
+              Puis 4,80€/mois · Sans engagement · Annulable en 1 clic
+            </p>
+
+            <div className="relative flex items-center gap-3 py-1">
+              <div className="flex-1 h-px bg-border" />
+              <span className="text-xs text-muted-foreground">ou</span>
+              <div className="flex-1 h-px bg-border" />
+            </div>
+
+            <button
+              type="button"
+              onClick={onFree}
+              className="w-full flex items-center justify-center gap-2 rounded-2xl border border-border py-3 text-sm text-muted-foreground hover:text-foreground hover:border-foreground/30 transition"
+            >
+              Continuer avec le plan gratuit
+              <ChevronRight className="w-4 h-4" />
+            </button>
+            <p className="text-center text-xs text-muted-foreground">
+              Les sections Vitrine seront supprimées de ta carte
+            </p>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
 }
