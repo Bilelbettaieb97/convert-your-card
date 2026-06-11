@@ -108,13 +108,13 @@ async function sendWelcomeEmail(
   </td></tr>
 
   <tr><td style="padding-bottom:6px;">
-    <p style="margin:0;font-size:11px;font-weight:700;color:#7c3aed;text-transform:uppercase;letter-spacing:1px;">Plan Vitrine · Essai 7 jours</p>
+    <p style="margin:0;font-size:11px;font-weight:700;color:#7c3aed;text-transform:uppercase;letter-spacing:1px;">Plan Vitrine · Essai 3 jours</p>
   </td></tr>
   <tr><td style="padding-bottom:22px;">
     <p style="margin:0;font-size:30px;font-weight:800;line-height:1.2;color:#0f0f14;letter-spacing:-0.5px;">Ta carte est en ligne.<br>Ton essai démarre maintenant.</p>
   </td></tr>
   <tr><td style="padding-bottom:24px;">
-    <p style="margin:0;font-size:15px;line-height:1.75;color:#374151;">Merci pour ta confiance. Ton essai de 7 jours commence maintenant — tu peux annuler à tout moment depuis ton dashboard, sans frais.</p>
+    <p style="margin:0;font-size:15px;line-height:1.75;color:#374151;">Merci pour ta confiance. Ton essai de 3 jours commence maintenant — tu peux annuler à tout moment depuis ton dashboard, sans frais.</p>
   </td></tr>
 
   <tr><td style="padding-bottom:22px;">
@@ -150,7 +150,7 @@ async function sendWelcomeEmail(
     </tr></table>
   </td></tr>
   <tr><td style="padding-bottom:36px;" align="center">
-    <p style="margin:0;font-size:12px;color:#9ca3af;">Essai 7 jours · Annulable à tout moment · Aucun frais avant la fin de l'essai</p>
+    <p style="margin:0;font-size:12px;color:#9ca3af;">Essai 3 jours · Annulable à tout moment · Aucun frais avant la fin de l'essai</p>
   </td></tr>
 
   <tr><td style="border-top:1px solid #f3f4f6;padding:20px 0 32px;">
@@ -293,9 +293,22 @@ export default defineEventHandler(async (event) => {
 
   } else if (stripeEvent.type === "customer.subscription.deleted") {
     const sub = stripeEvent.data.object;
-    await adminSupabase.from("subscriptions")
-      .update({ plan: "free", status: "canceled", updated_at: new Date().toISOString() })
-      .eq("stripe_subscription_id", sub.id);
+    const { data: subRow } = await adminSupabase
+      .from("subscriptions")
+      .select("user_id")
+      .eq("stripe_subscription_id", sub.id)
+      .maybeSingle();
+    await Promise.all([
+      adminSupabase.from("subscriptions")
+        .update({ plan: "free", status: "canceled", updated_at: new Date().toISOString() })
+        .eq("stripe_subscription_id", sub.id),
+      subRow?.user_id
+        ? adminSupabase.from("nfc_profiles")
+            .update({ actif: false, plan: "free" })
+            .eq("user_id", subRow.user_id)
+        : Promise.resolve(),
+    ]);
+    console.log("[stripe-webhook] Subscription canceled — card deactivated for user:", subRow?.user_id ?? "unknown");
   }
 
   return new Response(JSON.stringify({ received: true }), {

@@ -53,7 +53,7 @@ function DashboardLayout() {
   const [shareOpen, setShareOpen] = useState(false);
   const [gateDismissed, setGateDismissed] = useState(false);
   const { user, loading } = useAuthStore();
-  const { hasProfile, loading: planLoading } = usePlan();
+  const { hasProfile, loading: planLoading, actif } = usePlan();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -61,7 +61,7 @@ function DashboardLayout() {
   }, [user, loading, navigate]);
 
   useEffect(() => {
-    if (!planLoading && hasProfile === false) navigate({ to: "/builder" });
+    if (!planLoading && hasProfile === false) navigate({ to: "/builderia" });
   }, [planLoading, hasProfile, navigate]);
 
   const profile = getProfileMeta();
@@ -163,6 +163,17 @@ function DashboardLayout() {
               </Button>
             </div>
           </header>
+
+          {actif === false && (
+            <div className="bg-red-500/10 border-b border-red-500/30 px-6 py-3 flex items-center justify-between gap-4">
+              <p className="text-sm text-red-400 font-medium">
+                Votre essai est terminé — votre carte n'est plus visible en ligne.
+              </p>
+              <Link to="/pricing" className="shrink-0 px-4 py-1.5 rounded-full bg-red-500 text-white text-xs font-semibold hover:bg-red-600 transition">
+                Réactiver ma carte
+              </Link>
+            </div>
+          )}
 
           <main className="flex-1 min-w-0">
             <Outlet />

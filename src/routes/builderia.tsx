@@ -10,6 +10,8 @@ import { BusinessCard } from "@/components/card/BusinessCard";
 import { PhoneFrame } from "@/components/card/PhoneFrame";
 import { saveCardPreview } from "@/fns/save-card-preview";
 import { DEFAULT_CARD, type CardData, type BrickId, type ThemeAccent } from "@/lib/card-types";
+import { createCard, updateCard, loadMyCard } from "@/lib/card-actions";
+import { createCheckoutSession } from "@/fns/checkout";
 
 export const Route = createFileRoute("/builderia")({
   head: () => ({
@@ -119,6 +121,7 @@ function BuilderIAPage() {
   const [shareUrl, setShareUrl] = useState("");
   const [sharing, setSharing] = useState(false);
   const [copied, setCopied] = useState(false);
+  const [activating, setActivating] = useState(false);
 
   const animDoneRef = useRef(false);
   const resultReady = useRef(false);
@@ -244,10 +247,26 @@ function BuilderIAPage() {
   }, [phase]);
 
   // ── Actions depuis l'aperçu ──
-  function handleActivateVitrine() {
-    if (!generatedCard) return;
-    setData(generatedCard);
-    navigate({ to: "/pricing" });
+  async function handleActivateVitrine() {
+    if (!generatedCard || !user) return;
+    setActivating(true);
+    setError("");
+    try {
+      const existing = await loadMyCard();
+      if (!existing) {
+        await createCard(generatedCard);
+      } else {
+        await updateCard(existing.id, generatedCard);
+      }
+      setData(generatedCard);
+      const { url } = await createCheckoutSession({
+        data: { plan: "vitrine", billing: "monthly", email: user.email! },
+      });
+      if (url) window.location.href = url;
+    } catch {
+      setError("Une erreur est survenue. Réessaie.");
+      setActivating(false);
+    }
   }
 
   function handleContinueFree() {
@@ -540,6 +559,7 @@ function BuilderIAPage() {
       shareUrl={shareUrl}
       sharing={sharing}
       copied={copied}
+      activating={activating}
       onActivate={handleActivateVitrine}
       onFree={handleContinueFree}
       onShare={handleShare}
@@ -559,6 +579,7 @@ type PreviewPhaseProps = {
   shareUrl: string;
   sharing: boolean;
   copied: boolean;
+  activating: boolean;
   onActivate: () => void;
   onFree: () => void;
   onShare: () => void;
@@ -573,7 +594,7 @@ const QUICK_THEMES: Array<{ accent: ThemeAccent; label: string; bg: string; ring
 ];
 
 function PreviewPhase({
-  generatedCard, score, tips, shareUrl, sharing, copied,
+  generatedCard, score, tips, shareUrl, sharing, copied, activating,
   onActivate, onFree, onShare, onCopy,
 }: PreviewPhaseProps) {
   const [revealed, setRevealed] = useState(false);
@@ -754,10 +775,13 @@ function PreviewPhase({
             <button
               type="button"
               onClick={onActivate}
-              className="w-full flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-[#c026d3] to-[#7c3aed] text-white font-bold py-4 text-base hover:opacity-90 transition shadow-lg shadow-[#c026d3]/25"
+              disabled={activating}
+              className="w-full flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-[#c026d3] to-[#7c3aed] text-white font-bold py-4 text-base hover:opacity-90 transition shadow-lg shadow-[#c026d3]/25 disabled:opacity-70 disabled:cursor-not-allowed"
             >
-              <Rocket className="w-4 h-4" />
-              Je publie ma carte — 3 jours gratuits
+              {activating
+                ? <><Loader2 className="w-4 h-4 animate-spin" /> Publication en cours…</>
+                : <><Rocket className="w-4 h-4" /> Je publie ma carte — 3 jours gratuits</>
+              }
             </button>
 
             <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/[0.06] px-4 py-3 space-y-1">

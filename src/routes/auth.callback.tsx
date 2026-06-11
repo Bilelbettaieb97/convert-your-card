@@ -61,7 +61,7 @@ function AuthCallbackPage() {
         } catch {}
       }
 
-      navigate({ to: "/builder", replace: true });
+      navigate({ to: "/builderia", replace: true });
     }
 
     handleCallback();

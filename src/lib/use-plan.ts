@@ -7,6 +7,7 @@ export function usePlan() {
   const [plan, setPlan] = useState<string>(cached?.plan ?? "free");
   const [loading, setLoading] = useState(true);
   const [hasProfile, setHasProfile] = useState<boolean | null>(null);
+  const [actif, setActif] = useState<boolean>(cached?.actif ?? true);
 
   useEffect(() => {
     supabase.auth.getUser().then(async ({ data: { user } }) => {
@@ -20,6 +21,7 @@ export function usePlan() {
         setHasProfile(true);
         const realPlan = data.plan ?? "free";
         setPlan(realPlan);
+        setActif(data.actif ?? true);
         const meta = getProfileMeta();
         if (meta) {
           setProfileMeta({ ...meta, plan: realPlan });
@@ -33,5 +35,5 @@ export function usePlan() {
     });
   }, []);
 
-  return { plan, loading, hasProfile };
+  return { plan, loading, hasProfile, actif };
 }
