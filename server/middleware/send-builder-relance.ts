@@ -38,8 +38,9 @@ export default defineEventHandler(async (event) => {
 
   for (const u of users) {
     const clickToken = crypto.randomUUID();
-    const trackUrl   = `${appUrl}/api/builder-relance-click?t=${clickToken}`;
     const stepName   = u.builder_step_name ?? null;
+    const utmVariant = stepName ?? 'null';
+    const trackUrl   = `${appUrl}/api/builder-relance-click?t=${clickToken}&utm_source=email&utm_medium=relance&utm_campaign=builder-relance&utm_content=step${step}-${utmVariant}`;
 
     const { error: insertErr } = await admin.from("builder_relance_series").insert({
       email: u.email,

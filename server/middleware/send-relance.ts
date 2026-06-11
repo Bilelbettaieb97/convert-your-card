@@ -11,139 +11,168 @@ const EMAIL_TEMPLATES: Record<
   number,
   (firstName: string, trackUrl: string) => { subject: string; html: string }
 > = {
+  // J+10min — confirmation email (relance)
   1: (firstName, trackUrl) => ({
     subject: firstName
-      ? `${firstName}, tu as déjà fait le plus dur. Il reste 3 minutes.`
-      : "Tu as déjà fait le plus dur. Il reste 3 minutes.",
+      ? `${firstName}, confirme ton adresse email pour créer ta carte →`
+      : "Confirme ton adresse email pour créer ta carte →",
     html: wrap(`
 ${logo()}
 <tr><td style="padding:28px 36px 6px;">
-<p style="margin:0;font-size:11px;font-weight:700;color:#7c3aed;text-transform:uppercase;letter-spacing:1px;">Bienvenue</p>
+<p style="margin:0;font-size:11px;font-weight:700;color:#f59e0b;text-transform:uppercase;letter-spacing:1px;">Action requise</p>
 </td></tr>
 <tr><td style="padding:0 36px 22px;">
-<p style="margin:0;font-size:28px;font-weight:800;line-height:1.25;color:#0f0f14;letter-spacing:-0.4px;">Tu as déjà fait le plus dur.</p>
+<p style="margin:0;font-size:28px;font-weight:800;line-height:1.25;color:#0f0f14;letter-spacing:-0.4px;">Tu es à 1 clic<br>de ta carte digitale.</p>
 </td></tr>
 <tr><td style="padding:0 36px 16px;">
-<p style="margin:0;font-size:15px;line-height:1.75;color:#374151;">Tu t'es inscrit sur CVD. Tu as confirmé ton email. <strong style="color:#0f0f14;">85 % des gens s'arrêtent là.</strong> Ils voient un formulaire, se disent "plus tard". Et "plus tard" n'arrive jamais.</p>
+<p style="margin:0;font-size:15px;line-height:1.75;color:#374151;">Tu viens de t'inscrire sur Carte Visite Digitale — mais ton adresse email n'est pas encore confirmée. Sans ça, on ne peut pas créer ta carte.</p>
 </td></tr>
 <tr><td style="padding:0 36px 26px;">
-<p style="margin:0;font-size:15px;line-height:1.75;color:#374151;">Toi, tu es allé jusqu'au bout de l'inscription. Il te reste une seule chose à faire : créer ta carte. Ça prend 3 minutes.</p>
-</td></tr>
-<tr><td style="padding:0 36px 26px;">
-<table cellpadding="0" cellspacing="0" border="0" width="100%" style="background:#f9fafb;border-radius:10px;border:1px solid #f0f0f0;">
-<tr><td style="padding:20px 22px;">
-<p style="margin:0 0 14px;font-size:13px;font-weight:700;color:#0f0f14;">Ce qui t'attend dans le builder :</p>
+<table cellpadding="0" cellspacing="0" border="0" width="100%" style="background:#fffbeb;border:1px solid #fcd34d;border-radius:10px;">
+<tr><td style="padding:18px 22px;">
 <table cellpadding="0" cellspacing="0" border="0" width="100%">
-<tr><td style="padding:8px 0;border-bottom:1px solid #f0f0f0;">
+<tr><td style="padding:6px 0;font-size:14px;color:#374151;line-height:1.6;">
+<span style="color:#f59e0b;margin-right:8px;font-weight:700;">→</span>Clique sur le bouton ci-dessous pour confirmer ton email</td></tr>
+<tr><td style="padding:6px 0;font-size:14px;color:#374151;line-height:1.6;">
+<span style="color:#f59e0b;margin-right:8px;font-weight:700;">→</span>Tu es immédiatement redirigé vers ton générateur de carte</td></tr>
+<tr><td style="padding:6px 0;font-size:14px;color:#374151;line-height:1.6;">
+<span style="color:#f59e0b;margin-right:8px;font-weight:700;">→</span>L'IA génère ta carte en 30 secondes</td></tr>
+</table>
+</td></tr>
+</table>
+</td></tr>
+${cta("Confirmer mon email et créer ma carte →", trackUrl, "#7c3aed")}
+<tr><td style="padding:8px 36px 28px;" align="center"><p style="margin:0;font-size:12px;color:#9ca3af;">Si tu n'as pas créé de compte, tu peux ignorer cet email.</p></td></tr>
+${footer()}
+`),
+  }),
+
+  // J+1h — découverte du générateur IA
+  2: (firstName, trackUrl) => ({
+    subject: firstName
+      ? `${firstName}, une phrase suffit. L'IA génère ta carte entière.`
+      : "Une phrase suffit. L'IA génère ta carte entière.",
+    html: wrap(`
+${logo()}
+<tr><td style="padding:28px 36px 6px;">
+<p style="margin:0;font-size:11px;font-weight:700;color:#7c3aed;text-transform:uppercase;letter-spacing:1px;">Ta carte t'attend</p>
+</td></tr>
+<tr><td style="padding:0 36px 22px;">
+<p style="margin:0;font-size:28px;font-weight:800;line-height:1.25;color:#0f0f14;letter-spacing:-0.4px;">Tu décris ce que tu fais.<br>L'IA fait tout le reste.</p>
+</td></tr>
+<tr><td style="padding:0 36px 16px;">
+<p style="margin:0;font-size:15px;line-height:1.75;color:#374151;">Pas de formulaire à remplir champ par champ. Pas de template à personnaliser pendant des heures. Tu écris une phrase — l'IA génère ta carte complète en 30 secondes.</p>
+</td></tr>
+<tr><td style="padding:0 36px 26px;">
+<table cellpadding="0" cellspacing="0" border="0" width="100%" style="background:#faf5ff;border:1px solid #e9d5ff;border-radius:10px;">
+<tr><td style="padding:20px 22px;">
+<p style="margin:0 0 12px;font-size:13px;font-weight:700;color:#7c3aed;">Comment ça marche :</p>
+<table cellpadding="0" cellspacing="0" border="0" width="100%">
+<tr><td style="padding:8px 0;border-bottom:1px solid #ede9fe;">
 <table cellpadding="0" cellspacing="0" border="0"><tr>
 <td style="vertical-align:top;"><span style="display:inline-block;width:20px;height:20px;border-radius:50%;background:#7c3aed;color:#fff;font-size:10px;font-weight:800;text-align:center;line-height:20px;">1</span></td>
-<td style="padding-left:10px;font-size:14px;color:#374151;line-height:1.5;"><strong style="color:#0f0f14;">Choisis ton style</strong> : thème, couleurs, mise en page</td>
+<td style="padding-left:10px;font-size:14px;color:#374151;line-height:1.5;">Tu tapes une phrase : <em>"Électricien à Lyon, spécialisé rénovation"</em></td>
 </tr></table>
 </td></tr>
-<tr><td style="padding:8px 0;border-bottom:1px solid #f0f0f0;">
+<tr><td style="padding:8px 0;border-bottom:1px solid #ede9fe;">
 <table cellpadding="0" cellspacing="0" border="0"><tr>
 <td style="vertical-align:top;"><span style="display:inline-block;width:20px;height:20px;border-radius:50%;background:#7c3aed;color:#fff;font-size:10px;font-weight:800;text-align:center;line-height:20px;">2</span></td>
-<td style="padding-left:10px;font-size:14px;color:#374151;line-height:1.5;"><strong style="color:#0f0f14;">Remplis tes infos</strong> : nom, métier, numéro, réseaux</td>
+<td style="padding-left:10px;font-size:14px;color:#374151;line-height:1.5;"><strong style="color:#0f0f14;">L'IA génère</strong> : accroche, services, avis clients, design — tout</td>
 </tr></table>
 </td></tr>
 <tr><td style="padding:8px 0;">
 <table cellpadding="0" cellspacing="0" border="0"><tr>
 <td style="vertical-align:top;"><span style="display:inline-block;width:20px;height:20px;border-radius:50%;background:#7c3aed;color:#fff;font-size:10px;font-weight:800;text-align:center;line-height:20px;">3</span></td>
-<td style="padding-left:10px;font-size:14px;color:#374151;line-height:1.5;"><strong style="color:#0f0f14;">Active ta carte</strong> : lien live et QR code prêts à partager</td>
+<td style="padding-left:10px;font-size:14px;color:#374151;line-height:1.5;">Tu <strong style="color:#0f0f14;">valides et actives</strong> — lien live et QR code prêts</td>
 </tr></table>
 </td></tr>
 </table>
 </td></tr>
 </table>
 </td></tr>
-${cta("Créer ma carte maintenant →", trackUrl)}
-<tr><td style="padding:8px 36px 28px;" align="center"><p style="margin:0;font-size:12px;color:#9ca3af;">Gratuit · 3 minutes · Partageable immédiatement</p></td></tr>
+<tr><td style="padding:0 36px 26px;" align="center">
+<p style="margin:0;font-size:44px;font-weight:900;color:#0f0f14;line-height:1;">30 secondes.</p>
+<p style="margin:6px 0 0;font-size:13px;color:#9ca3af;">Pour voir ta carte générée. Gratuit, sans CB.</p>
+</td></tr>
+${cta("Générer ma carte avec l'IA →", trackUrl, "#7c3aed")}
+<tr><td style="padding:8px 36px 28px;" align="center"><p style="margin:0;font-size:12px;color:#9ca3af;">Gratuit · Sans engagement · Partageable immédiatement</p></td></tr>
 ${footer()}
 `),
   }),
 
-  2: (_firstName, trackUrl) => ({
-    subject: `Depuis que tu t'es inscrit, 47 pros ont mis leur carte en ligne.`,
+  // J+1 — FOMO + exemples concrets
+  3: (_firstName, trackUrl) => ({
+    subject: "Voici ce qu'un plombier a généré en tapant une seule phrase.",
     html: wrap(`
 ${logo()}
 <tr><td style="padding:28px 36px 22px;">
-<p style="margin:0;font-size:28px;font-weight:800;line-height:1.25;color:#0f0f14;letter-spacing:-0.4px;">Ces 4 derniers jours,<br>47 pros ont mis leur carte en ligne.</p>
-</td></tr>
-<tr><td style="padding:0 36px 18px;">
-<p style="margin:0;font-size:15px;line-height:1.75;color:#374151;">Un plombier à Bordeaux. Une coach à Paris. Un restaurateur à Lyon. Un consultant à Marseille. Ils ont tous fait la même chose : ils ont pris 3 minutes pour créer leur carte.</p>
-</td></tr>
-<tr><td style="padding:0 36px 26px;">
-<table cellpadding="0" cellspacing="0" border="0" width="100%" style="border-left:3px solid #7c3aed;background:#fafafa;border-radius:0 8px 8px 0;">
-<tr><td style="padding:16px 20px;">
-<p style="margin:0 0 10px;font-size:14px;font-weight:700;color:#0f0f14;">Ce qu'ils font maintenant :</p>
-<p style="margin:0 0 8px;font-size:14px;color:#374151;line-height:1.6;">Ils partagent leur lien en réponse à chaque demande de contact.</p>
-<p style="margin:0 0 8px;font-size:14px;color:#374151;line-height:1.6;">Leur QR code est sur leur véhicule, leur vitrine, leurs supports.</p>
-<p style="margin:0;font-size:14px;color:#374151;line-height:1.6;">Leurs anciens clients transmettent leurs coordonnées d'un tap.</p>
-</td></tr>
-</table>
-</td></tr>
-<tr><td style="padding:0 36px 22px;">
-<p style="margin:0;font-size:15px;line-height:1.75;color:#374151;">La différence entre eux et toi ? Ils ont cliqué sur le bouton. C'est tout.</p>
-</td></tr>
-<tr><td style="padding:0 36px 26px;">
-<table cellpadding="0" cellspacing="0" border="0" width="100%">
-<tr>
-<td style="padding:14px 10px;background:#f9fafb;border-radius:8px 0 0 8px;text-align:center;border:1px solid #f0f0f0;border-right:none;">
-<p style="margin:0;font-size:22px;font-weight:900;color:#0f0f14;">2 400+</p>
-<p style="margin:3px 0 0;font-size:10px;color:#9ca3af;text-transform:uppercase;">Pros actifs</p>
-</td>
-<td style="padding:14px 10px;background:#f9fafb;text-align:center;border:1px solid #f0f0f0;border-right:none;">
-<p style="margin:0;font-size:22px;font-weight:900;color:#0f0f14;">3 min</p>
-<p style="margin:3px 0 0;font-size:10px;color:#9ca3af;text-transform:uppercase;">Pour créer</p>
-</td>
-<td style="padding:14px 10px;background:#f9fafb;border-radius:0 8px 8px 0;text-align:center;border:1px solid #f0f0f0;">
-<p style="margin:0;font-size:22px;font-weight:900;color:#7c3aed;">0 €</p>
-<p style="margin:3px 0 0;font-size:10px;color:#9ca3af;text-transform:uppercase;">À vie</p>
-</td>
-</tr>
-</table>
-</td></tr>
-${cta("Créer ma carte en 3 minutes →", trackUrl, "#7c3aed")}
-<tr><td style="padding:8px 36px 28px;" align="center"><p style="margin:0;font-size:12px;color:#9ca3af;">Gratuit · Sans CB · Modifiable à vie</p></td></tr>
-${footer()}
-`),
-  }),
-
-  3: (firstName, trackUrl) => ({
-    subject: firstName
-      ? `Je ne t'enverrai plus rien après ça, ${firstName}.`
-      : "Je ne t'enverrai plus rien après ça.",
-    html: wrap(`
-${logo()}
-<tr><td style="padding:28px 36px 22px;">
-<p style="margin:0;font-size:28px;font-weight:800;line-height:1.25;color:#0f0f14;letter-spacing:-0.4px;">C'est le dernier message. Promis.</p>
+<p style="margin:0;font-size:28px;font-weight:800;line-height:1.25;color:#0f0f14;letter-spacing:-0.4px;">Ce que l'IA génère<br>avec une seule phrase.</p>
 </td></tr>
 <tr><td style="padding:0 36px 16px;">
-<p style="margin:0;font-size:15px;line-height:1.75;color:#374151;">Ça fait 8 jours. Deux messages. Tu n'as pas créé ta carte. Et c'est OK. Peut-être que le timing n'est pas le bon, peut-être que tu as changé d'avis.</p>
-</td></tr>
-<tr><td style="padding:0 36px 16px;">
-<p style="margin:0;font-size:15px;line-height:1.75;color:#374151;">Je ne vais pas t'envoyer un quatrième email. Mais avant de partir, deux choses.</p>
+<p style="margin:0;font-size:15px;line-height:1.75;color:#374151;">Marc, plombier à Nantes, a tapé : <strong style="color:#0f0f14;">"Plombier chauffagiste, urgences 7j/7, Nantes et périphérie"</strong></p>
 </td></tr>
 <tr><td style="padding:0 36px 26px;">
 <table cellpadding="0" cellspacing="0" border="0" width="100%" style="background:#f9fafb;border-radius:10px;border:1px solid #f0f0f0;">
 <tr><td style="padding:20px 22px;">
-<table cellpadding="0" cellspacing="0" border="0" width="100%">
-<tr><td style="padding:0 0 16px;border-bottom:1px solid #e5e7eb;">
-<p style="margin:0 0 4px;font-size:14px;font-weight:700;color:#0f0f14;">1. Ton compte est toujours là.</p>
-<p style="margin:0;font-size:14px;color:#374151;line-height:1.6;">Si tu veux créer ta carte dans 3 mois, tes informations de connexion fonctionnent toujours. Tu reprends là où tu t'es arrêté.</p>
-</td></tr>
-<tr><td style="padding:16px 0 0;">
-<p style="margin:0 0 4px;font-size:14px;font-weight:700;color:#0f0f14;">2. Si c'est maintenant, c'est 3 minutes.</p>
-<p style="margin:0;font-size:14px;color:#374151;line-height:1.6;">Le plan gratuit ne nécessite aucune carte bancaire. Tu vas dans le builder, tu remplis tes infos, tu actives. Voilà.</p>
+<p style="margin:0 0 10px;font-size:13px;font-weight:700;color:#0f0f14;">L'IA a généré automatiquement :</p>
+<p style="margin:0 0 7px;font-size:14px;color:#374151;line-height:1.6;">✦ <strong style="color:#0f0f14;">Accroche</strong> : "Urgence plomberie ? Je suis là en moins d'1h."</p>
+<p style="margin:0 0 7px;font-size:14px;color:#374151;line-height:1.6;">✦ <strong style="color:#0f0f14;">3 offres</strong> avec prix et délais d'intervention</p>
+<p style="margin:0 0 7px;font-size:14px;color:#374151;line-height:1.6;">✦ <strong style="color:#0f0f14;">Avis clients</strong> réalistes pour crédibiliser</p>
+<p style="margin:0;font-size:14px;color:#374151;line-height:1.6;">✦ <strong style="color:#0f0f14;">Design adapté</strong> à son activité</p>
 </td></tr>
 </table>
 </td></tr>
+<tr><td style="padding:0 36px 22px;">
+<p style="margin:0;font-size:15px;line-height:1.75;color:#374151;">Il partage maintenant son lien sur WhatsApp. Quand un client lui demande ses coordonnées, il envoie juste l'URL. <strong style="color:#0f0f14;">Ça lui a rapporté 2 nouveaux chantiers en une semaine.</strong></p>
+</td></tr>
+<tr><td style="padding:0 36px 26px;">
+<table cellpadding="0" cellspacing="0" border="0" width="100%"><tr>
+<td style="padding:14px 10px;background:#f9fafb;border-radius:8px 0 0 8px;text-align:center;border:1px solid #f0f0f0;border-right:none;">
+<p style="margin:0;font-size:22px;font-weight:900;color:#0f0f14;">30 sec</p>
+<p style="margin:3px 0 0;font-size:10px;color:#9ca3af;text-transform:uppercase;">Pour générer</p>
+</td>
+<td style="padding:14px 10px;background:#f9fafb;text-align:center;border:1px solid #f0f0f0;border-right:none;">
+<p style="margin:0;font-size:22px;font-weight:900;color:#0f0f14;">2 400+</p>
+<p style="margin:3px 0 0;font-size:10px;color:#9ca3af;text-transform:uppercase;">Pros actifs</p>
+</td>
+<td style="padding:14px 10px;background:#f9fafb;border-radius:0 8px 8px 0;text-align:center;border:1px solid #f0f0f0;">
+<p style="margin:0;font-size:22px;font-weight:900;color:#7c3aed;">0 €</p>
+<p style="margin:3px 0 0;font-size:10px;color:#9ca3af;text-transform:uppercase;">Pour commencer</p>
+</td>
+</tr></table>
+</td></tr>
+${cta("Voir ce que l'IA génère →", trackUrl, "#7c3aed")}
+<tr><td style="padding:8px 36px 28px;" align="center"><p style="margin:0;font-size:12px;color:#9ca3af;">Gratuit · Sans CB · Résultat visible en 30 secondes</p></td></tr>
+${footer()}
+`),
+  }),
+
+  // J+2 — breakup
+  4: (firstName, trackUrl) => ({
+    subject: firstName
+      ? `${firstName}, c'est mon dernier message.`
+      : "C'est mon dernier message.",
+    html: wrap(`
+${logo()}
+<tr><td style="padding:28px 36px 22px;">
+<p style="margin:0;font-size:28px;font-weight:800;line-height:1.25;color:#0f0f14;letter-spacing:-0.4px;">Je ne t'enverrai plus de messages après celui-ci.</p>
+</td></tr>
+<tr><td style="padding:0 36px 16px;">
+<p style="margin:0;font-size:15px;line-height:1.75;color:#374151;">Tu t'es inscrit. Tu n'as pas encore généré ta carte. Et c'est OK — peut-être que le timing n'était pas le bon.</p>
+</td></tr>
+<tr><td style="padding:0 36px 26px;">
+<table cellpadding="0" cellspacing="0" border="0" width="100%" style="border-left:3px solid #e5e7eb;background:#fafafa;border-radius:0 8px 8px 0;">
+<tr><td style="padding:18px 20px;">
+<p style="margin:0 0 10px;font-size:14px;font-weight:700;color:#0f0f14;">Avant de partir, deux choses :</p>
+<p style="margin:0 0 12px;font-size:14px;color:#374151;line-height:1.6;"><strong style="color:#0f0f14;">1. Ton compte est toujours là.</strong> Si tu veux générer ta carte dans 3 mois, tu te reconnectes et c'est parti.</p>
+<p style="margin:0;font-size:14px;color:#374151;line-height:1.6;"><strong style="color:#0f0f14;">2. Si c'est maintenant</strong> : une phrase sur ton activité, l'IA génère tout en 30 secondes. Gratuit, sans CB.</p>
+</td></tr>
 </table>
 </td></tr>
-${cta("Créer ma carte (dernière chance)", trackUrl)}
+${cta("Générer ma carte (dernière chance)", trackUrl)}
 <tr><td style="padding:8px 36px 28px;" align="center"><p style="margin:0;font-size:12px;color:#9ca3af;">Gratuit pour toujours · Sans engagement</p></td></tr>
 <tr><td style="padding:0 36px 32px;border-top:1px solid #f3f4f6;">
-<p style="margin:16px 0 10px;font-size:14px;line-height:1.75;color:#6b7280;">Quoi qu'il arrive, bonne continuation.</p>
+<p style="margin:16px 0 10px;font-size:14px;line-height:1.75;color:#6b7280;">Bonne continuation.</p>
 <p style="margin:0;font-size:13px;color:#9ca3af;">— L'équipe CVD &nbsp;·&nbsp; <a href="https://www.cartevisitedigitale.fr/unsubscribe" style="color:#d1d5db;font-size:12px;text-decoration:none;">Se désabonner définitivement</a></p>
 </td></tr>
 `),
@@ -260,7 +289,7 @@ export default defineEventHandler(async (event) => {
         continue;
       }
 
-      const trackUrl = `${appUrl}/api/relance-click?t=${inserted.click_token}`;
+      const trackUrl = `${appUrl}/api/relance-click?t=${inserted.click_token}&utm_source=email&utm_medium=relance&utm_campaign=email-non-clique&utm_content=step${step}`;
       const rawFirst = user.email.split("@")[0].split(".")[0];
       const capitalized = rawFirst.length >= 3
         ? rawFirst.charAt(0).toUpperCase() + rawFirst.slice(1)

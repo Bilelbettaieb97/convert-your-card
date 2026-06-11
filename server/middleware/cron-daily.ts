@@ -6,9 +6,10 @@ const TR_DELAYS: Record<number, number> = {
   2: 2,  // J+2 — urgence "expire demain"
 };
 const NC_DELAYS: Record<number, number> = {
-  1: 10 / 1440,  // 10 minutes
+  1: 10 / 1440,  // 10 minutes — confirmation email
   2: 1 / 24,     // 1 heure
   3: 1,          // 1 jour
+  4: 2,          // 2 jours — breakup
 };
 const BR_DELAYS: Record<number, number> = {
   1: 1 / 24,  // 1 heure

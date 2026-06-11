@@ -39,7 +39,7 @@ export default defineEventHandler(async (event) => {
 
   for (const u of users) {
     const clickToken = crypto.randomUUID();
-    const trackUrl   = `${appUrl}/api/vitrine-upgrade-click?t=${clickToken}`;
+    const trackUrl   = `${appUrl}/api/vitrine-upgrade-click?t=${clickToken}&utm_source=email&utm_medium=relance&utm_campaign=vitrine-upgrade&utm_content=step${step}`;
 
     const { error: insertErr } = await admin.from("vitrine_upgrade_series").insert({
       email: u.email,

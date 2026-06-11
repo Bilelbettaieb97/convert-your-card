@@ -9,13 +9,22 @@ import { createClient } from "@supabase/supabase-js";
 export default defineEventHandler(async (event) => {
   if (!event.path?.startsWith("/api/relance-click")) return;
 
-  const { t: token } = getQuery(event);
-  const appUrl =
-    process.env.VITE_APP_URL ?? "https://www.cartevisitedigitale.fr";
+  const query = getQuery(event);
+  const token = query.t;
+  const appUrl = process.env.VITE_APP_URL ?? "https://www.cartevisitedigitale.fr";
 
   if (!token || typeof token !== "string") {
     return sendRedirect(event, appUrl, 302);
   }
+
+  const utmKeys = ["utm_source", "utm_medium", "utm_campaign", "utm_content"];
+  const utmParams = new URLSearchParams();
+  for (const key of utmKeys) {
+    const val = query[key];
+    if (val) utmParams.set(key, String(val));
+  }
+  const utmStr = utmParams.toString();
+  const builderUrl = `${appUrl}/builderia${utmStr ? `?${utmStr}` : ""}`;
 
   const supabaseUrl =
     process.env.SUPABASE_URL ?? process.env.VITE_SUPABASE_URL ?? "";
@@ -48,11 +57,11 @@ export default defineEventHandler(async (event) => {
       .eq("id", record.id);
   }
 
-  // Générer un nouveau magic link — redirect vers /builder pour compléter le funnel
+  // Générer un nouveau magic link — redirect vers /builderia avec UTMs
   const { data: linkData } = await admin.auth.admin.generateLink({
     type: "magiclink",
     email: record.email,
-    options: { redirectTo: `${appUrl}/builder` },
+    options: { redirectTo: builderUrl },
   });
 
   const magicLink = (linkData as any)?.properties?.action_link;
@@ -60,10 +69,5 @@ export default defineEventHandler(async (event) => {
     return sendRedirect(event, magicLink, 302);
   }
 
-  // Fallback si génération échoue
-  return sendRedirect(
-    event,
-    `${appUrl}/builder`,
-    302,
-  );
+  return sendRedirect(event, builderUrl, 302);
 });
