@@ -52,7 +52,7 @@ function DashboardLayout() {
   const [shareOpen, setShareOpen] = useState(false);
   const [gateDismissed, setGateDismissed] = useState(false);
   const { user, loading } = useAuthStore();
-  const { hasProfile, loading: planLoading, actif, daysLeft, trialExpired, plan } = usePlan();
+  const { hasProfile, loading: planLoading, actif, daysLeft, trialExpired, plan, isInTrial, trialDaysLeft } = usePlan();
 
   const ESSENTIELLE_ALLOWED = [
     "/dashboard/content",
@@ -181,6 +181,37 @@ function DashboardLayout() {
             </div>
           </header>
 
+          {isInTrial && (
+            <div className={`border-b px-6 py-3 flex items-center justify-between gap-4 ${
+              trialDaysLeft === 0
+                ? "bg-red-500/10 border-red-500/30"
+                : trialDaysLeft === 1
+                ? "bg-orange-500/10 border-orange-500/30"
+                : "bg-amber-500/10 border-amber-500/30"
+            }`}>
+              <p className={`text-sm font-medium ${
+                trialDaysLeft === 0 ? "text-red-400"
+                : trialDaysLeft === 1 ? "text-orange-400"
+                : "text-amber-400"
+              }`}>
+                {trialDaysLeft === 0
+                  ? "Votre essai expire aujourd'hui — activez votre plan avant minuit pour ne pas perdre votre carte."
+                  : trialDaysLeft === 1
+                  ? "Votre essai expire demain — activez votre plan maintenant pour conserver vos données."
+                  : `Votre essai gratuit expire dans ${trialDaysLeft} jours — activez votre plan pour conserver votre carte.`}
+              </p>
+              <Link
+                to="/dashboard/account"
+                className={`shrink-0 px-4 py-1.5 rounded-full text-white text-xs font-semibold transition ${
+                  trialDaysLeft === 0 ? "bg-red-500 hover:bg-red-600"
+                  : trialDaysLeft === 1 ? "bg-orange-500 hover:bg-orange-600"
+                  : "bg-amber-500 hover:bg-amber-600"
+                }`}
+              >
+                Activer maintenant →
+              </Link>
+            </div>
+          )}
           {actif === false && (
             <div className="bg-red-500/10 border-b border-red-500/30 px-6 py-3 flex items-center justify-between gap-4">
               <p className="text-sm text-red-400 font-medium">

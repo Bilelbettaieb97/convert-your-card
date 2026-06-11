@@ -43,6 +43,8 @@ export function usePlan() {
     : 0;
   const daysLeft = Math.max(0, TRIAL_DAYS - daysOld);
   const trialExpired = daysOld >= TRIAL_DAYS && plan !== "vitrine";
+  const isInTrial = plan === "essentielle" && daysLeft > 0;
+  const trialDaysLeft = isInTrial ? daysLeft : 0;
 
-  return { plan, loading, hasProfile, actif, daysLeft, trialExpired, slug, profileId };
+  return { plan, loading, hasProfile, actif, daysLeft, trialExpired, slug, profileId, isInTrial, trialDaysLeft };
 }
