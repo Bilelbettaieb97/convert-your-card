@@ -94,6 +94,7 @@ function StatistiquesPage() {
   const [analytics, setAnalytics] = useState<AnalyticsRow[]>([]);
   const [feed, setFeed] = useState<NotifItem[]>([]);
   const [plan, setPlan] = useState<string>("free");
+  const [trialExpired, setTrialExpired] = useState(false);
   const [cardUrl, setCardUrl] = useState<string>("");
   const [loading, setLoading] = useState(true);
   const [refreshing, setRefreshing] = useState(false);
@@ -130,10 +131,15 @@ function StatistiquesPage() {
       if (!user) return;
       const { data: p } = await supabase
         .from("nfc_profiles")
-        .select("plan")
+        .select("plan, created_at")
         .eq("user_id", user.id)
         .maybeSingle();
-      setPlan(p?.plan ?? "free");
+      const realPlan = (p as any)?.plan ?? "free";
+      setPlan(realPlan);
+      if (realPlan !== "vitrine" && (p as any)?.created_at) {
+        const daysOld = Math.floor((Date.now() - new Date((p as any).created_at).getTime()) / 86_400_000);
+        setTrialExpired(daysOld >= 14);
+      }
     });
 
     supabase.from("nfc_analytics")
@@ -167,7 +173,7 @@ function StatistiquesPage() {
   }, []);
 
   const PERIOD_DAYS: Record<Period, number> = { "7j": 7, "30j": 30, "90j": 90 };
-  const LOCKED_PERIODS: Period[] = plan === "free" ? ["30j", "90j"] : plan === "starter" ? ["90j"] : [];
+  const LOCKED_PERIODS: Period[] = plan !== "vitrine" ? ["30j", "90j"] : [];
 
   const days = PERIOD_DAYS[period];
   const from = daysBack(days);
@@ -215,7 +221,23 @@ function StatistiquesPage() {
   );
 
   return (
-    <div className="p-5 lg:p-8">
+    <div className="p-5 lg:p-8 relative">
+      {trialExpired && (
+        <div className="absolute inset-0 z-50 flex items-start justify-center pt-24 bg-background/80 backdrop-blur-sm">
+          <div className="text-center p-8 rounded-2xl border border-border bg-card shadow-xl max-w-sm mx-4">
+            <Lock className="h-10 w-10 text-primary mx-auto mb-4" />
+            <h3 className="font-display text-xl mb-2">Statistiques verrouillées</h3>
+            <p className="text-sm text-muted-foreground mb-6">
+              Votre essai de 14 jours est terminé. Passez au plan Vitrine pour accéder à toutes vos statistiques et retirer le branding de votre carte.
+            </p>
+            <Link to="/dashboard/account">
+              <button className="w-full px-6 py-3 rounded-xl bg-primary text-primary-foreground font-semibold text-sm hover:opacity-90 transition">
+                Passer à Vitrine — 4,80€/mois
+              </button>
+            </Link>
+          </div>
+        </div>
+      )}
       <div className="grid lg:grid-cols-[1fr_300px] gap-6 max-w-7xl">
 
         {/* ── Left column: stats ── */}

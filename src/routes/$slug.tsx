@@ -101,6 +101,15 @@ function ProfilePage() {
     logEvent(profile.id, "scan", { referrer: document.referrer, ua: navigator.userAgent.slice(0, 100) });
   }, [profile.id]);
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const profilePlan = (profile as any).plan as string | null;
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
+  const profileCreatedAt = (profile as any).created_at as string | null;
+  const daysOld = profileCreatedAt
+    ? Math.floor((Date.now() - new Date(profileCreatedAt).getTime()) / 86_400_000)
+    : 0;
+  const showBranding = daysOld >= 14 && profilePlan !== "vitrine";
+
   // If card_data is available (saved via builder), use the exact same BusinessCard component
   // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const cardData = (profile as any).card_data as CardData | null;
@@ -110,6 +119,7 @@ function ProfilePage() {
       <div className="min-h-screen pb-8" style={{ background: themePalette.bg }}>
         <div className="mx-auto max-w-sm">
           <BusinessCard data={cardData} profileId={profile.id} />
+          {showBranding && <BrandingFooter color={themePalette.text} />}
         </div>
       </div>
     );
@@ -165,10 +175,24 @@ function ProfilePage() {
         <button onClick={() => downloadVCard(profile)} className="flex items-center justify-center gap-2 w-full rounded-full py-3.5 text-sm font-semibold transition hover:opacity-90" style={{ backgroundColor: "rgba(255,255,255,0.1)", border: "1px solid rgba(255,255,255,0.2)", color: "#fff" }}>
           <Download className="w-4 h-4" /> Enregistrer le contact
         </button>
-        <p className="text-center text-xs mt-6" style={{ color: subTextColorDim }}>
-          Propulsé par <a href="/" className="font-semibold hover:underline" style={{ color: theme.accent }}>Carte Visite Digitale</a>
-        </p>
+        {showBranding && <BrandingFooter color={subTextColorDim} />}
       </div>
+    </div>
+  );
+}
+
+function BrandingFooter({ color }: { color?: string }) {
+  return (
+    <div className="py-5 text-center">
+      <a
+        href="https://www.cartevisitedigitale.fr"
+        target="_blank"
+        rel="noopener noreferrer"
+        className="inline-flex items-center gap-1 text-xs hover:opacity-80 transition"
+        style={{ color: color ?? "rgba(255,255,255,0.4)" }}
+      >
+        Créez votre carte sur <span className="font-semibold">cartevisitedigitale.fr</span> →
+      </a>
     </div>
   );
 }

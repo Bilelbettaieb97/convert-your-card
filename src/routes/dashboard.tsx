@@ -52,7 +52,7 @@ function DashboardLayout() {
   const [shareOpen, setShareOpen] = useState(false);
   const [gateDismissed, setGateDismissed] = useState(false);
   const { user, loading } = useAuthStore();
-  const { hasProfile, loading: planLoading, actif } = usePlan();
+  const { hasProfile, loading: planLoading, actif, daysLeft, trialExpired, plan } = usePlan();
   const navigate = useNavigate();
 
   useEffect(() => {
@@ -166,10 +166,30 @@ function DashboardLayout() {
           {actif === false && (
             <div className="bg-red-500/10 border-b border-red-500/30 px-6 py-3 flex items-center justify-between gap-4">
               <p className="text-sm text-red-400 font-medium">
-                Votre essai est terminé — votre carte n'est plus visible en ligne.
+                Votre carte n'est plus visible en ligne.
               </p>
-              <Link to="/pricing" className="shrink-0 px-4 py-1.5 rounded-full bg-red-500 text-white text-xs font-semibold hover:bg-red-600 transition">
+              <Link to="/dashboard/account" className="shrink-0 px-4 py-1.5 rounded-full bg-red-500 text-white text-xs font-semibold hover:bg-red-600 transition">
                 Réactiver ma carte
+              </Link>
+            </div>
+          )}
+          {actif !== false && trialExpired && plan !== "vitrine" && (
+            <div className="bg-amber-500/10 border-b border-amber-500/30 px-6 py-3 flex items-center justify-between gap-4">
+              <p className="text-sm text-amber-400 font-medium">
+                Votre essai gratuit est terminé — votre carte affiche le branding ConvertiLab.
+              </p>
+              <Link to="/dashboard/account" className="shrink-0 px-4 py-1.5 rounded-full bg-amber-500 text-white text-xs font-semibold hover:bg-amber-600 transition">
+                Passer à Vitrine — 4,80€/mois
+              </Link>
+            </div>
+          )}
+          {actif !== false && !trialExpired && plan !== "vitrine" && daysLeft <= 3 && daysLeft > 0 && (
+            <div className="bg-blue-500/10 border-b border-blue-500/30 px-6 py-3 flex items-center justify-between gap-4">
+              <p className="text-sm text-blue-400 font-medium">
+                Il vous reste <strong>{daysLeft} jour{daysLeft > 1 ? "s" : ""}</strong> d'essai gratuit avant l'affichage du branding.
+              </p>
+              <Link to="/dashboard/account" className="shrink-0 px-4 py-1.5 rounded-full bg-blue-500 text-white text-xs font-semibold hover:bg-blue-600 transition">
+                Passer à Vitrine
               </Link>
             </div>
           )}
