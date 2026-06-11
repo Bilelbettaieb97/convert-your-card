@@ -278,7 +278,7 @@ function BuilderIAResultatPage() {
                 <BusinessCard data={fullCard} />
               </PhoneFrame>
               {/* Overlay : scroll autorisé, clics bloqués */}
-              <div ref={overlayRef} className="absolute inset-0 z-10 cursor-default rounded-[44px]" />
+              <div ref={overlayRef} className="absolute inset-0 z-10 cursor-default rounded-[44px] touch-none" />
             </div>
           </div>
 
