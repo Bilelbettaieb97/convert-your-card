@@ -127,6 +127,50 @@ export default defineEventHandler(async (event) => {
       }
     }
 
+    // ── Réconciliation plans : corrige les mismatches Stripe ↔ Supabase ──────
+    // Si subscriptions.status = active/trialing mais nfc_profiles.plan != vitrine
+    // → le webhook a raté → on corrige et on alerte
+    {
+      const { data: mismatches } = await admin
+        .from("subscriptions")
+        .select("user_id, plan, status, stripe_customer_id")
+        .in("status", ["active", "trialing"]);
+
+      const toFix = (mismatches ?? []).filter((s) => s.user_id && s.plan === "vitrine");
+
+      if (toFix.length > 0) {
+        // Récupérer les profils concernés pour vérifier lesquels sont mal synchronisés
+        const { data: profiles } = await admin
+          .from("nfc_profiles")
+          .select("user_id, email, plan")
+          .in("user_id", toFix.map((s) => s.user_id));
+
+        const broken = (profiles ?? []).filter((p) => p.plan !== "vitrine");
+
+        if (broken.length > 0) {
+          // Corriger silencieusement
+          await admin
+            .from("nfc_profiles")
+            .update({ plan: "vitrine", actif: true })
+            .in("user_id", broken.map((p) => p.user_id));
+
+          results["plan_reconciled"] = broken.length;
+          console.warn(`[cron-daily] Plan reconciliation: fixed ${broken.length} mismatch(es)`, broken.map((p) => p.email));
+
+          // Alerte email si correctif appliqué
+          if (resendKey) {
+            const list = broken.map((p) => `<li>${p.email} (était: ${p.plan})</li>`).join("");
+            await sendAlertEmail(
+              resendKey,
+              `⚠️ CVD — ${broken.length} plan(s) Vitrine corrigé(s) automatiquement`,
+              `Le cron a détecté un décalage entre Stripe et Supabase et a corrigé ${broken.length} compte(s) :<br><ul>${list}</ul>
+               Cause probable : webhook Stripe raté. Vérifiez les logs Stripe.`
+            ).catch(console.error);
+          }
+        }
+      }
+    }
+
     const { data: users, error } = await admin.rpc("get_user_funnel");
     if (error || !users) throw new Error(error?.message ?? "get_user_funnel returned null");
 
