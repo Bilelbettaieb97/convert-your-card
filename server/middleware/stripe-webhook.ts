@@ -262,30 +262,16 @@ export default defineEventHandler(async (event) => {
       console.log("[stripe-webhook] Created profile (no user):", profileSlug);
     }
 
-    // Fetch real subscription status + trial_end from Stripe
-    let subscriptionStatus = "trialing"; // défaut sécurisé : on ne facture pas par erreur
+    // Lire le statut depuis les métadonnées de la session — zéro appel API, zéro race condition
+    const hasTrial = session.metadata?.has_trial === "true";
+    const subscriptionStatus = hasTrial ? "trialing" : "active";
     let trialEnd: string | null = null;
-    if (stripeSubscriptionId) {
-      try {
-        const stripeKey = process.env.STRIPE_SECRET_KEY ?? "";
-        if (!stripeKey) throw new Error("STRIPE_SECRET_KEY not set");
-        const subRes = await fetch(`https://api.stripe.com/v1/subscriptions/${stripeSubscriptionId}`, {
-          headers: { Authorization: `Bearer ${stripeKey}` },
-        });
-        if (!subRes.ok) throw new Error(`Stripe API ${subRes.status}`);
-        const stripeSub = await subRes.json() as { status?: string; trial_end?: number };
-        if (stripeSub.status) subscriptionStatus = stripeSub.status;
-        if (stripeSub.trial_end) trialEnd = new Date(stripeSub.trial_end * 1000).toISOString();
-        console.log("[stripe-webhook] Subscription status from Stripe:", subscriptionStatus, "trial_end:", trialEnd);
-      } catch (e) {
-        console.error("[stripe-webhook] Could not fetch subscription, defaulting to trialing:", e);
-      }
-    }
+    console.log("[stripe-webhook] Status from metadata:", subscriptionStatus, "has_trial:", hasTrial);
 
     // Upsert subscription — CRITIQUE : retourne 500 si échec → Stripe retry automatique
     if (userId) {
       const { error: upsertErr } = await adminSupabase.from("subscriptions").upsert(
-        { user_id: userId, stripe_customer_id: stripeCustomerId, stripe_subscription_id: stripeSubscriptionId, plan, status: subscriptionStatus, current_period_end: trialEnd, had_trial: trialEnd !== null, updated_at: new Date().toISOString() },
+        { user_id: userId, stripe_customer_id: stripeCustomerId, stripe_subscription_id: stripeSubscriptionId, plan, status: subscriptionStatus, current_period_end: trialEnd, had_trial: hasTrial, updated_at: new Date().toISOString() },
         { onConflict: "user_id" },
       );
       if (upsertErr) {
@@ -306,29 +292,6 @@ export default defineEventHandler(async (event) => {
       console.log("[stripe-webhook] Admin notification sent");
     } catch (e) {
       console.error("[stripe-webhook] Admin notification error:", e);
-    }
-
-  } else if (stripeEvent.type === "customer.subscription.created") {
-    // Corrige le statut immédiatement après checkout — sans appel API secondaire
-    // Stripe fire cet event AVANT checkout.session.completed, donc il s'exécute en dernier
-    // et écrase le statut potentiellement incorrect écrit par checkout.session.completed
-    const sub = stripeEvent.data.object;
-    const trialEnd = sub.trial_end ? new Date(sub.trial_end * 1000).toISOString() : null;
-    const { data: subRow } = await adminSupabase
-      .from("subscriptions")
-      .select("user_id")
-      .eq("stripe_customer_id", sub.customer)
-      .maybeSingle();
-
-    if (subRow?.user_id) {
-      await adminSupabase.from("subscriptions").update({
-        stripe_subscription_id: sub.id,
-        status: sub.status,
-        current_period_end: trialEnd,
-        had_trial: trialEnd !== null,
-        updated_at: new Date().toISOString(),
-      }).eq("user_id", subRow.user_id);
-      console.log(`[stripe-webhook] subscription.created — status: ${sub.status}, trial_end: ${trialEnd}`);
     }
 
   } else if (stripeEvent.type === "customer.subscription.updated") {

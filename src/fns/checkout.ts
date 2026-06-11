@@ -53,7 +53,7 @@ export const createCheckoutSession = createServerFn({ method: "POST" })
         : { customer_email: data.email }),
       payment_method_collection: isVitrine && !hadTrial ? "if_required" : "always",
       line_items: [{ price: priceId, quantity: 1 }],
-      metadata: { plan: data.plan, billing: data.billing, email: data.email, user_id: data.userId ?? "" },
+      metadata: { plan: data.plan, billing: data.billing, email: data.email, user_id: data.userId ?? "", has_trial: (isVitrine && !hadTrial).toString() },
       success_url: `${appUrl}/bienvenue?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: hadTrial ? `${appUrl}/dashboard/account` : `${appUrl}/builderia/resultat`,
       allow_promotion_codes: true,
