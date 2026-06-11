@@ -208,6 +208,86 @@ function buildStep2Email(firstName: string, slug: string, appUrl: string, trialE
 </html>`;
 }
 
+function buildStep3Email(firstName: string, slug: string, appUrl: string): string {
+  const pricingUrl = `${appUrl}/pricing?utm_source=email&utm_medium=relance&utm_campaign=trial-relance&utm_content=step3`;
+  const cardUrl = `${appUrl}/${slug}`;
+  return `
+<!DOCTYPE html>
+<html lang="fr">
+<head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1"><title>Votre carte expire ce soir</title></head>
+<body style="margin:0;padding:0;background:#f9fafb;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;">
+<table width="100%" cellpadding="0" cellspacing="0" style="background:#f9fafb;padding:32px 16px;">
+  <tr><td align="center">
+    <table width="560" cellpadding="0" cellspacing="0" style="background:#ffffff;border-radius:16px;overflow:hidden;box-shadow:0 2px 12px rgba(0,0,0,0.06);">
+      <tr>
+        <td style="background:#7f1d1d;padding:14px 40px;text-align:center;">
+          <p style="margin:0;font-size:13px;font-weight:800;color:#fca5a5;letter-spacing:1px;text-transform:uppercase;">⚠️ Dernier jour — expire ce soir à minuit</p>
+        </td>
+      </tr>
+      <tr>
+        <td style="background:linear-gradient(135deg,#450a0a,#7f1d1d);padding:32px 40px 28px;text-align:center;">
+          <h1 style="margin:0;font-size:26px;font-weight:800;color:#ffffff;line-height:1.3;">${firstName}, c'est ce soir ou jamais.</h1>
+          <p style="margin:10px 0 0;font-size:14px;color:rgba(255,255,255,0.65);">Votre carte sera désactivée à minuit</p>
+        </td>
+      </tr>
+      <tr>
+        <td style="padding:36px 40px;">
+          <p style="margin:0 0 24px;font-size:15px;color:#374151;line-height:1.7;">
+            Votre essai gratuit de 3 jours se termine <strong style="color:#dc2626;">ce soir à minuit</strong>. Après ça, votre carte est désactivée et vos clients verront une page vide à votre place.
+          </p>
+          <table width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 28px;border-radius:12px;overflow:hidden;border:2px solid #fca5a5;">
+            <tr>
+              <td style="background:#fef2f2;padding:20px 24px;text-align:center;">
+                <p style="margin:0 0 6px;font-size:13px;color:#991b1b;font-weight:700;text-transform:uppercase;letter-spacing:0.5px;">Pour garder votre carte active</p>
+                <p style="margin:0;font-size:40px;font-weight:900;color:#111827;line-height:1;">4,80€<span style="font-size:18px;font-weight:500;color:#6b7280;">/mois</span></p>
+                <p style="margin:8px 0 0;font-size:13px;color:#6b7280;">= 16 centimes par jour · moins qu'un café par mois</p>
+                <p style="margin:6px 0 0;font-size:12px;color:#9ca3af;">Sans engagement · Résiliable en 1 clic</p>
+              </td>
+            </tr>
+          </table>
+          <table width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 28px;background:#fff7ed;border:1px solid #fed7aa;border-radius:12px;">
+            <tr>
+              <td style="padding:16px 20px;">
+                <p style="margin:0 0 10px;font-size:13px;font-weight:700;color:#c2410c;">Ce qui disparaît ce soir si vous n'activez pas :</p>
+                ${[
+                  "Votre lien public (vos clients voient une erreur)",
+                  "Votre QR code (ne fonctionne plus)",
+                  "Vos services, offres et avis clients",
+                  "Votre agenda et prise de RDV",
+                ].map(item => `<p style="margin:0 0 6px;font-size:13px;color:#374151;"><span style="color:#ea580c;margin-right:8px;">✕</span>${item}</p>`).join("")}
+              </td>
+            </tr>
+          </table>
+          <table width="100%" cellpadding="0" cellspacing="0" style="margin:0 0 16px;">
+            <tr>
+              <td align="center">
+                <a href="${pricingUrl}" style="display:inline-block;background:#dc2626;color:#ffffff;text-decoration:none;font-size:16px;font-weight:800;padding:18px 44px;border-radius:50px;">
+                  Activer maintenant — 4,80€/mois →
+                </a>
+              </td>
+            </tr>
+          </table>
+          <p style="margin:0 0 24px;font-size:12px;color:#9ca3af;text-align:center;">
+            Ou <a href="${cardUrl}" style="color:#c026d3;text-decoration:none;">voir ma carte</a> une dernière fois
+          </p>
+          <p style="margin:0;font-size:13px;color:#6b7280;line-height:1.6;">
+            Si vous activez après minuit, vos données sont conservées — il suffit de s'abonner pour remettre la carte en ligne instantanément.
+          </p>
+        </td>
+      </tr>
+      <tr>
+        <td style="background:#f9fafb;border-top:1px solid #e5e7eb;padding:20px 40px;text-align:center;">
+          <p style="margin:0 0 4px;font-size:12px;color:#9ca3af;">Bilel · Carte Visite Digitale</p>
+          <p style="margin:0;font-size:12px;color:#9ca3af;">Des questions ? Répondez directement à cet email.</p>
+        </td>
+      </tr>
+    </table>
+  </td></tr>
+</table>
+</body>
+</html>`;
+}
+
 export default defineEventHandler(async (event) => {
   if (!event.path?.startsWith("/api/send-trial-relance")) return;
 
@@ -237,13 +317,18 @@ export default defineEventHandler(async (event) => {
     const firstName = getFirstName(user.nom ?? "", user.email);
     const slug = user.slug ?? user.email.split("@")[0].toLowerCase().replace(/[^a-z0-9]+/g, "-");
 
-    const subject = step === 1
-      ? `${firstName}, votre carte est en ligne — partagez-la ce soir 🚀`
-      : `⏰ ${firstName}, votre carte expire bientôt — activez votre abonnement`;
-
-    const html = step === 1
-      ? buildStep1Email(firstName, slug, appUrl)
-      : buildStep2Email(firstName, slug, appUrl, user.trial_end);
+    const subjects: Record<number, string> = {
+      1: `${firstName}, votre carte est en ligne — partagez-la ce soir 🚀`,
+      2: `⏰ ${firstName}, votre carte expire demain soir`,
+      3: `⚠️ ${firstName}, votre carte est désactivée ce soir à minuit`,
+    };
+    const htmlBuilders: Record<number, () => string> = {
+      1: () => buildStep1Email(firstName, slug, appUrl),
+      2: () => buildStep2Email(firstName, slug, appUrl, user.trial_end),
+      3: () => buildStep3Email(firstName, slug, appUrl),
+    };
+    const subject = subjects[step] ?? subjects[2];
+    const html = (htmlBuilders[step] ?? htmlBuilders[2])();
 
     try {
       const res = await fetch("https://api.resend.com/emails", {

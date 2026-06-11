@@ -4,6 +4,7 @@ import { createClient } from "@supabase/supabase-js";
 const TR_DELAYS: Record<number, number> = {
   1: 1,  // J+1 — onboarding / partage
   2: 2,  // J+2 — urgence "expire demain"
+  3: 3,  // J+3 — dernier jour "expire ce soir"
 };
 const NC_DELAYS: Record<number, number> = {
   1: 10 / 1440,  // 10 minutes — confirmation email
