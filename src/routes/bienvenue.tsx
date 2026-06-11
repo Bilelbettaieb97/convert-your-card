@@ -2,7 +2,7 @@ import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { verifyUpgrade } from "@/fns/verify-upgrade";
-import { createCard, loadMyCard } from "@/lib/card-actions";
+import { createCard, updateCard, loadMyCard } from "@/lib/card-actions";
 import { loadCard } from "@/lib/card-store";
 import { CheckCircle, Zap } from "lucide-react";
 
@@ -50,18 +50,22 @@ function BienvenePage() {
         return;
       }
 
-      // Step 2 — créer le profil depuis localStorage si pas encore fait
+      // Step 2 — créer ou mettre à jour le profil depuis localStorage
       try {
         const existingProfile = await loadMyCard();
+        const cardData = loadCard();
         if (!existingProfile) {
-          const cardData = loadCard();
           if (cardData?.name) {
             await createCard(cardData);
             localStorage.removeItem("cyk.builderia.generated");
           }
+        } else if (!(existingProfile as any).card_data && cardData?.name) {
+          // Profil créé sans card_data — sync depuis localStorage
+          await updateCard(existingProfile.id, cardData);
+          localStorage.removeItem("cyk.builderia.generated");
         }
       } catch {
-        // Non-bloquant — le profil sera créé par le webhook si besoin
+        // Non-bloquant — le profil sera mis à jour depuis le dashboard
       }
 
       // Step 3 — if we got a Stripe session_id, verify the upgrade server-side
