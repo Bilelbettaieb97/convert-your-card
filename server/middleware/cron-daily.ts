@@ -161,8 +161,11 @@ export default defineEventHandler(async (event) => {
       results[`nc_step_${step}`] = result.sent ?? 0;
     }
 
-    // ── Série builder (J+1h / J+1 / J+3 / J+5 / J+7 / J+9) ────────────────
-    const builder = users.filter((r: any) => r.email_confirme_le && !r.plan);
+    // ── Série builder-relance (J+1h / J+1 / J+3 / J+5 / J+7 / J+9) ─────────
+    // Exclut builder_step_name = null : ces anciens users n'ont jamais ouvert
+    // Builderia et ne convertiront plus. Le funnel actuel set le step_name dès
+    // la confirmation email (magic link → /builderia).
+    const builder = users.filter((r: any) => r.email_confirme_le && !r.plan && r.builder_step_name);
 
     for (const [stepStr, minDays] of Object.entries(BR_DELAYS)) {
       const step = Number(stepStr);
