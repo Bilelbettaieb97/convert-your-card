@@ -6,7 +6,7 @@ import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
 import { isDisposableEmail } from "@/lib/is-disposable-email";
 import { Toaster } from "@/components/ui/sonner";
-import { Zap, ShieldCheck, Lock, Users, Star, TrendingUp, Award, Quote, Mail, ArrowRight, RefreshCw } from "lucide-react";
+import { Zap, ShieldCheck, Lock, Users, Mail, ArrowRight, RefreshCw } from "lucide-react";
 
 function GoogleIcon() {
   return (
@@ -258,57 +258,133 @@ function InscriptionPage() {
           </div>
         </div>
 
-        {/* Colonne Droite — Social proof desktop */}
+        {/* Colonne Droite */}
         <div className="hidden lg:flex flex-1 relative items-center justify-center px-12 py-16 overflow-hidden bg-gradient-to-br from-[#1a0b2e]/90 via-[#2d1b4e]/80 to-[#1a0b2e]/90">
-          <div className="absolute inset-0 opacity-20">
+          <div className="absolute inset-0 opacity-20 pointer-events-none">
             <div className="absolute top-20 left-20 w-72 h-72 bg-magenta rounded-full blur-[120px]" />
             <div className="absolute bottom-20 right-20 w-96 h-96 bg-violet rounded-full blur-[140px]" />
           </div>
 
-          <div className="relative z-10 w-full max-w-lg space-y-8">
-            <div className="grid grid-cols-2 gap-4">
-              <StatCard icon={<Users className="w-5 h-5 text-magenta" />} iconBg="bg-magenta/20" value="+12 400" label="Professionnels utilisent CVD chaque jour" />
-              <StatCard icon={<Star className="w-5 h-5 text-amber-400" />} iconBg="bg-amber-500/20" value="4.9/5" label="Note moyenne sur +2 800 avis vérifiés" />
-              <StatCard icon={<TrendingUp className="w-5 h-5 text-emerald-400" />} iconBg="bg-emerald-500/20" value="+340 %" label="De contacts échangés en moyenne" />
-              <StatCard icon={<Award className="w-5 h-5 text-violet-300" />} iconBg="bg-violet/30" value="#1" label="Appli carte de visite en France" />
+          <div className="relative z-10 w-full max-w-md space-y-8">
+
+            {/* Titre */}
+            <div>
+              <p className="text-xs uppercase tracking-widest text-magenta/80 font-semibold mb-2">Ce que tu vas obtenir</p>
+              <h2 className="text-2xl font-bold text-white leading-snug">
+                Ta carte pro, partageable en 1 lien,<br />créée par l'IA en 30 secondes.
+              </h2>
             </div>
 
-            <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-6">
-              <Quote className="w-8 h-8 text-magenta/60 mb-3" />
-              <blockquote className="text-lg text-white/90 leading-relaxed font-medium">
-                « J'ai créé ma carte en 2 minutes. Mes clients la scannent directement. C'est devenu indispensable. »
-              </blockquote>
-              <div className="mt-4 flex items-center gap-3">
-                <div className="w-12 h-12 rounded-full bg-gradient-brand flex items-center justify-center text-sm font-bold text-primary-foreground">
-                  SR
+            {/* Phone mockup */}
+            <div className="flex justify-center">
+              <div className="relative w-[200px]">
+                {/* Phone shell */}
+                <div className="w-[200px] rounded-[2rem] border-2 border-white/20 bg-[#0d001a] shadow-[0_0_60px_rgba(192,38,211,0.3)] overflow-hidden">
+                  {/* Notch */}
+                  <div className="h-6 flex items-center justify-center border-b border-white/10">
+                    <div className="w-12 h-1 bg-white/20 rounded-full" />
+                  </div>
+                  {/* Cover */}
+                  <div className="h-16 bg-gradient-to-r from-[#c026d3]/40 to-[#7c3aed]/40 flex items-end px-3 pb-2">
+                    <div className="w-24 h-1.5 bg-white/20 rounded-full" />
+                  </div>
+                  {/* Avatar + name */}
+                  <div className="px-3 pt-2 pb-1 flex items-center gap-2">
+                    <div className="w-9 h-9 rounded-full bg-gradient-to-br from-[#c026d3] to-[#7c3aed] flex items-center justify-center text-white text-[10px] font-bold shrink-0">MB</div>
+                    <div>
+                      <div className="text-white text-[11px] font-bold">Marc Brun</div>
+                      <div className="text-white/50 text-[9px]">Plombier · Paris 15e</div>
+                    </div>
+                  </div>
+                  {/* Bio */}
+                  <div className="px-3 py-1.5 space-y-1">
+                    <div className="w-full h-1.5 bg-white/10 rounded-full" />
+                    <div className="w-4/5 h-1.5 bg-white/10 rounded-full" />
+                  </div>
+                  {/* Action buttons */}
+                  <div className="px-3 py-2 flex gap-1.5">
+                    {["📞 Appeler", "💬 WhatsApp", "📅 RDV"].map((btn) => (
+                      <div key={btn} className="flex-1 rounded-lg bg-white/10 py-1.5 text-center text-[7px] text-white/60 font-medium">{btn}</div>
+                    ))}
+                  </div>
+                  {/* Stats row */}
+                  <div className="mx-3 mb-2 rounded-xl bg-white/5 border border-white/10 px-2 py-2 flex justify-between">
+                    {[["142", "visites"], ["38", "clics"], ["4.9★", "avis"]].map(([v, l]) => (
+                      <div key={l} className="text-center">
+                        <p className="text-white text-[10px] font-bold">{v}</p>
+                        <p className="text-white/40 text-[7px]">{l}</p>
+                      </div>
+                    ))}
+                  </div>
+                  {/* Services teaser */}
+                  <div className="px-3 pb-3 space-y-1">
+                    {["Dépannage urgent 24h/24", "Rénovation salle de bain"].map((s) => (
+                      <div key={s} className="flex items-center gap-1.5">
+                        <div className="w-1 h-1 rounded-full bg-magenta/80 shrink-0" />
+                        <div className="text-[8px] text-white/50">{s}</div>
+                      </div>
+                    ))}
+                  </div>
                 </div>
-                <div>
-                  <p className="text-white font-semibold">Sarah R.</p>
-                  <p className="text-white/50 text-sm">Consultante freelance · Paris</p>
-                </div>
-                <div className="ml-auto flex gap-0.5">
-                  {[1,2,3,4,5].map((s) => (
-                    <svg key={s} className="w-4 h-4 text-amber-400" fill="currentColor" viewBox="0 0 20 20">
-                      <path d="M9.049 2.927c.3-.921 1.603-.921 1.902 0l1.07 3.292a1 1 0 0 0 .95.69h3.462c.969 0 1.371 1.24.588 1.81l-2.8 2.034a1 1 0 0 0-.364 1.118l1.07 3.292c.3.921-.755 1.688-1.54 1.118l-2.8-2.034a1 1 0 0 0-1.175 0l-2.8 2.034c-.784.57-1.838-.197-1.539-1.118l1.07-3.292a1 1 0 0 0-.364-1.118L2.98 8.72c-.783-.57-.38-1.81.588-1.81h3.461a1 1 0 0 0 .951-.69l1.07-3.292z" />
-                    </svg>
-                  ))}
+
+                {/* Floating badge */}
+                <div className="absolute -top-3 -right-4 bg-emerald-500 text-white text-[10px] font-bold px-2.5 py-1 rounded-full shadow-lg">
+                  ✓ En ligne
                 </div>
               </div>
             </div>
 
-            <div className="text-center">
-              <p className="text-xs uppercase tracking-wider text-white/40 font-medium mb-4">Ils font confiance à CVD</p>
-              <div className="flex items-center justify-center gap-8 opacity-50">
-                <span className="font-display font-bold text-xl tracking-tight text-white/70">KPMG</span>
-                <span className="font-display font-bold text-xl tracking-tight text-white/70">Deloitte</span>
-                <span className="font-display font-bold text-xl tracking-tight text-white/70">BNP</span>
-                <span className="font-display font-bold text-xl tracking-tight text-white/70">L'Oréal</span>
-              </div>
+            {/* 3 étapes */}
+            <div className="space-y-3">
+              <p className="text-xs uppercase tracking-widest text-white/40 font-semibold">Ce qui se passe après ton inscription</p>
+              {[
+                { num: "1", label: "Décris ton activité en 1 phrase", detail: "L'IA comprend ton métier et génère tout." },
+                { num: "2", label: "Ta carte est créée en 30 secondes", detail: "Bio, services, avis clients, agenda — automatiquement." },
+                { num: "3", label: "Tu partages ton lien, tes clients te contactent", detail: "WhatsApp, Instagram, email, QR code." },
+              ].map(({ num, label, detail }, i) => (
+                <div key={num} className="flex gap-3 items-start">
+                  <div className="w-6 h-6 rounded-full bg-gradient-to-br from-[#c026d3] to-[#7c3aed] flex items-center justify-center text-white text-[10px] font-bold shrink-0 mt-0.5">
+                    {num}
+                  </div>
+                  <div>
+                    <p className="text-white text-sm font-semibold leading-snug">{label}</p>
+                    <p className="text-white/45 text-xs mt-0.5">{detail}</p>
+                  </div>
+                  {i < 2 && (
+                    <div className="absolute left-[1.75rem] mt-7 w-px h-4 bg-white/10" style={{ position: "relative", marginLeft: "-1.25rem", marginTop: "0.25rem", flexShrink: 0 }} />
+                  )}
+                </div>
+              ))}
             </div>
 
-            <div className="flex items-center justify-center gap-6 text-white/40 text-xs">
-              <span className="flex items-center gap-1.5"><ShieldCheck className="w-4 h-4" />RGPD conforme</span>
-              <span className="flex items-center gap-1.5"><Lock className="w-4 h-4" />Chiffrement SSL</span>
+            {/* 3 mini témoignages */}
+            <div className="space-y-2.5">
+              {[
+                { initials: "MB", name: "Marc B.", role: "Plombier · Paris", text: "Mes clients m'appellent directement depuis la carte. +40% de contacts en 2 semaines." },
+                { initials: "CL", name: "Céline L.", role: "Coach bien-être · Lyon", text: "J'ai arrêté les cartes papier. Mon lien CVD est dans ma bio Instagram, ça convertit." },
+                { initials: "TK", name: "Thomas K.", role: "Photographe · Bordeaux", text: "Créé en 3 minutes. Mes mariés réservent directement via mon agenda intégré." },
+              ].map(({ initials, name, role, text }) => (
+                <div key={name} className="flex gap-3 bg-white/5 border border-white/10 rounded-xl px-4 py-3">
+                  <div className="w-8 h-8 rounded-full bg-gradient-to-br from-[#c026d3]/60 to-[#7c3aed]/60 flex items-center justify-center text-white text-[10px] font-bold shrink-0">
+                    {initials}
+                  </div>
+                  <div className="min-w-0">
+                    <div className="flex items-center gap-2 mb-0.5">
+                      <span className="text-white text-xs font-semibold">{name}</span>
+                      <span className="text-white/40 text-[10px]">{role}</span>
+                      <span className="ml-auto text-amber-400 text-[10px]">★★★★★</span>
+                    </div>
+                    <p className="text-white/60 text-[11px] leading-relaxed">{text}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Badges sécurité */}
+            <div className="flex items-center justify-center gap-6 text-white/35 text-xs pt-2 border-t border-white/10">
+              <span className="flex items-center gap-1.5"><ShieldCheck className="w-3.5 h-3.5" />RGPD conforme</span>
+              <span className="flex items-center gap-1.5"><Lock className="w-3.5 h-3.5" />Chiffrement SSL</span>
+              <span className="flex items-center gap-1.5"><Users className="w-3.5 h-3.5" />+2 400 pros</span>
             </div>
           </div>
         </div>
@@ -317,14 +393,3 @@ function InscriptionPage() {
   );
 }
 
-function StatCard({ icon, iconBg, value, label }: { icon: React.ReactNode; iconBg: string; value: string; label: string }) {
-  return (
-    <div className="bg-white/5 backdrop-blur-sm border border-white/10 rounded-2xl p-5">
-      <div className="flex items-center gap-3 mb-2">
-        <div className={`w-10 h-10 rounded-xl ${iconBg} flex items-center justify-center`}>{icon}</div>
-        <span className="text-2xl font-display font-bold text-white">{value}</span>
-      </div>
-      <p className="text-sm text-white/60">{label}</p>
-    </div>
-  );
-}
