@@ -3,6 +3,7 @@ import { useState, useEffect, useRef } from "react";
 import { Sparkles, ArrowRight } from "lucide-react";
 import { useAuthStore } from "@/lib/auth-store";
 import { useCardStore } from "@/lib/card-store";
+import { supabase } from "@/integrations/supabase/client";
 import { BusinessCard } from "@/components/card/BusinessCard";
 import { DEFAULT_CARD, type CardData, type BrickId } from "@/lib/card-types";
 
@@ -76,6 +77,11 @@ function BuilderIAPromptPage() {
   useEffect(() => {
     if (!loading && !user) navigate({ to: "/connexion" });
   }, [loading, user]);
+
+  useEffect(() => {
+    if (!user) return;
+    supabase.rpc("track_builderia_step", { p_user_id: user.id, p_step: 1, p_step_name: "builderia" }).then(() => {});
+  }, [user?.id]);
 
   const userName: string =
     user?.user_metadata?.full_name ||

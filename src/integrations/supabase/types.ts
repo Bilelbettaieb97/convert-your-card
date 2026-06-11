@@ -179,6 +179,30 @@ export type Database = {
         }
         Relationships: []
       }
+      card_previews: {
+        Row: {
+          card_data: Json
+          created_at: string | null
+          expires_at: string | null
+          id: string
+          token: string
+        }
+        Insert: {
+          card_data: Json
+          created_at?: string | null
+          expires_at?: string | null
+          id?: string
+          token: string
+        }
+        Update: {
+          card_data?: Json
+          created_at?: string | null
+          expires_at?: string | null
+          id?: string
+          token?: string
+        }
+        Relationships: []
+      }
       chatbot_leads: {
         Row: {
           created_at: string
@@ -305,6 +329,33 @@ export type Database = {
           preferences?: boolean | null
           referrer?: string | null
           user_agent?: string | null
+        }
+        Relationships: []
+      }
+      cron_execution_logs: {
+        Row: {
+          duration_ms: number | null
+          errors: string | null
+          id: string
+          ran_at: string | null
+          results: Json | null
+          total_sent: number
+        }
+        Insert: {
+          duration_ms?: number | null
+          errors?: string | null
+          id?: string
+          ran_at?: string | null
+          results?: Json | null
+          total_sent?: number
+        }
+        Update: {
+          duration_ms?: number | null
+          errors?: string | null
+          id?: string
+          ran_at?: string | null
+          results?: Json | null
+          total_sent?: number
         }
         Relationships: []
       }
@@ -1136,6 +1187,7 @@ export type Database = {
           email_sent: boolean | null
           grade: string | null
           id: string
+          ip: string | null
           issues_count: number | null
           name: string
           phone: string | null
@@ -1160,6 +1212,7 @@ export type Database = {
           email_sent?: boolean | null
           grade?: string | null
           id?: string
+          ip?: string | null
           issues_count?: number | null
           name: string
           phone?: string | null
@@ -1184,6 +1237,7 @@ export type Database = {
           email_sent?: boolean | null
           grade?: string | null
           id?: string
+          ip?: string | null
           issues_count?: number | null
           name?: string
           phone?: string | null
@@ -1351,6 +1405,33 @@ export type Database = {
         }
         Relationships: []
       }
+      trial_relance_series: {
+        Row: {
+          clicked_at: string | null
+          email: string
+          id: string
+          sent_at: string | null
+          step: number
+          user_id: string | null
+        }
+        Insert: {
+          clicked_at?: string | null
+          email: string
+          id?: string
+          sent_at?: string | null
+          step?: number
+          user_id?: string | null
+        }
+        Update: {
+          clicked_at?: string | null
+          email?: string
+          id?: string
+          sent_at?: string | null
+          step?: number
+          user_id?: string | null
+        }
+        Relationships: []
+      }
       user_roles: {
         Row: {
           created_at: string | null
@@ -1369,6 +1450,33 @@ export type Database = {
           id?: string
           role?: string
           user_id?: string | null
+        }
+        Relationships: []
+      }
+      vitrine_upgrade_series: {
+        Row: {
+          click_token: string
+          clicked_at: string | null
+          email: string
+          id: string
+          sent_at: string | null
+          step: number
+        }
+        Insert: {
+          click_token: string
+          clicked_at?: string | null
+          email: string
+          id?: string
+          sent_at?: string | null
+          step: number
+        }
+        Update: {
+          click_token?: string
+          clicked_at?: string | null
+          email?: string
+          id?: string
+          sent_at?: string | null
+          step?: number
         }
         Relationships: []
       }
@@ -1480,6 +1588,7 @@ export type Database = {
           email: string
           email_confirme_le: string
           entreprise: string
+          fonction: string
           inscrit_le: string
           nom: string
           plan: string
@@ -1490,7 +1599,14 @@ export type Database = {
           slug: string
           stripe_subscription_id: string
           subscription_cree_le: string
+          subscription_status: string
+          trial_end: string
+          trial_relance_sent_at: string
+          trial_relance_step: number
           user_id: string
+          vitrine_relance_clicked_at: string
+          vitrine_relance_sent_at: string
+          vitrine_relance_step: number
         }[]
       }
       log_card_event: {
@@ -1499,6 +1615,10 @@ export type Database = {
           p_event_type: string
           p_profile_id: string
         }
+        Returns: undefined
+      }
+      track_builderia_step: {
+        Args: { p_step: number; p_step_name: string; p_user_id: string }
         Returns: undefined
       }
     }
@@ -1633,3 +1753,4 @@ export const Constants = {
     Enums: {},
   },
 } as const
+

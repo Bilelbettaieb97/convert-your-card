@@ -3,6 +3,7 @@ import { useState, useEffect, useMemo, useRef } from "react";
 import { Sparkles, Loader2, Rocket, Share2, Copy, Check } from "lucide-react";
 import { useAuthStore } from "@/lib/auth-store";
 import { useCardStore } from "@/lib/card-store";
+import { supabase } from "@/integrations/supabase/client";
 import { BusinessCard } from "@/components/card/BusinessCard";
 import { PhoneFrame } from "@/components/card/PhoneFrame";
 import { saveCardPreview } from "@/fns/save-card-preview";
@@ -115,6 +116,9 @@ function BuilderIAResultatPage() {
     sessionStorage.removeItem("cyk.builderia.generated");
     setSelectedAccent(data.accent ?? "gold");
     const t = setTimeout(() => setRevealed(true), 40);
+    if (user) {
+      supabase.rpc("track_builderia_step", { p_user_id: user.id, p_step: 2, p_step_name: "builderia-resultat" }).then(() => {});
+    }
     return () => clearTimeout(t);
   }, [hydrated]);
 
@@ -158,6 +162,7 @@ function BuilderIAResultatPage() {
         await updateCard(existing.id, cardWithTheme);
       }
       setData(cardWithTheme);
+      await supabase.rpc("track_builderia_step", { p_user_id: user.id, p_step: 3, p_step_name: "stripe-checkout" });
       const { url } = await createCheckoutSession({
         data: { plan: "vitrine", billing: "monthly", email: user.email! },
       });
