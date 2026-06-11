@@ -90,7 +90,7 @@ export const DEFAULT_VARIANTS = {
   vcard: "gradient",
   stats: "inline",
   about: "default",
-  video: "embed",
+  video: "thumb",
   services: "list",
   listings: "carousel",
   gallery: "grid",
