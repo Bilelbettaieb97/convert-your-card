@@ -68,17 +68,18 @@ function DashboardLayout() {
   }, [user, loading, navigate]);
 
   useEffect(() => {
-    if (!planLoading && hasProfile === false) {
-      const hasGenerated = typeof window !== "undefined" && !!localStorage.getItem("cyk.builderia.generated");
-      navigate({ to: hasGenerated ? "/builderia/resultat" : "/builderia" });
-    }
-  }, [planLoading, hasProfile, navigate]);
+    if (loading || planLoading || !user || hasProfile === null) return;
 
-  useEffect(() => {
-    if (!planLoading && hasProfile === true && plan !== "vitrine" && !ESSENTIELLE_ALLOWED.some(p => pathname.startsWith(p))) {
+    if (hasProfile === false) {
+      const hasGenerated = typeof window !== "undefined" && !!localStorage.getItem("cyk.builderia.generated");
+      navigate({ to: hasGenerated ? "/builderia/resultat" : "/builderia", replace: true });
+      return;
+    }
+
+    if (plan !== "vitrine" && !ESSENTIELLE_ALLOWED.some(p => pathname.startsWith(p))) {
       navigate({ to: "/dashboard/content", replace: true });
     }
-  }, [planLoading, hasProfile, plan, pathname, navigate]);
+  }, [loading, planLoading, user, hasProfile, plan, pathname, navigate]);
 
   const profile = getProfileMeta();
   const origin = typeof window !== "undefined" ? window.location.origin : "https://www.cartevisitedigitale.fr";
