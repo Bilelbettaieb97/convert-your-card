@@ -1,5 +1,5 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
-import { useState, useEffect, useRef } from "react";
+import { useState, useEffect, useRef, useMemo } from "react";
 import {
   Sparkles, Loader2, ArrowRight, Rocket,
   Share2, Copy, Check,
@@ -43,6 +43,43 @@ const BRICKS = [
 
 type Phase = "prompt" | "building" | "preview";
 
+
+// ─── Score ───────────────────────────────────────────────────────────────────
+
+function calcScore(card: CardData) {
+  let score = 35;
+  const tips: Array<{ label: string; impact: string }> = [];
+  if (card.photo?.startsWith("http")) score += 15;
+  else tips.push({ label: "Ajoutez une photo professionnelle", impact: "+23% de contacts" });
+  if (card.calendarEnabled && card.calendarUrl) score += 12;
+  else tips.push({ label: "Connectez votre agenda Calendly", impact: "+31% de RDV" });
+  if ((card.testimonials?.length ?? 0) >= 3) score += 12;
+  if (card.ctaEnabled && card.ctaTitle) score += 8;
+  if (card.coverPhoto) score += 8;
+  else tips.push({ label: "Ajoutez une photo de couverture", impact: "+12% d'engagement" });
+  const actionsCount = Object.values(card.actions ?? {}).filter(Boolean).length;
+  score += Math.min(actionsCount * 3, 10);
+  return { score: Math.min(score, 100), tips: tips.slice(0, 2) };
+}
+
+function ScoreRing({ score }: { score: number }) {
+  const r = 15;
+  const circ = 2 * Math.PI * r;
+  const color = score >= 80 ? "#22c55e" : score >= 60 ? "#f59e0b" : "#f97316";
+  return (
+    <svg width="44" height="44" viewBox="0 0 36 36" className="-rotate-90 shrink-0">
+      <circle cx="18" cy="18" r={r} fill="none" stroke="currentColor" strokeWidth="3" className="text-muted/20" />
+      <circle cx="18" cy="18" r={r} fill="none" stroke={color} strokeWidth="3"
+        strokeDasharray={`${(score / 100) * circ} ${circ}`} strokeLinecap="round"
+        style={{ transition: "stroke-dasharray 1s cubic-bezier(0.4,0,0.2,1)" }}
+      />
+      <text x="18" y="18" textAnchor="middle" dominantBaseline="middle"
+        style={{ rotate: "90deg", transformOrigin: "18px 18px", fill: color, fontSize: 8, fontWeight: 700, fontFamily: "system-ui" }}>
+        {score}
+      </text>
+    </svg>
+  );
+}
 
 // ─── Apply SSE field ──────────────────────────────────────────────────────────
 
@@ -253,6 +290,11 @@ function BuilderIAPage() {
     setTimeout(() => setCopied(false), 2000);
   }
 
+  const { score, tips } = useMemo(
+    () => (generatedCard ? calcScore(generatedCard) : { score: 0, tips: [] }),
+    [generatedCard]
+  );
+
   const currentBrickLabel =
     buildStep > 0 && buildStep <= BRICKS.length
       ? BRICKS[buildStep - 1].label
@@ -272,27 +314,46 @@ function BuilderIAPage() {
   if (phase === "prompt") {
     return (
       <div className="min-h-screen bg-gradient-to-br from-[#0d0014] via-[#12002a] to-[#0a0018] flex flex-col items-center justify-center px-4 py-16">
-        <div className="mb-6 flex items-center gap-2 px-3 py-1.5 rounded-full border border-[#c026d3]/30 bg-[#c026d3]/10">
+
+        <div className="mb-5 flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-[#c026d3]/30 bg-[#c026d3]/10">
           <Sparkles className="w-3.5 h-3.5 text-[#c026d3]" />
-          <span className="text-xs font-medium text-[#c026d3]">Génération IA · Streaming temps réel</span>
+          <span className="text-xs font-medium text-[#c026d3]">Carte complète générée en 30 secondes</span>
         </div>
 
-        <h1 className="text-3xl sm:text-5xl font-bold text-white text-center mb-3 leading-tight">
-          {firstName ? `${firstName}, décris` : "Décris"}{" "}
-          <span className="bg-gradient-to-r from-[#c026d3] to-[#7c3aed] bg-clip-text text-transparent">
-            ton activité
-          </span>
+        <h1 className="text-3xl sm:text-5xl font-bold text-white text-center mb-4 leading-tight">
+          {firstName ? (
+            <>{firstName}, dis-moi{" "}<br className="hidden sm:block" />
+            <span className="bg-gradient-to-r from-[#c026d3] to-[#7c3aed] bg-clip-text text-transparent">
+              ce que tu fais.
+            </span></>
+          ) : (
+            <>Dis-moi ce que tu fais.{" "}
+            <span className="bg-gradient-to-r from-[#c026d3] to-[#7c3aed] bg-clip-text text-transparent">
+              Je crée ta carte.
+            </span></>
+          )}
         </h1>
-        <p className="text-white/50 text-center mb-10 max-w-md text-sm sm:text-base">
-          L'IA génère ta carte de visite digitale complète en temps réel — thème, contenu, photo de couverture.
+
+        <p className="text-white/60 text-center mb-3 max-w-lg text-sm sm:text-base leading-relaxed">
+          Une phrase suffit. L'IA génère ta bio, tes services, tes témoignages,<br className="hidden sm:block" />
+          ta prise de RDV et ton thème couleur — <span className="text-white/90 font-medium">en temps réel, devant toi.</span>
         </p>
+
+        {/* Ce qui est généré */}
+        <div className="flex flex-wrap gap-1.5 justify-center mb-8 max-w-sm">
+          {["Bio percutante", "Services", "Avis clients", "Stats", "Prise de RDV", "CTA", "Photo de couverture"].map((item) => (
+            <span key={item} className="text-[11px] px-2.5 py-1 rounded-full bg-white/[0.06] border border-white/10 text-white/50">
+              {item}
+            </span>
+          ))}
+        </div>
 
         <form onSubmit={handleGenerate} className="w-full max-w-2xl">
           <div className="relative group">
             <textarea
               value={input}
               onChange={(e) => setInput(e.target.value)}
-              placeholder="Ex : Je suis agent immobilier à Lyon, spécialisé dans les biens de prestige…"
+              placeholder="Ex : Plombier à Paris, dépannage 24h/24, spécialisé en rénovation salle de bain…"
               rows={3}
               autoFocus
               onKeyDown={(e) => {
@@ -314,23 +375,26 @@ function BuilderIAPage() {
           </p>
         </form>
 
-        <div className="mt-8 flex flex-wrap gap-2 justify-center max-w-xl">
-          {[
-            "Plombier à Paris, dépannage 24h/24",
-            "Coach bien-être & développement personnel",
-            "Agent immobilier spécialisé luxe",
-            "Photographe portrait & mariage",
-            "Restaurateur cuisine du marché",
-          ].map((ex) => (
-            <button
-              key={ex}
-              type="button"
-              onClick={() => setInput(ex)}
-              className="text-xs px-3 py-1.5 rounded-full border border-white/10 text-white/40 hover:text-white/70 hover:border-white/20 transition"
-            >
-              {ex}
-            </button>
-          ))}
+        <div className="mt-6">
+          <p className="text-center text-white/25 text-[11px] mb-2 uppercase tracking-widest">Essaie avec</p>
+          <div className="flex flex-wrap gap-2 justify-center max-w-xl">
+            {[
+              "Plombier urgence 24h/24, Paris",
+              "Coach bien-être & développement perso",
+              "Agent immo spécialisé biens de prestige",
+              "Photographe portrait & mariage",
+              "Chef cuisinier, restaurant gastronomique",
+            ].map((ex) => (
+              <button
+                key={ex}
+                type="button"
+                onClick={() => setInput(ex)}
+                className="text-xs px-3 py-1.5 rounded-full border border-white/10 text-white/40 hover:text-white/70 hover:border-white/25 transition"
+              >
+                {ex}
+              </button>
+            ))}
+          </div>
         </div>
       </div>
     );
@@ -471,6 +535,8 @@ function BuilderIAPage() {
   if (phase === "preview" && generatedCard) {
     return <PreviewPhase
       generatedCard={generatedCard}
+      score={score}
+      tips={tips}
       shareUrl={shareUrl}
       sharing={sharing}
       copied={copied}
@@ -488,6 +554,8 @@ function BuilderIAPage() {
 
 type PreviewPhaseProps = {
   generatedCard: CardData;
+  score: number;
+  tips: Array<{ label: string; impact: string }>;
   shareUrl: string;
   sharing: boolean;
   copied: boolean;
@@ -498,7 +566,7 @@ type PreviewPhaseProps = {
 };
 
 function PreviewPhase({
-  generatedCard, shareUrl, sharing, copied,
+  generatedCard, score, tips, shareUrl, sharing, copied,
   onActivate, onFree, onShare, onCopy,
 }: PreviewPhaseProps) {
   const [revealed, setRevealed] = useState(false);
@@ -587,8 +655,8 @@ function PreviewPhase({
           </div>
         </div>
 
-        {/* ── Droite : features Vitrine + CTA ── */}
-        <div className="space-y-6 lg:pt-4">
+        {/* ── Droite : features Vitrine + score + CTA ── */}
+        <div className="space-y-5 lg:pt-4">
           <div>
             <h1 className="font-bold text-2xl text-foreground mb-1">
               Votre carte Vitrine est prête
@@ -598,14 +666,32 @@ function PreviewPhase({
             </p>
           </div>
 
+          {/* Score de conversion compact */}
+          {score > 0 && (() => {
+            const scoreColor = score >= 80 ? "#22c55e" : score >= 60 ? "#f59e0b" : "#f97316";
+            const scoreLabel = score >= 80 ? "Excellent niveau de conversion" : score >= 60 ? "Bon niveau — encore perfectible" : "À optimiser";
+            return (
+              <div className="flex items-center gap-3 rounded-xl border border-border bg-card px-4 py-3">
+                <ScoreRing score={score} />
+                <div className="min-w-0">
+                  <p className="text-xs font-semibold text-foreground">Score de conversion</p>
+                  <p className="text-[11px] font-medium" style={{ color: scoreColor }}>{scoreLabel}</p>
+                  {tips[0] && (
+                    <p className="text-[10px] text-muted-foreground mt-0.5 truncate">{tips[0].label} → <span className="text-emerald-500">{tips[0].impact}</span></p>
+                  )}
+                </div>
+              </div>
+            );
+          })()}
+
           {/* Liste des features Vitrine */}
-          <div className="rounded-2xl border border-[#c026d3]/30 bg-[#c026d3]/[0.04] p-5 space-y-3">
-            <p className="text-xs font-semibold text-[#c026d3] uppercase tracking-wide">
+          <div className="rounded-2xl border border-[#c026d3]/30 bg-[#c026d3]/[0.04] p-5 space-y-2.5">
+            <p className="text-xs font-semibold text-[#c026d3] uppercase tracking-wide mb-1">
               Inclus dans votre carte
             </p>
             {vitrineFeatures.map((feat) => (
               <div key={feat} className="flex items-center gap-3 text-sm text-foreground">
-                <span className="text-[#c026d3] font-bold text-base leading-none">✦</span>
+                <span className="text-[#c026d3] font-bold text-base leading-none shrink-0">✦</span>
                 <span>{feat}</span>
               </div>
             ))}
@@ -616,19 +702,19 @@ function PreviewPhase({
             <button
               type="button"
               onClick={onActivate}
-              className="w-full flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-[#c026d3] to-[#7c3aed] text-white font-semibold py-4 text-sm hover:opacity-90 transition shadow-lg shadow-[#c026d3]/20"
+              className="w-full flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-[#c026d3] to-[#7c3aed] text-white font-bold py-4 text-base hover:opacity-90 transition shadow-lg shadow-[#c026d3]/25"
             >
               <Rocket className="w-4 h-4" />
               Essayer 7 jours gratuit
             </button>
-            <div className="text-center">
-              <p className="text-xs font-medium text-foreground">Sans carte bleue</p>
-              <p className="text-xs text-muted-foreground mt-0.5">
-                Puis 4,80€/mois · Résiliable à tout moment
-              </p>
+
+            {/* Garanties sous le bouton — visibles */}
+            <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/[0.06] px-4 py-2.5 text-center space-y-0.5">
+              <p className="text-sm font-semibold text-emerald-400">Sans carte bleue</p>
+              <p className="text-xs text-foreground/70">Puis 4,80€/mois · Résiliable à tout moment en 1 clic</p>
             </div>
 
-            <div className="relative flex items-center gap-3 py-1">
+            <div className="relative flex items-center gap-3">
               <div className="flex-1 h-px bg-border" />
               <span className="text-xs text-muted-foreground">ou</span>
               <div className="flex-1 h-px bg-border" />
@@ -637,10 +723,10 @@ function PreviewPhase({
             <button
               type="button"
               onClick={onFree}
-              className="w-full text-center text-xs text-muted-foreground hover:text-foreground transition py-2"
+              className="w-full text-center text-xs text-muted-foreground hover:text-foreground transition py-1.5"
             >
               continuer gratuitement
-              <span className="block text-[10px] opacity-60 mt-0.5">
+              <span className="block text-[10px] opacity-50 mt-0.5">
                 (carte sans les fonctions Vitrine)
               </span>
             </button>
