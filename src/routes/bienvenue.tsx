@@ -4,6 +4,7 @@ import { supabase } from "@/integrations/supabase/client";
 import { verifyUpgrade } from "@/fns/verify-upgrade";
 import { createCard, updateCard, loadMyCard } from "@/lib/card-actions";
 import { loadCard } from "@/lib/card-store";
+import { DEFAULT_CARD } from "@/lib/card-types";
 import { CheckCircle, Zap } from "lucide-react";
 
 export const Route = createFileRoute("/bienvenue")({
@@ -50,20 +51,20 @@ function BienvenePage() {
         return;
       }
 
-      // Step 2 — créer ou mettre à jour le profil depuis localStorage
+      // Step 2 — créer ou mettre à jour le profil avec la carte pending
       try {
+        const pendingRaw = localStorage.getItem("cyk.card.pending");
+        const cardData = pendingRaw
+          ? { ...DEFAULT_CARD, ...(JSON.parse(pendingRaw) as object) }
+          : loadCard();
         const existingProfile = await loadMyCard();
-        const cardData = loadCard();
         if (!existingProfile) {
-          if (cardData?.name) {
-            await createCard(cardData);
-            localStorage.removeItem("cyk.builderia.generated");
-          }
-        } else if (!(existingProfile as any).card_data && cardData?.name) {
-          // Profil créé sans card_data — sync depuis localStorage
+          if (cardData?.name) await createCard(cardData);
+        } else if (cardData?.name) {
           await updateCard(existingProfile.id, cardData);
-          localStorage.removeItem("cyk.builderia.generated");
         }
+        localStorage.removeItem("cyk.card.pending");
+        localStorage.removeItem("cyk.builderia.generated");
       } catch {
         // Non-bloquant — le profil sera mis à jour depuis le dashboard
       }
