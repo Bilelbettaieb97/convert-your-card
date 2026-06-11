@@ -1,7 +1,7 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Check, Crown, Mail, LogOut } from "lucide-react";
+import { Check, Crown, Mail, LogOut, Settings } from "lucide-react";
 import { UpsellSection } from "@/components/dashboard/UpsellSection";
 import { useAuthStore } from "@/lib/auth-store";
 import { supabase } from "@/integrations/supabase/client";
@@ -52,7 +52,7 @@ function AccountPage() {
         </p>
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
           {PLANS.map((p) => {
-            const current = !loading && plan === p.id;
+            const current = !loading && (plan === p.id || (p.id === "essentielle" && (plan === "free" || !plan)));
             return (
               <Card key={p.id} className={`p-5 relative ${current ? "border-primary shadow-[var(--shadow-elegant)]" : p.highlight ? "border-primary/60" : ""}`}>
                 {current && (
@@ -105,7 +105,11 @@ function AccountPage() {
               <div className="text-sm font-medium">Adresse email</div>
               <div className="text-xs text-muted-foreground truncate">{user?.email ?? "—"}</div>
             </div>
-            <Button size="sm" variant="outline" disabled>Modifier</Button>
+            <Link to="/dashboard/settings">
+              <Button size="sm" variant="outline">
+                <Settings className="h-3.5 w-3.5 mr-1.5" />Modifier
+              </Button>
+            </Link>
           </div>
           <div className="p-4 flex items-center gap-3">
             <LogOut className="h-4 w-4 text-muted-foreground" />
