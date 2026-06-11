@@ -263,19 +263,22 @@ export default defineEventHandler(async (event) => {
     }
 
     // Fetch real subscription status + trial_end from Stripe
-    let subscriptionStatus = "active";
+    let subscriptionStatus = "trialing"; // défaut sécurisé : on ne facture pas par erreur
     let trialEnd: string | null = null;
     if (stripeSubscriptionId) {
       try {
         const stripeKey = process.env.STRIPE_SECRET_KEY ?? "";
+        if (!stripeKey) throw new Error("STRIPE_SECRET_KEY not set");
         const subRes = await fetch(`https://api.stripe.com/v1/subscriptions/${stripeSubscriptionId}`, {
           headers: { Authorization: `Bearer ${stripeKey}` },
         });
+        if (!subRes.ok) throw new Error(`Stripe API ${subRes.status}`);
         const stripeSub = await subRes.json() as { status?: string; trial_end?: number };
         if (stripeSub.status) subscriptionStatus = stripeSub.status;
         if (stripeSub.trial_end) trialEnd = new Date(stripeSub.trial_end * 1000).toISOString();
+        console.log("[stripe-webhook] Subscription status from Stripe:", subscriptionStatus, "trial_end:", trialEnd);
       } catch (e) {
-        console.error("[stripe-webhook] Could not fetch subscription:", e);
+        console.error("[stripe-webhook] Could not fetch subscription, defaulting to trialing:", e);
       }
     }
 
