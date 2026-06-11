@@ -47,10 +47,10 @@ function CardOverviewPage() {
           <PhoneFrame><BusinessCard data={data} /></PhoneFrame>
         </div>
 
-        {/* RIGHT — link, QR, share, edit buttons */}
+        {/* RIGHT */}
         <div className="space-y-5">
 
-          {/* Statut carte */}
+          {/* 1 — Statut */}
           {actif ? (
             <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full bg-emerald-500/10 border border-emerald-500/30">
               <span className="w-2 h-2 rounded-full bg-emerald-400 animate-pulse" />
@@ -65,31 +65,12 @@ function CardOverviewPage() {
             </div>
           )}
 
-          {/* Public link */}
-          <div className="rounded-2xl border border-border bg-card/40 p-4 space-y-3">
-            <div className="flex items-center justify-between">
-              <span className="text-xs uppercase tracking-wider text-muted-foreground">Lien public</span>
-              <a href={publicUrl} target="_blank" rel="noopener noreferrer"
-                className="text-[11px] text-primary hover:underline flex items-center gap-1">
-                Ouvrir <ExternalLink className="h-3 w-3" />
-              </a>
-            </div>
-            <PublicLinkBar url={publicUrl} />
-          </div>
-
-          {/* QR + share side by side */}
-          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-            <QrCard url={publicUrl} name={data.name} />
-            <div className="rounded-2xl border border-border bg-card/30 p-4">
-              <p className="text-xs uppercase tracking-wider text-muted-foreground mb-3">Partager</p>
-              <ShareGrid data={data} url={publicUrl} />
-            </div>
-          </div>
-
-          {/* 3 edit buttons */}
+          {/* 2 — Modifier en premier */}
           <div className="space-y-2">
-            <p className="text-xs uppercase tracking-wider text-muted-foreground px-1">Modifier ma carte</p>
-
+            <div className="flex items-center justify-between px-1">
+              <p className="text-xs uppercase tracking-wider text-muted-foreground">Personnaliser ma carte</p>
+              <p className="text-[11px] text-muted-foreground">Commencez par là avant de partager</p>
+            </div>
             <EditButton
               to="/dashboard/content"
               icon={<Layers className="h-6 w-6" />}
@@ -110,6 +91,35 @@ function CardOverviewPage() {
               hint="Variantes visuelles par brique"
             />
           </div>
+
+          {/* Séparateur */}
+          <div className="flex items-center gap-3">
+            <div className="flex-1 h-px bg-border" />
+            <span className="text-[11px] text-muted-foreground">Prête à partager ?</span>
+            <div className="flex-1 h-px bg-border" />
+          </div>
+
+          {/* 3 — Lien public */}
+          <div className="rounded-2xl border border-border bg-card/40 p-4 space-y-3">
+            <div className="flex items-center justify-between">
+              <span className="text-xs uppercase tracking-wider text-muted-foreground">Lien public</span>
+              <a href={publicUrl} target="_blank" rel="noopener noreferrer"
+                className="text-[11px] text-primary hover:underline flex items-center gap-1">
+                Ouvrir <ExternalLink className="h-3 w-3" />
+              </a>
+            </div>
+            <PublicLinkBar url={publicUrl} />
+          </div>
+
+          {/* 4 — QR + Partager */}
+          <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
+            <QrCard url={publicUrl} name={data.name} />
+            <div className="rounded-2xl border border-border bg-card/30 p-4">
+              <p className="text-xs uppercase tracking-wider text-muted-foreground mb-3">Partager</p>
+              <ShareGrid data={data} url={publicUrl} />
+            </div>
+          </div>
+
         </div>
       </div>
     </div>
