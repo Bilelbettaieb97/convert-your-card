@@ -20,17 +20,30 @@ export const verifyUpgrade = createServerFn({ method: "POST" })
 
     const email: string = session.metadata?.email || session.customer_email || "";
     const plan: string  = session.metadata?.plan  || "vitrine";
+    const metaUserId: string | null = session.metadata?.user_id || null;
     const stripeCustomerId   = session.customer as string | null;
     const stripeSubId        = session.subscription as string | null;
 
-    if (!email) return { ok: false, reason: "no_email" };
+    // Find profile by email first, then by user_id from metadata
+    let profile: { id: string; user_id: string | null } | null = null;
 
-    // Find profile by email
-    const { data: profile } = await adminSupabase
-      .from("nfc_profiles")
-      .select("id, user_id")
-      .eq("email", email)
-      .maybeSingle();
+    if (email) {
+      const { data } = await adminSupabase
+        .from("nfc_profiles")
+        .select("id, user_id")
+        .eq("email", email)
+        .maybeSingle();
+      profile = data;
+    }
+
+    if (!profile && metaUserId) {
+      const { data } = await adminSupabase
+        .from("nfc_profiles")
+        .select("id, user_id")
+        .eq("user_id", metaUserId)
+        .maybeSingle();
+      profile = data;
+    }
 
     if (!profile) return { ok: false, reason: "profile_not_found" };
 

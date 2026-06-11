@@ -8,7 +8,6 @@ import { BusinessCard } from "@/components/card/BusinessCard";
 import { PhoneFrame } from "@/components/card/PhoneFrame";
 import { saveCardPreview } from "@/fns/save-card-preview";
 import { type CardData, type ThemeAccent } from "@/lib/card-types";
-import { createCard, updateCard, loadMyCard } from "@/lib/card-actions";
 import { createCheckoutSession } from "@/fns/checkout";
 
 export const Route = createFileRoute("/builderia/resultat")({
@@ -137,16 +136,10 @@ function BuilderIAResultatPage() {
     setError("");
     try {
       const cardWithTheme: CardData = { ...generatedCard, accent: selectedAccent };
-      const existing = await loadMyCard();
-      if (!existing) {
-        await createCard(cardWithTheme);
-      } else {
-        await updateCard(existing.id, cardWithTheme);
-      }
       setData(cardWithTheme);
       await supabase.rpc("track_builderia_step", { p_user_id: user.id, p_step: 3, p_step_name: "stripe-checkout" });
       const { url } = await createCheckoutSession({
-        data: { plan: "vitrine", billing: "monthly", email: user.email! },
+        data: { plan: "vitrine", billing: "monthly", email: user.email!, userId: user.id },
       });
       if (url) window.location.href = url;
     } catch {

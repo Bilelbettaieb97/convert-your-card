@@ -7,6 +7,7 @@ const schema = z.object({
   plan: z.enum(["essentielle", "vitrine"]),
   billing: z.enum(["monthly", "yearly"]),
   email: z.string().email(),
+  userId: z.string().optional(),
 });
 
 export const createCheckoutSession = createServerFn({ method: "POST" })
@@ -52,7 +53,7 @@ export const createCheckoutSession = createServerFn({ method: "POST" })
         : { customer_email: data.email }),
       payment_method_collection: isVitrine && !hadTrial ? "if_required" : "always",
       line_items: [{ price: priceId, quantity: 1 }],
-      metadata: { plan: data.plan, billing: data.billing, email: data.email },
+      metadata: { plan: data.plan, billing: data.billing, email: data.email, user_id: data.userId ?? "" },
       success_url: `${appUrl}/bienvenue?session_id={CHECKOUT_SESSION_ID}`,
       cancel_url: hadTrial ? `${appUrl}/dashboard/account` : `${appUrl}/builderia/resultat`,
       allow_promotion_codes: true,
