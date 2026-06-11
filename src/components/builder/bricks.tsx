@@ -480,36 +480,52 @@ export function ContactBrick({ data, update }: BrickProps) {
 
 /* ---------- Socials ---------- */
 
+type SocialKey = "linkedin" | "instagram" | "facebook" | "tiktok" | "youtube" | "twitter" | "snapchat" | "pinterest" | "whatsappSocial";
+
+const SOCIAL_LIST: Array<{ key: SocialKey; label: string; placeholder: string }> = [
+  { key: "linkedin",      label: "LinkedIn",    placeholder: "https://linkedin.com/in/votre-profil" },
+  { key: "instagram",     label: "Instagram",   placeholder: "https://instagram.com/votre-compte" },
+  { key: "facebook",      label: "Facebook",    placeholder: "https://facebook.com/votre-page" },
+  { key: "tiktok",        label: "TikTok",      placeholder: "https://tiktok.com/@votre-compte" },
+  { key: "youtube",       label: "YouTube",     placeholder: "https://youtube.com/@votre-chaine" },
+  { key: "twitter",       label: "Twitter / X", placeholder: "https://x.com/votre-compte" },
+  { key: "snapchat",      label: "Snapchat",    placeholder: "https://snapchat.com/add/votre-compte" },
+  { key: "pinterest",     label: "Pinterest",   placeholder: "https://pinterest.com/votre-compte" },
+  { key: "whatsappSocial",label: "WhatsApp",    placeholder: "33612345678" },
+];
+
 export function SocialsBrick({ data, update }: BrickProps) {
+  const [enabled, setEnabled] = useState<Record<SocialKey, boolean>>(() => {
+    const init = {} as Record<SocialKey, boolean>;
+    for (const { key } of SOCIAL_LIST) init[key] = !!((data[key] as string) ?? "");
+    return init;
+  });
+
+  const toggle = (key: SocialKey, on: boolean) => {
+    setEnabled((prev) => ({ ...prev, [key]: on }));
+    if (!on) update(key, "");
+  };
+
   return (
-    <div className="space-y-3">
-      <Field label="LinkedIn (URL complète)">
-        <Input value={data.linkedin} onChange={(e) => update("linkedin", e.target.value)} placeholder="https://linkedin.com/in/votre-profil" />
-      </Field>
-      <Field label="Instagram (URL complète)">
-        <Input value={data.instagram} onChange={(e) => update("instagram", e.target.value)} placeholder="https://instagram.com/votre-compte" />
-      </Field>
-      <Field label="Facebook (URL complète)">
-        <Input value={data.facebook ?? ""} onChange={(e) => update("facebook", e.target.value)} placeholder="https://facebook.com/votre-page" />
-      </Field>
-      <Field label="TikTok (URL complète)">
-        <Input value={data.tiktok ?? ""} onChange={(e) => update("tiktok", e.target.value)} placeholder="https://tiktok.com/@votre-compte" />
-      </Field>
-      <Field label="YouTube (URL de la chaîne)">
-        <Input value={data.youtube ?? ""} onChange={(e) => update("youtube", e.target.value)} placeholder="https://youtube.com/@votre-chaine" />
-      </Field>
-      <Field label="Twitter / X (URL complète)">
-        <Input value={data.twitter ?? ""} onChange={(e) => update("twitter", e.target.value)} placeholder="https://x.com/votre-compte" />
-      </Field>
-      <Field label="Snapchat (URL complète)">
-        <Input value={data.snapchat ?? ""} onChange={(e) => update("snapchat", e.target.value)} placeholder="https://snapchat.com/add/votre-compte" />
-      </Field>
-      <Field label="Pinterest (URL complète)">
-        <Input value={data.pinterest ?? ""} onChange={(e) => update("pinterest", e.target.value)} placeholder="https://pinterest.com/votre-compte" />
-      </Field>
-      <Field label="WhatsApp (numéro sans +)">
-        <Input value={data.whatsappSocial} onChange={(e) => update("whatsappSocial", e.target.value)} placeholder="33612345678" />
-      </Field>
+    <div className="space-y-1">
+      {SOCIAL_LIST.map(({ key, label, placeholder }) => (
+        <div key={key}>
+          <div className="flex items-center justify-between py-2">
+            <span className="text-sm font-medium">{label}</span>
+            <Switch checked={enabled[key]} onCheckedChange={(v) => toggle(key, v)} />
+          </div>
+          {enabled[key] && (
+            <div className="pb-2">
+              <Input
+                value={(data[key] as string) ?? ""}
+                onChange={(e) => update(key, e.target.value)}
+                placeholder={placeholder}
+                autoFocus
+              />
+            </div>
+          )}
+        </div>
+      ))}
     </div>
   );
 }
