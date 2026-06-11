@@ -157,6 +157,7 @@ function StatistiquesPage() {
   const days = PERIOD_DAYS[period];
   const from = daysBack(days);
   const filtered = analytics.filter((e) => e.created_at && new Date(e.created_at) >= from);
+  const views = filtered.filter((e) => e.event_type === "view");
   const scans = filtered.filter((e) => e.event_type === "scan");
   const clicks = filtered.filter((e) => e.event_type === "click_button" || e.event_type === "click_social");
   const contacts = filtered.filter((e) => e.event_type === "vcard_download");
@@ -244,8 +245,9 @@ function StatistiquesPage() {
           ) : (
             <>
               {/* KPI row */}
-              <div className="grid grid-cols-2 lg:grid-cols-4 gap-3">
-                <KpiCard icon={<Eye className="w-4 h-4" />}               label="Scans"         value={scans.length}    sub={`+${scans.length} sur ${period}`}   color="#8B5CF6" />
+              <div className="grid grid-cols-2 lg:grid-cols-5 gap-3">
+                <KpiCard icon={<Eye className="w-4 h-4" />}               label="Vues"          value={views.length}    sub="Via lien direct"                     color="#3B82F6" />
+                <KpiCard icon={<QrCode className="w-4 h-4" />}            label="Scans QR"      value={scans.length}    sub={`+${scans.length} sur ${period}`}   color="#8B5CF6" />
                 <KpiCard icon={<MousePointerClick className="w-4 h-4" />}  label="Clics"         value={clicks.length}   sub={`${clickRate}% des visiteurs`}       color="#EC4899" />
                 <KpiCard icon={<UserPlus className="w-4 h-4" />}           label="Contacts"      value={contacts.length} sub={`${convRate}% de conversion`}        color="#10B981" />
                 <KpiCard icon={<TrendingUp className="w-4 h-4" />}         label="Meilleur jour" value={bestDay.scans}   sub={bestDay.date}                        color="#F59E0B" />
@@ -268,6 +270,10 @@ function StatistiquesPage() {
                         <stop offset="5%" stopColor="#EC4899" stopOpacity={0.2} />
                         <stop offset="95%" stopColor="#EC4899" stopOpacity={0} />
                       </linearGradient>
+                      <linearGradient id="gContacts" x1="0" y1="0" x2="0" y2="1">
+                        <stop offset="5%" stopColor="#10B981" stopOpacity={0.2} />
+                        <stop offset="95%" stopColor="#10B981" stopOpacity={0} />
+                      </linearGradient>
                     </defs>
                     <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" vertical={false} />
                     <XAxis dataKey="date" tick={{ fontSize: 10, fill: "var(--color-muted-foreground)" }}
@@ -276,13 +282,14 @@ function StatistiquesPage() {
                     <Tooltip
                       contentStyle={{ background: "var(--color-card)", border: "1px solid var(--color-border)", borderRadius: 10, fontSize: 12, padding: "8px 12px" }}
                       labelStyle={{ fontWeight: 600, marginBottom: 4 }}
-                      formatter={(v: number, name: string) => [v, name === "scans" ? "Scans" : name === "clics" ? "Clics" : "Contacts"]}
+                      formatter={(v: number, name: string) => [v, name === "scans" ? "Scans QR" : name === "clics" ? "Clics" : "Contacts"]}
                     />
-                    <Legend formatter={(v) => v === "scans" ? "Scans" : v === "clics" ? "Clics" : "Contacts"}
+                    <Legend formatter={(v) => v === "scans" ? "Scans QR" : v === "clics" ? "Clics" : "Contacts"}
                       iconType="circle" iconSize={8}
                       wrapperStyle={{ fontSize: 11, paddingTop: 12 }} />
                     <Area type="monotone" dataKey="scans" stroke="#8B5CF6" strokeWidth={2} fill="url(#gScans)" dot={false} activeDot={{ r: 4 }} />
                     <Area type="monotone" dataKey="clics" stroke="#EC4899" strokeWidth={2} fill="url(#gClics)" dot={false} activeDot={{ r: 4 }} />
+                    <Area type="monotone" dataKey="contacts" stroke="#10B981" strokeWidth={2} fill="url(#gContacts)" dot={false} activeDot={{ r: 4 }} />
                   </AreaChart>
                 </ResponsiveContainer>
               </div>
@@ -301,6 +308,15 @@ function StatistiquesPage() {
                           email: <Mail className="w-3.5 h-3.5" />,
                           website: <Globe className="w-3.5 h-3.5" />,
                           calendar: <Calendar className="w-3.5 h-3.5" />,
+                          rdv: <Calendar className="w-3.5 h-3.5" />,
+                          linkedin: <Share2 className="w-3.5 h-3.5" />,
+                          instagram: <Share2 className="w-3.5 h-3.5" />,
+                          facebook: <Share2 className="w-3.5 h-3.5" />,
+                          twitter: <Share2 className="w-3.5 h-3.5" />,
+                          tiktok: <Share2 className="w-3.5 h-3.5" />,
+                          youtube: <Share2 className="w-3.5 h-3.5" />,
+                          snapchat: <Share2 className="w-3.5 h-3.5" />,
+                          pinterest: <Share2 className="w-3.5 h-3.5" />,
                         };
                         return (
                           <div key={type} className="flex items-center gap-3">
