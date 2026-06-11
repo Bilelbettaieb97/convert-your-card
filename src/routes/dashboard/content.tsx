@@ -7,7 +7,7 @@ import { useCardStore } from "@/lib/card-store";
 import { loadMyCard, updateCard } from "@/lib/card-actions";
 import { getProfileMeta } from "@/lib/profile-store";
 import type { CardData } from "@/lib/card-types";
-import { ArrowLeft } from "lucide-react";
+import { ArrowLeft, Check, Loader2 } from "lucide-react";
 
 export const Route = createFileRoute("/dashboard/content")({
   component: ContentPage,
@@ -17,7 +17,10 @@ function ContentPage() {
   const { data, setData, update, hydrated } = useCardStore();
   const profile = getProfileMeta();
   const [supabaseReady, setSupabaseReady] = useState(false);
+  const [saveStatus, setSaveStatus] = useState<"idle" | "saving" | "saved">("idle");
   const skipNextSave = useRef(false);
+  const saveTimerRef = useRef<ReturnType<typeof setTimeout>>();
+  const resetTimerRef = useRef<ReturnType<typeof setTimeout>>();
 
   useEffect(() => {
     if (!hydrated) return;
@@ -33,10 +36,22 @@ function ContentPage() {
   useEffect(() => {
     if (!hydrated || !supabaseReady || !profile) return;
     if (skipNextSave.current) { skipNextSave.current = false; return; }
-    const timer = setTimeout(() => {
-      updateCard(profile.id, data).catch(console.error);
+    setSaveStatus("saving");
+    clearTimeout(saveTimerRef.current);
+    clearTimeout(resetTimerRef.current);
+    saveTimerRef.current = setTimeout(async () => {
+      try {
+        await updateCard(profile.id, data);
+        setSaveStatus("saved");
+        resetTimerRef.current = setTimeout(() => setSaveStatus("idle"), 2000);
+      } catch {
+        setSaveStatus("idle");
+      }
     }, 1500);
-    return () => clearTimeout(timer);
+    return () => {
+      clearTimeout(saveTimerRef.current);
+      clearTimeout(resetTimerRef.current);
+    };
   }, [data, hydrated, supabaseReady]); // eslint-disable-line react-hooks/exhaustive-deps
 
   if (!hydrated || !supabaseReady) {
@@ -50,9 +65,23 @@ function ContentPage() {
           <Link to="/dashboard/card" className="h-8 w-8 grid place-items-center rounded-lg border border-border text-muted-foreground hover:text-foreground hover:bg-muted transition shrink-0">
             <ArrowLeft className="h-4 w-4" />
           </Link>
-          <div>
-            <h2 className="font-display text-2xl font-medium">Contenu de la carte</h2>
-            <p className="text-sm text-muted-foreground">Activez, modifiez et réordonnez chaque section.</p>
+          <div className="flex-1">
+            <div className="flex items-center gap-3">
+              <h2 className="font-display text-2xl font-medium">Contenu de la carte</h2>
+              {saveStatus === "saving" && (
+                <span className="flex items-center gap-1.5 text-xs text-muted-foreground">
+                  <Loader2 className="h-3 w-3 animate-spin" />
+                  Sauvegarde…
+                </span>
+              )}
+              {saveStatus === "saved" && (
+                <span className="flex items-center gap-1.5 text-xs text-emerald-500">
+                  <Check className="h-3 w-3" />
+                  Sauvegardé
+                </span>
+              )}
+            </div>
+            <p className="text-sm text-muted-foreground">Vos modifications sont sauvegardées automatiquement.</p>
           </div>
         </div>
         <BrickList data={data} update={update} setData={setData} />

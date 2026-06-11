@@ -1,8 +1,9 @@
 import * as React from "react";
 import { type ReactNode } from "react";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import * as AccordionPrimitive from "@radix-ui/react-accordion";
+import { Accordion, AccordionContent, AccordionItem } from "@/components/ui/accordion";
 import { Switch } from "@/components/ui/switch";
-import { GripVertical } from "lucide-react";
+import { ChevronDown, GripVertical } from "lucide-react";
 import {
   DndContext, closestCenter, KeyboardSensor, PointerSensor, useSensor, useSensors,
   type DragEndEvent,
@@ -146,29 +147,30 @@ function SortableBrick({
   return (
     <div ref={setNodeRef} style={style}>
       <AccordionItem value={id} className="border border-border rounded-2xl bg-card overflow-hidden data-[state=open]:shadow-[var(--shadow-elegant)]">
-        <div className="flex items-center pr-4">
+        <AccordionPrimitive.Header className="flex items-center pr-4">
           <button
             type="button"
             aria-label="Réordonner la brique"
-            className="px-2 py-4 text-muted-foreground hover:text-foreground cursor-grab active:cursor-grabbing touch-none"
+            className="px-2 py-4 text-muted-foreground hover:text-foreground cursor-grab active:cursor-grabbing touch-none shrink-0"
             {...attributes}
             {...listeners}
             onClick={(e) => e.stopPropagation()}
           >
             <GripVertical className="h-4 w-4" />
           </button>
-          <AccordionTrigger className="flex-1 px-1 py-4 hover:no-underline">
+          <AccordionPrimitive.Trigger className="flex-1 flex items-center justify-between px-1 py-4 cursor-pointer [&[data-state=open]>svg]:rotate-180">
             <div className="text-left">
               <div className="font-medium">{title}</div>
               {subtitle && <div className="text-xs text-muted-foreground mt-0.5">{subtitle}</div>}
             </div>
-          </AccordionTrigger>
+            <ChevronDown className="h-4 w-4 shrink-0 text-muted-foreground transition-transform duration-200 mr-2" />
+          </AccordionPrimitive.Trigger>
           {alwaysOn ? (
-            <span className="text-[10px] uppercase tracking-wider text-primary ml-2">Toujours actif</span>
+            <span className="text-[10px] uppercase tracking-wider text-primary ml-2 shrink-0">Toujours actif</span>
           ) : (
-            <Switch checked={!!enabled} onCheckedChange={onToggle} onClick={(e) => e.stopPropagation()} />
+            <Switch checked={!!enabled} onCheckedChange={onToggle} onClick={(e) => e.stopPropagation()} className="shrink-0" />
           )}
-        </div>
+        </AccordionPrimitive.Header>
         <AccordionContent className="px-4 pb-5 pt-1">{children}</AccordionContent>
       </AccordionItem>
     </div>
