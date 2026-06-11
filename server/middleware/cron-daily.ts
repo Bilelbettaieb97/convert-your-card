@@ -1,6 +1,10 @@
 import { defineEventHandler, getHeader } from "h3";
 import { createClient } from "@supabase/supabase-js";
 
+const TR_DELAYS: Record<number, number> = {
+  1: 1,  // J+1 — onboarding / partage
+  2: 2,  // J+2 — urgence "expire demain"
+};
 const NC_DELAYS: Record<number, number> = {
   1: 10 / 1440,  // 10 minutes
   2: 1 / 24,     // 1 heure
@@ -188,6 +192,42 @@ export default defineEventHandler(async (event) => {
       }
       const result = await resp.json().catch(() => ({}));
       results[`br_step_${step}`] = result.sent ?? 0;
+    }
+
+    // ── Série trial (J+1 onboarding / J+2 urgence) ──────────────────────────
+    const trialUsers = users.filter((r: any) => r.subscription_status === "trialing");
+
+    for (const [stepStr, minDays] of Object.entries(TR_DELAYS)) {
+      const step = Number(stepStr);
+      const toSend = trialUsers.filter((r: any) =>
+        msSince(r.subscription_cree_le) >= minDays * 86_400_000 &&
+        (!r.trial_relance_step || r.trial_relance_step < step)
+      ).slice(0, 200);
+      if (toSend.length === 0) continue;
+
+      console.log(`[cron-daily] Trial step ${step}: ${toSend.length} destinataire(s)`);
+      const resp = await fetch(`${appUrl}/api/send-trial-relance`, {
+        method: "POST",
+        headers: authHeader,
+        body: JSON.stringify({
+          users: toSend.map((r: any) => ({
+            user_id: r.user_id,
+            email: r.email,
+            nom: r.nom,
+            slug: r.slug,
+            trial_end: r.trial_end,
+          })),
+          step,
+        }),
+      });
+      if (!resp.ok) {
+        const errText = await resp.text().catch(() => "unknown");
+        console.error(`[cron-daily] Trial step ${step} HTTP ${resp.status}: ${errText}`);
+        results[`tr_step_${step}_err`] = 1;
+        continue;
+      }
+      const result = await resp.json().catch(() => ({}));
+      results[`tr_step_${step}`] = result.sent ?? 0;
     }
 
     // ── Série upgrade Vitrine (J+1 → J+50, 12 emails) ───────────────────────

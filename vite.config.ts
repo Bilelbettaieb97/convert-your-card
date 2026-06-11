@@ -32,6 +32,7 @@ export default defineConfig(async ({ command }) => {
           { middleware: true, handler: "./server/middleware/vitrine-upgrade-click" },
           { middleware: true, handler: "./server/middleware/send-vitrine-relance" },
           { middleware: true, handler: "./server/middleware/generate-card-stream" },
+          { middleware: true, handler: "./server/middleware/send-trial-relance" },
         ],
       })
     );
