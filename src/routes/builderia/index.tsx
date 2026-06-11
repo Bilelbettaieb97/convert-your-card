@@ -81,6 +81,13 @@ function BuilderIAPromptPage() {
   useEffect(() => {
     if (!user) return;
     supabase.rpc("track_builderia_step", { p_user_id: user.id, p_step: 1, p_step_name: "builderia" }).then(() => {});
+
+    // CompleteRegistration — uniquement pour les nouveaux inscrits (pas encore de profil)
+    supabase.from("nfc_profiles").select("id").eq("user_id", user.id).maybeSingle().then(({ data }) => {
+      if (!data && typeof window !== "undefined" && (window as any).fbq) {
+        (window as any).fbq("track", "CompleteRegistration");
+      }
+    });
   }, [user?.id]);
 
   const userName: string =
