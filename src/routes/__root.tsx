@@ -94,6 +94,8 @@ export const Route = createRootRouteWithContext<{ queryClient: QueryClient }>()(
     links: [
       { rel: "stylesheet", href: appCss },
       { rel: "preconnect", href: "https://js.stripe.com" },
+      { rel: "preconnect", href: "https://checkout.stripe.com" },
+      { rel: "dns-prefetch", href: "https://checkout.stripe.com" },
       { rel: "preconnect", href: "https://fonts.googleapis.com" },
       { rel: "preconnect", href: "https://fonts.gstatic.com", crossOrigin: "anonymous" },
       {
