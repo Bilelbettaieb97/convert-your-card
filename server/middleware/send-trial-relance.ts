@@ -112,7 +112,7 @@ function buildStep1Email(firstName: string, slug: string, appUrl: string): strin
 
 function buildStep2Email(firstName: string, slug: string, appUrl: string, trialEndStr: string | undefined): string {
   const cardUrl = `${appUrl}/${slug}`;
-  const pricingUrl = `${appUrl}/pricing?utm_source=email&utm_medium=relance&utm_campaign=trial-relance&utm_content=step2`;
+  const pricingUrl = `${appUrl}/dashboard/account?utm_source=email&utm_medium=relance&utm_campaign=trial-relance&utm_content=step2`;
   const days = daysLeft(trialEndStr);
   const urgencyText = days <= 0 ? "expire aujourd'hui" : days === 1 ? "expire demain" : `expire dans ${days} jour${days > 1 ? "s" : ""}`;
 
@@ -209,7 +209,7 @@ function buildStep2Email(firstName: string, slug: string, appUrl: string, trialE
 }
 
 function buildStep3Email(firstName: string, slug: string, appUrl: string): string {
-  const pricingUrl = `${appUrl}/pricing?utm_source=email&utm_medium=relance&utm_campaign=trial-relance&utm_content=step3`;
+  const pricingUrl = `${appUrl}/dashboard/account?utm_source=email&utm_medium=relance&utm_campaign=trial-relance&utm_content=step3`;
   const cardUrl = `${appUrl}/${slug}`;
   return `
 <!DOCTYPE html>

@@ -2,7 +2,7 @@ import { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
 import { getProfileMeta, setProfileMeta } from "./profile-store";
 
-export const TRIAL_DAYS = 14;
+export const TRIAL_DAYS = 3;
 
 export function usePlan() {
   const cached = getProfileMeta();
