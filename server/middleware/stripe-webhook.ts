@@ -304,9 +304,30 @@ export default defineEventHandler(async (event) => {
 
   } else if (stripeEvent.type === "customer.subscription.updated") {
     const sub = stripeEvent.data.object;
+    const inactiveStatuses = ["past_due", "canceled", "incomplete_expired", "unpaid"];
+    const isInactive = inactiveStatuses.includes(sub.status);
+
+    const { data: subRow } = await adminSupabase
+      .from("subscriptions")
+      .select("user_id")
+      .eq("stripe_subscription_id", sub.id)
+      .maybeSingle();
+
     await adminSupabase.from("subscriptions")
-      .update({ plan: sub.metadata?.plan ?? "essentielle", status: sub.status, current_period_end: sub.current_period_end ? new Date(sub.current_period_end * 1000).toISOString() : null, updated_at: new Date().toISOString() })
+      .update({
+        plan: isInactive ? "free" : (sub.metadata?.plan ?? "essentielle"),
+        status: sub.status,
+        current_period_end: sub.current_period_end ? new Date(sub.current_period_end * 1000).toISOString() : null,
+        updated_at: new Date().toISOString(),
+      })
       .eq("stripe_subscription_id", sub.id);
+
+    if (isInactive && subRow?.user_id) {
+      await adminSupabase.from("nfc_profiles")
+        .update({ actif: false, plan: "free" })
+        .eq("user_id", subRow.user_id);
+      console.log(`[stripe-webhook] Subscription ${sub.status} — card deactivated for user:`, subRow.user_id);
+    }
 
   } else if (stripeEvent.type === "customer.subscription.deleted") {
     const sub = stripeEvent.data.object;
