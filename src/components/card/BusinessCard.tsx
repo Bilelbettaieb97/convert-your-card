@@ -411,16 +411,32 @@ function StatsSection({ data }: { data: CardData }) {
     );
   }
 
-  const valueSize = data.stats.length >= 4 ? "text-lg" : data.stats.length === 3 ? "text-xl" : "text-2xl";
+  const is4 = data.stats.length === 4;
+  const cols = is4 ? 2 : data.stats.length;
+  const valueSize = is4 ? "text-xl" : data.stats.length === 3 ? "text-xl" : "text-2xl";
   return (
     <section className="px-5">
-      <div className="grid rounded-2xl bg-card-surface border border-card-border overflow-hidden" style={{ gridTemplateColumns: `repeat(${data.stats.length}, minmax(0,1fr))` }}>
-        {data.stats.map((s, i) => (
-          <div key={i} className={`py-3 px-1 text-center overflow-hidden ${i < data.stats.length - 1 ? "border-r border-card-border" : ""}`}>
-            <div className={`font-display ${valueSize} leading-none truncate`} style={{ color: "var(--card-accent)" }}>{s.value}</div>
-            <div className="mt-1 text-[9px] uppercase tracking-wide text-card-muted leading-tight break-words">{s.label}</div>
-          </div>
-        ))}
+      <div
+        className="grid rounded-2xl bg-card-surface border border-card-border overflow-hidden"
+        style={{ gridTemplateColumns: `repeat(${cols}, minmax(0,1fr))` }}
+      >
+        {data.stats.map((s, i) => {
+          const borderRight = is4 ? i % 2 === 0 : i < data.stats.length - 1;
+          const borderBottom = is4 && i < 2;
+          return (
+            <div
+              key={i}
+              className={[
+                "py-3 px-2 text-center overflow-hidden",
+                borderRight ? "border-r border-card-border" : "",
+                borderBottom ? "border-b border-card-border" : "",
+              ].join(" ")}
+            >
+              <div className={`font-display ${valueSize} leading-none`} style={{ color: "var(--card-accent)" }}>{s.value}</div>
+              <div className="mt-1 text-[10px] uppercase tracking-wide text-card-muted leading-tight">{s.label}</div>
+            </div>
+          );
+        })}
       </div>
     </section>
   );
