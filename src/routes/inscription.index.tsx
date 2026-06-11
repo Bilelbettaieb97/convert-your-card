@@ -1,6 +1,6 @@
 import * as React from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState } from "react";
+import { useState, useRef } from "react";
 import { z } from "zod";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
@@ -101,6 +101,7 @@ export const Route = createFileRoute("/inscription/")({
 
 function InscriptionPage() {
   const search = Route.useSearch();
+  const phoneRef = useRef<HTMLDivElement>(null);
   const [email, setEmail] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [sent, setSent] = useState(false);
@@ -339,12 +340,22 @@ function InscriptionPage() {
             <div className="shrink-0 relative self-stretch flex items-center">
               {/* Container à taille fixe : clip le phone scaled */}
               <div className="relative overflow-hidden rounded-[28px] shadow-[0_0_60px_rgba(192,38,211,0.25)]"
-                style={{ width: 218, height: 448, pointerEvents: "none" }}>
-                <div style={{ transform: "scale(0.605)", transformOrigin: "top left", width: 360 }}>
+                style={{ width: 218, height: 448 }}>
+                <div ref={phoneRef} style={{ transform: "scale(0.605)", transformOrigin: "top left", width: 360 }}>
                   <PhoneFrame>
                     <BusinessCard data={DEMO_CARD} />
                   </PhoneFrame>
                 </div>
+                {/* Overlay : bloque les clics, laisse passer le scroll */}
+                <div
+                  className="absolute inset-0 z-10 cursor-default"
+                  onClick={(e) => e.stopPropagation()}
+                  onClickCapture={(e) => e.stopPropagation()}
+                  onWheel={(e) => {
+                    const scroller = phoneRef.current?.querySelector("[class*='overflow-y-auto']") as HTMLElement | null;
+                    if (scroller) scroller.scrollTop += e.deltaY;
+                  }}
+                />
               </div>
               {/* Badge flottant */}
               <div className="absolute -top-2 -right-3 bg-emerald-500 text-white text-[10px] font-bold px-2.5 py-1 rounded-full shadow-lg whitespace-nowrap z-10">
