@@ -195,25 +195,6 @@ function BuilderIAResultatPage() {
     }
   }
 
-  function handleContinueFree() {
-    if (!generatedCard) return;
-    const freeCard: CardData = {
-      ...generatedCard,
-      accent: selectedAccent,
-      statsEnabled: false,
-      servicesEnabled: false,
-      testimonialsEnabled: false,
-      calendarEnabled: false,
-      galleryEnabled: false,
-      listingsEnabled: false,
-      ctaEnabled: false,
-      videoEnabled: false,
-      languagesEnabled: false,
-    };
-    setData(freeCard);
-    navigate({ to: "/builderia" });
-  }
-
   async function handleShare() {
     if (!generatedCard || sharing) return;
     setSharing(true);
@@ -414,17 +395,6 @@ function BuilderIAResultatPage() {
               <span className="text-xs text-muted-foreground">ou</span>
               <div className="flex-1 h-px bg-border" />
             </div>
-
-            <button
-              type="button"
-              onClick={handleContinueFree}
-              className="w-full text-center text-xs text-muted-foreground hover:text-foreground transition py-1.5"
-            >
-              continuer gratuitement
-              <span className="block text-[10px] opacity-50 mt-0.5">
-                (carte sans les fonctions Vitrine)
-              </span>
-            </button>
 
             <button
               type="button"
