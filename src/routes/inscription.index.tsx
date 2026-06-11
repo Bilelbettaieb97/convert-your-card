@@ -1,6 +1,6 @@
 import * as React from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
-import { useState, useRef } from "react";
+import { useState, useRef, useEffect } from "react";
 import { z } from "zod";
 import { toast } from "sonner";
 import { supabase } from "@/integrations/supabase/client";
@@ -102,6 +102,25 @@ export const Route = createFileRoute("/inscription/")({
 function InscriptionPage() {
   const search = Route.useSearch();
   const phoneRef = useRef<HTMLDivElement>(null);
+  const overlayRef = useRef<HTMLDivElement>(null);
+
+  useEffect(() => {
+    const overlay = overlayRef.current;
+    if (!overlay) return;
+    const handleWheel = (e: WheelEvent) => {
+      e.preventDefault();
+      const scroller = phoneRef.current?.querySelector(".overflow-y-auto") as HTMLElement | null;
+      if (scroller) scroller.scrollTop += e.deltaY;
+    };
+    const handleClick = (e: MouseEvent) => e.stopPropagation();
+    overlay.addEventListener("wheel", handleWheel, { passive: false });
+    overlay.addEventListener("click", handleClick, true);
+    return () => {
+      overlay.removeEventListener("wheel", handleWheel);
+      overlay.removeEventListener("click", handleClick, true);
+    };
+  }, []);
+
   const [email, setEmail] = useState("");
   const [submitting, setSubmitting] = useState(false);
   const [sent, setSent] = useState(false);
@@ -346,16 +365,8 @@ function InscriptionPage() {
                     <BusinessCard data={DEMO_CARD} />
                   </PhoneFrame>
                 </div>
-                {/* Overlay : bloque les clics, laisse passer le scroll */}
-                <div
-                  className="absolute inset-0 z-10 cursor-default"
-                  onClick={(e) => e.stopPropagation()}
-                  onClickCapture={(e) => e.stopPropagation()}
-                  onWheel={(e) => {
-                    const scroller = phoneRef.current?.querySelector("[class*='overflow-y-auto']") as HTMLElement | null;
-                    if (scroller) scroller.scrollTop += e.deltaY;
-                  }}
-                />
+                {/* Overlay : bloque les clics, forward le scroll via useEffect */}
+                <div ref={overlayRef} className="absolute inset-0 z-10 cursor-default" />
               </div>
               {/* Badge flottant */}
               <div className="absolute -top-2 -right-3 bg-emerald-500 text-white text-[10px] font-bold px-2.5 py-1 rounded-full shadow-lg whitespace-nowrap z-10">
