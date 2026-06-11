@@ -179,7 +179,7 @@ export default defineEventHandler(async (event) => {
           users: toSend.map((r: any) => ({
             user_id: r.user_id,
             email: r.email,
-            builder_step: r.builder_step ?? 1,
+            builder_step_name: r.builder_step_name ?? null,
           })),
           step,
         }),
