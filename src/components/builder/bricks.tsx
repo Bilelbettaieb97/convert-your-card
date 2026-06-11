@@ -241,6 +241,14 @@ export function ActionsBrick({ data, update }: BrickProps) {
           </Field>
         )}
       </div>
+      <div className="rounded-xl border border-border p-3 space-y-3">
+        <Row label="Bouton RDV"><Switch checked={!!data.actions.rdv} onCheckedChange={toggle("rdv")} /></Row>
+        {data.actions.rdv && (
+          <Field label="Lien de réservation (Calendly, Doctolib…)">
+            <Input value={data.calendarUrl} onChange={(e) => update("calendarUrl", e.target.value)} placeholder="https://calendly.com/votre-lien" />
+          </Field>
+        )}
+      </div>
     </div>
   );
 }
@@ -1012,7 +1020,7 @@ export function ThemeBrick({ data, update }: BrickProps) {
 
 export const BRICK_META: Record<BrickId, { title: string; subtitle: string }> = {
   identity: { title: "Identité", subtitle: "Photo, nom, titre, agence" },
-  actions: { title: "Actions rapides", subtitle: "Appel, WhatsApp, Mail, Site" },
+  actions: { title: "Actions rapides", subtitle: "Appel, WhatsApp, Mail, Site, RDV" },
   vcard: { title: "Enregistrer le contact", subtitle: "Bouton vCard" },
   stats: { title: "Statistiques", subtitle: "Chiffres clés" },
   about: { title: "À propos", subtitle: "Bio + badges" },

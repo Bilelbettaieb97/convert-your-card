@@ -64,7 +64,7 @@ export interface CardData {
   coverPhoto: string;
 
   // Actions
-  actions: { call: boolean; whatsapp: boolean; email: boolean; website: boolean };
+  actions: { call: boolean; whatsapp: boolean; email: boolean; website: boolean; rdv: boolean };
 
   // vCard
   vcardEnabled: boolean;
@@ -156,7 +156,7 @@ export const DEFAULT_CARD: CardData = {
   area: "Paris & Île-de-France",
   photo: "",
   coverPhoto: "",
-  actions: { call: true, whatsapp: true, email: true, website: true },
+  actions: { call: true, whatsapp: true, email: true, website: true, rdv: false },
   vcardEnabled: true,
   statsEnabled: true,
   stats: [

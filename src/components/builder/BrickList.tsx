@@ -87,7 +87,7 @@ export function BrickList({ data, update, setData, styleOnly = false }: BrickLis
 
   const toggleOf = (id: BrickId) => (v: boolean) => {
     switch (id) {
-      case "actions":      update("actions", { call: v, whatsapp: v, email: v, website: v }); break;
+      case "actions":      update("actions", { call: v, whatsapp: v, email: v, website: v, rdv: v }); break;
       case "vcard":        update("vcardEnabled", v); break;
       case "stats":        update("statsEnabled", v); break;
       case "about":        update("aboutEnabled", v); break;

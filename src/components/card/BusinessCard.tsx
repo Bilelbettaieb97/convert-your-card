@@ -2,7 +2,7 @@ import * as React from "react";
 import { useState } from "react";
 import {
   Phone, Mail, MessageCircle, MapPin, Globe, Linkedin, Instagram,
-  Facebook, Youtube, Twitter,
+  Facebook, Youtube, Twitter, CalendarCheck,
   Share2, Download, BadgeCheck, Award, ChevronRight, Building2, ImageIcon,
   Star, Calendar, Languages as LangIcon, Sparkles, PlayCircle, ArrowRight, Quote, ExternalLink,
 } from "lucide-react";
@@ -275,13 +275,14 @@ function IdentitySection({ data }: { data: CardData }) {
    ============================================================ */
 
 function ActionsSection({ data, profileId }: { data: CardData; profileId?: string }) {
-  const any = data.actions.call || data.actions.whatsapp || data.actions.email || data.actions.website;
+  const any = data.actions.call || data.actions.whatsapp || data.actions.email || data.actions.website || data.actions.rdv;
   if (!any) return null;
   const items = [
-    data.actions.call     && { icon: Phone,         label: "Appeler",  href: `tel:${data.phone}`,             type: "call" },
-    data.actions.whatsapp && { icon: MessageCircle, label: "WhatsApp", href: `https://wa.me/${data.whatsapp}`, type: "whatsapp" },
-    data.actions.email    && { icon: Mail,          label: "Mail",     href: `mailto:${data.email}`,           type: "email" },
-    data.actions.website  && { icon: Globe,         label: "Site",     href: `https://${data.website}`,        type: "website" },
+    data.actions.call     && { icon: Phone,          label: "Appeler",  href: `tel:${data.phone}`,             type: "call" },
+    data.actions.whatsapp && { icon: MessageCircle,  label: "WhatsApp", href: `https://wa.me/${data.whatsapp}`, type: "whatsapp" },
+    data.actions.email    && { icon: Mail,           label: "Mail",     href: `mailto:${data.email}`,           type: "email" },
+    data.actions.website  && { icon: Globe,          label: "Site",     href: `https://${data.website}`,        type: "website" },
+    (data.actions.rdv && data.calendarUrl) && { icon: CalendarCheck, label: "RDV",   href: data.calendarUrl,              type: "rdv" },
   ].filter(Boolean) as Array<{ icon: any; label: string; href: string; type: string }>;
 
   const v = data.variants.actions;
