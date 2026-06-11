@@ -55,7 +55,10 @@ function BienvenePage() {
         const existingProfile = await loadMyCard();
         if (!existingProfile) {
           const cardData = loadCard();
-          if (cardData?.name) await createCard(cardData);
+          if (cardData?.name) {
+            await createCard(cardData);
+            localStorage.removeItem("cyk.builderia.generated");
+          }
         }
       } catch {
         // Non-bloquant — le profil sera créé par le webhook si besoin

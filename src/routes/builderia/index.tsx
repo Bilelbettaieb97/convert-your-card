@@ -183,7 +183,7 @@ function BuilderIAPromptPage() {
       };
 
       setData(merged);
-      sessionStorage.setItem("cyk.builderia.generated", "1");
+      localStorage.setItem("cyk.builderia.generated", "1");
       resultReady.current = true;
       if (animDoneRef.current) triggerFlip();
 

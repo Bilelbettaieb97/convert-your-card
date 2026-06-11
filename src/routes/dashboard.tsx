@@ -68,7 +68,10 @@ function DashboardLayout() {
   }, [user, loading, navigate]);
 
   useEffect(() => {
-    if (!planLoading && hasProfile === false) navigate({ to: "/builderia" });
+    if (!planLoading && hasProfile === false) {
+      const hasGenerated = typeof window !== "undefined" && !!localStorage.getItem("cyk.builderia.generated");
+      navigate({ to: hasGenerated ? "/builderia/resultat" : "/builderia" });
+    }
   }, [planLoading, hasProfile, navigate]);
 
   useEffect(() => {

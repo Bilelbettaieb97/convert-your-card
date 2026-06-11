@@ -89,12 +89,12 @@ function BuilderIAResultatPage() {
 
   useEffect(() => {
     if (!hydrated) return;
-    const fresh = sessionStorage.getItem("cyk.builderia.generated");
+    const fresh = localStorage.getItem("cyk.builderia.generated");
     if (!fresh || !data?.bio) {
       navigate({ to: "/builderia", replace: true });
       return;
     }
-    sessionStorage.removeItem("cyk.builderia.generated");
+    localStorage.removeItem("cyk.builderia.generated");
     setSelectedAccent(data.accent ?? "gold");
     const t = setTimeout(() => setRevealed(true), 40);
     if (user) {
@@ -138,7 +138,7 @@ function BuilderIAResultatPage() {
       const cardWithTheme: CardData = { ...generatedCard, accent: selectedAccent };
       setData(cardWithTheme);
       // Remettre le flag pour qu'un retour depuis Stripe repasse par /builderia/resultat
-      sessionStorage.setItem("cyk.builderia.generated", "1");
+      localStorage.setItem("cyk.builderia.generated", "1");
       await supabase.rpc("track_builderia_step", { p_user_id: user.id, p_step: 3, p_step_name: "stripe-checkout" });
       const { url } = await createCheckoutSession({
         data: { plan: "vitrine", billing: "monthly", email: user.email!, userId: user.id },
