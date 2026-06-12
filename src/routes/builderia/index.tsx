@@ -80,7 +80,8 @@ function BuilderIAPromptPage() {
 
   useEffect(() => {
     if (!user) return;
-    supabase.rpc("track_builderia_step", { p_user_id: user.id, p_step: 1, p_step_name: "builderia" }).then(() => {});
+    const device = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent) ? "mobile" : "desktop";
+    supabase.rpc("track_builderia_step", { p_user_id: user.id, p_step: 1, p_step_name: "builderia", p_device: device }).then(() => {});
 
     // Si profil déjà existant → user a déjà complété le checkout → dashboard
     supabase.from("nfc_profiles").select("id").eq("user_id", user.id).maybeSingle().then(({ data }) => {
