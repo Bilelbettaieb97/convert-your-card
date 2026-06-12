@@ -291,7 +291,7 @@ function CartePhysiqueUpsellPage() {
                 {ordering ? (
                   <><Loader2 className="h-4 w-4 animate-spin" /> Redirection…</>
                 ) : (
-                  <><CreditCard className="h-4 w-4" /> Commander ma carte — {total}€ <ArrowRight className="h-4 w-4" /></>
+                  <><CreditCard className="h-4 w-4" /> Acheter maintenant — {total}€ <ArrowRight className="h-4 w-4" /></>
                 )}
               </button>
             </div>
