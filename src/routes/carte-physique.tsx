@@ -1,8 +1,10 @@
 import * as React from "react";
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useMemo, useRef, useState } from "react";
-import { Check, CreditCard, Sparkles, Upload, X, Wifi, ArrowRight } from "lucide-react";
+import { Check, CreditCard, Sparkles, Upload, X, Wifi, ArrowRight, Loader2 } from "lucide-react";
 import { Nav } from "@/routes/index";
+import { useAuthStore } from "@/lib/auth-store";
+import { createNfcCheckoutSession } from "@/fns/checkout-nfc";
 
 export const Route = createFileRoute("/carte-physique")({
   head: () => ({
@@ -47,15 +49,41 @@ const PRICE_BASE = 29;
 const PRICE_METAL_EXTRA = 10;
 
 function CartePhysiqueUpsellPage() {
+  const { user } = useAuthStore();
+  const navigate = useNavigate();
   const [color, setColor] = useState<ColorKey>("noir");
   const [finish, setFinish] = useState<Finish>("mat");
   const [name, setName] = useState("Ton Prénom");
   const [role, setRole] = useState("Ton métier");
   const [logo, setLogo] = useState<string | null>(null);
+  const [ordering, setOrdering] = useState(false);
   const fileRef = useRef<HTMLInputElement>(null);
 
   const selectedColor = COLORS.find((c) => c.key === color)!;
   const total = useMemo(() => PRICE_BASE + (finish === "metal" ? PRICE_METAL_EXTRA : 0), [finish]);
+
+  async function handleOrder() {
+    if (!user) {
+      navigate({ to: "/inscription", search: { redirect: "/carte-physique" } });
+      return;
+    }
+    setOrdering(true);
+    try {
+      const { url } = await createNfcCheckoutSession({
+        data: {
+          finish,
+          color: selectedColor.name,
+          name: name || "Non renseigné",
+          role: role || "Non renseigné",
+          email: user.email!,
+          userId: user.id,
+        },
+      });
+      if (url) window.location.href = url;
+    } catch {
+      setOrdering(false);
+    }
+  }
 
   const handleLogo = (e: React.ChangeEvent<HTMLInputElement>) => {
     const file = e.target.files?.[0];
@@ -256,11 +284,15 @@ function CartePhysiqueUpsellPage() {
               </div>
               <button
                 type="button"
-                className="w-full flex items-center justify-center gap-2 rounded-full bg-background text-magenta py-3.5 text-sm font-semibold hover:bg-background/90 transition-all shadow-card"
+                onClick={handleOrder}
+                disabled={ordering}
+                className="w-full flex items-center justify-center gap-2 rounded-full bg-background text-magenta py-3.5 text-sm font-semibold hover:bg-background/90 transition-all shadow-card disabled:opacity-70 disabled:cursor-not-allowed"
               >
-                <CreditCard className="h-4 w-4" />
-                Ajouter ma carte à la commande
-                <ArrowRight className="h-4 w-4" />
+                {ordering ? (
+                  <><Loader2 className="h-4 w-4 animate-spin" /> Redirection…</>
+                ) : (
+                  <><CreditCard className="h-4 w-4" /> Commander ma carte — {total}€ <ArrowRight className="h-4 w-4" /></>
+                )}
               </button>
             </div>
 
