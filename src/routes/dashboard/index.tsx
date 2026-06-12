@@ -32,7 +32,7 @@ const ONBOARDING_STEPS = [
     to: "/dashboard/card",
     icon: CreditCard,
     title: "Ma carte",
-    description: "Accédez à votre aperçu live, copiez votre lien public et téléchargez votre QR code à imprimer ou à partager par message.",
+    description: "Accède à ton aperçu live, copie ton lien public et télécharge ton QR code à imprimer ou à partager par message.",
     color: "text-violet-500",
     bg: "bg-violet-500/10",
     border: "border-violet-500/30",
@@ -42,7 +42,7 @@ const ONBOARDING_STEPS = [
     to: "/dashboard/content",
     icon: Layers,
     title: "Contenu",
-    description: "Remplissez vos sections : identité, services, témoignages, boutons d'action. C'est le cœur de votre carte.",
+    description: "Remplis tes sections : identité, services, témoignages, boutons d'action. C'est le cœur de ta carte.",
     color: "text-sky-500",
     bg: "bg-sky-500/10",
     border: "border-sky-500/30",
@@ -52,7 +52,7 @@ const ONBOARDING_STEPS = [
     to: "/dashboard/theme",
     icon: Palette,
     title: "Apparence",
-    description: "Choisissez votre thème de couleurs et la variante visuelle qui correspond le mieux à votre univers professionnel.",
+    description: "Choisis ton thème de couleurs et la variante visuelle qui correspond le mieux à ton univers professionnel.",
     color: "text-pink-500",
     bg: "bg-pink-500/10",
     border: "border-pink-500/30",
@@ -72,7 +72,7 @@ const ONBOARDING_STEPS = [
     to: "/dashboard/links",
     icon: Link2,
     title: "Liens & réseaux",
-    description: "Ajoutez vos réseaux sociaux (LinkedIn, Instagram, TikTok), votre numéro WhatsApp et vos liens personnalisés.",
+    description: "Ajoute tes réseaux sociaux (LinkedIn, Instagram, TikTok), ton numéro WhatsApp et tes liens personnalisés.",
     color: "text-emerald-500",
     bg: "bg-emerald-500/10",
     border: "border-emerald-500/30",
@@ -82,7 +82,7 @@ const ONBOARDING_STEPS = [
     to: "/dashboard/media",
     icon: Image,
     title: "Médias",
-    description: "Importez votre photo de profil, votre logo d'entreprise et vos images de galerie pour enrichir votre carte.",
+    description: "Importe ta photo de profil, ton logo d'entreprise et tes images de galerie pour enrichir ta carte.",
     color: "text-orange-500",
     bg: "bg-orange-500/10",
     border: "border-orange-500/30",
@@ -92,7 +92,7 @@ const ONBOARDING_STEPS = [
     to: "/dashboard/statistiques",
     icon: BarChart2,
     title: "Statistiques",
-    description: "Suivez vos vues, clics sur vos boutons et téléchargements vCard en temps réel. Sachez qui visite votre carte.",
+    description: "Suis tes vues, clics sur tes boutons et téléchargements vCard en temps réel. Sache qui visite ta carte.",
     color: "text-cyan-500",
     bg: "bg-cyan-500/10",
     border: "border-cyan-500/30",
@@ -102,7 +102,7 @@ const ONBOARDING_STEPS = [
     to: "/dashboard/settings",
     icon: Settings,
     title: "Paramètres",
-    description: "Gérez votre profil public, votre mot de passe, vos préférences de notification et vos données personnelles.",
+    description: "Gère ton profil public, ton mot de passe, tes préférences de notification et tes données personnelles.",
     color: "text-slate-500",
     bg: "bg-slate-500/10",
     border: "border-slate-500/30",
@@ -139,7 +139,7 @@ function OverviewPage() {
   }
 
   const { score, items, missing } = getCompletion(data);
-  const firstName = data.name?.split(" ")[0] || "vous";
+  const firstName = data.name?.split(" ")[0] || "toi";
 
   return (
     <div className="mx-auto max-w-7xl px-5 sm:px-8 py-8 space-y-10">
@@ -153,7 +153,7 @@ function OverviewPage() {
             Bonjour, {firstName} 👋
           </h2>
           <p className="text-base text-muted-foreground mt-2">
-            Voici la santé de votre carte digitale aujourd'hui.
+            Voici la santé de ta carte digitale aujourd'hui.
           </p>
         </div>
         <Link to="/dashboard/card">
@@ -166,8 +166,8 @@ function OverviewPage() {
       {/* KPIs */}
       <section>
         <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-          <MetricCard icon={Eye} label="Vues · 7 j." value={kpis.vues > 0 ? String(kpis.vues) : "—"} hint="Visiteurs de votre carte" spark={[3,5,4,7,6,9,8]} delta={12} />
-          <MetricCard icon={MousePointerClick} label="Clics · 7 j." value={kpis.clics > 0 ? String(kpis.clics) : "—"} hint="Sur vos boutons d'action" spark={[2,4,3,5,4,6,7]} delta={8} />
+          <MetricCard icon={Eye} label="Vues · 7 j." value={kpis.vues > 0 ? String(kpis.vues) : "—"} hint="Visiteurs de ta carte" spark={[3,5,4,7,6,9,8]} delta={12} />
+          <MetricCard icon={MousePointerClick} label="Clics · 7 j." value={kpis.clics > 0 ? String(kpis.clics) : "—"} hint="Sur tes boutons d'action" spark={[2,4,3,5,4,6,7]} delta={8} />
           <MetricCard icon={Smartphone} label="vCard ajoutées" value={kpis.vcards > 0 ? String(kpis.vcards) : "—"} hint="Contacts enregistrés" spark={[1,2,2,3,4,3,5]} delta={24} />
           <MetricCard icon={QrCode} label="Scans QR" value={kpis.scans > 0 ? String(kpis.scans) : "—"} hint="Détection physique" spark={[0,1,3,2,4,5,4]} delta={-3} />
         </div>
@@ -179,7 +179,7 @@ function OverviewPage() {
           <div className="flex items-start justify-between gap-4 mb-5">
             <div>
               <h3 className="font-display text-2xl font-semibold">Santé de ma carte</h3>
-              <p className="text-sm text-muted-foreground mt-1">Plus votre carte est complète, plus elle convertit.</p>
+              <p className="text-sm text-muted-foreground mt-1">Plus ta carte est complète, plus elle convertit.</p>
             </div>
             <div className="text-right">
               <div className="font-display text-5xl text-primary leading-none font-semibold">{score}<span className="text-2xl text-muted-foreground">%</span></div>
@@ -248,8 +248,8 @@ function OverviewPage() {
       {/* ── Onboarding ── */}
       <section>
         <div className="mb-5">
-          <h3 className="font-display text-2xl font-semibold">Apprenez à utiliser votre dashboard</h3>
-          <p className="text-sm text-muted-foreground mt-1">Suivez ces 8 étapes pour tirer le maximum de votre carte digitale.</p>
+          <h3 className="font-display text-2xl font-semibold">Apprends à utiliser ton dashboard</h3>
+          <p className="text-sm text-muted-foreground mt-1">Suis ces 8 étapes pour tirer le maximum de ta carte digitale.</p>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 xl:grid-cols-4 gap-4">
           {ONBOARDING_STEPS.map((s) => {
@@ -283,8 +283,8 @@ function OverviewPage() {
       <section className="pt-2">
         <div className="flex items-end justify-between mb-5">
           <div>
-            <h3 className="font-display text-2xl font-semibold">Allez plus loin</h3>
-            <p className="text-sm text-muted-foreground mt-1">Deux upgrades premium qui transforment votre carte en machine à convertir.</p>
+            <h3 className="font-display text-2xl font-semibold">Vas plus loin</h3>
+            <p className="text-sm text-muted-foreground mt-1">Deux upgrades premium qui transforment ta carte en machine à convertir.</p>
           </div>
           <Link to="/dashboard/account" className="text-sm text-primary hover:underline font-medium">Tout voir →</Link>
         </div>

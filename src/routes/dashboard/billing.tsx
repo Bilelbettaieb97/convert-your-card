@@ -258,7 +258,7 @@ function BillingPage() {
             <Receipt className="w-10 h-10 mx-auto opacity-15 mb-3" />
             <p className="text-sm text-muted-foreground font-medium">Aucune facture pour l'instant</p>
             <p className="text-xs text-muted-foreground mt-1 opacity-70">
-              {hasSub ? "Vos prochaines factures apparaîtront ici après le premier prélèvement." : "Les factures s'affichent dès que vous avez un abonnement actif."}
+              {hasSub ? "Tes prochaines factures apparaîtront ici après le premier prélèvement." : "Les factures s'affichent dès que tu as un abonnement actif."}
             </p>
           </div>
         ) : (

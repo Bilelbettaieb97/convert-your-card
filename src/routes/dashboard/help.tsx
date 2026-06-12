@@ -29,12 +29,12 @@ function HelpPage() {
     : ARTICLES;
 
   const STEPS = [
-    { done: true, label: "Créer votre compte", desc: "Bienvenue sur CVD" },
-    { done: !!data.name, label: "Compléter votre profil", desc: "Nom, photo, bio, liens", to: "/dashboard/card" },
+    { done: true, label: "Créer ton compte", desc: "Bienvenue sur CVD" },
+    { done: !!data.name, label: "Compléter ton profil", desc: "Nom, photo, bio, liens", to: "/dashboard/card" },
     { done: !!data.accent, label: "Choisir un thème", desc: "Personnalisez l'apparence", to: "/dashboard/style" },
-    { done: !!profile?.actif, label: "Activer votre carte", desc: "Passez au plan payant", to: "/dashboard/account" },
+    { done: !!profile?.actif, label: "Activer ta carte", desc: "Passe au plan payant", to: "/dashboard/account" },
     { done: false, label: "Commander ma carte physique", desc: "À partir de 29 €", to: "/carte-physique" },
-    { done: false, label: "Partager votre carte", desc: "Premier contact sauvegardé" },
+    { done: false, label: "Partager ta carte", desc: "Premier contact sauvegardé" },
   ];
 
   const progress = STEPS.filter(s => s.done).length;
@@ -44,7 +44,7 @@ function HelpPage() {
       <div className="rounded-2xl border border-primary/30 bg-gradient-to-br from-primary/10 to-transparent p-6">
         <div className="flex justify-between items-start mb-4">
           <div>
-            <h2 className="font-display text-xl mb-1">Activez votre carte</h2>
+            <h2 className="font-display text-xl mb-1">Active ta carte</h2>
             <p className="text-sm text-muted-foreground">{progress} / {STEPS.length} étapes complétées</p>
           </div>
           <div className="font-display text-3xl text-primary">{Math.round((progress / STEPS.length) * 100)}%</div>
@@ -96,8 +96,10 @@ function HelpPage() {
           <div className="rounded-2xl border border-border bg-card/40 p-5">
             <Play className="h-8 w-8 text-muted-foreground mb-3" />
             <h4 className="font-display text-lg mb-1">Tutoriels vidéo</h4>
-            <p className="text-xs text-muted-foreground mb-4">Des vidéos pas à pas arrivent bientôt</p>
-            <Button variant="outline" size="sm" className="w-full" disabled>Bientôt disponible</Button>
+            <p className="text-xs text-muted-foreground mb-4">Regarde nos guides pas à pas sur YouTube</p>
+            <a href="https://www.youtube.com/@convertilab" target="_blank" rel="noopener noreferrer">
+              <Button variant="outline" size="sm" className="w-full">Voir les tutoriels</Button>
+            </a>
           </div>
           <div className="rounded-2xl border border-border bg-card/40 p-5">
             <MessageCircle className="h-8 w-8 text-primary mb-3" />

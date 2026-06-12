@@ -222,7 +222,7 @@ function StatistiquesPage() {
             <Lock className="h-10 w-10 text-primary mx-auto mb-4" />
             <h3 className="font-display text-xl mb-2">Statistiques verrouillées</h3>
             <p className="text-sm text-muted-foreground mb-6">
-              Les statistiques sont disponibles avec le plan Vitrine. Suivez vos vues, clics et contacts sauvegardés en temps réel.
+              Les statistiques sont disponibles avec le plan Vitrine. Suis tes vues, clics et contacts sauvegardés en temps réel.
             </p>
             <Link to="/dashboard/account">
               <button className="w-full px-6 py-3 rounded-xl bg-primary text-primary-foreground font-semibold text-sm hover:opacity-90 transition">
@@ -417,7 +417,7 @@ function StatistiquesPage() {
                   <p className="text-xs mb-3" style={{ color: "rgba(255,255,255,0.55)" }}>
                     {LOCKED_PERIODS.includes("30j")
                       ? "Plan Starter = données 30 jours. Plan Pro = 90 jours d'historique complet."
-                      : "Plan Pro = 90 jours d'historique pour suivre vos tendances."}
+                      : "Plan Pro = 90 jours d'historique pour suivre tes tendances."}
                   </p>
                   <Link to="/dashboard/account"
                     className="inline-flex items-center gap-1.5 px-4 py-2 rounded-full text-xs font-bold text-white transition hover:opacity-90"
@@ -496,8 +496,8 @@ function EmptyState({ totalScans, cardUrl, copied, onCopy }: {
           style={{ background: "linear-gradient(135deg,rgba(139,92,246,0.15),rgba(236,72,153,0.1))" }}>
           <Target className="w-7 h-7 text-violet-400" />
         </div>
-        <h2 className="text-lg font-semibold text-foreground mb-1">Objectif : vos 10 premiers scans</h2>
-        <p className="text-sm text-muted-foreground mb-6">Chaque partage = des scans = de la valeur perçue. Commencez maintenant.</p>
+        <h2 className="text-lg font-semibold text-foreground mb-1">Objectif : tes 10 premiers scans</h2>
+        <p className="text-sm text-muted-foreground mb-6">Chaque partage = des scans = de la valeur perçue. Commence maintenant.</p>
 
         <div className="mb-6">
           <div className="flex items-center justify-between text-xs text-muted-foreground mb-2">
@@ -512,8 +512,8 @@ function EmptyState({ totalScans, cardUrl, copied, onCopy }: {
 
         <div className="grid sm:grid-cols-3 gap-2.5 text-left mb-6">
           {[
-            { icon: <MessageCircle className="w-4 h-4 text-emerald-400" />, tip: "Partagez sur WhatsApp", detail: "À vos contacts pro — 5 min" },
-            { icon: <QrCode className="w-4 h-4 text-violet-400" />, tip: "QR code sur vos supports", detail: "Flyers, menu, vitrine…" },
+            { icon: <MessageCircle className="w-4 h-4 text-emerald-400" />, tip: "Partage sur WhatsApp", detail: "À tes contacts pro — 5 min" },
+            { icon: <QrCode className="w-4 h-4 text-violet-400" />, tip: "QR code sur tes supports", detail: "Flyers, menu, vitrine…" },
             { icon: <Share2 className="w-4 h-4 text-sky-400" />, tip: "LinkedIn ou Instagram", detail: "Bio, posts, stories" },
           ].map((t) => (
             <div key={t.tip} className="flex gap-2.5 p-3 rounded-xl bg-muted/50 border border-border">

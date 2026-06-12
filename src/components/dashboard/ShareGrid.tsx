@@ -162,7 +162,7 @@ export function QrCard({ url, name }: { url: string; name?: string }) {
         </div>
       </div>
       <p className="text-[11px] text-muted-foreground text-center mt-3">
-        Imprimez-le sur vos supports — chaque scan ouvre votre carte.
+        Imprime-le sur tes supports — chaque scan ouvre ta carte.
       </p>
     </div>
   );

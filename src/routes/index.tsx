@@ -213,7 +213,7 @@ function Hero() {
           </div>
 
           <h1 className="mt-4 sm:mt-5 font-display font-extrabold text-3xl sm:text-5xl lg:text-6xl leading-[1.05]">
-            Une carte de visite digitale, <span className="text-gradient">conçue pour vous.</span>
+            Une carte de visite digitale, <span className="text-gradient">conçue pour toi.</span>
           </h1>
 
           {/* Sous-titre court visible sur mobile */}
@@ -223,14 +223,14 @@ function Hero() {
 
           {/* Sous-titre complet sur desktop */}
           <p className="hidden sm:block mt-5 text-lg text-muted-foreground max-w-xl">
-            Rejoignez les pros qui ne distribuent plus de papier. Une seule carte pour partager tout ce que vous êtes — réseaux, site, contact, prise de rendez-vous — d'un simple contact avec un téléphone. Designée et gérée par notre équipe.
+            Rejoins les pros qui ne distribuent plus de papier. Une seule carte pour partager tout ce que tu es — réseaux, site, contact, prise de rendez-vous — d'un simple contact avec un téléphone. Designée et gérée par notre équipe.
           </p>
 
           <ul className="hidden sm:block mt-6 space-y-2.5">
             {[
               "Activée en 3 minutes — aucune compétence technique",
               "Compatible iPhone & Android (sans appli)",
-              "Modifiez vos infos quand vous voulez, à vie",
+              "Modifie tes infos quand tu veux, à vie",
             ].map((b) => (
               <li key={b} className="flex items-start gap-2.5 text-sm">
                 <span className="mt-0.5 w-5 h-5 rounded-full bg-success/15 flex items-center justify-center shrink-0">
@@ -372,7 +372,7 @@ function TrustBar() {
           </div>
           <div>
             <p className="font-semibold text-sm">Satisfait ou remboursé pendant 30 jours</p>
-            <p className="text-xs text-muted-foreground">Si votre carte ne vous convient pas, on vous rembourse. Sans question.</p>
+            <p className="text-xs text-muted-foreground">Si ta carte ne te convient pas, on te rembourse. Sans question.</p>
           </div>
         </div>
       </div>
@@ -424,7 +424,7 @@ function Problem() {
             <span className="text-gradient">Et ne convertit plus.</span>
           </h2>
           <p className="mt-4 text-muted-foreground text-base sm:text-lg">
-            En 2026, votre carte papier finit à la poubelle avant même votre relance.
+            En 2026, ta carte papier finit à la poubelle avant même ta relance.
             Comparez — la différence est sans appel.
           </p>
         </div>
@@ -597,7 +597,7 @@ function HowItWorks() {
             <Smartphone className="w-3.5 h-3.5" /> Modèles de cartes
           </span>
           <h2 className="mt-3 font-display font-bold text-3xl sm:text-4xl lg:text-5xl leading-tight">
-            Une carte qui ressemble <span className="text-gradient">à votre métier</span>
+            Une carte qui ressemble <span className="text-gradient">à ton métier</span>
           </h2>
           <p className="mt-3 text-base sm:text-lg text-muted-foreground">
             Immobilier, coaching, restaurant, beauté, artisanat… chaque profil a son univers, son ton, ses appels à l'action.
@@ -831,7 +831,7 @@ export function Pricing() {
     <section id="offres" className="py-20 lg:py-28">
       <div className="max-w-7xl mx-auto px-4">
         <div className="text-center max-w-2xl mx-auto">
-          <span className="text-sm font-semibold text-magenta uppercase tracking-wider">Choisissez votre formule</span>
+          <span className="text-sm font-semibold text-magenta uppercase tracking-wider">Choisis ta formule</span>
           <h2 className="mt-3 font-display font-bold text-3xl sm:text-4xl">
             Simple, transparent. <span className="text-gradient">Sans engagement.</span>
           </h2>
@@ -894,14 +894,14 @@ export function Pricing() {
           <div className="order-3 lg:order-3 flex max-w-md mx-auto w-full lg:max-w-none">
             <OfferCard
               name="Carte connectée"
-              tagline="En option avec votre plan"
+              tagline="En option avec ton plan"
               oldPrice="39€"
               price="29€"
               badge="Add-on"
               features={[
-                { t: "Carte gravée à votre nom", v: true },
+                { t: "Carte gravée à ton nom", v: true },
                 { t: "QR code gravé au dos", v: true },
-                { t: "Livraison offerte 48h", v: true },
+                { t: "Livraison offerte (48h–5 jours)", v: true },
                 { t: "1 tap = profil ouvert", v: true },
                 { t: "Paiement unique, sans abonnement", v: true },
               ]}
@@ -914,7 +914,7 @@ export function Pricing() {
         <div className="mt-10 flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-sm text-muted-foreground">
           <span className="flex items-center gap-2"><CreditCard className="w-4 h-4" /> CB · Apple Pay · Google Pay</span>
           <span className="flex items-center gap-2"><Shield className="w-4 h-4 text-success" /> Paiement 100% sécurisé Stripe</span>
-          <span className="flex items-center gap-2"><Truck className="w-4 h-4" /> Livraison offerte · carte connectée</span>
+          <span className="flex items-center gap-2"><Truck className="w-4 h-4" /> Livraison offerte en 48h–5j · carte connectée</span>
         </div>
 
         <ComparisonTable />
@@ -945,9 +945,9 @@ function ComparisonTable() {
     { label: "Section À propos enrichie", values: [false, true, false] },
     { label: "Support prioritaire", values: [false, true, false] },
 
-    { group: "Carte connectée (add-on)", label: "Carte gravée à votre nom", values: [false, false, true] },
+    { group: "Carte connectée (add-on)", label: "Carte gravée à ton nom", values: [false, false, true] },
     { label: "QR code gravé au dos", values: [false, false, true] },
-    { label: "Livraison offerte 48h", values: [false, false, true] },
+    { label: "Livraison offerte (48h–5 jours)", values: [false, false, true] },
     { label: "1 tap = profil ouvert", values: [false, false, true] },
     { label: "Paiement unique sans abonnement", values: [false, false, true] },
   ];
@@ -1133,7 +1133,7 @@ function OfferCard({
 
       {totalValue && (
         <p className={`mt-2 text-xs font-semibold ${highlight ? "text-primary-foreground/90" : "text-magenta"}`}>
-          Valeur totale {totalValue}€ — vous économisez {totalValue - parseFloat(price.replace(",", ".")) | 0}€
+          Valeur totale {totalValue}€ — tu économises {totalValue - parseFloat(price.replace(",", ".")) | 0}€
         </p>
       )}
 
@@ -1183,7 +1183,7 @@ function OfferCard({
       {valueStack && (
         <div className={`mt-6 pt-5 border-t ${highlight ? "border-white/20" : "border-border"}`}>
           <p className={`text-xs font-semibold uppercase tracking-wider mb-3 ${highlight ? "opacity-90" : "text-muted-foreground"}`}>
-            Ce que vous obtenez
+            Ce que tu obtiens
           </p>
           <ul className="space-y-1.5">
             {valueStack.map((v) => (
@@ -1203,11 +1203,11 @@ function OfferCard({
 
 function Features() {
   const items = [
-    { icon: Smartphone, t: "Sans appli à télécharger", d: "Vos contacts ouvrent votre carte instantanément, sur n'importe quel téléphone." },
+    { icon: Smartphone, t: "Sans appli à télécharger", d: "Tes contacts ouvrent ta carte instantanément, sur n'importe quel téléphone." },
     { icon: Zap, t: "Activation en 3 minutes", d: "Un éditeur ultra simple. Aucune compétence technique requise." },
-    { icon: BarChart3, t: "Suivez votre impact", d: "Vues, clics, contacts ajoutés — mesurez vraiment vos rencontres (offre Premium)." },
+    { icon: BarChart3, t: "Suis ton impact", d: "Vues, clics, contacts ajoutés — mesure vraiment tes rencontres (offre Premium)." },
     { icon: Leaf, t: "100% éco-responsable", d: "Plus de cartes papier jetées. Une seule carte digitale à vie." },
-    { icon: Shield, t: "Vos données protégées", d: "Hébergement européen, RGPD, vous restez propriétaire de tout." },
+    { icon: Shield, t: "Tes données protégées", d: "Hébergement européen, RGPD, tu restes propriétaire de tout." },
     { icon: TrendingUp, t: "Conçu pour convertir", d: "Boutons d'action optimisés pour transformer un contact en client." },
   ];
   return (
@@ -1489,12 +1489,12 @@ function Comparison() {
 
 function FAQ() {
   const items = [
-    { q: "Comment fonctionne la carte de visite digitale CVD ?", a: "Vous créez votre profil en 3 minutes (photo, infos, réseaux, liens). Un QR code et un lien unique sont générés instantanément. Partagez-les lors de vos rencontres, en signature email ou sur vos réseaux." },
+    { q: "Comment fonctionne la carte de visite digitale CVD ?", a: "Tu crées ton profil en 3 minutes (photo, infos, réseaux, liens). Un QR code et un lien unique sont générés instantanément. Partage-les lors de tes rencontres, en signature email ou sur tes réseaux." },
     { q: "Combien ça coûte ?", a: "L'offre Essentielle est à 9,80€/mois (ou 8,16€/mois en annuel). L'offre Vitrine est à 15,80€/mois (ou 13,16€/mois en annuel). Essai gratuit 7 jours, sans carte bancaire. Annulable à tout moment, sans engagement." },
-    { q: "Y a-t-il un engagement ou un contrat ?", a: "Aucun. Vous pouvez annuler votre abonnement en 1 clic depuis votre dashboard, à tout moment, avant ou après l'essai. Pas de frais de résiliation." },
+    { q: "Y a-t-il un engagement ou un contrat ?", a: "Aucun. Tu peux annuler ton abonnement en 1 clic depuis ton dashboard, à tout moment, avant ou après l'essai. Pas de frais de résiliation." },
     { q: "Quelle est la différence entre Essentielle et Vitrine ?", a: "Essentielle couvre la carte complète, le QR code et les réseaux. Vitrine ajoute les témoignages clients, les statistiques de vues avancées, la section À propos enrichie et la priorité support." },
-    { q: "Compatible avec iPhone et Android ?", a: "Oui, 100%. Aucune application à télécharger — votre carte s'ouvre directement dans le navigateur de votre contact, en 1 scan." },
-    { q: "Et si je ne suis pas satisfait ?", a: "Garantie satisfait ou remboursé 30 jours. Si CVD ne vous convient pas, on vous rembourse intégralement, sans question." },
+    { q: "Compatible avec iPhone et Android ?", a: "Oui, 100%. Aucune application à télécharger — ta carte s'ouvre directement dans le navigateur de ton contact, en 1 scan." },
+    { q: "Et si je ne suis pas satisfait ?", a: "Garantie satisfait ou remboursé 30 jours. Si CVD ne te convient pas, on te rembourse intégralement, sans question." },
   ];
   const [open, setOpen] = useState<number | null>(0);
   return (
@@ -1537,10 +1537,10 @@ function FinalCTA() {
               <Users className="w-4 h-4" /> Rejoignez 2 400+ pros
             </div>
             <h2 className="mt-5 font-display font-extrabold text-4xl sm:text-5xl leading-tight">
-              Votre prochaine rencontre<br className="hidden sm:block" /> mérite mieux qu'un papier.
+              Ta prochaine rencontre<br className="hidden sm:block" /> mérite mieux qu'un papier.
             </h2>
             <p className="mt-5 text-lg opacity-90 max-w-xl mx-auto">
-              Créez votre carte digitale en 3 minutes. Essai gratuit 7 jours, sans CB. Garantie 30 jours.
+              Crée ta carte digitale en 3 minutes. Essai gratuit 7 jours, sans CB. Garantie 30 jours.
             </p>
             <a
               href="/inscription"

@@ -78,7 +78,7 @@ function CartePhysiqueUpsellPage() {
           </h1>
           <p className="mt-4 text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto">
             Un simple tap et tu partages ton profil. Couleur, finition, logo, nom — tout est à toi.
-            Paiement unique, livraison offerte en 5 jours.
+            Paiement unique, livraison offerte en 48h–5 jours ouvrés.
           </p>
         </div>
 
@@ -142,7 +142,7 @@ function CartePhysiqueUpsellPage() {
               </div>
 
               <div className="mt-6 grid grid-cols-3 gap-3 text-center">
-                <Mini icon={<Check className="h-3.5 w-3.5" />} label="Sans contact + QR" />
+                <Mini icon={<Check className="h-3.5 w-3.5" />} label="1 tap + QR code" />
                 <Mini icon={<Check className="h-3.5 w-3.5" />} label="Compatible iPhone & Android" />
                 <Mini icon={<Check className="h-3.5 w-3.5" />} label="Garantie 2 ans" />
               </div>

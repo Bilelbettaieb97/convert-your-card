@@ -27,7 +27,7 @@ const PLANS = [
     id: "vitrine",
     label: "Vitrine",
     price: "4,80 €/mois",
-    description: "Toutes les briques pour vendre votre savoir-faire.",
+    description: "Toutes les briques pour vendre ton savoir-faire.",
     features: [
       "Tout le plan Essentielle",
       "Services, témoignages, réalisations",
@@ -95,15 +95,15 @@ function AccountPage() {
         <h2 className="font-display text-2xl font-medium">Plan</h2>
         {isInTrial && !paymentMethodSet ? (
           <p className="text-sm text-amber-500 font-medium mt-1 mb-5">
-            Période d'essai en cours — {trialDaysLeft} jour{trialDaysLeft > 1 ? "s" : ""} restant{trialDaysLeft > 1 ? "s" : ""}. Activez votre abonnement pour ne pas perdre votre carte.
+            Période d'essai en cours — {trialDaysLeft} jour{trialDaysLeft > 1 ? "s" : ""} restant{trialDaysLeft > 1 ? "s" : ""}. Active ton abonnement pour ne pas perdre ta carte.
           </p>
         ) : isInTrial && paymentMethodSet ? (
           <p className="text-sm text-emerald-500 font-medium mt-1 mb-5">
-            Abonnement confirmé ✓ — vous serez débité automatiquement à la fin de votre essai.
+            Abonnement confirmé ✓ — tu seras débité automatiquement à la fin de ton essai.
           </p>
         ) : (
           <p className="text-sm text-muted-foreground mt-1 mb-5">
-            Vous pouvez changer de plan à tout moment, sans engagement.
+            Tu peux changer de plan à tout moment, sans engagement.
           </p>
         )}
         <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -167,7 +167,7 @@ function AccountPage() {
 
       <section>
         <h2 className="font-display text-2xl font-medium">Compte</h2>
-        <p className="text-sm text-muted-foreground mt-1 mb-5">Gérez votre adresse email et votre session.</p>
+        <p className="text-sm text-muted-foreground mt-1 mb-5">Gère ton adresse email et ta session.</p>
         <Card className="divide-y divide-border">
           <div className="p-4 flex items-center gap-3">
             <Mail className="h-4 w-4 text-muted-foreground" />

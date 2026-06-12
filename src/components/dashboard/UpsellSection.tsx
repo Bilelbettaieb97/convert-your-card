@@ -11,8 +11,8 @@ interface Props {
 
 export function UpsellSection({
   variant = "full",
-  title = "Allez plus loin",
-  subtitle = "Deux upgrades premium qui transforment votre carte digitale en machine à convertir.",
+  title = "Vas plus loin",
+  subtitle = "Deux upgrades premium qui transforment ta carte digitale en machine à convertir.",
 }: Props) {
   if (variant === "compact") {
     return (
@@ -29,8 +29,8 @@ export function UpsellSection({
             <div className="flex items-center gap-2 mb-0.5">
               <span className="text-[10px] uppercase tracking-wider font-semibold text-amber-600 dark:text-amber-400">Dernière étape recommandée</span>
             </div>
-            <div className="font-display text-lg font-semibold leading-snug">Commander la carte physique pour impressionner vos leads</div>
-            <p className="text-sm text-muted-foreground mt-0.5">Métal noir gravé à votre nom · Sans contact + QR Code · livraison 48h · dès 29 €</p>
+            <div className="font-display text-lg font-semibold leading-snug">Commander ta carte physique pour impressionner tes leads</div>
+            <p className="text-sm text-muted-foreground mt-0.5">Métal noir gravé à ton nom · 1 tap + QR Code · livraison 48h–5j · dès 29 €</p>
           </div>
           <span className="shrink-0 inline-flex items-center gap-1.5 rounded-full bg-amber-500 text-white font-semibold text-sm px-4 py-2 shadow-md group-hover:bg-amber-600 transition">
             Commander <ArrowRight className="h-4 w-4" />
@@ -51,7 +51,7 @@ export function UpsellSection({
             <div className="flex items-center gap-2 mb-0.5">
               <span className="text-[10px] uppercase tracking-wider font-semibold text-sky-500">Création de site web</span>
             </div>
-            <div className="font-display text-lg font-semibold leading-snug">Un vrai site vitrine pour votre entreprise</div>
+            <div className="font-display text-lg font-semibold leading-snug">Un vrai site vitrine pour ton entreprise</div>
             <p className="text-sm text-muted-foreground mt-0.5">Design sur-mesure · SEO local · livré en 7 jours · dès 490 €</p>
           </div>
           <span className="shrink-0 inline-flex items-center gap-1.5 rounded-full border border-sky-500/50 text-sky-600 dark:text-sky-400 font-semibold text-sm px-4 py-2 group-hover:bg-sky-500/10 transition">
@@ -80,14 +80,14 @@ export function UpsellSection({
           gradient="linear-gradient(135deg, oklch(0.88 0.1 90) 0%, oklch(0.75 0.14 75) 100%)"
           glowColor="rgba(234, 179, 8, 0.25)"
           title="Carte connectée"
-          subtitle="L'objet premium que vos prospects n'oublieront pas."
+          subtitle="L'objet premium que tes prospects n'oublieront pas."
           price="29 €"
           priceSuffix="à vie · sans abonnement"
           features={[
             "Approche du smartphone → carte s'ouvre instantanément",
-            "Carte en métal ou PVC noir mat — gravée à votre nom",
+            "Carte en métal ou PVC noir mat — gravée à ton nom",
             "QR code de secours imprimé au dos",
-            "Sync automatique : modifiez votre carte, elle reste à jour en temps réel",
+            "Sync automatique : modifie ta carte, elle reste à jour en temps réel",
             "Livraison France 48h offerte dès 2 cartes",
           ]}
           cta="Commander ma carte"
@@ -106,14 +106,14 @@ export function UpsellSection({
           gradient="linear-gradient(135deg, oklch(0.7 0.18 240) 0%, oklch(0.55 0.2 260) 100%)"
           glowColor="rgba(59, 130, 246, 0.25)"
           title="Site vitrine pro clé en main"
-          subtitle="On crée votre site, vous gardez la main."
+          subtitle="On crée ton site, tu gardes la main."
           price="dès 490 €"
           priceSuffix="livré en 7 jours · paiement en 3×"
           features={[
-            "Design sur-mesure — adapté à votre métier",
+            "Design sur-mesure — adapté à ton métier",
             "Pages : Accueil, Services, Réalisations, Contact",
-            "Connecté à votre carte digitale (lien & QR partagés)",
-            "SEO local optimisé — soyez trouvé sur Google Maps",
+            "Connecté à ta carte digitale (lien & QR partagés)",
+            "SEO local optimisé — sois trouvé sur Google Maps",
             "Hébergement & domaine inclus la 1ʳᵉ année",
             "Modifications illimitées les 30 premiers jours",
           ]}
@@ -127,7 +127,7 @@ export function UpsellSection({
       </div>
 
       <p className="text-center text-xs text-muted-foreground mt-6">
-        Ces add-ons sont facturés une fois — pas de surprise sur votre abonnement.
+        Ces add-ons sont facturés une fois — pas de surprise sur ton abonnement.
       </p>
     </section>
   );

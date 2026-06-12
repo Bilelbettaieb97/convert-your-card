@@ -86,7 +86,7 @@ function CommanderMaCartePage() {
       {/* 3 points forts */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         {[
-          { icon: Wifi,       title: "Contact instantané + QR code",  desc: "Compatible avec tous les smartphones modernes" },
+          { icon: Wifi,       title: "1 tap + QR code",               desc: "Compatible avec tous les smartphones modernes" },
           { icon: Smartphone, title: "Sans application",             desc: "S'ouvre directement dans le navigateur" },
           { icon: Zap,        title: "Lié à ta carte CVD en direct", desc: "Toujours à jour, même après modification" },
         ].map(({ icon: Icon, title, desc }) => (
@@ -126,7 +126,7 @@ function CommanderMaCartePage() {
             </div>
           </div>
           <div className="flex items-center gap-3 text-xs text-muted-foreground">
-            <span className="flex items-center gap-1"><Check className="w-3 h-3 text-emerald-500" /> Sans contact</span>
+            <span className="flex items-center gap-1"><Check className="w-3 h-3 text-emerald-500" /> 1 tap</span>
             <span className="flex items-center gap-1"><Check className="w-3 h-3 text-emerald-500" /> QR code</span>
             <span className="flex items-center gap-1"><Check className="w-3 h-3 text-emerald-500" /> Garantie 2 ans</span>
           </div>
@@ -218,7 +218,7 @@ function CommanderMaCartePage() {
               <p className="text-sm text-white/80">Carte connectée personnalisée</p>
               <p className="text-3xl font-bold text-white">29€</p>
             </div>
-            <p className="text-xs text-white/70">Paiement unique · Livraison offerte (5–10 jours) · France & Europe</p>
+            <p className="text-xs text-white/70">Paiement unique · Livraison offerte (48h–5 jours) · France & Europe</p>
             <button
               type="button"
               onClick={handleOrder}

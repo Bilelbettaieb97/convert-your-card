@@ -98,7 +98,7 @@ function SettingsPage() {
 
   return (
     <div className="p-6 md:p-8 max-w-3xl space-y-6">
-      <Section title="Profil" desc="Vos informations de connexion">
+      <Section title="Profil" desc="Tes informations de connexion">
         <div>
           <label className="text-xs uppercase tracking-wider text-muted-foreground mb-1.5 block">Email actuel</label>
           <Input defaultValue={user?.email ?? ""} readOnly className="bg-muted/30" />
@@ -156,7 +156,7 @@ function SettingsPage() {
           <EyeOff className="h-4 w-4 text-muted-foreground flex-shrink-0" />
           <div className="flex-1 min-w-0">
             <div className="text-sm">Mode privé</div>
-            <div className="text-xs text-muted-foreground">Masquer votre carte des résultats Google (noindex)</div>
+            <div className="text-xs text-muted-foreground">Masquer ta carte des résultats Google (noindex)</div>
           </div>
           <Switch
             checked={data.noIndex ?? false}
@@ -166,7 +166,7 @@ function SettingsPage() {
         <ActionRow
           icon={Download}
           label="Exporter mes données"
-          desc="Téléchargez votre carte au format JSON (conformité RGPD)"
+          desc="Télécharge ta carte au format JSON (conformité RGPD)"
           cta="Exporter"
           onClick={handleExport}
         />
