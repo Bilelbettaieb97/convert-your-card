@@ -114,7 +114,7 @@ export function Nav() {
           <Link to="/" hash="fonctionnement" className="hover:text-foreground transition">Fonctionnement</Link>
           <Link to="/templates" className="hover:text-foreground transition">Modèles</Link>
           <Link to="/offres" className="hover:text-foreground transition">Offres</Link>
-          <Link to="/carte-physique" className="hover:text-foreground transition">Carte physique</Link>
+          <Link to="/carte-physique" className="hover:text-foreground transition">Carte connectée</Link>
         </nav>
         <div className="flex items-center gap-2 sm:gap-3">
           {userEmail ? (
@@ -893,16 +893,15 @@ export function Pricing() {
           {/* Offer 3 — Premium (mobile: 3rd, desktop: 3rd) */}
           <div className="order-3 lg:order-3 flex max-w-md mx-auto w-full lg:max-w-none">
             <OfferCard
-              name="Carte connectée physique"
+              name="Carte connectée"
               tagline="En option avec votre plan"
               oldPrice="39€"
               price="29€"
               badge="Add-on"
               features={[
-                { t: "Carte premium gravée à votre nom", v: true },
+                { t: "Carte gravée à votre nom", v: true },
+                { t: "QR code gravé au dos", v: true },
                 { t: "Livraison offerte 48h", v: true },
-                { t: "QR code intégré", v: true },
-                { t: "Compatible iPhone & Android", v: true },
                 { t: "1 tap = profil ouvert", v: true },
                 { t: "Paiement unique, sans abonnement", v: true },
               ]}
@@ -915,7 +914,7 @@ export function Pricing() {
         <div className="mt-10 flex flex-wrap items-center justify-center gap-x-8 gap-y-3 text-sm text-muted-foreground">
           <span className="flex items-center gap-2"><CreditCard className="w-4 h-4" /> CB · Apple Pay · Google Pay</span>
           <span className="flex items-center gap-2"><Shield className="w-4 h-4 text-success" /> Paiement 100% sécurisé Stripe</span>
-          <span className="flex items-center gap-2"><Truck className="w-4 h-4" /> Livraison 48h (option physique)</span>
+          <span className="flex items-center gap-2"><Truck className="w-4 h-4" /> Livraison offerte · carte connectée</span>
         </div>
 
         <ComparisonTable />
@@ -929,7 +928,7 @@ function ComparisonTable() {
   const offers: { key: string; name: string; price: string; badge: string; highlight?: boolean }[] = [
     { key: "essentielle", name: "Essentielle", price: "8,16€/mois", badge: "Annuel" },
     { key: "vitrine", name: "Vitrine", price: "13,16€/mois", badge: "Populaire", highlight: true },
-    { key: "nfc", name: "Connectée", price: "29€", badge: "Add-on" },
+    { key: "nfc", name: "Carte connectée", price: "29€", badge: "Add-on" },
   ];
 
   type Cell = boolean | string;
@@ -946,7 +945,8 @@ function ComparisonTable() {
     { label: "Section À propos enrichie", values: [false, true, false] },
     { label: "Support prioritaire", values: [false, true, false] },
 
-    { group: "Carte connectée (add-on)", label: "Carte connectée premium livrée", values: [false, false, true] },
+    { group: "Carte connectée (add-on)", label: "Carte gravée à votre nom", values: [false, false, true] },
+    { label: "QR code gravé au dos", values: [false, false, true] },
     { label: "Livraison offerte 48h", values: [false, false, true] },
     { label: "1 tap = profil ouvert", values: [false, false, true] },
     { label: "Paiement unique sans abonnement", values: [false, false, true] },
@@ -1572,7 +1572,7 @@ export function Footer() {
               <li><Link to="/" className="hover:text-foreground transition">Accueil</Link></li>
               
               <li><Link to="/templates" className="hover:text-foreground transition">Templates</Link></li>
-              <li><Link to="/carte-physique" className="hover:text-foreground transition">Carte connectée physique</Link></li>
+              <li><Link to="/carte-physique" className="hover:text-foreground transition">Carte connectée</Link></li>
               <li><Link to="/metiers" className="hover:text-foreground transition">Carte par métier</Link></li>
             </ul>
           </div>
