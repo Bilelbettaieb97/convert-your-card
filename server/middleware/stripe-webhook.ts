@@ -265,7 +265,7 @@ export default defineEventHandler(async (event) => {
     // Lire le statut depuis les métadonnées de la session — zéro appel API, zéro race condition
     const hasTrial = session.metadata?.has_trial === "true";
     const subscriptionStatus = hasTrial ? "trialing" : "active";
-    let trialEnd: string | null = null;
+    const trialEnd: string | null = hasTrial ? new Date(Date.now() + 3 * 86_400_000).toISOString() : null;
     console.log("[stripe-webhook] Status from metadata:", subscriptionStatus, "has_trial:", hasTrial);
 
     // Upsert subscription — CRITIQUE : retourne 500 si échec → Stripe retry automatique
