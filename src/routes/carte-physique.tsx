@@ -35,9 +35,6 @@ type ColorKey = "noir" | "blanc" | "magenta" | "or" | "bleu";
 const COLORS: { key: ColorKey; name: string; bg: string; fg: string; ring: string }[] = [
   { key: "noir", name: "Noir mat", bg: "#0a0a0a", fg: "#ffffff", ring: "#0a0a0a" },
   { key: "blanc", name: "Blanc pur", bg: "#f5f5f5", fg: "#0a0a0a", ring: "#d4d4d4" },
-  { key: "magenta", name: "Magenta", bg: "#d946a0", fg: "#ffffff", ring: "#d946a0" },
-  { key: "or", name: "Or champagne", bg: "#c9a84c", fg: "#1a1a1a", ring: "#c9a84c" },
-  { key: "bleu", name: "Bleu nuit", bg: "#0c2340", fg: "#ffffff", ring: "#0c2340" },
 ];
 
 const FINISHES: { key: Finish; label: string; desc: string }[] = [
