@@ -264,7 +264,7 @@ function BuilderIAResultatPage() {
           </div>
 
           {/* Bouton CTA dupliqué — mobile uniquement, sous le téléphone */}
-          <div className="w-full max-w-[280px] lg:hidden space-y-3">
+          <div className="w-full lg:hidden space-y-3">
             <button
               type="button"
               onClick={handleActivateVitrine}
