@@ -223,18 +223,21 @@ function BuilderIAResultatPage() {
             <span className="text-[11px] text-muted-foreground ml-1">Changer de thème</span>
           </div>
 
-          <div style={{
-            perspective: "900px",
-            transform: revealed ? "rotateY(0deg)" : "rotateY(-90deg)",
-            transition: "transform 0.55s cubic-bezier(0.4, 0, 0.2, 1)",
-          }}>
-            <div ref={phoneRef} className="relative">
-              <PhoneFrame>
-                <div style={{ pointerEvents: "none" }}>
-                  <BusinessCard data={fullCard} />
-                </div>
-              </PhoneFrame>
+          <div className="relative">
+            <div style={{
+              perspective: "900px",
+              transform: revealed ? "rotateY(0deg)" : "rotateY(-90deg)",
+              transition: "transform 0.55s cubic-bezier(0.4, 0, 0.2, 1)",
+            }}>
+              <div ref={phoneRef} className="relative">
+                <PhoneFrame>
+                  <div style={{ pointerEvents: "none" }}>
+                    <BusinessCard data={fullCard} />
+                  </div>
+                </PhoneFrame>
+              </div>
             </div>
+            <div className="absolute inset-0 lg:hidden" />
           </div>
 
           {/* Partage */}
