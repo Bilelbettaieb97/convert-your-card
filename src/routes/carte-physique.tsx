@@ -2,6 +2,7 @@ import * as React from "react";
 import { createFileRoute, Link } from "@tanstack/react-router";
 import { useMemo, useRef, useState } from "react";
 import { Check, CreditCard, Sparkles, Upload, X, Wifi, ArrowRight } from "lucide-react";
+import { Nav } from "@/routes/index";
 
 export const Route = createFileRoute("/carte-physique")({
   head: () => ({
@@ -69,6 +70,7 @@ function CartePhysiqueUpsellPage() {
 
   return (
     <main className="min-h-screen bg-background">
+      <Nav />
       <div className="mx-auto max-w-6xl px-4 py-10 sm:py-14 lg:py-16">
         {/* Header */}
         <div className="text-center mb-10 animate-fade-in">
