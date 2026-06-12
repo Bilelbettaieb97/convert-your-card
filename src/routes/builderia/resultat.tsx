@@ -262,6 +262,25 @@ function BuilderIAResultatPage() {
               </button>
             )}
           </div>
+
+          {/* Bouton CTA dupliqué — mobile uniquement, sous le téléphone */}
+          <div className="w-full max-w-[280px] lg:hidden space-y-3">
+            <button
+              type="button"
+              onClick={handleActivateVitrine}
+              disabled={activating}
+              className="w-full flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-[#c026d3] to-[#7c3aed] text-white font-bold py-4 text-base hover:opacity-90 transition shadow-lg shadow-[#c026d3]/25 disabled:opacity-70 disabled:cursor-not-allowed"
+            >
+              {activating
+                ? <><Loader2 className="w-4 h-4 animate-spin" /> Publication en cours…</>
+                : <><Rocket className="w-4 h-4" /> Je publie ma carte — 3 jours gratuits</>
+              }
+            </button>
+            <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/[0.06] px-4 py-3 space-y-1">
+              <p className="text-sm font-semibold text-emerald-400">Sans carte bleue · Sans engagement</p>
+              <p className="text-xs text-muted-foreground">Puis 4,80€/mois · Résiliable à tout moment</p>
+            </div>
+          </div>
         </div>
 
         {/* ── Droite : CTA ── 1er sur mobile, 2ème sur desktop */}
