@@ -86,13 +86,6 @@ function GoogleIcon() {
   );
 }
 
-function FacebookIcon() {
-  return (
-    <svg viewBox="0 0 24 24" className="w-4 h-4" aria-hidden="true" fill="#1877F2">
-      <path d="M24 12.073C24 5.404 18.627 0 12 0S0 5.404 0 12.073C0 18.1 4.388 23.094 10.125 24v-8.437H7.078v-3.49h3.047V9.41c0-3.025 1.792-4.697 4.532-4.697 1.313 0 2.686.236 2.686.236v2.97h-1.513c-1.491 0-1.956.93-1.956 1.883v2.268h3.328l-.532 3.49h-2.796V24C19.612 23.094 24 18.1 24 12.073z"/>
-    </svg>
-  );
-}
 
 export const Route = createFileRoute("/inscription/")({
   validateSearch: z.object({ redirect: z.string().optional() }),
@@ -133,8 +126,6 @@ function InscriptionPage() {
   const [submitting, setSubmitting] = useState(false);
   const [sent, setSent] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
-  const [facebookLoading, setFacebookLoading] = useState(false);
-
   async function handleGoogleLogin() {
     setGoogleLoading(true);
     const appUrl = typeof window !== "undefined" ? window.location.origin : "https://www.cartevisitedigitale.fr";
@@ -145,19 +136,6 @@ function InscriptionPage() {
     if (error) {
       toast.error("Impossible de se connecter avec Google");
       setGoogleLoading(false);
-    }
-  }
-
-  async function handleFacebookLogin() {
-    setFacebookLoading(true);
-    const appUrl = typeof window !== "undefined" ? window.location.origin : "https://www.cartevisitedigitale.fr";
-    const { error } = await supabase.auth.signInWithOAuth({
-      provider: "facebook",
-      options: { redirectTo: `${appUrl}/auth/callback` },
-    });
-    if (error) {
-      toast.error("Impossible de se connecter avec Facebook");
-      setFacebookLoading(false);
     }
   }
 
@@ -262,26 +240,15 @@ function InscriptionPage() {
                     </span>
                   </div>
 
-                  <div className="flex flex-col gap-2.5 mb-4">
-                    <button
-                      type="button"
-                      onClick={handleGoogleLogin}
-                      disabled={googleLoading || facebookLoading}
-                      className="w-full flex items-center justify-center gap-2.5 rounded-xl border border-border bg-background px-4 py-3 text-sm font-medium text-foreground hover:bg-muted/50 transition disabled:opacity-60"
-                    >
-                      <GoogleIcon />
-                      {googleLoading ? "Redirection…" : "Continuer avec Google"}
-                    </button>
-                    <button
-                      type="button"
-                      onClick={handleFacebookLogin}
-                      disabled={facebookLoading || googleLoading}
-                      className="w-full flex items-center justify-center gap-2.5 rounded-xl border border-border bg-background px-4 py-3 text-sm font-medium text-foreground hover:bg-muted/50 transition disabled:opacity-60"
-                    >
-                      <FacebookIcon />
-                      {facebookLoading ? "Redirection…" : "Continuer avec Facebook"}
-                    </button>
-                  </div>
+                  <button
+                    type="button"
+                    onClick={handleGoogleLogin}
+                    disabled={googleLoading}
+                    className="w-full flex items-center justify-center gap-2.5 rounded-xl border border-border bg-background px-4 py-3 text-sm font-medium text-foreground hover:bg-muted/50 transition disabled:opacity-60 mb-4"
+                  >
+                    <GoogleIcon />
+                    {googleLoading ? "Redirection…" : "Continuer avec Google"}
+                  </button>
 
                   <div className="flex items-center gap-3 mb-4">
                     <div className="flex-1 h-px bg-border" />
