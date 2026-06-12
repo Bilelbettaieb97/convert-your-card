@@ -43,7 +43,6 @@ function CgvPage() {
           <p><strong className="text-foreground">Adresse :</strong> Rueil-Malmaison, 92500, Île-de-France, France</p>
           <p><strong className="text-foreground">Email :</strong> contact@cartevisitedigitale.fr</p>
           <p><strong className="text-foreground">Téléphone :</strong> 06 16 47 72 45</p>
-          <p><strong className="text-foreground">SIRET :</strong> [à compléter]</p>
           <EnClair>
             Vous achetez directement auprès de Bilel Bettaieb, entrepreneur individuel basé à Rueil-Malmaison (92).
           </EnClair>
