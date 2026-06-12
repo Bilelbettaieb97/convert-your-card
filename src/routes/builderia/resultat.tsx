@@ -196,8 +196,8 @@ function BuilderIAResultatPage() {
 
       <div className="max-w-5xl mx-auto px-4 py-10 grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
 
-        {/* ── Gauche : phone ── */}
-        <div className="flex flex-col items-center gap-4">
+        {/* ── Gauche : phone ── 2ème sur mobile, 1er sur desktop */}
+        <div className="flex flex-col items-center gap-4 order-2 lg:order-1">
           <p className="text-xs uppercase tracking-widest text-primary">Aperçu Vitrine complet</p>
 
           <div className="flex items-center gap-3">
@@ -223,21 +223,18 @@ function BuilderIAResultatPage() {
             <span className="text-[11px] text-muted-foreground ml-1">Changer de thème</span>
           </div>
 
-          <div className="relative">
-            <div style={{
-              perspective: "900px",
-              transform: revealed ? "rotateY(0deg)" : "rotateY(-90deg)",
-              transition: "transform 0.55s cubic-bezier(0.4, 0, 0.2, 1)",
-            }}>
-              <div ref={phoneRef} className="relative">
-                <PhoneFrame>
-                  <div style={{ pointerEvents: "none" }}>
-                    <BusinessCard data={fullCard} />
-                  </div>
-                </PhoneFrame>
-              </div>
+          <div style={{
+            perspective: "900px",
+            transform: revealed ? "rotateY(0deg)" : "rotateY(-90deg)",
+            transition: "transform 0.55s cubic-bezier(0.4, 0, 0.2, 1)",
+          }}>
+            <div ref={phoneRef} className="relative">
+              <PhoneFrame>
+                <div style={{ pointerEvents: "none" }}>
+                  <BusinessCard data={fullCard} />
+                </div>
+              </PhoneFrame>
             </div>
-            <div className="absolute inset-0 lg:hidden" />
           </div>
 
           {/* Partage */}
@@ -267,8 +264,8 @@ function BuilderIAResultatPage() {
           </div>
         </div>
 
-        {/* ── Droite : CTA ── */}
-        <div className="space-y-4 lg:pt-4">
+        {/* ── Droite : CTA ── 1er sur mobile, 2ème sur desktop */}
+        <div className="space-y-4 lg:pt-4 order-1 lg:order-2">
 
           <div>
             <h1 className="font-bold text-2xl text-foreground mb-1">
