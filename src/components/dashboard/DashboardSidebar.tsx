@@ -26,21 +26,14 @@ const NAV_EXTRAS = [
 ];
 
 const NAV_DATA = [
-  { to: "/dashboard/statistiques",   label: "Statistiques",     icon: BarChart2 },
-  { to: "/dashboard/contacts",      label: "Contacts",         icon: Users    },
-  { to: "/dashboard/leads",         label: "Pipeline",         icon: TrendingUp },
-  { to: "/dashboard/analytics",     label: "Analytics avancé", icon: BarChart2 },
-  { to: "/dashboard/notifications", label: "Notifications",    icon: Bell     },
+  { to: "/dashboard/statistiques", label: "Statistiques", icon: BarChart2 },
 ];
 
 const NAV_ACCOUNT = [
-  { to: "/dashboard/team",         label: "Équipe",         icon: UserCog  },
-  { to: "/dashboard/orders",       label: "Commandes NFC",  icon: Package  },
-  { to: "/dashboard/integrations", label: "Intégrations",   icon: Plug     },
-  { to: "/dashboard/billing",      label: "Facturation",    icon: Receipt  },
-  { to: "/dashboard/settings",     label: "Paramètres",     icon: Settings },
-  { to: "/dashboard/help",         label: "Aide",           icon: HelpCircle },
-  { to: "/dashboard/account",      label: "Plan & compte",  icon: CreditCard },
+  { to: "/dashboard/billing",  label: "Facturation",  icon: Receipt    },
+  { to: "/dashboard/settings", label: "Paramètres",   icon: Settings   },
+  { to: "/dashboard/help",     label: "Aide",         icon: HelpCircle },
+  { to: "/dashboard/account",  label: "Plan & compte", icon: CreditCard },
 ];
 
 const ESSENTIELLE_ALLOWED = [
