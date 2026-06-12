@@ -64,8 +64,14 @@ function AuthCallbackPage() {
       const device = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent) ? "mobile" : "desktop";
       supabase.rpc("track_signup_device", { p_user_id: session.user.id, p_device: device }).then(() => {});
 
-      const hasGenerated = typeof window !== "undefined" && !!localStorage.getItem("cyk.builderia.generated");
-      navigate({ to: hasGenerated ? "/builderia/resultat" : "/builderia", replace: true });
+      let goToResultat = false;
+      if (typeof window !== "undefined" && !!localStorage.getItem("cyk.builderia.generated")) {
+        try {
+          const cardData = loadCard();
+          goToResultat = !!cardData?.bio;
+        } catch {}
+      }
+      navigate({ to: goToResultat ? "/builderia/resultat" : "/builderia", replace: true });
     }
 
     handleCallback();

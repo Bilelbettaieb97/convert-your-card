@@ -173,6 +173,11 @@ function BuilderIAResultatPage() {
     setTimeout(() => setCopied(false), 2000);
   }
 
+  if (!generatedCard?.bio && hydrated) {
+    navigate({ to: "/builderia", replace: true });
+    return null;
+  }
+
   if (loading || !hydrated || !user) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
