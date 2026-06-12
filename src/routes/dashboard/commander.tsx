@@ -73,7 +73,7 @@ function CommanderMaCartePage() {
   }
 
   return (
-    <div className="p-6 max-w-4xl mx-auto space-y-8">
+    <div className="p-5 lg:p-8 space-y-6 max-w-7xl">
       {/* Header */}
       <div>
         <h1 className="text-2xl font-bold text-foreground">Commander ma carte NFC</h1>
@@ -84,10 +84,10 @@ function CommanderMaCartePage() {
       </div>
 
       {/* 3 points forts */}
-      <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
+      <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         {[
-          { icon: Wifi,       title: "Puce NFC + QR code",          desc: "Compatible avec tous les smartphones modernes" },
-          { icon: Smartphone, title: "Sans application",            desc: "S'ouvre directement dans le navigateur" },
+          { icon: Wifi,       title: "Puce NFC + QR code",           desc: "Compatible avec tous les smartphones modernes" },
+          { icon: Smartphone, title: "Sans application",             desc: "S'ouvre directement dans le navigateur" },
           { icon: Zap,        title: "Lié à ta carte CVD en direct", desc: "Toujours à jour, même après modification" },
         ].map(({ icon: Icon, title, desc }) => (
           <div key={title} className="rounded-xl border border-border bg-card px-4 py-4 flex gap-3 items-start">
@@ -102,7 +102,7 @@ function CommanderMaCartePage() {
         ))}
       </div>
 
-      <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 items-start">
+      <div className="grid grid-cols-1 lg:grid-cols-[1fr_420px] gap-6 items-start">
 
         {/* Preview carte */}
         <div className="rounded-2xl border border-border bg-card p-6 flex flex-col items-center gap-4">

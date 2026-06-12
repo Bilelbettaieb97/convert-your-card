@@ -52,6 +52,7 @@ import { Route as DashboardIntegrationsRouteImport } from './routes/dashboard/in
 import { Route as DashboardHelpRouteImport } from './routes/dashboard/help'
 import { Route as DashboardContentRouteImport } from './routes/dashboard/content'
 import { Route as DashboardContactsRouteImport } from './routes/dashboard/contacts'
+import { Route as DashboardCommanderRouteImport } from './routes/dashboard/commander'
 import { Route as DashboardCarteRouteImport } from './routes/dashboard/carte'
 import { Route as DashboardCardRouteImport } from './routes/dashboard/card'
 import { Route as DashboardBillingRouteImport } from './routes/dashboard/billing'
@@ -278,6 +279,11 @@ const DashboardContactsRoute = DashboardContactsRouteImport.update({
   path: '/contacts',
   getParentRoute: () => DashboardRoute,
 } as any)
+const DashboardCommanderRoute = DashboardCommanderRouteImport.update({
+  id: '/commander',
+  path: '/commander',
+  getParentRoute: () => DashboardRoute,
+} as any)
 const DashboardCarteRoute = DashboardCarteRouteImport.update({
   id: '/carte',
   path: '/carte',
@@ -346,6 +352,7 @@ export interface FileRoutesByFullPath {
   '/dashboard/billing': typeof DashboardBillingRoute
   '/dashboard/card': typeof DashboardCardRoute
   '/dashboard/carte': typeof DashboardCarteRoute
+  '/dashboard/commander': typeof DashboardCommanderRoute
   '/dashboard/contacts': typeof DashboardContactsRoute
   '/dashboard/content': typeof DashboardContentRoute
   '/dashboard/help': typeof DashboardHelpRoute
@@ -395,6 +402,7 @@ export interface FileRoutesByTo {
   '/dashboard/billing': typeof DashboardBillingRoute
   '/dashboard/card': typeof DashboardCardRoute
   '/dashboard/carte': typeof DashboardCarteRoute
+  '/dashboard/commander': typeof DashboardCommanderRoute
   '/dashboard/contacts': typeof DashboardContactsRoute
   '/dashboard/content': typeof DashboardContentRoute
   '/dashboard/help': typeof DashboardHelpRoute
@@ -449,6 +457,7 @@ export interface FileRoutesById {
   '/dashboard/billing': typeof DashboardBillingRoute
   '/dashboard/card': typeof DashboardCardRoute
   '/dashboard/carte': typeof DashboardCarteRoute
+  '/dashboard/commander': typeof DashboardCommanderRoute
   '/dashboard/contacts': typeof DashboardContactsRoute
   '/dashboard/content': typeof DashboardContentRoute
   '/dashboard/help': typeof DashboardHelpRoute
@@ -504,6 +513,7 @@ export interface FileRouteTypes {
     | '/dashboard/billing'
     | '/dashboard/card'
     | '/dashboard/carte'
+    | '/dashboard/commander'
     | '/dashboard/contacts'
     | '/dashboard/content'
     | '/dashboard/help'
@@ -553,6 +563,7 @@ export interface FileRouteTypes {
     | '/dashboard/billing'
     | '/dashboard/card'
     | '/dashboard/carte'
+    | '/dashboard/commander'
     | '/dashboard/contacts'
     | '/dashboard/content'
     | '/dashboard/help'
@@ -606,6 +617,7 @@ export interface FileRouteTypes {
     | '/dashboard/billing'
     | '/dashboard/card'
     | '/dashboard/carte'
+    | '/dashboard/commander'
     | '/dashboard/contacts'
     | '/dashboard/content'
     | '/dashboard/help'
@@ -960,6 +972,13 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof DashboardContactsRouteImport
       parentRoute: typeof DashboardRoute
     }
+    '/dashboard/commander': {
+      id: '/dashboard/commander'
+      path: '/commander'
+      fullPath: '/dashboard/commander'
+      preLoaderRoute: typeof DashboardCommanderRouteImport
+      parentRoute: typeof DashboardRoute
+    }
     '/dashboard/carte': {
       id: '/dashboard/carte'
       path: '/carte'
@@ -1039,6 +1058,7 @@ interface DashboardRouteChildren {
   DashboardBillingRoute: typeof DashboardBillingRoute
   DashboardCardRoute: typeof DashboardCardRoute
   DashboardCarteRoute: typeof DashboardCarteRoute
+  DashboardCommanderRoute: typeof DashboardCommanderRoute
   DashboardContactsRoute: typeof DashboardContactsRoute
   DashboardContentRoute: typeof DashboardContentRoute
   DashboardHelpRoute: typeof DashboardHelpRoute
@@ -1063,6 +1083,7 @@ const DashboardRouteChildren: DashboardRouteChildren = {
   DashboardBillingRoute: DashboardBillingRoute,
   DashboardCardRoute: DashboardCardRoute,
   DashboardCarteRoute: DashboardCarteRoute,
+  DashboardCommanderRoute: DashboardCommanderRoute,
   DashboardContactsRoute: DashboardContactsRoute,
   DashboardContentRoute: DashboardContentRoute,
   DashboardHelpRoute: DashboardHelpRoute,
