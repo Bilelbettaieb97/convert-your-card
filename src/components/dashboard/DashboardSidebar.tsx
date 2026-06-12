@@ -26,7 +26,8 @@ const NAV_EXTRAS = [
 ];
 
 const NAV_DATA = [
-  { to: "/dashboard/statistiques", label: "Statistiques", icon: BarChart2 },
+  { to: "/dashboard/statistiques",  label: "Statistiques",      icon: BarChart2 },
+  { to: "/dashboard/commander",     label: "Commander ma carte", icon: Package   },
 ];
 
 const NAV_ACCOUNT = [
