@@ -12,6 +12,7 @@ import { ExternalLink, Share2, Command, Circle, QrCode, HeadphonesIcon } from "l
 import { useAuthStore } from "@/lib/auth-store";
 import { getProfileMeta } from "@/lib/profile-store";
 import { usePlan } from "@/lib/use-plan";
+import { supabase } from "@/integrations/supabase/client";
 
 export const Route = createFileRoute("/dashboard")({
   head: () => ({
@@ -66,6 +67,15 @@ function DashboardLayout() {
   useEffect(() => {
     if (!loading && !user) navigate({ to: "/connexion" });
   }, [user, loading, navigate]);
+
+  useEffect(() => {
+    if (!user) return;
+    const update = () =>
+      supabase.from("nfc_profiles").update({ last_seen_at: new Date().toISOString() }).eq("user_id", user.id);
+    update();
+    const id = setInterval(update, 2 * 60 * 1000);
+    return () => clearInterval(id);
+  }, [user]);
 
   useEffect(() => {
     if (loading || planLoading || !user || hasProfile === null) return;
