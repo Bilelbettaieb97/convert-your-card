@@ -53,11 +53,11 @@ function CgvPage() {
           <ul className="list-disc pl-5 space-y-1 mt-2">
             <li><strong className="text-foreground">Plan Essentielle</strong> — Gratuit, sans limitation de durée, sans engagement</li>
             <li><strong className="text-foreground">Plan Vitrine</strong> — 4,80 € / mois TTC, avec essai gratuit de 3 jours sans CB requise</li>
-            <li><strong className="text-foreground">Carte NFC physique</strong> — 29 € TTC (achat unique, frais de port inclus en France métropolitaine)</li>
+            <li><strong className="text-foreground">Carte connectée physique</strong> — 29 € TTC (achat unique, frais de port inclus en France métropolitaine)</li>
           </ul>
           <p className="mt-2">Les prix sont indiqués en euros toutes taxes comprises (TTC). Bilel Bettaieb, micro-entrepreneur non assujetti à la TVA, applique l'article 293 B du CGI : aucune TVA n'est collectée.</p>
           <EnClair>
-            Il y a trois offres : gratuit, 4,80€/mois ou une carte NFC à 29€ en une fois. Les prix affichés sont les prix finaux — pas de surprise.
+            Il y a trois offres : gratuit, 4,80€/mois ou une carte connectée à 29€ en une fois. Les prix affichés sont les prix finaux — pas de surprise.
           </EnClair>
         </Section>
 
@@ -71,7 +71,7 @@ function CgvPage() {
         </Section>
 
         <Section title="4. Commande et souscription">
-          <p>Toute souscription au plan Vitrine ou tout achat de carte NFC vaut acceptation des présentes CGV.</p>
+          <p>Toute souscription au plan Vitrine ou tout achat de carte connectée vaut acceptation des présentes CGV.</p>
           <p>Un email de confirmation récapitulatif est envoyé à l'adresse fournie lors de l'inscription dans les minutes suivant la souscription.</p>
           <p>Carte Visite Digitale se réserve le droit de refuser toute commande pour un motif légitime (fraude suspectée, usurpation d'identité, violation des CGU).</p>
           <EnClair>
@@ -83,7 +83,7 @@ function CgvPage() {
           <p>Les paiements sont traités de manière sécurisée par <strong className="text-foreground">Stripe</strong> (Stripe Payments Europe, Ltd — certifié PCI DSS Niveau 1). Carte Visite Digitale ne stocke aucune donnée bancaire.</p>
           <p>Moyens de paiement acceptés : carte bancaire (Visa, Mastercard, American Express, Carte Bleue).</p>
           <p>Pour l'abonnement Vitrine : le paiement est mensuel et reconduit automatiquement chaque mois à la date anniversaire de souscription.</p>
-          <p>Pour la carte NFC physique : paiement unique à la commande.</p>
+          <p>Pour la carte connectée physique : paiement unique à la commande.</p>
           <EnClair>
             Paiement 100% sécurisé via Stripe. On ne voit jamais votre numéro de carte. L'abonnement se renouvelle chaque mois automatiquement.
           </EnClair>
@@ -102,18 +102,18 @@ function CgvPage() {
         <Section title="7. Droit de rétractation">
           <p>Conformément à l'article L.221-18 du Code de la consommation, vous disposez d'un délai de <strong className="text-foreground">14 jours</strong> à compter de la souscription pour exercer votre droit de rétractation, sans avoir à justifier de motifs ni à payer de pénalités.</p>
           <p>Pour exercer ce droit, contactez-nous par email à <strong className="text-foreground">contact@cartevisitedigitale.fr</strong> en indiquant votre demande de rétractation. Le remboursement interviendra dans les 14 jours suivant la réception de votre demande.</p>
-          <p><strong className="text-foreground">Exception :</strong> conformément à l'article L.221-28 du Code de la consommation, le droit de rétractation ne s'applique pas à la carte NFC physique, produit fabriqué sur mesure selon vos spécifications (personnalisation du profil).</p>
+          <p><strong className="text-foreground">Exception :</strong> conformément à l'article L.221-28 du Code de la consommation, le droit de rétractation ne s'applique pas à la carte connectée physique, produit fabriqué sur mesure selon vos spécifications (personnalisation du profil).</p>
           <EnClair>
-            Pour l'abonnement : vous avez 14 jours pour changer d'avis et être remboursé intégralement. Pour la carte NFC physique : pas de rétractation possible car elle est personnalisée à votre nom.
+            Pour l'abonnement : vous avez 14 jours pour changer d'avis et être remboursé intégralement. Pour la carte connectée physique : pas de rétractation possible car elle est personnalisée à votre nom.
           </EnClair>
         </Section>
 
-        <Section title="8. Livraison de la carte NFC physique">
-          <p>Les cartes NFC physiques sont expédiées dans un délai de <strong className="text-foreground">5 à 10 jours ouvrés</strong> après validation de la commande, en France métropolitaine.</p>
+        <Section title="8. Livraison de la carte connectée physique">
+          <p>Les cartes connectées physiques sont expédiées dans un délai de <strong className="text-foreground">5 à 10 jours ouvrés</strong> après validation de la commande, en France métropolitaine.</p>
           <p>Un email de confirmation avec numéro de suivi est envoyé à l'expédition.</p>
           <p>En cas de colis perdu ou endommagé, contactez-nous dans les 30 jours suivant la commande.</p>
           <EnClair>
-            Votre carte NFC arrive sous 5 à 10 jours ouvrés. On vous envoie le numéro de suivi par email.
+            Votre carte connectée arrive sous 5 à 10 jours ouvrés. On vous envoie le numéro de suivi par email.
           </EnClair>
         </Section>
 

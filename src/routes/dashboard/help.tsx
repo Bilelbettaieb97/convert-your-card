@@ -12,12 +12,12 @@ export const Route = createFileRoute("/dashboard/help")({
 });
 
 const ARTICLES = [
-  { t: "Comment fonctionne la carte NFC ?", c: "Démarrage", time: "3 min" },
+  { t: "Comment fonctionne la carte connectée ?", c: "Démarrage", time: "3 min" },
   { t: "Personnaliser le design de mon profil", c: "Design", time: "5 min" },
   { t: "Comprendre mes statistiques", c: "Analytics", time: "4 min" },
   { t: "Synchroniser avec HubSpot", c: "Intégrations", time: "6 min" },
   { t: "Inviter mon équipe", c: "Équipe", time: "2 min" },
-  { t: "Modifier mes infos sans recommencer", c: "Carte NFC", time: "1 min" },
+  { t: "Modifier mes infos sans recommencer", c: "Carte physique", time: "1 min" },
 ];
 
 function HelpPage() {
@@ -33,7 +33,7 @@ function HelpPage() {
     { done: !!data.name, label: "Compléter votre profil", desc: "Nom, photo, bio, liens", to: "/dashboard/card" },
     { done: !!data.accent, label: "Choisir un thème", desc: "Personnalisez l'apparence", to: "/dashboard/style" },
     { done: !!profile?.actif, label: "Activer votre carte", desc: "Passez au plan payant", to: "/dashboard/account" },
-    { done: false, label: "Commander une carte NFC", desc: "À partir de 29 €", to: "/carte-physique" },
+    { done: false, label: "Commander ma carte physique", desc: "À partir de 29 €", to: "/carte-physique" },
     { done: false, label: "Partager votre carte", desc: "Premier contact sauvegardé" },
   ];
 

@@ -27,7 +27,7 @@ export const Route = createFileRoute("/")({
       { property: "og:site_name", content: "CVD — Carte de visite digitale" },
       { property: "og:locale", content: "fr_FR" },
       { property: "og:image", content: "https://cartevisitedigitale.fr/og-image.jpg" },
-      { property: "og:image:alt", content: "CVD — Carte de visite digitale professionnelle NFC" },
+      { property: "og:image:alt", content: "CVD — Carte de visite digitale professionnelle" },
       { name: "twitter:card", content: "summary_large_image" },
       { name: "twitter:title", content: "CVD · Carte de visite digitale — 1 tap pour partager vos contacts" },
       { name: "twitter:description", content: "Créez votre carte de visite digitale en 3 minutes. 2 400+ pros · 4,9★." },
@@ -893,20 +893,20 @@ export function Pricing() {
           {/* Offer 3 — Premium (mobile: 3rd, desktop: 3rd) */}
           <div className="order-3 lg:order-3 flex max-w-md mx-auto w-full lg:max-w-none">
             <OfferCard
-              name="Carte NFC physique"
+              name="Carte connectée physique"
               tagline="En option avec votre plan"
               oldPrice="39€"
               price="29€"
               badge="Add-on"
               features={[
-                { t: "Carte NFC premium gravée", v: true },
+                { t: "Carte premium gravée à votre nom", v: true },
                 { t: "Livraison offerte 48h", v: true },
                 { t: "QR code intégré", v: true },
                 { t: "Compatible iPhone & Android", v: true },
                 { t: "1 tap = profil ouvert", v: true },
                 { t: "Paiement unique, sans abonnement", v: true },
               ]}
-              cta="Ajouter la carte NFC"
+              cta="Ajouter la carte connectée"
             />
           </div>
         </div>
@@ -929,7 +929,7 @@ function ComparisonTable() {
   const offers: { key: string; name: string; price: string; badge: string; highlight?: boolean }[] = [
     { key: "essentielle", name: "Essentielle", price: "8,16€/mois", badge: "Annuel" },
     { key: "vitrine", name: "Vitrine", price: "13,16€/mois", badge: "Populaire", highlight: true },
-    { key: "nfc", name: "NFC", price: "29€", badge: "Add-on" },
+    { key: "nfc", name: "Connectée", price: "29€", badge: "Add-on" },
   ];
 
   type Cell = boolean | string;
@@ -946,7 +946,7 @@ function ComparisonTable() {
     { label: "Section À propos enrichie", values: [false, true, false] },
     { label: "Support prioritaire", values: [false, true, false] },
 
-    { group: "Carte NFC (add-on)", label: "Carte NFC premium livrée", values: [false, false, true] },
+    { group: "Carte connectée (add-on)", label: "Carte connectée premium livrée", values: [false, false, true] },
     { label: "Livraison offerte 48h", values: [false, false, true] },
     { label: "1 tap = profil ouvert", values: [false, false, true] },
     { label: "Paiement unique sans abonnement", values: [false, false, true] },
@@ -1314,7 +1314,7 @@ function Testimonials() {
       name: "Karim Lahbabi",
       role: "Agent immobilier indépendant",
       location: "Marseille, France",
-      quote: "En immobilier, la rapidité compte. Quand je tends mon téléphone pour un tap NFC, les prospects sont bluffés. Mes informations sont à jour en temps réel, et je peux suivre qui consulte ma carte. Je ne reviendrai jamais au papier.",
+      quote: "En immobilier, la rapidité compte. Quand j'approche ma carte du téléphone, les prospects sont bluffés. Mes informations s'ouvrent instantanément, toujours à jour en temps réel, et je peux suivre qui consulte ma carte. Je ne reviendrai jamais au papier.",
       metric: "+40% de rappels",
       metricLabel: "vs cartes papier",
       avatar: "/avatars/karim.jpg",
@@ -1572,7 +1572,7 @@ export function Footer() {
               <li><Link to="/" className="hover:text-foreground transition">Accueil</Link></li>
               
               <li><Link to="/templates" className="hover:text-foreground transition">Templates</Link></li>
-              <li><Link to="/carte-physique" className="hover:text-foreground transition">Carte NFC physique</Link></li>
+              <li><Link to="/carte-physique" className="hover:text-foreground transition">Carte connectée physique</Link></li>
               <li><Link to="/metiers" className="hover:text-foreground transition">Carte par métier</Link></li>
             </ul>
           </div>

@@ -306,7 +306,7 @@ export function StructuredData() {
           },
           {
             "@type": "Offer",
-            name: "Carte NFC physique",
+            name: "Carte connectée physique",
             price: "29.00",
             priceCurrency: "EUR",
             availability: "https://schema.org/InStock",
@@ -391,10 +391,10 @@ export function StructuredData() {
           },
           {
             "@type": "Question",
-            name: "Quelle est la différence entre la carte digitale et la carte NFC physique ?",
+            name: "Quelle est la différence entre la carte digitale et la carte connectée physique ?",
             acceptedAnswer: {
               "@type": "Answer",
-              text: "La carte digitale est votre profil en ligne accessible via QR code ou lien. La carte NFC physique est une vraie carte en plastique ou métal avec une puce NFC intégrée. Quand quelqu'un approche son téléphone de la carte, votre profil s'ouvre instantanément — sans même scanner un QR code. Les deux sont complémentaires.",
+              text: "La carte digitale est votre profil en ligne accessible via QR code ou lien. La carte connectée physique est une vraie carte en plastique ou métal. Quand quelqu'un approche son téléphone de la carte, votre profil s'ouvre instantanément — sans même scanner un QR code, sans application. Les deux sont complémentaires.",
             },
           },
         ],

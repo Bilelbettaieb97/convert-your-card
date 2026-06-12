@@ -2,7 +2,7 @@ import { createFileRoute } from "@tanstack/react-router";
 import { Package, Truck, Zap, CreditCard, QrCode, RefreshCw, CalendarCheck, ShieldCheck, MapPin } from "lucide-react";
 
 export const Route = createFileRoute("/dashboard/orders")({
-  head: () => ({ meta: [{ title: "Commandes NFC — Dashboard" }] }),
+  head: () => ({ meta: [{ title: "Commandes — Dashboard" }] }),
   component: OrdersPage,
 });
 
@@ -27,16 +27,16 @@ function ComingSoon() {
           En développement
         </div>
 
-        <h1 className="text-2xl font-bold text-foreground mb-3">Commandes NFC</h1>
+        <h1 className="text-2xl font-bold text-foreground mb-3">Commandes</h1>
         <p className="text-muted-foreground text-sm leading-relaxed mb-8">
-          Votre carte digitale, maintenant aussi en physique. Commandez votre carte NFC préprogrammée — un tap suffit pour partager votre profil. Suivi de livraison, historique et renouvellement gérés ici.
+          Votre carte digitale, maintenant aussi en physique. Commandez votre carte connectée préprogrammée — un tap suffit pour partager votre profil. Suivi de livraison, historique et renouvellement gérés ici.
         </p>
 
         {/* Feature grid */}
         <div className="grid grid-cols-2 gap-3 text-left mb-8">
           {[
-            { icon: <Zap className="w-4 h-4 text-amber-400" />,       label: "Tap & partage instantané", detail: "Un seul tap NFC ouvre votre carte sur n'importe quel smartphone" },
-            { icon: <QrCode className="w-4 h-4 text-violet-400" />,   label: "QR code gravé au dos", detail: "Compatible iPhone et appareils sans NFC" },
+            { icon: <Zap className="w-4 h-4 text-amber-400" />,       label: "Tap & partage instantané", detail: "Un simple contact ouvre votre carte sur n'importe quel smartphone" },
+            { icon: <QrCode className="w-4 h-4 text-violet-400" />,   label: "QR code gravé au dos", detail: "Compatible iPhone et tous les smartphones modernes" },
             { icon: <RefreshCw className="w-4 h-4 text-sky-400" />,   label: "Carte toujours à jour", detail: "Modifiez votre profil sans racheter de carte" },
             { icon: <Truck className="w-4 h-4 text-emerald-400" />,   label: "Suivi de livraison", detail: "Colissimo avec numéro de suivi en temps réel" },
             { icon: <CreditCard className="w-4 h-4 text-rose-400" />, label: "Plusieurs modèles", detail: "Noire mat, transparente, bambou — choisissez votre style" },

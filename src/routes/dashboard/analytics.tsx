@@ -37,7 +37,7 @@ function ComingSoon() {
           {[
             { icon: <Flame className="w-4 h-4 text-orange-400" />,  label: "Heatmap horaire", detail: "Pic d'activité par heure de la journée" },
             { icon: <Globe2 className="w-4 h-4 text-sky-400" />,    label: "Carte géographique", detail: "Villes et pays de vos scans" },
-            { icon: <TrendingUp className="w-4 h-4 text-emerald-400" />, label: "Sources de trafic", detail: "NFC, QR code, lien direct, réseaux" },
+            { icon: <TrendingUp className="w-4 h-4 text-emerald-400" />, label: "Sources de trafic", detail: "Tap, QR code, lien direct, réseaux" },
             { icon: <Clock className="w-4 h-4 text-violet-400" />,  label: "Durée de consultation", detail: "Temps passé sur votre carte" },
             { icon: <GitCompare className="w-4 h-4 text-amber-400" />, label: "Comparaison de périodes", detail: "Semaine vs semaine, mois vs mois" },
             { icon: <MapPin className="w-4 h-4 text-rose-400" />,   label: "Localisation des scans", detail: "Événements, salons, lieux physiques" },

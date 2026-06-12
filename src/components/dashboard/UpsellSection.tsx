@@ -30,7 +30,7 @@ export function UpsellSection({
               <span className="text-[10px] uppercase tracking-wider font-semibold text-amber-600 dark:text-amber-400">Dernière étape recommandée</span>
             </div>
             <div className="font-display text-lg font-semibold leading-snug">Commander la carte physique pour impressionner vos leads</div>
-            <p className="text-sm text-muted-foreground mt-0.5">Métal noir gravé à votre nom · NFC + QR Code · livraison 48h · dès 29 €</p>
+            <p className="text-sm text-muted-foreground mt-0.5">Métal noir gravé à votre nom · Sans contact + QR Code · livraison 48h · dès 29 €</p>
           </div>
           <span className="shrink-0 inline-flex items-center gap-1.5 rounded-full bg-amber-500 text-white font-semibold text-sm px-4 py-2 shadow-md group-hover:bg-amber-600 transition">
             Commander <ArrowRight className="h-4 w-4" />
@@ -79,7 +79,7 @@ export function UpsellSection({
           tagIcon={Nfc}
           gradient="linear-gradient(135deg, oklch(0.88 0.1 90) 0%, oklch(0.75 0.14 75) 100%)"
           glowColor="rgba(234, 179, 8, 0.25)"
-          title="Carte NFC connectée"
+          title="Carte connectée"
           subtitle="L'objet premium que vos prospects n'oublieront pas."
           price="29 €"
           priceSuffix="à vie · sans abonnement"
@@ -87,14 +87,14 @@ export function UpsellSection({
             "Approche du smartphone → carte s'ouvre instantanément",
             "Carte en métal ou PVC noir mat — gravée à votre nom",
             "QR code de secours imprimé au dos",
-            "Sync automatique : modifiez votre carte, la NFC reste à jour",
+            "Sync automatique : modifiez votre carte, elle reste à jour en temps réel",
             "Livraison France 48h offerte dès 2 cartes",
           ]}
           cta="Commander ma carte"
           ctaSecondary="Voir les modèles"
           ctaTo="/carte-physique"
           ctaSecondaryTo="/carte-physique"
-          highlight="🔥 +84% de prospects sauvegardent un contact reçu via NFC vs carte papier."
+          highlight="🔥 +84% de prospects sauvegardent un contact reçu via carte connectée vs carte papier."
           visual={<NFCVisual />}
         />
 

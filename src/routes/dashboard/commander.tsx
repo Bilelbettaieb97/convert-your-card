@@ -7,7 +7,7 @@ import { createNfcCheckoutSession } from "@/fns/checkout-nfc";
 
 export const Route = createFileRoute("/dashboard/commander")({
   head: () => ({
-    meta: [{ title: "Commander ma carte NFC — Dashboard" }],
+    meta: [{ title: "Commander ma carte — Dashboard" }],
   }),
   component: CommanderMaCartePage,
 });
@@ -76,17 +76,17 @@ function CommanderMaCartePage() {
     <div className="p-5 lg:p-8 space-y-6 max-w-7xl">
       {/* Header */}
       <div>
-        <h1 className="text-2xl font-bold text-foreground">Commander ma carte NFC</h1>
+        <h1 className="text-2xl font-bold text-foreground">Commander ma carte physique</h1>
         <p className="text-muted-foreground text-sm mt-1">
-          Une carte physique avec puce NFC intégrée. Ton contact tape son téléphone dessus
-          et atterrit directement sur ta carte CVD — sans application, sans friction.
+          Une carte physique connectée à ta carte digitale. Ton contact approche son téléphone
+          et atterrit directement sur ton profil CVD — sans application, sans friction.
         </p>
       </div>
 
       {/* 3 points forts */}
       <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
         {[
-          { icon: Wifi,       title: "Puce NFC + QR code",           desc: "Compatible avec tous les smartphones modernes" },
+          { icon: Wifi,       title: "Contact instantané + QR code",  desc: "Compatible avec tous les smartphones modernes" },
           { icon: Smartphone, title: "Sans application",             desc: "S'ouvre directement dans le navigateur" },
           { icon: Zap,        title: "Lié à ta carte CVD en direct", desc: "Toujours à jour, même après modification" },
         ].map(({ icon: Icon, title, desc }) => (
@@ -126,7 +126,7 @@ function CommanderMaCartePage() {
             </div>
           </div>
           <div className="flex items-center gap-3 text-xs text-muted-foreground">
-            <span className="flex items-center gap-1"><Check className="w-3 h-3 text-emerald-500" /> Puce NFC</span>
+            <span className="flex items-center gap-1"><Check className="w-3 h-3 text-emerald-500" /> Sans contact</span>
             <span className="flex items-center gap-1"><Check className="w-3 h-3 text-emerald-500" /> QR code</span>
             <span className="flex items-center gap-1"><Check className="w-3 h-3 text-emerald-500" /> Garantie 2 ans</span>
           </div>
@@ -215,7 +215,7 @@ function CommanderMaCartePage() {
           {/* CTA */}
           <div className="rounded-2xl bg-gradient-to-r from-[#c026d3] to-[#7c3aed] p-5 space-y-3">
             <div className="flex items-baseline justify-between">
-              <p className="text-sm text-white/80">Carte NFC personnalisée</p>
+              <p className="text-sm text-white/80">Carte connectée personnalisée</p>
               <p className="text-3xl font-bold text-white">29€</p>
             </div>
             <p className="text-xs text-white/70">Paiement unique · Livraison offerte (5–10 jours) · France & Europe</p>

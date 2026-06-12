@@ -6,16 +6,16 @@ import { Check, CreditCard, Sparkles, Upload, X, Wifi, ArrowRight } from "lucide
 export const Route = createFileRoute("/inscription/carte-physique")({
   head: () => ({
     meta: [
-      { title: "Ajoute ta carte NFC physique — CVD" },
+      { title: "Ajoute ta carte connectée — CVD" },
       {
         name: "description",
         content:
-          "Personnalise ta carte de visite NFC physique : couleur, finition, logo et nom. Une commande unique, livrée chez toi.",
+          "Personnalise ta carte de visite physique connectée : couleur, finition, logo et nom. Un simple contact avec un téléphone et ta carte digitale s'ouvre. Une commande unique, livrée chez toi.",
       },
-      { property: "og:title", content: "Ajoute ta carte NFC physique — CVD" },
+      { property: "og:title", content: "Ajoute ta carte connectée — CVD" },
       {
         property: "og:description",
-        content: "Carte NFC personnalisable, livrée chez toi. Paiement unique, en complément de ton abonnement.",
+        content: "Carte connectée personnalisable, livrée chez toi. Paiement unique, en complément de ton abonnement.",
       },
     ],
   }),
@@ -74,7 +74,7 @@ function CartePhysiqueUpsellPage() {
             Dernière étape — offre exclusive
           </div>
           <h1 className="text-3xl sm:text-4xl lg:text-5xl font-bold text-foreground tracking-tight max-w-3xl mx-auto">
-            Ajoute ta carte NFC physique, entièrement personnalisée
+            Ajoute ta carte connectée, entièrement personnalisée
           </h1>
           <p className="mt-4 text-base sm:text-lg text-muted-foreground max-w-2xl mx-auto">
             Un simple tap et tu partages ton profil. Couleur, finition, logo, nom — tout est à toi.
@@ -142,7 +142,7 @@ function CartePhysiqueUpsellPage() {
               </div>
 
               <div className="mt-6 grid grid-cols-3 gap-3 text-center">
-                <Mini icon={<Check className="h-3.5 w-3.5" />} label="Puce NFC + QR" />
+                <Mini icon={<Check className="h-3.5 w-3.5" />} label="Sans contact + QR" />
                 <Mini icon={<Check className="h-3.5 w-3.5" />} label="Compatible iPhone & Android" />
                 <Mini icon={<Check className="h-3.5 w-3.5" />} label="Garantie 2 ans" />
               </div>
@@ -246,7 +246,7 @@ function CartePhysiqueUpsellPage() {
             {/* Price + CTA */}
             <div className="rounded-2xl bg-gradient-cta text-primary-foreground p-6 shadow-glow">
               <div className="flex items-baseline justify-between mb-1">
-                <div className="text-sm opacity-90">Carte NFC personnalisée</div>
+                <div className="text-sm opacity-90">Carte connectée personnalisée</div>
                 <div className="text-3xl font-bold tracking-tight">{total}€</div>
               </div>
               <div className="text-xs opacity-80 mb-5">

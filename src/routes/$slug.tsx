@@ -292,7 +292,7 @@ function ProfileNotFound() {
     <div className="min-h-screen bg-gradient-soft flex flex-col items-center justify-center px-4 text-center">
       <div className="text-6xl mb-4">🔍</div>
       <h1 className="text-2xl font-bold text-foreground">Carte introuvable</h1>
-      <p className="mt-2 text-muted-foreground">Cette carte NFC n'existe pas ou n'est plus active.</p>
+      <p className="mt-2 text-muted-foreground">Cette carte n'existe pas ou n'est plus active.</p>
       <a href="/" className="mt-6 inline-block text-magenta font-semibold hover:underline">
         Créer ma carte →
       </a>

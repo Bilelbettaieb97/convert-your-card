@@ -39,7 +39,7 @@ function CguPage() {
 
         <Section title="1. Objet">
           <p>Les présentes Conditions Générales d'Utilisation (CGU) régissent l'accès et l'utilisation du service <strong className="text-foreground">Carte Visite Digitale</strong>, accessible sur <strong className="text-foreground">cartevisitedigitale.fr</strong>, édité par Bilel Bettaieb (Rueil-Malmaison, 92500).</p>
-          <p>Ce service permet à tout professionnel ou entrepreneur de créer, personnaliser et partager une carte de visite digitale accessible en ligne via un lien ou une carte NFC.</p>
+          <p>Ce service permet à tout professionnel ou entrepreneur de créer, personnaliser et partager une carte de visite digitale accessible en ligne via un lien, un QR code ou une carte physique connectée.</p>
           <EnClair>
             Carte Visite Digitale est un outil pour créer votre carte de visite numérique en ligne. Ces CGU définissent les règles du jeu entre vous et nous.
           </EnClair>
