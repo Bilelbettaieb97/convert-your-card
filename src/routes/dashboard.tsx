@@ -71,7 +71,7 @@ function DashboardLayout() {
   useEffect(() => {
     if (!user) return;
     const update = () =>
-      supabase.from("nfc_profiles").update({ last_seen_at: new Date().toISOString() }).eq("user_id", user.id);
+      supabase.from("nfc_profiles").update({ last_seen_at: new Date().toISOString() }).eq("user_id", user.id).then(() => {});
     update();
     const id = setInterval(update, 2 * 60 * 1000);
     return () => clearInterval(id);
