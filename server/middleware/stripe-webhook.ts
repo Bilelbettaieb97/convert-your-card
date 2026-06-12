@@ -305,9 +305,12 @@ export default defineEventHandler(async (event) => {
       .eq("stripe_subscription_id", sub.id)
       .maybeSingle();
 
+    const isStillTrialing = sub.trial_end && sub.trial_end * 1000 > Date.now();
+    const effectiveStatus = isStillTrialing ? "trialing" : sub.status;
+
     const updatePayload: Record<string, unknown> = {
       plan: isInactive ? "free" : (sub.metadata?.plan ?? "essentielle"),
-      status: sub.status,
+      status: effectiveStatus,
       current_period_end: sub.current_period_end ? new Date(sub.current_period_end * 1000).toISOString() : null,
       updated_at: new Date().toISOString(),
     };
