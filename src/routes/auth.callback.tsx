@@ -61,6 +61,9 @@ function AuthCallbackPage() {
         } catch {}
       }
 
+      const device = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent) ? "mobile" : "desktop";
+      supabase.rpc("track_signup_device", { p_user_id: session.user.id, p_device: device }).then(() => {});
+
       const hasGenerated = typeof window !== "undefined" && !!localStorage.getItem("cyk.builderia.generated");
       navigate({ to: hasGenerated ? "/builderia/resultat" : "/builderia", replace: true });
     }
