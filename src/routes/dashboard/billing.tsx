@@ -303,7 +303,7 @@ function BillingPage() {
           Voir tous les plans
         </Link>
         {" · "}
-        <a href="mailto:bilel@convertilab.com" className="underline underline-offset-2 hover:text-foreground transition">
+        <a href="mailto:contact@cartevisitedigitale.fr" className="underline underline-offset-2 hover:text-foreground transition">
           Contacter le support
         </a>
       </p>

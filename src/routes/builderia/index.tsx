@@ -36,6 +36,15 @@ const BRICKS = [
   { icon: "🎯", label: "Appel à l'action" },
 ];
 
+const EXAMPLES = [
+  { icon: "🔧", short: "Plombier Paris",         full: "Plombier urgence 24h/24, Paris" },
+  { icon: "🧘", short: "Coach bien-être",         full: "Coach bien-être & développement perso" },
+  { icon: "🏠", short: "Agent immobilier",        full: "Agent immo spécialisé biens de prestige" },
+  { icon: "📷", short: "Photographe",             full: "Photographe portrait & mariage" },
+  { icon: "👨‍🍳", short: "Chef cuisinier",         full: "Chef cuisinier, restaurant gastronomique" },
+  { icon: "💇", short: "Coiffeur / Barbier",      full: "Coiffeur et barbier, salon de coiffure moderne" },
+];
+
 type Phase = "prompt" | "building";
 
 function applyField(card: Partial<CardData>, f: string, v: unknown) {
@@ -83,13 +92,11 @@ function BuilderIAPromptPage() {
     const device = /Mobi|Android|iPhone|iPad/i.test(navigator.userAgent) ? "mobile" : "desktop";
     supabase.rpc("track_builderia_step", { p_user_id: user.id, p_step: 1, p_step_name: "builderia", p_device: device }).then(() => {});
 
-    // Si profil déjà existant → user a déjà complété le checkout → dashboard
     supabase.from("nfc_profiles").select("id").eq("user_id", user.id).maybeSingle().then(({ data }) => {
       if (data) {
         navigate({ to: "/dashboard", replace: true });
         return;
       }
-      // CompleteRegistration — uniquement pour les nouveaux inscrits
       if (typeof window !== "undefined" && (window as any).fbq) {
         (window as any).fbq("track", "CompleteRegistration");
       }
@@ -103,7 +110,6 @@ function BuilderIAPromptPage() {
     "";
   const firstName = userName.split(" ")[0] || "toi";
 
-  // ── Flip → navigate to /builderia/resultat ──
   function triggerFlip() {
     setIsFlipping(true);
     setTimeout(() => {
@@ -111,10 +117,8 @@ function BuilderIAPromptPage() {
     }, 450);
   }
 
-  // ── Génération streaming ──
-  async function handleGenerate(e: React.FormEvent) {
-    e.preventDefault();
-    if (!input.trim()) return;
+  async function runGeneration(text: string) {
+    if (!text.trim()) return;
 
     setPhase("building");
     setBuildStep(0);
@@ -129,7 +133,7 @@ function BuilderIAPromptPage() {
         method: "POST",
         headers: { "Content-Type": "application/json" },
         body: JSON.stringify({
-          input: input.trim(),
+          input: text.trim(),
           name: userName || undefined,
           email: user?.email || undefined,
         }),
@@ -194,6 +198,16 @@ function BuilderIAPromptPage() {
     }
   }
 
+  function handleGenerate(e: React.FormEvent) {
+    e.preventDefault();
+    runGeneration(input);
+  }
+
+  function handleChipClick(full: string) {
+    setInput(full);
+    runGeneration(full);
+  }
+
   // ── Animation brique ──
   useEffect(() => {
     if (phase !== "building") return;
@@ -228,14 +242,14 @@ function BuilderIAPromptPage() {
   // ═══════════════════════════════════════════════════════
   if (phase === "prompt") {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-[#0d0014] via-[#12002a] to-[#0a0018] flex flex-col items-center justify-center px-4 py-16">
+      <div className="min-h-screen bg-gradient-to-br from-[#0d0014] via-[#12002a] to-[#0a0018] flex flex-col items-center justify-center px-4 py-12">
 
-        <div className="mb-5 flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-[#c026d3]/30 bg-[#c026d3]/10">
+        <div className="mb-4 flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-[#c026d3]/30 bg-[#c026d3]/10">
           <Sparkles className="w-3.5 h-3.5 text-[#c026d3]" />
           <span className="text-xs font-medium text-[#c026d3]">Carte complète générée en 30 secondes</span>
         </div>
 
-        <h1 className="text-3xl sm:text-5xl font-bold text-white text-center mb-4 leading-tight">
+        <h1 className="text-3xl sm:text-5xl font-bold text-white text-center mb-3 leading-tight">
           {firstName ? (
             <>{firstName}, dis-moi{" "}<br className="hidden sm:block" />
             <span className="bg-gradient-to-r from-[#c026d3] to-[#7c3aed] bg-clip-text text-transparent">
@@ -249,19 +263,39 @@ function BuilderIAPromptPage() {
           )}
         </h1>
 
-        <p className="text-white/60 text-center mb-3 max-w-lg text-sm sm:text-base leading-relaxed">
-          Une phrase suffit. L'IA génère ta bio, tes services, tes témoignages,<br className="hidden sm:block" />
-          ta prise de RDV et ton thème couleur — <span className="text-white/90 font-medium">en temps réel, devant toi.</span>
+        <p className="text-white/60 text-center mb-6 max-w-lg text-sm sm:text-base leading-relaxed">
+          Choisis un exemple ci-dessous ou décris ton activité — l'IA génère<br className="hidden sm:block" />
+          ta bio, services, avis et thème <span className="text-white/90 font-medium">en temps réel.</span>
         </p>
 
-        <div className="flex flex-wrap gap-1.5 justify-center mb-8 max-w-sm">
-          {["Bio percutante", "Services", "Avis clients", "Stats", "Prise de RDV", "CTA", "Photo de couverture"].map((item) => (
-            <span key={item} className="text-[11px] px-2.5 py-1 rounded-full bg-white/[0.06] border border-white/10 text-white/50">
-              {item}
-            </span>
-          ))}
+        {/* ── Exemples — au-dessus du textarea, 2 colonnes sur mobile ── */}
+        <div className="w-full max-w-2xl mb-5">
+          <p className="text-center text-white/30 text-[11px] uppercase tracking-widest mb-3">
+            Choisis ton métier
+          </p>
+          <div className="grid grid-cols-2 sm:grid-cols-3 gap-2">
+            {EXAMPLES.map((ex) => (
+              <button
+                key={ex.full}
+                type="button"
+                onClick={() => handleChipClick(ex.full)}
+                className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/[0.04] hover:bg-white/[0.09] hover:border-[#c026d3]/40 px-4 py-3 text-left transition-all active:scale-95"
+              >
+                <span className="text-xl shrink-0">{ex.icon}</span>
+                <span className="text-sm text-white/75 font-medium leading-snug">{ex.short}</span>
+              </button>
+            ))}
+          </div>
         </div>
 
+        {/* ── Séparateur ── */}
+        <div className="w-full max-w-2xl flex items-center gap-3 mb-4">
+          <div className="flex-1 h-px bg-white/10" />
+          <span className="text-white/25 text-xs">ou décris ton activité</span>
+          <div className="flex-1 h-px bg-white/10" />
+        </div>
+
+        {/* ── Textarea ── */}
         <form onSubmit={handleGenerate} className="w-full max-w-2xl">
           <div className="relative group">
             <textarea
@@ -269,11 +303,10 @@ function BuilderIAPromptPage() {
               onChange={(e) => setInput(e.target.value)}
               placeholder="Ex : Plombier à Paris, dépannage 24h/24, spécialisé en rénovation salle de bain…"
               rows={3}
-              autoFocus
               onKeyDown={(e) => {
                 if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); handleGenerate(e as unknown as React.FormEvent); }
               }}
-              className="w-full rounded-2xl border border-white/15 bg-white/5 px-5 py-4 pr-16 text-white placeholder:text-white/30 text-sm sm:text-base focus:outline-none focus:ring-2 focus:ring-[#c026d3]/50 focus:border-[#c026d3]/50 transition resize-none backdrop-blur"
+              className="w-full rounded-2xl border border-white/15 bg-white/5 px-5 py-4 pr-16 text-white placeholder:text-white/30 text-base focus:outline-none focus:ring-2 focus:ring-[#c026d3]/50 focus:border-[#c026d3]/50 transition resize-none backdrop-blur"
             />
             <button
               type="submit"
@@ -284,32 +317,10 @@ function BuilderIAPromptPage() {
             </button>
           </div>
           {error && <p className="text-red-400 text-sm mt-2 text-center">{error}</p>}
-          <p className="text-center text-white/25 text-xs mt-3">
+          <p className="text-center text-white/25 text-xs mt-3 hidden sm:block">
             Entrée pour générer · Shift+Entrée pour aller à la ligne
           </p>
         </form>
-
-        <div className="mt-6">
-          <p className="text-center text-white/25 text-[11px] mb-2 uppercase tracking-widest">Essaie avec</p>
-          <div className="flex flex-wrap gap-2 justify-center max-w-xl">
-            {[
-              "Plombier urgence 24h/24, Paris",
-              "Coach bien-être & développement perso",
-              "Agent immo spécialisé biens de prestige",
-              "Photographe portrait & mariage",
-              "Chef cuisinier, restaurant gastronomique",
-            ].map((ex) => (
-              <button
-                key={ex}
-                type="button"
-                onClick={() => setInput(ex)}
-                className="text-xs px-3 py-1.5 rounded-full border border-white/10 text-white/40 hover:text-white/70 hover:border-white/25 transition"
-              >
-                {ex}
-              </button>
-            ))}
-          </div>
-        </div>
       </div>
     );
   }

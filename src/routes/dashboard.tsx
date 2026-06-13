@@ -172,7 +172,7 @@ function DashboardLayout() {
 
               {/* Desktop only — Support */}
               <a
-                href="mailto:convertilab@gmail.com?subject=Support%20%E2%80%94%20Carte%20Visite%20Digitale"
+                href="mailto:contact@cartevisitedigitale.fr?subject=Support%20%E2%80%94%20Carte%20Visite%20Digitale"
                 className="hidden md:inline-flex items-center gap-1.5 h-9 px-3 rounded-md border border-border bg-background text-sm font-medium text-muted-foreground hover:text-foreground hover:border-foreground/30 transition"
               >
                 <HeadphonesIcon className="h-4 w-4" />

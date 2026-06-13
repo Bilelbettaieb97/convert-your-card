@@ -1,7 +1,9 @@
 {
   "redirects": [
     { "source": "/pricing", "destination": "/", "permanent": false },
-    { "source": "/builder", "destination": "/builderia", "permanent": false }
+    { "source": "/builder", "destination": "/builderia", "permanent": false },
+    { "source": "/inscription/selection-de-plan", "destination": "/inscription", "permanent": false },
+    { "source": "/inscription/offre/:plan", "destination": "/inscription", "permanent": false }
   ],
   "crons": [
     {
