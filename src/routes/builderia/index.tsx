@@ -108,7 +108,9 @@ function BuilderIAPromptPage() {
     user?.user_metadata?.name ||
     user?.email?.split("@")[0] ||
     "";
-  const firstName = userName.split(" ")[0] || "toi";
+  const rawFirst = userName.split(" ")[0] || "";
+  // Email prefixes (e.g. "jean.dupont97", "bilelbettaieb97") look bad in the headline
+  const firstName = /^[a-zA-ZÀ-ÿ]{2,}$/.test(rawFirst) ? rawFirst : "toi";
 
   function triggerFlip() {
     setIsFlipping(true);
@@ -290,7 +292,7 @@ function BuilderIAPromptPage() {
                   <span>{icon}</span>{label}
                 </span>
               ))}
-              <span className="text-white/25 text-[11px]">+ thème couleur</span>
+              <span className="text-white/40 text-[11px]">+ thème couleur</span>
             </div>
           </div>
 
@@ -325,7 +327,7 @@ function BuilderIAPromptPage() {
           {/* ── Séparateur ── */}
           <div className="flex items-center gap-3">
             <div className="flex-1 h-px bg-white/10" />
-            <span className="text-white/25 text-xs shrink-0">ou choisis ton métier</span>
+            <span className="text-white/40 text-xs shrink-0">ou choisis ton métier</span>
             <div className="flex-1 h-px bg-white/10" />
           </div>
 
@@ -360,14 +362,15 @@ function BuilderIAPromptPage() {
   };
 
   return (
-    <div className="fixed inset-0 z-[100] flex flex-col items-center justify-center bg-gradient-to-br from-[#0d0014] via-[#12002a] to-[#0a0018]">
-      <div className="mb-8 text-center px-4">
+    <div className="fixed inset-0 z-[100] overflow-y-auto bg-gradient-to-br from-[#0d0014] via-[#12002a] to-[#0a0018]">
+      <div className="min-h-full flex flex-col items-center justify-center py-6 px-4">
+      <div className="mb-4 sm:mb-8 text-center">
         <p className="text-white/40 text-xs uppercase tracking-widest mb-2">IA au travail</p>
         <h2 className="text-white text-2xl sm:text-3xl font-bold">Construction de ta carte…</h2>
       </div>
 
       <div style={phoneStyle}>
-        <div className="relative w-[220px] h-[420px] rounded-[2.5rem] border-2 border-white/15 bg-white/[0.03] shadow-[0_0_80px_rgba(192,38,211,0.25)] overflow-hidden">
+        <div className="relative w-[190px] h-[360px] sm:w-[220px] sm:h-[420px] rounded-[2rem] sm:rounded-[2.5rem] border-2 border-white/15 bg-white/[0.03] shadow-[0_0_80px_rgba(192,38,211,0.25)] overflow-hidden">
           <div className="h-7 flex items-center justify-center border-b border-white/10 shrink-0">
             <div className="w-16 h-1.5 bg-white/20 rounded-full" />
           </div>
@@ -444,7 +447,7 @@ function BuilderIAPromptPage() {
         </div>
       </div>
 
-      <div className="mt-8 text-center">
+      <div className="mt-4 sm:mt-8 text-center">
         <p className="text-white/80 text-sm font-medium transition-all duration-300 min-h-[1.25rem]">
           {currentBrickLabel}
         </p>
@@ -454,6 +457,7 @@ function BuilderIAPromptPage() {
           className="h-full bg-gradient-to-r from-[#c026d3] to-[#7c3aed] rounded-full transition-all duration-300 ease-out"
           style={{ width: `${(buildStep / BRICKS.length) * 100}%` }}
         />
+      </div>
       </div>
     </div>
   );
