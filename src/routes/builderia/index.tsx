@@ -266,13 +266,20 @@ function BuilderIAPromptPage() {
               )}
             </h1>
 
-            {/* Social proof */}
-            <p className="text-white/35 text-xs">
-              2 400+ professionnels · 4,9★ Trustpilot
+            {/* Sous-titre émotionnel */}
+            <p className="text-white/65 text-sm leading-snug max-w-xs">
+              Ta carte en ligne, partageable en 30 secondes.
             </p>
 
-            {/* 3 items horizontaux — ce que l'IA génère */}
-            <div className="flex items-center gap-2 flex-wrap justify-center mt-1">
+            {/* Social proof — visible */}
+            <div className="flex items-center gap-2 text-white/60 text-xs font-medium">
+              <span>⭐ 4,9/5 Trustpilot</span>
+              <span className="text-white/20">·</span>
+              <span>2 400+ professionnels</span>
+            </div>
+
+            {/* Ce que l'IA génère */}
+            <div className="flex items-center gap-2 flex-wrap justify-center">
               {[
                 { icon: "📝", label: "Bio" },
                 { icon: "💼", label: "Services" },
@@ -283,7 +290,7 @@ function BuilderIAPromptPage() {
                   <span>{icon}</span>{label}
                 </span>
               ))}
-              <span className="text-white/20 text-[11px]">+ thème couleur</span>
+              <span className="text-white/25 text-[11px]">+ thème couleur</span>
             </div>
           </div>
 
@@ -309,6 +316,9 @@ function BuilderIAPromptPage() {
               <Sparkles className="w-4 h-4" />
               {input.trim() ? "Générer ma carte" : "Décris ton activité…"}
             </button>
+            <p className="text-center text-[11px] text-emerald-400/80 font-medium">
+              ✓ Gratuit · Sans carte bancaire · Prête en 30 sec
+            </p>
             {error && <p className="text-red-400 text-sm text-center">{error}</p>}
           </form>
 
