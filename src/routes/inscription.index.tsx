@@ -243,11 +243,11 @@ function InscriptionPage() {
                 <p className="text-xs font-semibold uppercase tracking-wider text-magenta mb-2">
                   Carte de visite digitale — 100 % gratuit
                 </p>
-                <h1 className="font-display text-2xl sm:text-3xl font-bold text-foreground leading-tight">
-                  Partage tes contacts en 1 lien. Tes clients t'appellent, réservent, te suivent.
+                <h1 className="font-display text-3xl sm:text-4xl font-bold text-foreground leading-tight">
+                  Partage tes contacts en 1 lien
                 </h1>
-                <p className="mt-2 text-sm text-muted-foreground">
-                  Générée par l'IA en 30 secondes. Sans mot de passe.
+                <p className="mt-3 text-sm text-muted-foreground leading-relaxed">
+                  Tes clients t'appellent, réservent, te suivent. Carte générée par l'IA en 30 secondes. Sans mot de passe.
                 </p>
 
                 <div className="mt-6">
