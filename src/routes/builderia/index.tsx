@@ -294,18 +294,20 @@ function BuilderIAPromptPage() {
               onChange={(e) => setInput(e.target.value)}
               placeholder="Ex : Plombier à Paris, urgence 24h/24, rénovation salle de bain…"
               rows={2}
+              inputMode="text"
+              enterKeyHint="send"
               onKeyDown={(e) => {
                 if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); handleGenerate(e as unknown as React.FormEvent); }
               }}
-              className="w-full rounded-2xl border border-white/15 bg-white/5 px-4 py-3.5 text-white placeholder:text-white/25 text-base focus:outline-none focus:ring-2 focus:ring-[#c026d3]/50 focus:border-[#c026d3]/50 transition resize-none backdrop-blur"
+              className="w-full rounded-2xl border border-white/15 bg-white/5 px-4 py-3.5 text-white placeholder:text-white/40 text-base focus:outline-none focus:ring-2 focus:ring-[#c026d3]/50 focus:border-[#c026d3]/50 transition resize-none backdrop-blur"
             />
             <button
               type="submit"
               disabled={!input.trim()}
-              className="w-full flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-[#c026d3] to-[#7c3aed] text-white font-bold py-4 text-base hover:opacity-90 active:scale-[0.98] transition disabled:opacity-25"
+              className="w-full flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-[#c026d3] to-[#7c3aed] text-white font-bold py-4 text-base active:scale-[0.98] transition disabled:opacity-50 disabled:cursor-not-allowed"
             >
               <Sparkles className="w-4 h-4" />
-              Générer ma carte
+              {input.trim() ? "Générer ma carte" : "Décris ton activité…"}
             </button>
             {error && <p className="text-red-400 text-sm text-center">{error}</p>}
           </form>
