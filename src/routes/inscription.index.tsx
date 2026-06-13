@@ -238,6 +238,45 @@ function InscriptionPage() {
               <span className="font-display font-bold text-sm leading-tight">Carte Visite Digitale</span>
             </div>
 
+            {/* Product preview — mobile only, above form */}
+            {!sent && (
+              <div className="lg:hidden flex items-center gap-3 mb-4 bg-card border border-border rounded-2xl p-3 shadow-card">
+                {/* Mini phone */}
+                <div className="relative shrink-0 pointer-events-none select-none">
+                  <div
+                    className="relative overflow-hidden rounded-[14px] shadow-[0_0_20px_rgba(192,38,211,0.15)]"
+                    style={{ width: 90, height: 140 }}
+                  >
+                    <div style={{ transform: "scale(0.25)", transformOrigin: "top left", width: 360 }}>
+                      <PhoneFrame>
+                        <BusinessCard data={DEMO_CARD} />
+                      </PhoneFrame>
+                    </div>
+                    <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-card to-transparent" />
+                  </div>
+                  <div className="absolute -top-1.5 -right-1.5 bg-emerald-500 text-white text-[8px] font-bold px-1.5 py-0.5 rounded-full shadow whitespace-nowrap z-10">
+                    ✓ Live
+                  </div>
+                </div>
+                {/* Description */}
+                <div className="flex-1 min-w-0">
+                  <p className="text-[11px] font-bold text-foreground mb-2">Voilà ce que tu vas créer</p>
+                  <div className="space-y-1.5">
+                    {[
+                      "Carte cliquable partageable en 1 lien",
+                      "Agenda, services & avis clients intégrés",
+                      "Générée par l'IA en 30 secondes",
+                    ].map((item) => (
+                      <div key={item} className="flex items-start gap-1.5">
+                        <div className="w-1.5 h-1.5 rounded-full bg-magenta mt-1.5 shrink-0" />
+                        <p className="text-[11px] text-muted-foreground leading-snug">{item}</p>
+                      </div>
+                    ))}
+                  </div>
+                </div>
+              </div>
+            )}
+
             {!sent ? (
               <div className="bg-card border border-border rounded-2xl shadow-card p-6 sm:p-8">
                 <p className="text-xs font-semibold uppercase tracking-wider text-magenta mb-2">
