@@ -77,6 +77,7 @@ function BuilderIAPromptPage() {
   const [buildStep, setBuildStep] = useState(0);
   const [liveCard, setLiveCard] = useState<Partial<CardData>>({});
   const [isFlipping, setIsFlipping] = useState(false);
+  const [profileChecked, setProfileChecked] = useState(false);
 
   const animDoneRef = useRef(false);
   const resultReady = useRef(false);
@@ -104,6 +105,7 @@ function BuilderIAPromptPage() {
       if (typeof window !== "undefined" && (window as any).fbq) {
         (window as any).fbq("track", "CompleteRegistration");
       }
+      setProfileChecked(true);
     });
   }, [user?.id]);
 
@@ -252,7 +254,7 @@ function BuilderIAPromptPage() {
       ? BRICKS[buildStep - 1].label
       : "Initialisation…";
 
-  if (loading || !user) {
+  if (loading || !user || !profileChecked) {
     return (
       <div className="min-h-screen bg-background flex items-center justify-center">
         <div className="w-8 h-8 rounded-full border-2 border-primary border-t-transparent animate-spin" />
