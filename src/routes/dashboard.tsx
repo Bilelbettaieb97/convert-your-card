@@ -9,6 +9,7 @@ import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
 import { useCardStore } from "@/lib/card-store";
 import { ExternalLink, Share2, Command, Circle, QrCode, HeadphonesIcon } from "lucide-react";
+import { BottomNav } from "@/components/dashboard/BottomNav";
 import { useAuthStore } from "@/lib/auth-store";
 import { getProfileMeta } from "@/lib/profile-store";
 import { usePlan } from "@/lib/use-plan";
@@ -118,8 +119,8 @@ function DashboardLayout() {
         <div className="flex-1 flex flex-col min-w-0">
           {/* Header */}
           <header className="h-16 flex items-center gap-2 border-b border-border bg-background/80 backdrop-blur-xl px-4 sm:px-6 sticky top-0 z-30">
-            <SidebarTrigger className="-ml-1" />
-            <div className="h-6 w-px bg-border" aria-hidden />
+            <SidebarTrigger className="-ml-1 hidden md:inline-flex" />
+            <div className="h-6 w-px bg-border hidden md:block" aria-hidden />
 
             <div className="min-w-0 flex-1">
               <div className="flex items-center gap-2.5">
@@ -192,71 +193,82 @@ function DashboardLayout() {
           </header>
 
           {isInTrial && !paymentMethodSet && (
-            <div className={`border-b px-6 py-3 flex items-center justify-between gap-4 ${
+            <div className={`border-b px-4 sm:px-6 py-2.5 sm:py-3 flex items-center justify-between gap-3 ${
               trialDaysLeft === 0
                 ? "bg-red-500/10 border-red-500/30"
                 : trialDaysLeft === 1
                 ? "bg-orange-500/10 border-orange-500/30"
                 : "bg-amber-500/10 border-amber-500/30"
             }`}>
-              <p className={`text-sm font-medium ${
+              <p className={`text-xs sm:text-sm font-medium truncate ${
                 trialDaysLeft === 0 ? "text-red-400"
                 : trialDaysLeft === 1 ? "text-orange-400"
                 : "text-amber-400"
               }`}>
                 {trialDaysLeft === 0
-                  ? "Votre essai expire aujourd'hui — activez votre plan avant minuit pour ne pas perdre votre carte."
+                  ? "Essai expiré — activez avant minuit."
                   : trialDaysLeft === 1
-                  ? "Votre essai expire demain — activez votre plan maintenant pour conserver vos données."
-                  : `Votre essai gratuit expire dans ${trialDaysLeft} jours — activez votre plan pour conserver votre carte.`}
+                  ? "Essai expire demain — activez maintenant."
+                  : `Essai gratuit — ${trialDaysLeft} jours restants.`}
+                <span className="hidden sm:inline">
+                  {trialDaysLeft === 0
+                    ? " Ne perdez pas votre carte."
+                    : trialDaysLeft === 1
+                    ? " Conservez vos données."
+                    : " Activez votre plan pour conserver votre carte."}
+                </span>
               </p>
               <Link
                 to="/dashboard/account"
-                className={`shrink-0 px-4 py-1.5 rounded-full text-white text-xs font-semibold transition ${
+                className={`shrink-0 px-3 sm:px-4 py-1.5 rounded-full text-white text-xs font-semibold transition whitespace-nowrap ${
                   trialDaysLeft === 0 ? "bg-red-500 hover:bg-red-600"
                   : trialDaysLeft === 1 ? "bg-orange-500 hover:bg-orange-600"
                   : "bg-amber-500 hover:bg-amber-600"
                 }`}
               >
-                Activer maintenant →
+                Activer →
               </Link>
             </div>
           )}
           {isInTrial && paymentMethodSet && (
-            <div className="bg-emerald-500/10 border-b border-emerald-500/30 px-6 py-3 flex items-center justify-center gap-4">
-              <p className="text-sm text-emerald-400 font-medium">
-                Abonnement confirmé ✓ — vous serez débité automatiquement à la fin de votre essai gratuit.
+            <div className="bg-emerald-500/10 border-b border-emerald-500/30 px-4 sm:px-6 py-2.5 sm:py-3 flex items-center justify-center gap-4">
+              <p className="text-xs sm:text-sm text-emerald-400 font-medium text-center">
+                Abonnement confirmé ✓
+                <span className="hidden sm:inline"> — vous serez débité automatiquement à la fin de votre essai gratuit.</span>
               </p>
             </div>
           )}
           {actif === false && (
-            <div className="bg-red-500/10 border-b border-red-500/30 px-6 py-3 flex items-center justify-between gap-4">
-              <p className="text-sm text-red-400 font-medium">
-                Votre carte n'est plus visible en ligne.
+            <div className="bg-red-500/10 border-b border-red-500/30 px-4 sm:px-6 py-2.5 sm:py-3 flex items-center justify-between gap-3">
+              <p className="text-xs sm:text-sm text-red-400 font-medium truncate">
+                Carte hors ligne.
+                <span className="hidden sm:inline"> Votre carte n'est plus visible en ligne.</span>
               </p>
-              <Link to="/dashboard/account" className="shrink-0 px-4 py-1.5 rounded-full bg-red-500 text-white text-xs font-semibold hover:bg-red-600 transition">
-                Réactiver ma carte
+              <Link to="/dashboard/account" className="shrink-0 px-3 sm:px-4 py-1.5 rounded-full bg-red-500 text-white text-xs font-semibold hover:bg-red-600 transition whitespace-nowrap">
+                Réactiver →
               </Link>
             </div>
           )}
           {actif !== false && plan !== "vitrine" && (
-            <div className="bg-amber-500/10 border-b border-amber-500/30 px-6 py-3 flex items-center justify-between gap-4">
-              <p className="text-sm text-amber-400 font-medium">
-                Plan Essentielle — votre carte affiche le branding cartevisitedigitale.fr et vos statistiques sont verrouillées.
+            <div className="bg-amber-500/10 border-b border-amber-500/30 px-4 sm:px-6 py-2.5 sm:py-3 flex items-center justify-between gap-3">
+              <p className="text-xs sm:text-sm text-amber-400 font-medium truncate">
+                Plan Essentielle
+                <span className="hidden sm:inline"> — votre carte affiche le branding cartevisitedigitale.fr et vos statistiques sont verrouillées.</span>
               </p>
-              <Link to="/dashboard/account" className="shrink-0 px-4 py-1.5 rounded-full bg-amber-500 text-white text-xs font-semibold hover:bg-amber-600 transition">
-                Passer à Vitrine — 4,80€/mois
+              <Link to="/dashboard/account" className="shrink-0 px-3 sm:px-4 py-1.5 rounded-full bg-amber-500 text-white text-xs font-semibold hover:bg-amber-600 transition whitespace-nowrap">
+                <span className="hidden sm:inline">Passer à Vitrine — </span>4,80€/mois
               </Link>
             </div>
           )}
 
-          <main className="flex-1 min-w-0">
+          <main className="flex-1 min-w-0 pb-20 md:pb-0">
             <Outlet />
           </main>
         </div>
 
         <CommandPalette publicUrl={publicUrl} />
         <ShareDialog data={data} open={shareOpen} onOpenChange={setShareOpen} />
+        <BottomNav />
       </div>
     </SidebarProvider>
   );

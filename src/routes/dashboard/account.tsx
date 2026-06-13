@@ -2,7 +2,7 @@ import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useEffect, useState } from "react";
 import { Button } from "@/components/ui/button";
 import { Card } from "@/components/ui/card";
-import { Check, Crown, Loader2, Mail, LogOut, Settings } from "lucide-react";
+import { Check, Crown, Loader2, Mail, LogOut, Settings, CreditCard, HelpCircle, Package, ArrowRight } from "lucide-react";
 import { UpsellSection } from "@/components/dashboard/UpsellSection";
 import { useAuthStore } from "@/lib/auth-store";
 import { supabase } from "@/integrations/supabase/client";
@@ -91,6 +91,30 @@ function AccountPage() {
 
   return (
     <div className="mx-auto max-w-5xl px-5 py-8 space-y-10">
+
+      {/* ── Raccourcis mobile uniquement ── */}
+      <div className="md:hidden grid grid-cols-2 gap-3 -mt-2">
+        {[
+          { to: "/dashboard/billing", icon: CreditCard, label: "Facturation", hint: "Factures & paiement" },
+          { to: "/dashboard/settings", icon: Settings, label: "Paramètres", hint: "Sécurité & RGPD" },
+          { to: "/dashboard/help", icon: HelpCircle, label: "Aide", hint: "Checklist & tutos" },
+          { to: "/dashboard/commander", icon: Package, label: "Carte NFC", hint: "Commander physique" },
+        ].map(({ to, icon: Icon, label, hint }) => (
+          <Link key={to} to={to}
+            className="flex items-center gap-3 rounded-2xl border border-border bg-card/40 p-3.5 hover:border-primary/30 transition active:scale-95"
+          >
+            <span className="w-9 h-9 rounded-xl bg-primary/10 grid place-items-center shrink-0">
+              <Icon className="w-4.5 h-4.5 text-primary" />
+            </span>
+            <div className="flex-1 min-w-0">
+              <div className="text-sm font-semibold truncate">{label}</div>
+              <div className="text-[11px] text-muted-foreground truncate">{hint}</div>
+            </div>
+            <ArrowRight className="w-3.5 h-3.5 text-muted-foreground shrink-0" />
+          </Link>
+        ))}
+      </div>
+
       <section>
         <h2 className="font-display text-2xl font-medium">Plan</h2>
         {isInTrial && !paymentMethodSet ? (

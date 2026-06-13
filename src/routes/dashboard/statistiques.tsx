@@ -251,7 +251,7 @@ function StatistiquesPage() {
                 <RefreshCw className={`h-3.5 w-3.5 ${refreshing ? "animate-spin" : ""}`} />
               </button>
             </div>
-            <div className="flex items-center gap-1 p-1 rounded-xl bg-muted self-start sm:self-auto">
+            <div className="flex items-center gap-1 p-1 rounded-xl bg-muted self-start sm:self-auto overflow-x-auto max-w-full">
               {(["7j", "30j", "90j"] as Period[]).map((p) => {
                 const locked = LOCKED_PERIODS.includes(p);
                 return (
@@ -290,7 +290,7 @@ function StatistiquesPage() {
                   <BarChart3 className="w-4 h-4 text-muted-foreground" />
                   <h2 className="font-medium text-sm text-foreground">Activité sur {period}</h2>
                 </div>
-                <ResponsiveContainer width="100%" height={220}>
+                <ResponsiveContainer width="100%" height={typeof window !== "undefined" && window.innerWidth < 768 ? 180 : 220}>
                   <AreaChart data={chartData} margin={{ top: 4, right: 4, left: -24, bottom: 0 }}>
                     <defs>
                       <linearGradient id="gScans" x1="0" y1="0" x2="0" y2="1">

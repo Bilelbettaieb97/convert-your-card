@@ -7,7 +7,8 @@ import { useCardStore } from "@/lib/card-store";
 import { loadMyCard, updateCard } from "@/lib/card-actions";
 import { getProfileMeta } from "@/lib/profile-store";
 import type { CardData } from "@/lib/card-types";
-import { ArrowLeft, Check, Loader2 } from "lucide-react";
+import { ArrowLeft, Check, Loader2, Eye, X } from "lucide-react";
+import { Sheet, SheetContent } from "@/components/ui/sheet";
 
 export const Route = createFileRoute("/dashboard/content")({
   component: ContentPage,
@@ -18,6 +19,7 @@ function ContentPage() {
   const profile = getProfileMeta();
   const [supabaseReady, setSupabaseReady] = useState(false);
   const [saveStatus, setSaveStatus] = useState<"idle" | "saving" | "saved">("idle");
+  const [previewOpen, setPreviewOpen] = useState(false);
   const skipNextSave = useRef(false);
   const saveTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
   const resetTimerRef = useRef<ReturnType<typeof setTimeout> | undefined>(undefined);
@@ -59,6 +61,7 @@ function ContentPage() {
   }
 
   return (
+    <>
     <div className="mx-auto max-w-[1400px] px-5 sm:px-8 py-8 grid grid-cols-1 xl:grid-cols-[1fr_380px] gap-8 items-start">
       <section>
         <div className="flex items-center gap-3 mb-6">
@@ -96,5 +99,38 @@ function ContentPage() {
         </div>
       </aside>
     </div>
+
+    {/* Bouton Aperçu flottant — mobile uniquement */}
+    <button
+      onClick={() => setPreviewOpen(true)}
+      className="xl:hidden fixed bottom-[72px] right-4 z-40 flex items-center gap-2 bg-primary text-primary-foreground rounded-full pl-3.5 pr-4 py-2.5 shadow-[0_4px_20px_-4px] shadow-primary/60 text-sm font-semibold"
+    >
+      <Eye className="w-4 h-4" />
+      Aperçu
+    </button>
+
+    {/* Sheet aperçu — mobile */}
+    <Sheet open={previewOpen} onOpenChange={setPreviewOpen}>
+      <SheetContent side="bottom" className="h-[92vh] rounded-t-3xl p-0 overflow-hidden flex flex-col">
+        <div className="flex items-center justify-between px-5 py-4 border-b border-border shrink-0">
+          <div className="flex items-center gap-2">
+            <span className="h-1.5 w-1.5 rounded-full bg-primary animate-pulse" />
+            <span className="font-semibold text-sm">Aperçu live</span>
+          </div>
+          <button
+            onClick={() => setPreviewOpen(false)}
+            className="h-8 w-8 grid place-items-center rounded-full bg-muted text-muted-foreground hover:text-foreground transition"
+          >
+            <X className="w-4 h-4" />
+          </button>
+        </div>
+        <div className="flex-1 overflow-y-auto flex justify-center py-6 px-4">
+          <div className="w-full max-w-[360px]">
+            <PhoneFrame><BusinessCard data={data} /></PhoneFrame>
+          </div>
+        </div>
+      </SheetContent>
+    </Sheet>
+    </>
   );
 }
