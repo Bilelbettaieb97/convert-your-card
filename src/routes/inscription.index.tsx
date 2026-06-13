@@ -1,5 +1,5 @@
 import * as React from "react";
-import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
+import { createFileRoute, Link } from "@tanstack/react-router";
 import { useState, useRef, useEffect } from "react";
 import { z } from "zod";
 import { toast } from "sonner";
@@ -102,7 +102,6 @@ export const Route = createFileRoute("/inscription/")({
 
 function InscriptionPage() {
   const search = Route.useSearch();
-  const navigate = useNavigate();
   const phoneRef = useRef<HTMLDivElement>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
 
@@ -155,25 +154,18 @@ function InscriptionPage() {
     try {
       const redirectPath = search.redirect ?? "/builderia";
       const appUrl = typeof window !== "undefined" ? window.location.origin : "https://www.cartevisitedigitale.fr";
+      const emailRedirectTo = `${appUrl}${redirectPath}`;
 
-      // 1. Session anonyme immédiate si pas déjà connecté
-      const existingSession = (await supabase.auth.getSession()).data.session;
-      if (!existingSession) {
-        const { error: anonErr } = await supabase.auth.signInAnonymously();
-        if (anonErr) throw anonErr;
-        // Stocker l'email dans les metadata Supabase (navigate() garde le JS vivant → updateUser se termine)
-        await supabase.auth.updateUser({ data: { pending_email: trimmed } }).catch(() => {});
-      }
+      const { error } = await supabase.auth.signInWithOtp({
+        email: trimmed,
+        options: { emailRedirectTo },
+      });
 
-      // 2. Stocker l'email en localStorage (double sécurité)
-      localStorage.setItem("cyk.pending_email", trimmed);
-
+      if (error) throw error;
+      setSent(true);
       if (typeof window !== "undefined" && (window as any).fbq) {
         (window as any).fbq("track", "Lead");
       }
-
-      // Navigation client-side — pas de rechargement de page, session déjà en mémoire
-      navigate({ to: redirectPath as any });
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Une erreur est survenue");
     } finally {
@@ -288,10 +280,10 @@ function InscriptionPage() {
                       className="w-full bg-gradient-cta text-primary-foreground rounded-full py-3 text-sm font-semibold shadow-card hover:shadow-glow transition-all disabled:opacity-60 flex items-center justify-center gap-2"
                     >
                       {submitting ? (
-                        "Création en cours…"
+                        "Envoi en cours…"
                       ) : (
                         <>
-                          Générer ma carte de visite digitale
+                          Recevoir mon lien de connexion
                           <ArrowRight className="w-4 h-4" />
                         </>
                       )}

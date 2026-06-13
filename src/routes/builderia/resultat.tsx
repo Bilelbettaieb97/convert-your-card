@@ -81,8 +81,6 @@ function BuilderIAResultatPage() {
   const [copied, setCopied] = useState(false);
   const [activating, setActivating] = useState(false);
   const [error, setError] = useState("");
-  const [emailCapture, setEmailCapture] = useState("");
-  const [showEmailCapture, setShowEmailCapture] = useState(false);
 
   useEffect(() => {
     if (!loading && !user) navigate({ to: "/connexion" });
@@ -130,67 +128,25 @@ function BuilderIAResultatPage() {
     "Carte sans publicité Carte Visite Digitale",
   ].filter(Boolean) as string[];
 
-  function resolveEmail(): string {
-    const cardEmail = (data as CardData)?.email;
-    const isRealEmail = (v: string | undefined): v is string =>
-      !!v && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) && !v.endsWith("@maison-vendome.fr");
-    return user?.email
-      ?? (user?.user_metadata?.pending_email as string | undefined)
-      ?? localStorage.getItem("cyk.pending_email")
-      ?? (isRealEmail(cardEmail) ? cardEmail : undefined)
-      ?? "";
-  }
-
-  async function launchCheckout(email: string) {
-    if (!user) { setError("Session expirée — recharge la page."); return; }
-    if (!generatedCard?.bio) { setError("Carte manquante — retourne sur le builder."); return; }
-
+  async function handleActivateVitrine() {
+    if (!generatedCard || !user) return;
     setActivating(true);
     setError("");
     try {
       const cardWithTheme: CardData = { ...generatedCard, accent: selectedAccent };
       setData(cardWithTheme);
+      // Remettre le flag pour qu'un retour depuis Stripe repasse par /builderia/resultat
       localStorage.setItem("cyk.card.pending", JSON.stringify(cardWithTheme));
       localStorage.setItem("cyk.builderia.generated", "1");
       supabase.rpc("track_builderia_step", { p_user_id: user.id, p_step: 3, p_step_name: "stripe-checkout" }).then(() => {});
       const { url } = await createCheckoutSession({
-        data: { plan: "vitrine", billing: "monthly", email, userId: user.id },
+        data: { plan: "vitrine", billing: "monthly", email: user.email!, userId: user.id },
       });
-      if (url) {
-        window.location.href = url;
-      } else {
-        setError("Lien Stripe non reçu — réessaie.");
-        setActivating(false);
-      }
-    } catch (err) {
-      console.error("[checkout]", err);
+      if (url) window.location.href = url;
+    } catch {
       setError("Une erreur est survenue. Réessaie.");
       setActivating(false);
     }
-  }
-
-  async function handleActivateVitrine() {
-    if (!user) { setError("Session expirée — recharge la page."); return; }
-    if (!generatedCard?.bio) { setError("Carte manquante — retourne sur le builder."); return; }
-    const email = resolveEmail();
-    if (!email) {
-      setShowEmailCapture(true);
-      return;
-    }
-    await launchCheckout(email);
-  }
-
-  async function handleEmailCaptureSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    const trimmed = emailCapture.trim().toLowerCase();
-    if (!trimmed || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(trimmed)) {
-      setError("Entre une adresse email valide.");
-      return;
-    }
-    localStorage.setItem("cyk.pending_email", trimmed);
-    setShowEmailCapture(false);
-    setError("");
-    await launchCheckout(trimmed);
   }
 
   async function copyToClipboard(text: string) {
@@ -390,27 +346,6 @@ function BuilderIAResultatPage() {
             </div>
           )}
 
-          {showEmailCapture && (
-            <form onSubmit={handleEmailCaptureSubmit} className="flex flex-col gap-2 p-4 rounded-2xl border border-[#c026d3]/30 bg-[#c026d3]/5">
-              <p className="text-sm font-medium text-foreground">Entre ton email pour continuer</p>
-              <input
-                type="email"
-                value={emailCapture}
-                onChange={(e) => setEmailCapture(e.target.value)}
-                placeholder="ton@email.com"
-                autoFocus
-                className="w-full rounded-xl border border-border bg-background px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#c026d3]/50"
-              />
-              <button
-                type="submit"
-                disabled={activating}
-                className="w-full flex items-center justify-center gap-2 rounded-xl bg-gradient-to-r from-[#c026d3] to-[#7c3aed] text-white font-bold py-2.5 text-sm disabled:opacity-70"
-              >
-                {activating ? <><Loader2 className="w-4 h-4 animate-spin" /> En cours…</> : <><Rocket className="w-4 h-4" /> Continuer vers le paiement</>}
-              </button>
-            </form>
-          )}
-
           {error && <p className="text-red-400 text-sm text-center">{error}</p>}
 
           {/* CTA desktop uniquement — sur mobile c'est la barre sticky en bas */}
@@ -453,38 +388,17 @@ function BuilderIAResultatPage() {
 
       {/* ── Sticky CTA — mobile uniquement ── */}
       <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-background/95 backdrop-blur border-t border-border px-4 py-3 space-y-1.5">
-        {showEmailCapture ? (
-          <form onSubmit={handleEmailCaptureSubmit} className="flex gap-2">
-            <input
-              type="email"
-              value={emailCapture}
-              onChange={(e) => setEmailCapture(e.target.value)}
-              placeholder="ton@email.com"
-              autoFocus
-              className="flex-1 rounded-xl border border-border bg-background px-3 py-2.5 text-sm focus:outline-none focus:ring-2 focus:ring-[#c026d3]/50"
-            />
-            <button
-              type="submit"
-              disabled={activating}
-              className="flex items-center gap-1.5 rounded-xl bg-gradient-to-r from-[#c026d3] to-[#7c3aed] text-white font-bold px-4 py-2.5 text-sm disabled:opacity-70 whitespace-nowrap"
-            >
-              {activating ? <Loader2 className="w-4 h-4 animate-spin" /> : <Rocket className="w-4 h-4" />}
-              Continuer
-            </button>
-          </form>
-        ) : (
-          <button
-            type="button"
-            onClick={handleActivateVitrine}
-            disabled={activating}
-            className="w-full flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-[#c026d3] to-[#7c3aed] text-white font-bold py-4 text-base active:scale-[0.98] transition shadow-lg shadow-[#c026d3]/20 disabled:opacity-70 disabled:cursor-not-allowed"
-          >
-            {activating
-              ? <><Loader2 className="w-4 h-4 animate-spin" /> Publication en cours…</>
-              : <><Rocket className="w-4 h-4" /> Commencer à modifier ma carte</>
-            }
-          </button>
-        )}
+        <button
+          type="button"
+          onClick={handleActivateVitrine}
+          disabled={activating}
+          className="w-full flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-[#c026d3] to-[#7c3aed] text-white font-bold py-4 text-base active:scale-[0.98] transition shadow-lg shadow-[#c026d3]/20 disabled:opacity-70 disabled:cursor-not-allowed"
+        >
+          {activating
+            ? <><Loader2 className="w-4 h-4 animate-spin" /> Publication en cours…</>
+            : <><Rocket className="w-4 h-4" /> Commencer à modifier ma carte</>
+          }
+        </button>
         <p className="text-center text-[11px] text-muted-foreground">
           Sans carte bleue · Sans engagement · Puis 4,80€/mois
         </p>

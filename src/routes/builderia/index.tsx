@@ -190,7 +190,7 @@ function BuilderIAPromptPage() {
         ...p,
         name: userName || DEFAULT_CARD.name,
         photo: user?.user_metadata?.avatar_url || DEFAULT_CARD.photo,
-        email: user?.email || localStorage.getItem("cyk.pending_email") || DEFAULT_CARD.email,
+        email: user?.email || DEFAULT_CARD.email,
         // Sanitize fields — AI may send null or wrong type
         stats: Array.isArray(p.stats) ? p.stats : DEFAULT_CARD.stats,
         badges: Array.isArray(p.badges) ? p.badges : DEFAULT_CARD.badges,
