@@ -116,10 +116,10 @@ function CardOverviewPage() {
             Personnaliser ma carte
           </p>
           <div className="grid grid-cols-2 gap-2.5">
-            <QuickCard to="/dashboard/content" icon={<Layers className="w-5 h-5" />} label="Contenu" hint="Sections & textes" primary />
-            <QuickCard to="/dashboard/theme" icon={<Palette className="w-5 h-5" />} label="Apparence" hint="Thème & couleurs" />
-            <QuickCard to="/dashboard/style" icon={<Sparkles className="w-5 h-5" />} label="Style" hint="Variantes visuelles" />
-            <QuickCard to="/dashboard/media" icon={<Image className="w-5 h-5" />} label="Médias" hint="Logo & photos" />
+            <QuickCard to="/dashboard/content" icon={<Layers className="w-5 h-5" />} label="Contenu" hint="Sections & textes" color="pink" />
+            <QuickCard to="/dashboard/theme" icon={<Palette className="w-5 h-5" />} label="Apparence" hint="Thème & couleurs" color="violet" />
+            <QuickCard to="/dashboard/style" icon={<Sparkles className="w-5 h-5" />} label="Style" hint="Variantes visuelles" color="amber" />
+            <QuickCard to="/dashboard/media" icon={<Image className="w-5 h-5" />} label="Médias" hint="Logo & photos" color="sky" />
           </div>
         </div>
       </div>
@@ -195,20 +195,24 @@ function CardOverviewPage() {
   );
 }
 
-function QuickCard({ to, icon, label, hint, primary }: { to: string; icon: React.ReactNode; label: string; hint: string; primary?: boolean }) {
+const COLOR_MAP = {
+  pink:   { icon: "text-pink-500",    bg: "bg-pink-500/12",    border: "border-pink-500/25" },
+  violet: { icon: "text-violet-500",  bg: "bg-violet-500/12",  border: "border-violet-500/25" },
+  amber:  { icon: "text-amber-500",   bg: "bg-amber-500/12",   border: "border-amber-500/25" },
+  sky:    { icon: "text-sky-500",     bg: "bg-sky-500/12",     border: "border-sky-500/25" },
+};
+
+function QuickCard({ to, icon, label, hint, color = "violet" }: { to: string; icon: React.ReactNode; label: string; hint: string; color?: keyof typeof COLOR_MAP }) {
+  const c = COLOR_MAP[color];
   return (
     <Link
       to={to}
-      className={`flex flex-col gap-2 rounded-2xl border p-3.5 transition-all active:scale-95 ${
-        primary
-          ? "border-primary/50 bg-gradient-to-br from-primary to-primary/80 shadow-[0_4px_20px_-4px] shadow-primary/40"
-          : "border-border bg-card/40 hover:border-primary/30"
-      }`}
+      className={`flex flex-col gap-2.5 rounded-2xl border p-3.5 transition-all active:scale-95 ${c.bg} ${c.border}`}
     >
-      <span className={`${primary ? "text-white" : "text-primary"}`}>{icon}</span>
+      <span className={`w-9 h-9 rounded-xl grid place-items-center ${c.bg} ${c.icon}`}>{icon}</span>
       <div>
-        <div className={`text-sm font-semibold ${primary ? "text-white" : "text-foreground"}`}>{label}</div>
-        <div className={`text-[11px] ${primary ? "text-white/70" : "text-muted-foreground"}`}>{hint}</div>
+        <div className="text-sm font-semibold text-foreground">{label}</div>
+        <div className="text-[11px] text-muted-foreground">{hint}</div>
       </div>
     </Link>
   );

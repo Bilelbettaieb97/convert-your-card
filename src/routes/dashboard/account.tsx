@@ -95,22 +95,21 @@ function AccountPage() {
       {/* ── Raccourcis mobile uniquement ── */}
       <div className="md:hidden grid grid-cols-2 gap-3 -mt-2">
         {[
-          { to: "/dashboard/billing", icon: CreditCard, label: "Facturation", hint: "Factures & paiement" },
-          { to: "/dashboard/settings", icon: Settings, label: "Paramètres", hint: "Sécurité & RGPD" },
-          { to: "/dashboard/help", icon: HelpCircle, label: "Aide", hint: "Checklist & tutos" },
-          { to: "/dashboard/commander", icon: Package, label: "Carte NFC", hint: "Commander physique" },
-        ].map(({ to, icon: Icon, label, hint }) => (
+          { to: "/dashboard/billing",   icon: CreditCard, label: "Facturation", hint: "Factures & paiement", iconCls: "text-violet-500", bgCls: "bg-violet-500/12 border-violet-500/25" },
+          { to: "/dashboard/settings",  icon: Settings,   label: "Paramètres",  hint: "Sécurité & RGPD",     iconCls: "text-sky-500",    bgCls: "bg-sky-500/12 border-sky-500/25" },
+          { to: "/dashboard/help",      icon: HelpCircle, label: "Aide",        hint: "Checklist & tutos",   iconCls: "text-amber-500",  bgCls: "bg-amber-500/12 border-amber-500/25" },
+          { to: "/dashboard/commander", icon: Package,    label: "Carte NFC",   hint: "Commander physique",  iconCls: "text-emerald-500", bgCls: "bg-emerald-500/12 border-emerald-500/25" },
+        ].map(({ to, icon: Icon, label, hint, iconCls, bgCls }) => (
           <Link key={to} to={to}
-            className="flex items-center gap-3 rounded-2xl border border-border bg-card/40 p-3.5 hover:border-primary/30 transition active:scale-95"
+            className={`flex flex-col gap-2.5 rounded-2xl border p-3.5 transition active:scale-95 ${bgCls}`}
           >
-            <span className="w-9 h-9 rounded-xl bg-primary/10 grid place-items-center shrink-0">
-              <Icon className="w-4.5 h-4.5 text-primary" />
+            <span className={`w-9 h-9 rounded-xl grid place-items-center bg-background/60 shrink-0 ${iconCls}`}>
+              <Icon className="w-4.5 h-4.5" />
             </span>
-            <div className="flex-1 min-w-0">
-              <div className="text-sm font-semibold truncate">{label}</div>
-              <div className="text-[11px] text-muted-foreground truncate">{hint}</div>
+            <div>
+              <div className="text-sm font-semibold">{label}</div>
+              <div className="text-[11px] text-muted-foreground">{hint}</div>
             </div>
-            <ArrowRight className="w-3.5 h-3.5 text-muted-foreground shrink-0" />
           </Link>
         ))}
       </div>
