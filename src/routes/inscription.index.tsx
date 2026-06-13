@@ -154,18 +154,30 @@ function InscriptionPage() {
     try {
       const redirectPath = search.redirect ?? "/builderia";
       const appUrl = typeof window !== "undefined" ? window.location.origin : "https://www.cartevisitedigitale.fr";
-      const emailRedirectTo = `${appUrl}${redirectPath}`;
 
-      const { error } = await supabase.auth.signInWithOtp({
+      // 1. Session anonyme immédiate si pas déjà connecté
+      const existingSession = (await supabase.auth.getSession()).data.session;
+      if (!existingSession) {
+        const { error: anonErr } = await supabase.auth.signInAnonymously();
+        if (anonErr) throw anonErr;
+      }
+
+      // 2. Lier l'email au compte anonyme — envoie la confirmation par email
+      const { error: updateErr } = await supabase.auth.updateUser({
         email: trimmed,
-        options: { emailRedirectTo },
+        data: { pending_email: trimmed },
       });
+      if (updateErr) throw updateErr;
 
-      if (error) throw error;
-      setSent(true);
+      // 3. Stocker l'email pour le checkout Stripe (user.email encore null avant confirmation)
+      localStorage.setItem("cyk.pending_email", trimmed);
+
       if (typeof window !== "undefined" && (window as any).fbq) {
         (window as any).fbq("track", "Lead");
       }
+
+      // 4. Rediriger immédiatement — pas d'écran "Vérifie ta boîte email"
+      window.location.href = redirectPath;
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Une erreur est survenue");
     } finally {

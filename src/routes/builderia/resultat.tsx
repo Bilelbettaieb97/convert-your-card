@@ -140,7 +140,7 @@ function BuilderIAResultatPage() {
       localStorage.setItem("cyk.builderia.generated", "1");
       await supabase.rpc("track_builderia_step", { p_user_id: user.id, p_step: 3, p_step_name: "stripe-checkout" });
       const { url } = await createCheckoutSession({
-        data: { plan: "vitrine", billing: "monthly", email: user.email!, userId: user.id },
+        data: { plan: "vitrine", billing: "monthly", email: user.email ?? (user.user_metadata?.pending_email as string | undefined) ?? localStorage.getItem("cyk.pending_email") ?? "", userId: user.id },
       });
       if (url) window.location.href = url;
     } catch {
