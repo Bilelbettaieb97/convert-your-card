@@ -287,35 +287,8 @@ function BuilderIAPromptPage() {
             </div>
           </div>
 
-          {/* ── Chips métier — ACTION PRINCIPALE ── */}
-          <div>
-            <p className="text-white/50 text-xs font-semibold uppercase tracking-widest mb-2.5 text-center">
-              Choisis ton métier
-            </p>
-            <div className="grid grid-cols-2 gap-2.5">
-              {EXAMPLES.map((ex) => (
-                <button
-                  key={ex.full}
-                  type="button"
-                  onClick={() => handleChipClick(ex.full)}
-                  className="flex items-center gap-3 rounded-2xl border border-white/15 bg-white/[0.06] hover:bg-white/[0.12] hover:border-[#c026d3]/50 px-4 py-4 text-left transition-all active:scale-95 shadow-sm"
-                >
-                  <span className="text-2xl shrink-0">{ex.icon}</span>
-                  <span className="text-sm text-white/80 font-semibold leading-snug">{ex.short}</span>
-                </button>
-              ))}
-            </div>
-          </div>
-
-          {/* ── Séparateur ── */}
-          <div className="flex items-center gap-3">
-            <div className="flex-1 h-px bg-white/10" />
-            <span className="text-white/25 text-xs shrink-0">ou décris en tes mots</span>
-            <div className="flex-1 h-px bg-white/10" />
-          </div>
-
-          {/* ── Textarea — ACTION SECONDAIRE ── */}
-          <form onSubmit={handleGenerate} className="flex flex-col gap-3 pb-6">
+          {/* ── Textarea — ACTION PRINCIPALE ── */}
+          <form onSubmit={handleGenerate} className="flex flex-col gap-3">
             <textarea
               value={input}
               onChange={(e) => setInput(e.target.value)}
@@ -336,6 +309,30 @@ function BuilderIAPromptPage() {
             </button>
             {error && <p className="text-red-400 text-sm text-center">{error}</p>}
           </form>
+
+          {/* ── Séparateur ── */}
+          <div className="flex items-center gap-3">
+            <div className="flex-1 h-px bg-white/10" />
+            <span className="text-white/25 text-xs shrink-0">ou choisis ton métier</span>
+            <div className="flex-1 h-px bg-white/10" />
+          </div>
+
+          {/* ── Chips métier — ACTION SECONDAIRE ── */}
+          <div className="pb-6">
+            <div className="grid grid-cols-2 gap-2.5">
+              {EXAMPLES.map((ex) => (
+                <button
+                  key={ex.full}
+                  type="button"
+                  onClick={() => handleChipClick(ex.full)}
+                  className="flex items-center gap-3 rounded-2xl border border-white/15 bg-white/[0.06] hover:bg-white/[0.12] hover:border-[#c026d3]/50 px-4 py-4 text-left transition-all active:scale-95"
+                >
+                  <span className="text-2xl shrink-0">{ex.icon}</span>
+                  <span className="text-sm text-white/80 font-semibold leading-snug">{ex.short}</span>
+                </button>
+              ))}
+            </div>
+          </div>
 
         </div>
       </div>
