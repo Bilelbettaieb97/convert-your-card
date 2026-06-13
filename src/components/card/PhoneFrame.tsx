@@ -3,7 +3,7 @@ import { type ReactNode } from "react";
 /** iPhone-style frame with a scrollable inner viewport. */
 export function PhoneFrame({ children, gridOverlay = false, scrollHint = false }: { children: ReactNode; gridOverlay?: boolean; scrollHint?: boolean }) {
   return (
-    <div className="relative mx-auto" style={{ width: 360 }}>
+    <div className="relative mx-auto w-full" style={{ maxWidth: 360 }}>
       <div
         className="relative rounded-[44px] p-[10px] shadow-2xl"
         style={{

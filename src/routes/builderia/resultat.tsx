@@ -75,8 +75,7 @@ function BuilderIAResultatPage() {
 
   const phoneRef = useRef<HTMLDivElement>(null);
 
-  const [revealed, setRevealed] = useState(false);
-  const [selectedAccent, setSelectedAccent] = useState<ThemeAccent>("gold");
+  const [selectedAccent, setSelectedAccent] = useState<ThemeAccent>("noir");
   const [shareUrl, setShareUrl] = useState("");
   const [sharing, setSharing] = useState(false);
   const [copied, setCopied] = useState(false);
@@ -94,12 +93,12 @@ function BuilderIAResultatPage() {
       navigate({ to: "/builderia", replace: true });
       return;
     }
-    setSelectedAccent(data.accent ?? "gold");
-    const t = setTimeout(() => setRevealed(true), 40);
+    const raw = data.accent;
+    const safeAccent = QUICK_THEMES.some(t => t.accent === raw) ? raw! : "noir";
+    setSelectedAccent(safeAccent);
     if (user) {
       supabase.rpc("track_builderia_step", { p_user_id: user.id, p_step: 2, p_step_name: "builderia-resultat" }).then(() => {});
     }
-    return () => clearTimeout(t);
   }, [hydrated]);
 
   const generatedCard = data as CardData;
@@ -150,6 +149,22 @@ function BuilderIAResultatPage() {
     }
   }
 
+  async function copyToClipboard(text: string) {
+    try {
+      await navigator.clipboard.writeText(text);
+    } catch {
+      // Fallback iOS Safari — user gesture context lost after await
+      const el = document.createElement("textarea");
+      el.value = text;
+      Object.assign(el.style, { position: "fixed", opacity: "0", top: "0", left: "0" });
+      document.body.appendChild(el);
+      el.focus();
+      el.select();
+      document.execCommand("copy");
+      document.body.removeChild(el);
+    }
+  }
+
   async function handleShare() {
     if (!generatedCard || sharing) return;
     setSharing(true);
@@ -158,7 +173,7 @@ function BuilderIAResultatPage() {
       const { token } = await saveCardPreview({ data: { cardData: cardWithTheme as unknown as Record<string, unknown> } });
       const url = `${window.location.origin}/preview/${token}`;
       setShareUrl(url);
-      await navigator.clipboard.writeText(url).catch(() => {});
+      await copyToClipboard(url);
     } catch {
       // silently fail
     } finally {
@@ -168,7 +183,7 @@ function BuilderIAResultatPage() {
 
   async function handleCopy() {
     if (!shareUrl) return;
-    await navigator.clipboard.writeText(shareUrl).catch(() => {});
+    await copyToClipboard(shareUrl);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   }
@@ -196,13 +211,21 @@ function BuilderIAResultatPage() {
           </div>
           <span className="font-semibold text-sm">Carte Visite Digitale</span>
         </div>
-        <span className="text-xs text-muted-foreground">Ta carte est prête ✨</span>
+        <div className="flex items-center gap-3">
+          <span className="hidden sm:inline text-xs text-muted-foreground">Ta carte est prête ✨</span>
+          <button
+            onClick={() => navigate({ to: "/builderia" })}
+            className="flex items-center gap-1 text-xs text-muted-foreground hover:text-foreground transition"
+          >
+            <RotateCcw className="w-3 h-3" /> Modifier
+          </button>
+        </div>
       </div>
 
-      <div className="max-w-5xl mx-auto px-4 py-10 grid grid-cols-1 lg:grid-cols-2 gap-10 items-start">
+      <div className="max-w-5xl mx-auto px-4 py-4 lg:py-10 grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-10 items-start">
 
-        {/* ── Gauche : phone ── 2ème sur mobile, 1er sur desktop */}
-        <div className="flex flex-col items-center gap-4 order-2 lg:order-1">
+        {/* ── Gauche : phone ── 1er sur mobile ET desktop */}
+        <div className="flex flex-col items-center gap-4 order-1">
           <p className="text-xs uppercase tracking-widest text-primary">Aperçu Vitrine complet</p>
 
           <div className="flex items-center gap-3">
@@ -228,22 +251,16 @@ function BuilderIAResultatPage() {
             <span className="text-[11px] text-muted-foreground ml-1">Changer de thème</span>
           </div>
 
-          <div style={{
-            perspective: "900px",
-            transform: revealed ? "rotateY(0deg)" : "rotateY(-90deg)",
-            transition: "transform 0.55s cubic-bezier(0.4, 0, 0.2, 1)",
-          }}>
-            <div ref={phoneRef} className="relative">
-              <PhoneFrame>
-                <div style={{ pointerEvents: "none" }}>
-                  <BusinessCard data={fullCard} />
-                </div>
-              </PhoneFrame>
-            </div>
+          <div ref={phoneRef} className="relative w-full">
+            <PhoneFrame>
+              <div style={{ pointerEvents: "none" }}>
+                <BusinessCard data={fullCard} />
+              </div>
+            </PhoneFrame>
           </div>
 
           {/* Partage */}
-          <div className="w-full max-w-[280px]">
+          <div className="w-full max-w-[320px]">
             {shareUrl ? (
               <div className="flex gap-2">
                 <div className="flex-1 rounded-xl border border-border bg-muted/30 px-3 py-2 text-[11px] text-muted-foreground truncate">
@@ -267,29 +284,10 @@ function BuilderIAResultatPage() {
               </button>
             )}
           </div>
-
-          {/* Bouton CTA dupliqué — mobile uniquement, sous le téléphone */}
-          <div className="w-full lg:hidden space-y-3">
-            <button
-              type="button"
-              onClick={handleActivateVitrine}
-              disabled={activating}
-              className="w-full flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-[#c026d3] to-[#7c3aed] text-white font-bold py-4 text-base hover:opacity-90 transition shadow-lg shadow-[#c026d3]/25 disabled:opacity-70 disabled:cursor-not-allowed"
-            >
-              {activating
-                ? <><Loader2 className="w-4 h-4 animate-spin" /> Publication en cours…</>
-                : <><Rocket className="w-4 h-4" /> Je publie ma carte — 3 jours gratuits</>
-              }
-            </button>
-            <div className="rounded-xl border border-emerald-500/30 bg-emerald-500/[0.06] px-4 py-3 space-y-1">
-              <p className="text-sm font-semibold text-emerald-400">Sans carte bleue · Sans engagement</p>
-              <p className="text-xs text-muted-foreground">Puis 4,80€/mois · Résiliable à tout moment</p>
-            </div>
-          </div>
         </div>
 
-        {/* ── Droite : CTA ── 1er sur mobile, 2ème sur desktop */}
-        <div className="space-y-4 lg:pt-4 order-1 lg:order-2">
+        {/* ── Droite : CTA ── 2ème sur mobile ET desktop */}
+        <div className="space-y-4 lg:pt-4 order-2">
 
           <div>
             <h1 className="font-bold text-2xl text-foreground mb-1">
@@ -327,7 +325,7 @@ function BuilderIAResultatPage() {
                   <p className="text-xs font-semibold text-foreground">Score de conversion</p>
                   <p className="text-[11px] font-medium" style={{ color: scoreColor }}>{scoreLabel}</p>
                   {tips[0] && (
-                    <p className="text-[10px] text-muted-foreground mt-0.5 truncate">{tips[0].label} → <span className="text-emerald-500">{tips[0].impact}</span></p>
+                    <p className="text-xs text-muted-foreground mt-0.5 truncate">{tips[0].label} → <span className="text-emerald-500">{tips[0].impact}</span></p>
                   )}
                 </div>
               </div>
