@@ -241,13 +241,13 @@ function InscriptionPage() {
             {!sent ? (
               <div className="bg-card border border-border rounded-2xl shadow-card p-6 sm:p-8">
                 <p className="text-xs font-semibold uppercase tracking-wider text-magenta mb-2">
-                  Pour artisans, coaches & indépendants
+                  Carte de visite digitale — 100 % gratuit
                 </p>
                 <h1 className="font-display text-2xl sm:text-3xl font-bold text-foreground leading-tight">
-                  Ta carte de visite digitale pro, prête en 30 secondes
+                  Partage tes contacts en 1 lien. Tes clients t'appellent, réservent, te suivent.
                 </h1>
                 <p className="mt-2 text-sm text-muted-foreground">
-                  L'IA génère ta carte, tu la partages en 1 lien. Sans mot de passe.
+                  Générée par l'IA en 30 secondes. Sans mot de passe.
                 </p>
 
                 <div className="mt-6">
