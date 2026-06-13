@@ -358,7 +358,7 @@ function BuilderIAResultatPage() {
             >
               {activating
                 ? <><Loader2 className="w-4 h-4 animate-spin" /> Publication en cours…</>
-                : <><Rocket className="w-4 h-4" /> Je publie ma carte — 3 jours gratuits</>
+                : <><Rocket className="w-4 h-4" /> Commencer à modifier ma carte</>
               }
             </button>
 
@@ -396,7 +396,7 @@ function BuilderIAResultatPage() {
         >
           {activating
             ? <><Loader2 className="w-4 h-4 animate-spin" /> Publication en cours…</>
-            : <><Rocket className="w-4 h-4" /> Je publie ma carte — 3 jours gratuits</>
+            : <><Rocket className="w-4 h-4" /> Commencer à modifier ma carte</>
           }
         </button>
         <p className="text-center text-[11px] text-muted-foreground">
