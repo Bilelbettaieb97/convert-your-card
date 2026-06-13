@@ -125,6 +125,10 @@ function BuilderIAPromptPage() {
 
   async function runGeneration(text: string) {
     if (!text.trim()) return;
+    if (text.trim().length < 3 || !/[a-zA-ZÀ-ÿ]/.test(text)) {
+      setError("Décris ton activité en quelques mots — ex : Plombier Paris, Coach bien-être…");
+      return;
+    }
 
     abortRef.current?.abort();
     const controller = new AbortController();
@@ -197,6 +201,13 @@ function BuilderIAPromptPage() {
         listingsEnabled: false,
         sectionOrder: [...BASE_ORDER],
       };
+
+      // Si Claude n'a pas généré de bio, le contenu est inutilisable (gibberish input)
+      if (!partialRef.current.bio) {
+        setPhase("prompt");
+        setError("Je n'ai pas réussi à identifier ton activité. Essaie d'être plus précis — ex : Plombier Paris, Coach bien-être…");
+        return;
+      }
 
       setData(merged);
       localStorage.setItem("cyk.builderia.generated", "1");
