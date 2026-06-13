@@ -238,59 +238,49 @@ function InscriptionPage() {
               <span className="font-display font-bold text-sm leading-tight">Carte Visite Digitale</span>
             </div>
 
-            {/* Product preview — mobile only, above form */}
-            {!sent && (
-              <div className="lg:hidden flex items-center gap-3 mb-4 bg-card border border-border rounded-2xl p-3 shadow-card">
-                {/* Mini phone */}
-                <div className="relative shrink-0 pointer-events-none select-none">
-                  <div
-                    className="relative overflow-hidden rounded-[14px] shadow-[0_0_20px_rgba(192,38,211,0.15)]"
-                    style={{ width: 90, height: 140 }}
-                  >
-                    <div style={{ transform: "scale(0.25)", transformOrigin: "top left", width: 360 }}>
-                      <PhoneFrame>
-                        <BusinessCard data={DEMO_CARD} />
-                      </PhoneFrame>
-                    </div>
-                    <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-card to-transparent" />
-                  </div>
-                  <div className="absolute -top-1.5 -right-1.5 bg-emerald-500 text-white text-[8px] font-bold px-1.5 py-0.5 rounded-full shadow whitespace-nowrap z-10">
-                    ✓ Live
-                  </div>
-                </div>
-                {/* Description */}
-                <div className="flex-1 min-w-0">
-                  <p className="text-[11px] font-bold text-foreground mb-2">Voilà ce que tu vas créer</p>
-                  <div className="space-y-1.5">
-                    {[
-                      "Carte cliquable partageable en 1 lien",
-                      "Agenda, services & avis clients intégrés",
-                      "Générée par l'IA en 30 secondes",
-                    ].map((item) => (
-                      <div key={item} className="flex items-start gap-1.5">
-                        <div className="w-1.5 h-1.5 rounded-full bg-magenta mt-1.5 shrink-0" />
-                        <p className="text-[11px] text-muted-foreground leading-snug">{item}</p>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            )}
-
             {!sent ? (
               <div className="bg-card border border-border rounded-2xl shadow-card p-6 sm:p-8">
-                <p className="text-xs font-semibold uppercase tracking-wider text-magenta mb-2">
-                  Carte de visite digitale — 100 % gratuit
-                </p>
-                <h1 className="font-display text-3xl sm:text-4xl font-bold text-foreground leading-tight">
-                  Partage tes contacts en 1 lien
-                </h1>
+
+                {/* Header : texte gauche + mini phone droite (mobile only) */}
+                <div className="flex items-start gap-4">
+                  <div className="flex-1 min-w-0">
+                    <p className="text-xs font-semibold uppercase tracking-wider text-magenta mb-2">
+                      Carte de visite digitale — 100 % gratuit
+                    </p>
+                    <h1 className="font-display text-2xl sm:text-3xl font-bold text-foreground leading-tight">
+                      Partage tes contacts en 1 lien
+                    </h1>
+                    {/* Social proof inline */}
+                    <div className="flex items-center gap-1.5 mt-2">
+                      <span className="text-amber-400 text-xs leading-none">★★★★★</span>
+                      <span className="text-xs text-muted-foreground">+2 400 pros · 4.8/5</span>
+                    </div>
+                  </div>
+                  {/* Mini phone — mobile only */}
+                  <div className="lg:hidden shrink-0 relative pointer-events-none select-none mt-1">
+                    <div
+                      className="relative overflow-hidden rounded-[14px] shadow-[0_0_24px_rgba(192,38,211,0.2)]"
+                      style={{ width: 80, height: 128 }}
+                    >
+                      <div style={{ transform: "scale(0.222)", transformOrigin: "top left", width: 360 }}>
+                        <PhoneFrame>
+                          <BusinessCard data={DEMO_CARD} />
+                        </PhoneFrame>
+                      </div>
+                      <div className="absolute bottom-0 left-0 right-0 h-8 bg-gradient-to-t from-card to-transparent" />
+                    </div>
+                    <div className="absolute -top-1.5 -right-1.5 bg-emerald-500 text-white text-[8px] font-bold px-1.5 py-0.5 rounded-full shadow whitespace-nowrap z-10">
+                      ✓ Live
+                    </div>
+                  </div>
+                </div>
+
                 <p className="mt-3 text-sm text-muted-foreground leading-relaxed">
-                  Tes clients t'appellent, réservent, te suivent. Carte générée par l'IA en 30 secondes. Sans mot de passe.
+                  Tes clients t'appellent, réservent, te suivent. Générée par l'IA en 30 secondes.
                 </p>
 
-                <div className="mt-6">
-                  <div className="flex flex-wrap items-center gap-2 mb-5">
+                <div className="mt-5">
+                  <div className="flex flex-wrap items-center gap-2 mb-4">
                     <span className="inline-flex items-center gap-1.5 rounded-full bg-emerald-50 dark:bg-emerald-900/20 border border-emerald-200 dark:border-emerald-800 px-3 py-1 text-[11px] font-semibold text-emerald-700 dark:text-emerald-400">
                       <ShieldCheck className="w-3.5 h-3.5" />
                       100 % gratuit
@@ -305,11 +295,14 @@ function InscriptionPage() {
                     type="button"
                     onClick={handleGoogleLogin}
                     disabled={googleLoading}
-                    className="w-full flex items-center justify-center gap-2.5 rounded-xl border border-border bg-background px-4 py-3 text-sm font-medium text-foreground hover:bg-muted/50 transition disabled:opacity-60 mb-4"
+                    className="w-full flex items-center justify-center gap-2.5 rounded-xl border border-border bg-background px-4 py-3 text-sm font-medium text-foreground hover:bg-muted/50 transition disabled:opacity-60"
                   >
                     <GoogleIcon />
                     {googleLoading ? "Redirection…" : "Continuer avec Google"}
                   </button>
+                  <p className="text-center text-[11px] text-muted-foreground mt-2 mb-4">
+                    Ensuite, l'IA génère ta carte en 30 secondes →
+                  </p>
 
                   <div className="flex items-center gap-3 mb-4">
                     <div className="flex-1 h-px bg-border" />
