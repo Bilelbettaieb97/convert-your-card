@@ -129,21 +129,35 @@ function BuilderIAResultatPage() {
   ].filter(Boolean) as string[];
 
   async function handleActivateVitrine() {
-    if (!generatedCard || !user) return;
+    if (!user) { setError("Session expirée — recharge la page."); return; }
+    if (!generatedCard?.bio) { setError("Carte manquante — retourne sur le builder."); return; }
+
+    const email = user.email
+      ?? (user.user_metadata?.pending_email as string | undefined)
+      ?? localStorage.getItem("cyk.pending_email")
+      ?? "";
+
+    if (!email) { setError("Email introuvable — retourne sur /inscription."); return; }
+
     setActivating(true);
     setError("");
     try {
       const cardWithTheme: CardData = { ...generatedCard, accent: selectedAccent };
       setData(cardWithTheme);
-      // Remettre le flag pour qu'un retour depuis Stripe repasse par /builderia/resultat
       localStorage.setItem("cyk.card.pending", JSON.stringify(cardWithTheme));
       localStorage.setItem("cyk.builderia.generated", "1");
       supabase.rpc("track_builderia_step", { p_user_id: user.id, p_step: 3, p_step_name: "stripe-checkout" }).then(() => {});
       const { url } = await createCheckoutSession({
-        data: { plan: "vitrine", billing: "monthly", email: user.email ?? (user.user_metadata?.pending_email as string | undefined) ?? localStorage.getItem("cyk.pending_email") ?? "", userId: user.id },
+        data: { plan: "vitrine", billing: "monthly", email, userId: user.id },
       });
-      if (url) window.location.href = url;
-    } catch {
+      if (url) {
+        window.location.href = url;
+      } else {
+        setError("Lien Stripe non reçu — réessaie.");
+        setActivating(false);
+      }
+    } catch (err) {
+      console.error("[checkout]", err);
       setError("Une erreur est survenue. Réessaie.");
       setActivating(false);
     }
