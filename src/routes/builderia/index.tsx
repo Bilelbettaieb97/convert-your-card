@@ -184,12 +184,18 @@ function BuilderIAPromptPage() {
         }
       }
 
+      const p = partialRef.current;
       const merged: CardData = {
         ...DEFAULT_CARD,
-        ...partialRef.current,
+        ...p,
         name: userName || DEFAULT_CARD.name,
         photo: user?.user_metadata?.avatar_url || DEFAULT_CARD.photo,
         email: user?.email || localStorage.getItem("cyk.pending_email") || DEFAULT_CARD.email,
+        // Sanitize array fields — AI may send null instead of an array
+        stats: Array.isArray(p.stats) ? p.stats : DEFAULT_CARD.stats,
+        badges: Array.isArray(p.badges) ? p.badges : DEFAULT_CARD.badges,
+        services: Array.isArray(p.services) ? p.services : DEFAULT_CARD.services,
+        testimonials: Array.isArray(p.testimonials) ? p.testimonials : DEFAULT_CARD.testimonials,
         agency: "",
         phone: "",
         website: "",
