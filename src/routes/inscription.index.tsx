@@ -160,6 +160,8 @@ function InscriptionPage() {
       if (!existingSession) {
         const { error: anonErr } = await supabase.auth.signInAnonymously();
         if (anonErr) throw anonErr;
+        // Stocker l'email dans les metadata user (persiste côté serveur, survit au refresh)
+        supabase.auth.updateUser({ data: { pending_email: trimmed } }).catch(() => {});
       }
 
       // 2. Stocker l'email pour le checkout Stripe (user.email null sur compte anonyme)

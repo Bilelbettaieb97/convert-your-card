@@ -189,7 +189,7 @@ function BuilderIAPromptPage() {
         ...partialRef.current,
         name: userName || DEFAULT_CARD.name,
         photo: user?.user_metadata?.avatar_url || DEFAULT_CARD.photo,
-        email: user?.email || DEFAULT_CARD.email,
+        email: user?.email || localStorage.getItem("cyk.pending_email") || DEFAULT_CARD.email,
         agency: "",
         phone: "",
         website: "",

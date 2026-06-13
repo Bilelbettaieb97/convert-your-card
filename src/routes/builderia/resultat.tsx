@@ -132,9 +132,14 @@ function BuilderIAResultatPage() {
     if (!user) { setError("Session expirée — recharge la page."); return; }
     if (!generatedCard?.bio) { setError("Carte manquante — retourne sur le builder."); return; }
 
+    const cardEmail = generatedCard?.email;
+    const isRealEmail = (v: string | undefined): v is string =>
+      !!v && /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) && !v.endsWith("@maison-vendome.fr");
+
     const email = user.email
       ?? (user.user_metadata?.pending_email as string | undefined)
       ?? localStorage.getItem("cyk.pending_email")
+      ?? (isRealEmail(cardEmail) ? cardEmail : undefined)
       ?? "";
 
     if (!email) { setError("Email introuvable — retourne sur /inscription."); return; }
