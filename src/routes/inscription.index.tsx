@@ -1,5 +1,5 @@
 import * as React from "react";
-import { createFileRoute, Link } from "@tanstack/react-router";
+import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import { useState, useRef, useEffect } from "react";
 import { z } from "zod";
 import { toast } from "sonner";
@@ -102,6 +102,7 @@ export const Route = createFileRoute("/inscription/")({
 
 function InscriptionPage() {
   const search = Route.useSearch();
+  const navigate = useNavigate();
   const phoneRef = useRef<HTMLDivElement>(null);
   const overlayRef = useRef<HTMLDivElement>(null);
 
@@ -160,19 +161,19 @@ function InscriptionPage() {
       if (!existingSession) {
         const { error: anonErr } = await supabase.auth.signInAnonymously();
         if (anonErr) throw anonErr;
-        // Stocker l'email dans les metadata user (persiste côté serveur, survit au refresh)
-        supabase.auth.updateUser({ data: { pending_email: trimmed } }).catch(() => {});
+        // Stocker l'email dans les metadata Supabase (navigate() garde le JS vivant → updateUser se termine)
+        await supabase.auth.updateUser({ data: { pending_email: trimmed } }).catch(() => {});
       }
 
-      // 2. Stocker l'email pour le checkout Stripe (user.email null sur compte anonyme)
+      // 2. Stocker l'email en localStorage (double sécurité)
       localStorage.setItem("cyk.pending_email", trimmed);
 
       if (typeof window !== "undefined" && (window as any).fbq) {
         (window as any).fbq("track", "Lead");
       }
 
-      // 4. Rediriger immédiatement — pas d'écran "Vérifie ta boîte email"
-      window.location.href = redirectPath;
+      // Navigation client-side — pas de rechargement de page, session déjà en mémoire
+      navigate({ to: redirectPath as any });
     } catch (err) {
       toast.error(err instanceof Error ? err.message : "Une erreur est survenue");
     } finally {
