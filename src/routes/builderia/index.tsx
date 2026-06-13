@@ -236,7 +236,6 @@ function BuilderIAPromptPage() {
 
   function handleChipClick(full: string) {
     setInput(full);
-    runGeneration(full);
   }
 
   // ── Animation brique ──
