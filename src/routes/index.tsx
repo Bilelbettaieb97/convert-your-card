@@ -1,13 +1,14 @@
 import { createFileRoute, Link, useNavigate } from "@tanstack/react-router";
 import React, { useEffect, useState } from "react";
 import { supabase } from "@/integrations/supabase/client";
-import { LayoutDashboard, LogOut } from "lucide-react";
+import { LayoutDashboard, LogOut, Menu, X as XIcon } from "lucide-react";
 import {
   Check, X, Star, Zap, Shield, Smartphone, BarChart3, Leaf,
   CreditCard, Truck, ChevronDown, ArrowRight, Sparkles, Clock, Users, TrendingUp,
   Award, MessageCircle, BadgeCheck, Quote, ThumbsUp,
   Building2, Home, UtensilsCrossed, GraduationCap, Scissors, HardHat,
 } from "lucide-react";
+import { Sheet, SheetContent } from "@/components/ui/sheet";
 import { DigitalCardVisual } from "@/components/landing/DigitalCardVisual";
 import { HeroCards } from "@/components/landing/HeroCards";
 import { Countdown } from "@/components/landing/Countdown";
@@ -80,14 +81,13 @@ export function PromoBar() {
 
 export function Nav() {
   const [userEmail, setUserEmail] = useState<string | null>(null);
+  const [menuOpen, setMenuOpen] = useState(false);
   const navigate = useNavigate();
 
   useEffect(() => {
-    // Check current session
     supabase.auth.getUser().then(({ data: { user } }) => {
       setUserEmail(user?.email ?? null);
     });
-    // Listen to auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange((_event, session) => {
       setUserEmail(session?.user?.email ?? null);
     });
@@ -101,53 +101,146 @@ export function Nav() {
     navigate({ to: "/" });
   }
 
+  const NAV_LINKS = [
+    { label: "Fonctionnement", href: "/#fonctionnement" },
+    { label: "Modèles", href: "/templates" },
+    { label: "Offres", href: "/offres" },
+    { label: "Carte connectée", href: "/carte-physique" },
+    { label: "Avis clients", href: "/#avis" },
+  ];
+
   return (
-    <header className="sticky top-0 z-40 bg-background/80 backdrop-blur-lg border-b border-border">
-      <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
-        <Link to="/" className="flex items-center gap-2">
-          <div className="w-9 h-9 rounded-xl bg-gradient-brand flex items-center justify-center shadow-card">
-            <Zap className="w-5 h-5 text-primary-foreground" />
+    <>
+      <header className="sticky top-0 z-40 bg-background/80 backdrop-blur-lg border-b border-border">
+        <div className="max-w-7xl mx-auto px-4 h-16 flex items-center justify-between">
+          <Link to="/" className="flex items-center gap-2">
+            <div className="w-9 h-9 rounded-xl bg-gradient-brand flex items-center justify-center shadow-card">
+              <Zap className="w-5 h-5 text-primary-foreground" />
+            </div>
+            <span className="font-display font-bold text-sm leading-tight">Carte Visite Digitale</span>
+          </Link>
+
+          {/* Desktop nav */}
+          <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-muted-foreground">
+            {NAV_LINKS.map(({ label, href }) => (
+              <a key={label} href={href} className="hover:text-foreground transition">
+                {label}
+              </a>
+            ))}
+          </nav>
+
+          <div className="flex items-center gap-2">
+            {/* Hamburger — mobile only */}
+            <button
+              type="button"
+              onClick={() => setMenuOpen(true)}
+              className="md:hidden w-9 h-9 flex items-center justify-center rounded-xl hover:bg-muted transition"
+              aria-label="Ouvrir le menu"
+            >
+              <Menu className="w-5 h-5" />
+            </button>
+
+            {/* CTAs */}
+            {userEmail ? (
+              <>
+                <Link
+                  to="/dashboard"
+                  className="flex items-center gap-1.5 bg-gradient-cta text-primary-foreground px-3 sm:px-4 py-2 rounded-full text-sm font-semibold shadow-card hover:shadow-glow transition-all whitespace-nowrap"
+                >
+                  <LayoutDashboard className="w-4 h-4" />
+                  <span className="hidden sm:inline">Tableau de bord</span>
+                  <span className="sm:hidden">Dashboard</span>
+                </Link>
+                <button
+                  onClick={handleSignOut}
+                  className="w-8 h-8 rounded-full bg-muted hover:bg-destructive/10 flex items-center justify-center transition"
+                  title="Se déconnecter"
+                >
+                  <LogOut className="w-3.5 h-3.5 text-muted-foreground hover:text-destructive" />
+                </button>
+              </>
+            ) : (
+              <>
+                <Link to="/connexion" className="hidden md:inline text-sm font-medium text-muted-foreground hover:text-foreground transition whitespace-nowrap">
+                  Se connecter
+                </Link>
+                <Link to="/inscription" className="bg-gradient-cta text-primary-foreground px-3 sm:px-5 py-2.5 rounded-full text-sm font-semibold shadow-card hover:shadow-glow transition-all whitespace-nowrap">
+                  <span className="hidden sm:inline">Inscription gratuite</span>
+                  <span className="sm:hidden">Essai gratuit</span>
+                </Link>
+              </>
+            )}
           </div>
-          <span className="font-display font-bold text-sm leading-tight">Carte Visite Digitale</span>
-        </Link>
-        <nav className="hidden md:flex items-center gap-8 text-sm font-medium text-muted-foreground">
-          <Link to="/" hash="fonctionnement" className="hover:text-foreground transition">Fonctionnement</Link>
-          <Link to="/templates" className="hover:text-foreground transition">Modèles</Link>
-          <Link to="/offres" className="hover:text-foreground transition">Offres</Link>
-          <Link to="/carte-physique" className="hover:text-foreground transition">Carte connectée</Link>
-        </nav>
-        <div className="flex items-center gap-2 sm:gap-3">
-          {userEmail ? (
-            <>
+        </div>
+      </header>
+
+      {/* Mobile menu drawer */}
+      <Sheet open={menuOpen} onOpenChange={setMenuOpen}>
+        <SheetContent side="right" className="w-[300px] p-0 flex flex-col z-50">
+          {/* Header */}
+          <div className="flex items-center justify-between px-5 py-4 border-b border-border">
+            <Link to="/" className="flex items-center gap-2" onClick={() => setMenuOpen(false)}>
+              <div className="w-8 h-8 rounded-xl bg-gradient-brand flex items-center justify-center">
+                <Zap className="w-4 h-4 text-primary-foreground" />
+              </div>
+              <span className="font-display font-bold text-sm">CVD</span>
+            </Link>
+            <button
+              onClick={() => setMenuOpen(false)}
+              className="w-8 h-8 flex items-center justify-center rounded-full bg-muted text-muted-foreground hover:text-foreground transition"
+            >
+              <XIcon className="w-4 h-4" />
+            </button>
+          </div>
+
+          {/* Nav links */}
+          <nav className="flex flex-col gap-0.5 px-3 py-4 flex-1">
+            {NAV_LINKS.map(({ label, href }) => (
+              <a
+                key={label}
+                href={href}
+                onClick={() => setMenuOpen(false)}
+                className="flex items-center justify-between px-3 py-3.5 rounded-xl text-sm font-medium text-foreground/80 hover:text-foreground hover:bg-muted transition"
+              >
+                {label}
+                <ArrowRight className="w-3.5 h-3.5 text-muted-foreground/40" />
+              </a>
+            ))}
+          </nav>
+
+          {/* Bottom CTAs */}
+          <div className="px-5 py-5 border-t border-border space-y-3">
+            {!userEmail ? (
+              <>
+                <Link
+                  to="/connexion"
+                  onClick={() => setMenuOpen(false)}
+                  className="block w-full text-center py-3 rounded-xl border border-border text-sm font-semibold text-foreground hover:bg-muted transition"
+                >
+                  Se connecter
+                </Link>
+                <Link
+                  to="/inscription"
+                  onClick={() => setMenuOpen(false)}
+                  className="block w-full text-center py-3.5 rounded-xl bg-gradient-cta text-primary-foreground text-sm font-bold shadow-glow"
+                >
+                  Commencer gratuitement →
+                </Link>
+              </>
+            ) : (
               <Link
                 to="/dashboard"
-                className="flex items-center gap-1.5 bg-gradient-cta text-primary-foreground px-3 sm:px-4 py-2 rounded-full text-sm font-semibold shadow-card hover:shadow-glow transition-all whitespace-nowrap"
+                onClick={() => setMenuOpen(false)}
+                className="flex items-center justify-center gap-2 w-full text-center py-3.5 rounded-xl bg-gradient-cta text-primary-foreground text-sm font-bold shadow-glow"
               >
                 <LayoutDashboard className="w-4 h-4" />
-                <span className="hidden sm:inline">Tableau de bord</span>
-                <span className="sm:hidden">Dashboard</span>
+                Mon tableau de bord
               </Link>
-              <button
-                onClick={handleSignOut}
-                className="w-8 h-8 rounded-full bg-muted hover:bg-destructive/10 flex items-center justify-center transition"
-                title="Se déconnecter"
-              >
-                <LogOut className="w-3.5 h-3.5 text-muted-foreground hover:text-destructive" />
-              </button>
-            </>
-          ) : (
-            <>
-              <Link to="/connexion" className="text-sm font-medium text-muted-foreground hover:text-foreground transition whitespace-nowrap">
-                Se connecter
-              </Link>
-              <Link to="/inscription" className="bg-gradient-cta text-primary-foreground px-3 sm:px-5 py-2.5 rounded-full text-sm font-semibold shadow-card hover:shadow-glow transition-all whitespace-nowrap">
-                Inscription gratuite
-              </Link>
-            </>
-          )}
-        </div>
-      </div>
-    </header>
+            )}
+          </div>
+        </SheetContent>
+      </Sheet>
+    </>
   );
 }
 
@@ -245,10 +338,10 @@ function Hero() {
             <HeroCTA />
           </div>
 
-          <div className="hidden sm:flex mt-6 flex-wrap items-center gap-x-6 gap-y-2 text-xs text-muted-foreground">
-            <span className="flex items-center gap-1.5"><Shield className="w-4 h-4 text-success" /> Paiement 100% sécurisé</span>
-            <span className="flex items-center gap-1.5"><Clock className="w-4 h-4 text-success" /> Activation immédiate</span>
-            <span className="flex items-center gap-1.5"><Check className="w-4 h-4 text-success" /> Garantie 30 jours</span>
+          <div className="mt-4 flex flex-wrap items-center justify-center sm:justify-start gap-x-4 gap-y-2 text-xs text-muted-foreground">
+            <span className="flex items-center gap-1.5"><Shield className="w-3.5 h-3.5 text-success" /> 100% sécurisé</span>
+            <span className="flex items-center gap-1.5"><Clock className="w-3.5 h-3.5 text-success" /> Activation immédiate</span>
+            <span className="flex items-center gap-1.5"><Check className="w-3.5 h-3.5 text-success" /> Garantie 30j</span>
           </div>
 
           {/* Mobile scarcity strip */}
@@ -828,7 +921,7 @@ function HowItWorks() {
 
 export function Pricing() {
   return (
-    <section id="offres" className="py-20 lg:py-28">
+    <section id="offres" className="py-12 lg:py-28">
       <div className="max-w-7xl mx-auto px-4">
         <div className="text-center max-w-2xl mx-auto">
           <span className="text-sm font-semibold text-magenta uppercase tracking-wider">Choisis ta formule</span>
@@ -1211,21 +1304,23 @@ function Features() {
     { icon: TrendingUp, t: "Conçu pour convertir", d: "Boutons d'action optimisés pour transformer un contact en client." },
   ];
   return (
-    <section className="py-20 lg:py-28 bg-gradient-soft">
+    <section className="py-12 lg:py-28 bg-gradient-soft">
       <div className="max-w-6xl mx-auto px-4">
         <div className="text-center max-w-2xl mx-auto">
           <h2 className="font-display font-bold text-3xl sm:text-4xl">
             Tout ce qu'il faut. <span className="text-gradient">Rien de superflu.</span>
           </h2>
         </div>
-        <div className="mt-12 grid md:grid-cols-2 lg:grid-cols-3 gap-5">
+        <div className="mt-10 sm:mt-12 grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-4 sm:gap-5">
           {items.map((it) => (
-            <div key={it.t} className="bg-card border border-border rounded-2xl p-6 shadow-card hover:shadow-glow transition-all">
-              <div className="w-11 h-11 rounded-xl bg-gradient-brand flex items-center justify-center shadow-card">
-                <it.icon className="w-5 h-5 text-primary-foreground" />
+            <div key={it.t} className="bg-card border border-border rounded-2xl p-5 sm:p-6 shadow-card hover:shadow-glow transition-all flex sm:flex-col items-start gap-4 sm:gap-0">
+              <div className="w-10 h-10 sm:w-11 sm:h-11 rounded-xl bg-gradient-brand flex items-center justify-center shadow-card shrink-0">
+                <it.icon className="w-4.5 h-4.5 sm:w-5 sm:h-5 text-primary-foreground" />
               </div>
-              <h3 className="mt-4 font-display font-bold text-lg">{it.t}</h3>
-              <p className="mt-2 text-sm text-muted-foreground">{it.d}</p>
+              <div>
+                <h3 className="sm:mt-4 font-display font-bold text-base sm:text-lg">{it.t}</h3>
+                <p className="mt-1 sm:mt-2 text-sm text-muted-foreground">{it.d}</p>
+              </div>
             </div>
           ))}
         </div>
@@ -1346,7 +1441,7 @@ function Testimonials() {
   ];
 
   return (
-    <section id="avis" className="py-20 lg:py-28">
+    <section id="avis" className="py-12 lg:py-28">
       <div className="max-w-6xl mx-auto px-4">
         {/* Header */}
         <div className="text-center max-w-2xl mx-auto">
@@ -1369,11 +1464,11 @@ function Testimonials() {
         </div>
 
         {/* Testimonials grid */}
-        <div className="mt-14 grid md:grid-cols-2 gap-5">
+        <div className="mt-10 sm:mt-14 grid md:grid-cols-2 gap-4 sm:gap-5">
           {testimonials.map((t) => (
             <figure
               key={t.name}
-              className="relative bg-card border border-border rounded-2xl p-6 lg:p-7 shadow-card hover:shadow-glow transition-all"
+              className="relative bg-card border border-border rounded-2xl p-5 lg:p-7 shadow-card hover:shadow-glow transition-all"
             >
               {/* Quote icon */}
               <Quote className="absolute top-6 right-6 w-8 h-8 text-muted-foreground/20" />
@@ -1459,7 +1554,7 @@ function Comparison() {
     ["Effet sur prospects", "Banal", "Wow effect"],
   ];
   return (
-    <section className="py-20 lg:py-28 bg-gradient-soft">
+    <section className="py-12 lg:py-28 bg-gradient-soft">
       <div className="max-w-4xl mx-auto px-4">
         <div className="text-center max-w-2xl mx-auto">
           <h2 className="font-display font-bold text-3xl sm:text-4xl">
@@ -1498,7 +1593,7 @@ function FAQ() {
   ];
   const [open, setOpen] = useState<number | null>(0);
   return (
-    <section id="faq" className="py-20 lg:py-28">
+    <section id="faq" className="py-12 lg:py-28">
       <div className="max-w-3xl mx-auto px-4">
         <div className="text-center">
           <h2 className="font-display font-bold text-3xl sm:text-4xl">Questions <span className="text-gradient">fréquentes</span></h2>
@@ -1528,23 +1623,23 @@ function FAQ() {
 
 function FinalCTA() {
   return (
-    <section className="py-20 lg:py-28">
+    <section className="py-12 lg:py-28">
       <div className="max-w-5xl mx-auto px-4">
-        <div className="relative overflow-hidden rounded-[2.5rem] bg-gradient-brand text-primary-foreground p-10 sm:p-16 text-center shadow-glow">
+        <div className="relative overflow-hidden rounded-[2rem] sm:rounded-[2.5rem] bg-gradient-brand text-primary-foreground p-8 sm:p-16 text-center shadow-glow">
           <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_white_0%,_transparent_50%)] opacity-10" />
           <div className="relative">
             <div className="inline-flex items-center gap-2 bg-white/20 backdrop-blur px-4 py-1.5 rounded-full text-xs font-semibold">
               <Users className="w-4 h-4" /> Rejoignez 2 400+ pros
             </div>
-            <h2 className="mt-5 font-display font-extrabold text-4xl sm:text-5xl leading-tight">
+            <h2 className="mt-4 sm:mt-5 font-display font-extrabold text-3xl sm:text-5xl leading-tight">
               Ta prochaine rencontre<br className="hidden sm:block" /> mérite mieux qu'un papier.
             </h2>
-            <p className="mt-5 text-lg opacity-90 max-w-xl mx-auto">
+            <p className="mt-4 sm:mt-5 text-base sm:text-lg opacity-90 max-w-xl mx-auto">
               Crée ta carte digitale en 3 minutes. Essai gratuit 7 jours, sans CB. Garantie 30 jours.
             </p>
             <a
               href="/inscription"
-              className="mt-8 inline-flex items-center gap-2 bg-background text-foreground px-8 py-4 rounded-xl font-bold text-lg shadow-card hover:scale-[1.03] transition-all"
+              className="mt-7 sm:mt-8 inline-flex items-center gap-2 bg-background text-foreground px-6 sm:px-8 py-3.5 sm:py-4 rounded-xl font-bold text-base sm:text-lg shadow-card hover:scale-[1.03] transition-all"
             >
               Commencer gratuitement
               <ArrowRight className="w-5 h-5" />
@@ -1570,7 +1665,6 @@ export function Footer() {
             <p className="font-display font-bold text-sm text-foreground mb-4">Produit</p>
             <ul className="space-y-2 text-sm text-muted-foreground">
               <li><Link to="/" className="hover:text-foreground transition">Accueil</Link></li>
-              
               <li><Link to="/templates" className="hover:text-foreground transition">Templates</Link></li>
               <li><Link to="/carte-physique" className="hover:text-foreground transition">Carte connectée</Link></li>
               <li><Link to="/metiers" className="hover:text-foreground transition">Carte par métier</Link></li>
@@ -1586,17 +1680,23 @@ export function Footer() {
               <li><Link to="/metiers/avocat" className="hover:text-foreground transition">Avocat</Link></li>
               <li><Link to="/metiers/notaire" className="hover:text-foreground transition">Notaire</Link></li>
               <li><Link to="/metiers/agent-immobilier" className="hover:text-foreground transition">Agent immobilier</Link></li>
-              <li><Link to="/metiers/photographe" className="hover:text-foreground transition">Photographe</Link></li>
-              <li><Link to="/metiers/coach-sportif" className="hover:text-foreground transition">Coach sportif</Link></li>
-              <li><Link to="/metiers/osteopathe" className="hover:text-foreground transition">Ostéopathe</Link></li>
-              <li><Link to="/metiers/dentiste" className="hover:text-foreground transition">Dentiste</Link></li>
-              <li><Link to="/metiers/coiffeuse" className="hover:text-foreground transition">Coiffeuse</Link></li>
+              {/* Mobile: show "Voir tous" link instead of full list */}
+              <li className="md:hidden">
+                <Link to="/metiers" className="inline-flex items-center gap-1 text-magenta font-medium hover:underline transition">
+                  Voir tous les métiers <ArrowRight className="w-3 h-3" />
+                </Link>
+              </li>
+              <li className="hidden md:list-item"><Link to="/metiers/photographe" className="hover:text-foreground transition">Photographe</Link></li>
+              <li className="hidden md:list-item"><Link to="/metiers/coach-sportif" className="hover:text-foreground transition">Coach sportif</Link></li>
+              <li className="hidden md:list-item"><Link to="/metiers/osteopathe" className="hover:text-foreground transition">Ostéopathe</Link></li>
+              <li className="hidden md:list-item"><Link to="/metiers/dentiste" className="hover:text-foreground transition">Dentiste</Link></li>
+              <li className="hidden md:list-item"><Link to="/metiers/coiffeuse" className="hover:text-foreground transition">Coiffeuse</Link></li>
             </ul>
           </div>
 
-          {/* Métiers — colonne 2 */}
-          <div>
-            <p className="font-display font-bold text-sm text-foreground mb-4 md:invisible">Par métier</p>
+          {/* Métiers — colonne 2 (desktop only) */}
+          <div className="hidden md:block">
+            <p className="font-display font-bold text-sm text-foreground mb-4 invisible">Par métier</p>
             <ul className="space-y-2 text-sm text-muted-foreground">
               <li><Link to="/metiers/menuisier" className="hover:text-foreground transition">Menuisier</Link></li>
               <li><Link to="/metiers/electricien" className="hover:text-foreground transition">Électricien</Link></li>
