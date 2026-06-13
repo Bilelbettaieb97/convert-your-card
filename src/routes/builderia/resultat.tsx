@@ -138,7 +138,7 @@ function BuilderIAResultatPage() {
       // Remettre le flag pour qu'un retour depuis Stripe repasse par /builderia/resultat
       localStorage.setItem("cyk.card.pending", JSON.stringify(cardWithTheme));
       localStorage.setItem("cyk.builderia.generated", "1");
-      await supabase.rpc("track_builderia_step", { p_user_id: user.id, p_step: 3, p_step_name: "stripe-checkout" });
+      supabase.rpc("track_builderia_step", { p_user_id: user.id, p_step: 3, p_step_name: "stripe-checkout" }).then(() => {});
       const { url } = await createCheckoutSession({
         data: { plan: "vitrine", billing: "monthly", email: user.email ?? (user.user_metadata?.pending_email as string | undefined) ?? localStorage.getItem("cyk.pending_email") ?? "", userId: user.id },
       });
