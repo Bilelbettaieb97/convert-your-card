@@ -242,14 +242,14 @@ function BuilderIAPromptPage() {
   // ═══════════════════════════════════════════════════════
   if (phase === "prompt") {
     return (
-      <div className="min-h-screen bg-gradient-to-br from-[#0d0014] via-[#12002a] to-[#0a0018] flex flex-col px-4 py-10 overflow-y-auto">
-        <div className="w-full max-w-lg mx-auto flex flex-col gap-6">
+      <div className="min-h-screen bg-gradient-to-br from-[#0d0014] via-[#12002a] to-[#0a0018] flex flex-col px-4 py-8 overflow-y-auto">
+        <div className="w-full max-w-lg mx-auto flex flex-col gap-5">
 
           {/* ── Header ── */}
-          <div className="flex flex-col items-center text-center gap-3 pt-2">
-            <div className="flex items-center gap-2 px-3.5 py-1.5 rounded-full border border-[#c026d3]/30 bg-[#c026d3]/10">
-              <Sparkles className="w-3.5 h-3.5 text-[#c026d3]" />
-              <span className="text-xs font-semibold text-[#c026d3]">Carte générée en 30 secondes</span>
+          <div className="flex flex-col items-center text-center gap-2 pt-1">
+            <div className="flex items-center gap-2 px-3 py-1 rounded-full border border-[#c026d3]/30 bg-[#c026d3]/10">
+              <Sparkles className="w-3 h-3 text-[#c026d3]" />
+              <span className="text-[11px] font-semibold text-[#c026d3]">Carte générée en 30 secondes</span>
             </div>
 
             <h1 className="text-3xl sm:text-4xl font-bold text-white leading-tight">
@@ -266,87 +266,76 @@ function BuilderIAPromptPage() {
               )}
             </h1>
 
-            <p className="text-white/55 text-sm leading-relaxed max-w-sm">
-              Une phrase suffit. L'IA construit ta carte professionnelle complète, prête à partager.
+            {/* Social proof */}
+            <p className="text-white/35 text-xs">
+              2 400+ professionnels · 4,9★ Trustpilot
             </p>
+
+            {/* 3 items horizontaux — ce que l'IA génère */}
+            <div className="flex items-center gap-2 flex-wrap justify-center mt-1">
+              {[
+                { icon: "📝", label: "Bio" },
+                { icon: "💼", label: "Services" },
+                { icon: "⭐", label: "Avis clients" },
+                { icon: "📊", label: "Stats" },
+              ].map(({ icon, label }) => (
+                <span key={label} className="flex items-center gap-1.5 px-2.5 py-1 rounded-full bg-white/[0.06] border border-white/10 text-white/50 text-[11px]">
+                  <span>{icon}</span>{label}
+                </span>
+              ))}
+              <span className="text-white/20 text-[11px]">+ thème couleur</span>
+            </div>
           </div>
 
-          {/* ── Ce que l'IA génère ── */}
-          <div className="rounded-2xl border border-white/10 bg-white/[0.03] px-4 py-4">
-            <p className="text-white/35 text-[11px] uppercase tracking-widest mb-3 text-center">
-              Ce que l'IA va créer pour toi
+          {/* ── Chips métier — ACTION PRINCIPALE ── */}
+          <div>
+            <p className="text-white/50 text-xs font-semibold uppercase tracking-widest mb-2.5 text-center">
+              Choisis ton métier
             </p>
-            <div className="grid grid-cols-2 gap-2">
-              {[
-                { icon: "📝", label: "Bio percutante",      sub: "Rédigée selon ton métier" },
-                { icon: "💼", label: "3–4 services",        sub: "Tes offres présentées" },
-                { icon: "⭐", label: "3 avis clients",      sub: "Témoignages crédibles" },
-                { icon: "📊", label: "4 chiffres clés",     sub: "KPIs qui rassurent" },
-                { icon: "📅", label: "Prise de RDV",        sub: "Lien Calendly intégré" },
-                { icon: "🎨", label: "Thème couleur",       sub: "Adapté à ton secteur" },
-              ].map(({ icon, label, sub }) => (
-                <div key={label} className="flex items-start gap-2.5 rounded-xl bg-white/[0.03] border border-white/[0.06] px-3 py-2.5">
-                  <span className="text-lg shrink-0 mt-0.5">{icon}</span>
-                  <div>
-                    <p className="text-white/85 text-xs font-semibold leading-snug">{label}</p>
-                    <p className="text-white/35 text-[10px] leading-snug">{sub}</p>
-                  </div>
-                </div>
+            <div className="grid grid-cols-2 gap-2.5">
+              {EXAMPLES.map((ex) => (
+                <button
+                  key={ex.full}
+                  type="button"
+                  onClick={() => handleChipClick(ex.full)}
+                  className="flex items-center gap-3 rounded-2xl border border-white/15 bg-white/[0.06] hover:bg-white/[0.12] hover:border-[#c026d3]/50 px-4 py-4 text-left transition-all active:scale-95 shadow-sm"
+                >
+                  <span className="text-2xl shrink-0">{ex.icon}</span>
+                  <span className="text-sm text-white/80 font-semibold leading-snug">{ex.short}</span>
+                </button>
               ))}
             </div>
           </div>
 
-          {/* ── Textarea / chatbot ── */}
-          <form onSubmit={handleGenerate} className="flex flex-col gap-3">
-            <div>
-              <p className="text-white/40 text-xs uppercase tracking-widest mb-2 text-center">
-                Décris ton activité
-              </p>
-              <textarea
-                value={input}
-                onChange={(e) => setInput(e.target.value)}
-                placeholder="Ex : Plombier à Paris, dépannage 24h/24, spécialisé en rénovation salle de bain…"
-                rows={3}
-                onKeyDown={(e) => {
-                  if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); handleGenerate(e as unknown as React.FormEvent); }
-                }}
-                className="w-full rounded-2xl border border-white/15 bg-white/5 px-4 py-3.5 text-white placeholder:text-white/30 text-base focus:outline-none focus:ring-2 focus:ring-[#c026d3]/50 focus:border-[#c026d3]/50 transition resize-none backdrop-blur"
-              />
-            </div>
+          {/* ── Séparateur ── */}
+          <div className="flex items-center gap-3">
+            <div className="flex-1 h-px bg-white/10" />
+            <span className="text-white/25 text-xs shrink-0">ou décris en tes mots</span>
+            <div className="flex-1 h-px bg-white/10" />
+          </div>
+
+          {/* ── Textarea — ACTION SECONDAIRE ── */}
+          <form onSubmit={handleGenerate} className="flex flex-col gap-3 pb-6">
+            <textarea
+              value={input}
+              onChange={(e) => setInput(e.target.value)}
+              placeholder="Ex : Plombier à Paris, urgence 24h/24, rénovation salle de bain…"
+              rows={2}
+              onKeyDown={(e) => {
+                if (e.key === "Enter" && !e.shiftKey) { e.preventDefault(); handleGenerate(e as unknown as React.FormEvent); }
+              }}
+              className="w-full rounded-2xl border border-white/15 bg-white/5 px-4 py-3.5 text-white placeholder:text-white/25 text-base focus:outline-none focus:ring-2 focus:ring-[#c026d3]/50 focus:border-[#c026d3]/50 transition resize-none backdrop-blur"
+            />
             <button
               type="submit"
               disabled={!input.trim()}
-              className="w-full flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-[#c026d3] to-[#7c3aed] text-white font-bold py-4 text-base hover:opacity-90 active:scale-[0.98] transition disabled:opacity-30"
+              className="w-full flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-[#c026d3] to-[#7c3aed] text-white font-bold py-4 text-base hover:opacity-90 active:scale-[0.98] transition disabled:opacity-25"
             >
               <Sparkles className="w-4 h-4" />
               Générer ma carte
             </button>
             {error && <p className="text-red-400 text-sm text-center">{error}</p>}
           </form>
-
-          {/* ── Séparateur ── */}
-          <div className="flex items-center gap-3">
-            <div className="flex-1 h-px bg-white/10" />
-            <span className="text-white/25 text-xs">ou choisis un métier</span>
-            <div className="flex-1 h-px bg-white/10" />
-          </div>
-
-          {/* ── Chips métier — en bas ── */}
-          <div className="pb-4">
-            <div className="grid grid-cols-2 gap-2">
-              {EXAMPLES.map((ex) => (
-                <button
-                  key={ex.full}
-                  type="button"
-                  onClick={() => handleChipClick(ex.full)}
-                  className="flex items-center gap-3 rounded-2xl border border-white/10 bg-white/[0.04] hover:bg-white/[0.09] hover:border-[#c026d3]/40 px-4 py-3.5 text-left transition-all active:scale-95"
-                >
-                  <span className="text-xl shrink-0">{ex.icon}</span>
-                  <span className="text-sm text-white/75 font-medium leading-snug">{ex.short}</span>
-                </button>
-              ))}
-            </div>
-          </div>
 
         </div>
       </div>
