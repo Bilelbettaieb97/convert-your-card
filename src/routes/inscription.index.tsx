@@ -162,14 +162,7 @@ function InscriptionPage() {
         if (anonErr) throw anonErr;
       }
 
-      // 2. Lier l'email au compte anonyme — envoie la confirmation par email
-      const { error: updateErr } = await supabase.auth.updateUser({
-        email: trimmed,
-        data: { pending_email: trimmed },
-      });
-      if (updateErr) throw updateErr;
-
-      // 3. Stocker l'email pour le checkout Stripe (user.email encore null avant confirmation)
+      // 2. Stocker l'email pour le checkout Stripe (user.email null sur compte anonyme)
       localStorage.setItem("cyk.pending_email", trimmed);
 
       if (typeof window !== "undefined" && (window as any).fbq) {
@@ -292,10 +285,10 @@ function InscriptionPage() {
                       className="w-full bg-gradient-cta text-primary-foreground rounded-full py-3 text-sm font-semibold shadow-card hover:shadow-glow transition-all disabled:opacity-60 flex items-center justify-center gap-2"
                     >
                       {submitting ? (
-                        "Envoi en cours…"
+                        "Création en cours…"
                       ) : (
                         <>
-                          Recevoir mon lien de connexion
+                          Générer ma carte de visite digitale
                           <ArrowRight className="w-4 h-4" />
                         </>
                       )}
