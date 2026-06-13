@@ -239,7 +239,7 @@ function InscriptionPage() {
             </div>
 
             {/* Trust bar — mobile only */}
-            <div className="lg:hidden flex items-center justify-center gap-3 mb-4">
+            <div className="lg:hidden flex items-center justify-center gap-3 mb-5">
               <div className="flex -space-x-1.5">
                 {["MB", "CL", "TK", "DR"].map((i) => (
                   <div key={i} className="w-7 h-7 rounded-full bg-gradient-brand border-2 border-background flex items-center justify-center text-[9px] font-bold text-white shrink-0">
@@ -250,6 +250,26 @@ function InscriptionPage() {
               <p className="text-xs text-muted-foreground">
                 <strong className="text-foreground font-semibold">+2 400 pros</strong> · ★★★★★ 4.8/5
               </p>
+            </div>
+
+            {/* Phone preview — mobile only */}
+            <div className="lg:hidden flex justify-center mb-5 pointer-events-none select-none">
+              <div className="relative">
+                <div
+                  className="relative overflow-hidden rounded-[24px] shadow-[0_0_40px_rgba(192,38,211,0.18)]"
+                  style={{ width: 160, height: 240 }}
+                >
+                  <div style={{ transform: "scale(0.444)", transformOrigin: "top left", width: 360 }}>
+                    <PhoneFrame>
+                      <BusinessCard data={DEMO_CARD} />
+                    </PhoneFrame>
+                  </div>
+                  <div className="absolute bottom-0 left-0 right-0 h-14 bg-gradient-to-t from-background to-transparent" />
+                </div>
+                <div className="absolute -top-2 -right-3 bg-emerald-500 text-white text-[10px] font-bold px-2.5 py-1 rounded-full shadow-lg whitespace-nowrap z-10">
+                  ✓ En ligne
+                </div>
+              </div>
             </div>
 
             {!sent ? (
