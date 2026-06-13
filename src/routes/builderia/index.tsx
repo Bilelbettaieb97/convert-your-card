@@ -1,10 +1,9 @@
 import { createFileRoute, useNavigate } from "@tanstack/react-router";
 import { useState, useEffect, useRef } from "react";
-import { Sparkles, ArrowRight } from "lucide-react";
+import { Sparkles } from "lucide-react";
 import { useAuthStore } from "@/lib/auth-store";
 import { useCardStore } from "@/lib/card-store";
 import { supabase } from "@/integrations/supabase/client";
-import { BusinessCard } from "@/components/card/BusinessCard";
 import { DEFAULT_CARD, type CardData, type BrickId } from "@/lib/card-types";
 
 export const Route = createFileRoute("/builderia/")({
@@ -82,6 +81,11 @@ function BuilderIAPromptPage() {
   const animDoneRef = useRef(false);
   const resultReady = useRef(false);
   const partialRef = useRef<Partial<CardData>>({});
+  const abortRef = useRef<AbortController | null>(null);
+
+  useEffect(() => {
+    return () => { abortRef.current?.abort(); };
+  }, []);
 
   useEffect(() => {
     if (!loading && !user) navigate({ to: "/connexion" });
@@ -109,8 +113,8 @@ function BuilderIAPromptPage() {
     user?.email?.split("@")[0] ||
     "";
   const rawFirst = userName.split(" ")[0] || "";
-  // Email prefixes (e.g. "jean.dupont97", "bilelbettaieb97") look bad in the headline
-  const firstName = /^[a-zA-ZÀ-ÿ]{2,}$/.test(rawFirst) ? rawFirst : "toi";
+  // Email prefixes (e.g. "jean.dupont97") look bad in the headline; allow hyphenated names
+  const firstName = /^[a-zA-ZÀ-ÿ][a-zA-ZÀ-ÿ-]{1,}$/.test(rawFirst) ? rawFirst : "toi";
 
   function triggerFlip() {
     setIsFlipping(true);
@@ -121,6 +125,10 @@ function BuilderIAPromptPage() {
 
   async function runGeneration(text: string) {
     if (!text.trim()) return;
+
+    abortRef.current?.abort();
+    const controller = new AbortController();
+    abortRef.current = controller;
 
     setPhase("building");
     setBuildStep(0);
@@ -134,6 +142,7 @@ function BuilderIAPromptPage() {
       const response = await fetch("/api/generate-card-stream", {
         method: "POST",
         headers: { "Content-Type": "application/json" },
+        signal: controller.signal,
         body: JSON.stringify({
           input: text.trim(),
           name: userName || undefined,
@@ -194,7 +203,8 @@ function BuilderIAPromptPage() {
       resultReady.current = true;
       if (animDoneRef.current) triggerFlip();
 
-    } catch {
+    } catch (err) {
+      if (err instanceof Error && err.name === "AbortError") return;
       setPhase("prompt");
       setError("Une erreur est survenue, réessaie.");
     }
@@ -255,17 +265,10 @@ function BuilderIAPromptPage() {
             </div>
 
             <h1 className="text-3xl sm:text-4xl font-bold text-white leading-tight">
-              {firstName ? (
-                <>{firstName},{" "}
-                <span className="bg-gradient-to-r from-[#c026d3] to-[#7c3aed] bg-clip-text text-transparent">
-                  dis-moi ce que tu fais.
-                </span></>
-              ) : (
-                <>Dis-moi ce que tu fais.{" "}
-                <span className="bg-gradient-to-r from-[#c026d3] to-[#7c3aed] bg-clip-text text-transparent">
-                  Je crée ta carte.
-                </span></>
-              )}
+              {firstName},{" "}
+              <span className="bg-gradient-to-r from-[#c026d3] to-[#7c3aed] bg-clip-text text-transparent">
+                dis-moi ce que tu fais.
+              </span>
             </h1>
 
             {/* Sous-titre émotionnel */}
