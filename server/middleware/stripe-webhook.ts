@@ -220,8 +220,10 @@ export default defineEventHandler(async (event) => {
 
     // Find user by email via RPC — évite la limite de pagination listUsers() (50 max par défaut)
     const { data: userIdData } = await adminSupabase.rpc("get_user_id_by_email", { email_param: email });
-    const userId: string | null = userIdData ?? null;
-    console.log("[stripe-webhook] User found:", userId ? "yes" : "no (email: " + email + ")");
+    // Fallback : user anonyme (pas d'email dans auth) → utiliser le user_id des métadonnées Stripe
+    const metadataUserId: string | null = session.metadata?.user_id || null;
+    const userId: string | null = userIdData ?? metadataUserId;
+    console.log("[stripe-webhook] User found:", userId ? "yes (id: " + userId + ")" : "no (email: " + email + ")");
 
     // Generate unique slug
     const slugBase = email.split("@")[0].toLowerCase().replace(/[^a-z0-9]+/g, "-").slice(0, 25);
