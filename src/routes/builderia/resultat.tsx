@@ -222,7 +222,7 @@ function BuilderIAResultatPage() {
         </div>
       </div>
 
-      <div className="max-w-5xl mx-auto px-4 py-4 lg:py-10 grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-10 items-start">
+      <div className="max-w-5xl mx-auto px-4 py-4 lg:py-10 grid grid-cols-1 lg:grid-cols-2 gap-6 lg:gap-10 items-start pb-32 lg:pb-0">
 
         {/* ── Gauche : phone ── 1er sur mobile ET desktop */}
         <div className="flex flex-col items-center gap-4 order-1">
@@ -348,7 +348,8 @@ function BuilderIAResultatPage() {
 
           {error && <p className="text-red-400 text-sm text-center">{error}</p>}
 
-          <div className="space-y-3 pt-1">
+          {/* CTA desktop uniquement — sur mobile c'est la barre sticky en bas */}
+          <div className="hidden lg:block space-y-3 pt-1">
             <button
               type="button"
               onClick={handleActivateVitrine}
@@ -372,17 +373,35 @@ function BuilderIAResultatPage() {
               <span className="text-xs text-muted-foreground">ou</span>
               <div className="flex-1 h-px bg-border" />
             </div>
-
-            <button
-              type="button"
-              onClick={() => navigate({ to: "/builderia" })}
-              className="w-full flex items-center justify-center gap-2 text-xs text-muted-foreground hover:text-foreground transition py-1.5"
-            >
-              <RotateCcw className="w-3 h-3" />
-              Refaire le prompt
-            </button>
           </div>
+
+          <button
+            type="button"
+            onClick={() => navigate({ to: "/builderia" })}
+            className="w-full flex items-center justify-center gap-2 text-xs text-muted-foreground hover:text-foreground transition py-1.5"
+          >
+            <RotateCcw className="w-3 h-3" />
+            Refaire le prompt
+          </button>
         </div>
+      </div>
+
+      {/* ── Sticky CTA — mobile uniquement ── */}
+      <div className="lg:hidden fixed bottom-0 left-0 right-0 z-50 bg-background/95 backdrop-blur border-t border-border px-4 py-3 space-y-1.5">
+        <button
+          type="button"
+          onClick={handleActivateVitrine}
+          disabled={activating}
+          className="w-full flex items-center justify-center gap-2 rounded-2xl bg-gradient-to-r from-[#c026d3] to-[#7c3aed] text-white font-bold py-4 text-base active:scale-[0.98] transition shadow-lg shadow-[#c026d3]/20 disabled:opacity-70 disabled:cursor-not-allowed"
+        >
+          {activating
+            ? <><Loader2 className="w-4 h-4 animate-spin" /> Publication en cours…</>
+            : <><Rocket className="w-4 h-4" /> Je publie ma carte — 3 jours gratuits</>
+          }
+        </button>
+        <p className="text-center text-[11px] text-muted-foreground">
+          Sans carte bleue · Sans engagement · Puis 4,80€/mois
+        </p>
       </div>
     </div>
   );
