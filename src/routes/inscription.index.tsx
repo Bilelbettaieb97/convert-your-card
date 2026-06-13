@@ -75,6 +75,12 @@ const DEMO_CARD: CardData = {
   contactEnabled: true,
 };
 
+const TESTIMONIALS = [
+  { initials: "MB", name: "Marc B.", role: "Plombier · Paris", text: "+40% de contacts en 2 semaines. Mes clients appellent direct depuis la carte." },
+  { initials: "CL", name: "Céline L.", role: "Coach · Lyon", text: "Mon lien CVD en bio Instagram. Ça convertit bien mieux que les cartes papier." },
+  { initials: "TK", name: "Thomas K.", role: "Photographe · Bordeaux", text: "Créé en 3 min. Les mariés réservent directement via mon agenda intégré." },
+];
+
 function GoogleIcon() {
   return (
     <svg viewBox="0 0 24 24" className="w-4 h-4" aria-hidden="true">
@@ -86,6 +92,21 @@ function GoogleIcon() {
   );
 }
 
+function GmailIcon() {
+  return (
+    <svg viewBox="0 0 24 24" className="w-4 h-4" aria-hidden="true">
+      <path d="M24 5.457v13.909c0 .904-.732 1.636-1.636 1.636h-3.819V11.73L12 16.64l-6.545-4.91v9.273H1.636A1.636 1.636 0 0 1 0 19.366V5.457c0-2.023 2.309-3.178 3.927-1.964L5.455 4.64 12 9.548l6.545-4.91 1.528-1.145C21.69 2.28 24 3.434 24 5.457z" fill="#EA4335"/>
+    </svg>
+  );
+}
+
+function OutlookIcon() {
+  return (
+    <svg viewBox="0 0 24 24" className="w-4 h-4" aria-hidden="true">
+      <path d="M7.88 12.04q0 .45-.11.87-.1.41-.33.74-.22.33-.58.52-.37.2-.87.2t-.85-.2q-.35-.21-.57-.55-.22-.33-.33-.75-.1-.42-.1-.86t.1-.87q.1-.43.34-.76.22-.34.59-.54.36-.2.87-.2t.86.2q.35.21.57.55.22.34.31.77.1.43.1.88zM24 12v9.38q0 .46-.33.8-.33.32-.8.32H7.13q-.46 0-.8-.32-.32-.34-.32-.8V18H1q-.41 0-.7-.3-.3-.29-.3-.7V7q0-.41.3-.7Q.58 6 1 6h6V2.55q0-.44.3-.75.3-.3.75-.3h12.9q.44 0 .75.3.3.3.3.75V10.85l1.24.72h.01q.1.07.18.18.07.12.07.25zm-6-8.25v3h3l-3-3zm4.5 10.96l-4.5-2.7v2.45h-2v-2.45l-4.5 2.7 4.5 2.7v-2.44h2v2.44l4.5-2.7z" fill="#0072C6"/>
+    </svg>
+  );
+}
 
 export const Route = createFileRoute("/inscription/")({
   validateSearch: z.object({ redirect: z.string().optional() }),
@@ -126,6 +147,7 @@ function InscriptionPage() {
   const [submitting, setSubmitting] = useState(false);
   const [sent, setSent] = useState(false);
   const [googleLoading, setGoogleLoading] = useState(false);
+
   async function handleGoogleLogin() {
     setGoogleLoading(true);
     const appUrl = typeof window !== "undefined" ? window.location.origin : "https://www.cartevisitedigitale.fr";
@@ -216,6 +238,20 @@ function InscriptionPage() {
               <span className="font-display font-bold text-sm leading-tight">Carte Visite Digitale</span>
             </div>
 
+            {/* Trust bar — mobile only */}
+            <div className="lg:hidden flex items-center justify-center gap-3 mb-4">
+              <div className="flex -space-x-1.5">
+                {["MB", "CL", "TK", "DR"].map((i) => (
+                  <div key={i} className="w-7 h-7 rounded-full bg-gradient-brand border-2 border-background flex items-center justify-center text-[9px] font-bold text-white shrink-0">
+                    {i}
+                  </div>
+                ))}
+              </div>
+              <p className="text-xs text-muted-foreground">
+                <strong className="text-foreground font-semibold">+2 400 pros</strong> · ★★★★★ 4.8/5
+              </p>
+            </div>
+
             {!sent ? (
               <div className="bg-card border border-border rounded-2xl shadow-card p-6 sm:p-8">
                 <p className="text-xs font-semibold uppercase tracking-wider text-magenta mb-2">
@@ -266,7 +302,6 @@ function InscriptionPage() {
                         type="email"
                         required
                         autoComplete="email"
-                        autoFocus
                         value={email}
                         onChange={(e) => setEmail(e.target.value)}
                         className="w-full rounded-xl border border-border bg-background px-4 py-3 text-sm text-foreground placeholder:text-muted-foreground focus:outline-none focus:ring-2 focus:ring-magenta/40 focus:border-magenta transition"
@@ -283,7 +318,7 @@ function InscriptionPage() {
                         "Envoi en cours…"
                       ) : (
                         <>
-                          Recevoir mon lien de connexion
+                          Commencer gratuitement
                           <ArrowRight className="w-4 h-4" />
                         </>
                       )}
@@ -297,8 +332,11 @@ function InscriptionPage() {
               </div>
             ) : (
               <div className="bg-card border border-border rounded-2xl shadow-card p-6 sm:p-8 text-center">
-                <div className="w-16 h-16 bg-magenta/10 rounded-full flex items-center justify-center mx-auto mb-5">
-                  <Mail className="w-8 h-8 text-magenta" />
+                <div className="relative mx-auto mb-5 w-fit">
+                  <div className="w-16 h-16 bg-magenta/10 rounded-full flex items-center justify-center">
+                    <Mail className="w-8 h-8 text-magenta" />
+                  </div>
+                  <div className="absolute inset-0 rounded-full border-2 border-magenta/30 animate-ping" />
                 </div>
                 <h2 className="font-display text-2xl font-bold text-foreground mb-2">
                   Vérifie ta boîte email
@@ -308,12 +346,31 @@ function InscriptionPage() {
                 </p>
                 <p className="text-sm font-semibold text-foreground mb-6 break-all">{email}</p>
 
-                <div className="bg-muted/40 rounded-xl p-4 mb-6 text-left space-y-2">
-                  <p className="text-xs font-medium text-foreground">Comment ça marche :</p>
-                  <p className="text-xs text-muted-foreground">1. Ouvre ta boîte email</p>
-                  <p className="text-xs text-muted-foreground">2. Clique sur le lien dans l'email de Carte Visite Digitale</p>
-                  <p className="text-xs text-muted-foreground">3. Tu es connecté et tu peux commencer !</p>
+                {/* Raccourcis email clients */}
+                <div className="flex flex-col gap-2 mb-4">
+                  <a
+                    href={`https://mail.google.com/mail/u/0/#search/from%3Acarte+visite+digitale`}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-center gap-2 w-full rounded-xl border border-border bg-background py-2.5 text-sm font-medium text-foreground hover:bg-muted/50 transition"
+                  >
+                    <GmailIcon />
+                    Ouvrir Gmail
+                  </a>
+                  <a
+                    href="https://outlook.live.com/mail/"
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="flex items-center justify-center gap-2 w-full rounded-xl border border-border bg-background py-2.5 text-sm font-medium text-foreground hover:bg-muted/50 transition"
+                  >
+                    <OutlookIcon />
+                    Ouvrir Outlook
+                  </a>
                 </div>
+
+                <p className="text-[11px] text-muted-foreground mb-4">
+                  Vérifie aussi ton dossier spam si tu ne vois pas l'email.
+                </p>
 
                 <div className="flex flex-col gap-2">
                   <button
@@ -342,6 +399,28 @@ function InscriptionPage() {
                 Connecte-toi
               </Link>
             </p>
+
+            {/* Témoignages — mobile only */}
+            <div className="lg:hidden mt-8">
+              <p className="text-[11px] text-center text-muted-foreground mb-3 uppercase tracking-wider font-semibold">Ce qu'ils disent</p>
+              <div className="flex gap-2 overflow-x-auto pb-2 [scrollbar-width:none] [&::-webkit-scrollbar]:hidden snap-x snap-mandatory">
+                {TESTIMONIALS.map(({ initials, name, role, text }) => (
+                  <div key={name} className="min-w-[240px] snap-start flex gap-2.5 bg-card border border-border rounded-xl px-3 py-2.5 shrink-0">
+                    <div className="w-7 h-7 rounded-full bg-gradient-brand flex items-center justify-center text-white text-[9px] font-bold shrink-0 mt-0.5">
+                      {initials}
+                    </div>
+                    <div className="min-w-0">
+                      <div className="flex items-center gap-1.5 mb-0.5">
+                        <span className="text-[11px] font-semibold text-foreground">{name}</span>
+                        <span className="text-[10px] text-muted-foreground truncate">{role}</span>
+                      </div>
+                      <p className="text-[10px] text-muted-foreground leading-relaxed">{text}</p>
+                      <p className="text-amber-400 text-[9px] mt-1">★★★★★</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
           </div>
         </div>
 
@@ -357,7 +436,6 @@ function InscriptionPage() {
 
             {/* ── Phone (gauche) ── */}
             <div className="shrink-0 relative self-stretch flex items-center">
-              {/* Container à taille fixe : clip le phone scaled */}
               <div className="relative overflow-hidden rounded-[28px] shadow-[0_0_60px_rgba(192,38,211,0.25)]"
                 style={{ width: 218, height: 448 }}>
                 <div ref={phoneRef} style={{ transform: "scale(0.605)", transformOrigin: "top left", width: 360 }}>
@@ -365,10 +443,8 @@ function InscriptionPage() {
                     <BusinessCard data={DEMO_CARD} />
                   </PhoneFrame>
                 </div>
-                {/* Overlay : bloque les clics, forward le scroll via useEffect */}
                 <div ref={overlayRef} className="absolute inset-0 z-10 cursor-default" />
               </div>
-              {/* Badge flottant */}
               <div className="absolute -top-2 -right-3 bg-emerald-500 text-white text-[10px] font-bold px-2.5 py-1 rounded-full shadow-lg whitespace-nowrap z-10">
                 ✓ En ligne
               </div>
@@ -377,7 +453,6 @@ function InscriptionPage() {
             {/* ── Contenu (droite) ── */}
             <div className="flex-1 min-w-0 flex flex-col gap-6">
 
-              {/* Titre */}
               <div>
                 <p className="text-[11px] uppercase tracking-widest text-magenta/80 font-semibold mb-2">Ce que tu vas obtenir</p>
                 <h2 className="text-xl font-bold text-white leading-snug">
@@ -385,7 +460,6 @@ function InscriptionPage() {
                 </h2>
               </div>
 
-              {/* 3 étapes */}
               <div className="space-y-3">
                 <p className="text-[10px] uppercase tracking-widest text-white/35 font-semibold">Après ton inscription</p>
                 {[
@@ -405,16 +479,10 @@ function InscriptionPage() {
                 ))}
               </div>
 
-              {/* Séparateur */}
               <div className="h-px bg-white/10" />
 
-              {/* 3 mini témoignages */}
               <div className="space-y-2">
-                {[
-                  { initials: "MB", name: "Marc B.", role: "Plombier · Paris", text: "+40% de contacts en 2 semaines. Mes clients appellent direct depuis la carte." },
-                  { initials: "CL", name: "Céline L.", role: "Coach · Lyon", text: "Mon lien CVD en bio Instagram. Ça convertit bien mieux que les cartes papier." },
-                  { initials: "TK", name: "Thomas K.", role: "Photographe · Bordeaux", text: "Créé en 3 min. Les mariés réservent directement via mon agenda intégré." },
-                ].map(({ initials, name, role, text }) => (
+                {TESTIMONIALS.map(({ initials, name, role, text }) => (
                   <div key={name} className="flex gap-2.5 bg-white/5 border border-white/10 rounded-xl px-3 py-2.5">
                     <div className="w-7 h-7 rounded-full bg-gradient-to-br from-[#c026d3]/60 to-[#7c3aed]/60 flex items-center justify-center text-white text-[9px] font-bold shrink-0">
                       {initials}
@@ -431,7 +499,6 @@ function InscriptionPage() {
                 ))}
               </div>
 
-              {/* Badges sécurité */}
               <div className="flex items-center gap-5 text-white/30 text-[11px] pt-1 border-t border-white/10">
                 <span className="flex items-center gap-1"><ShieldCheck className="w-3 h-3" />RGPD</span>
                 <span className="flex items-center gap-1"><Lock className="w-3 h-3" />SSL</span>
@@ -444,4 +511,3 @@ function InscriptionPage() {
     </>
   );
 }
-
