@@ -101,6 +101,19 @@ function BuilderIAResultatPage() {
     }
   }, [hydrated]);
 
+  useEffect(() => {
+    if (!user) return;
+    supabase
+      .from("subscriptions")
+      .select("status")
+      .eq("user_id", user.id)
+      .in("status", ["active", "trialing"])
+      .maybeSingle()
+      .then(({ data: sub }) => {
+        if (sub) navigate({ to: "/dashboard", replace: true });
+      });
+  }, [user?.id]);
+
   const generatedCard = data as CardData;
 
   const fullCard: CardData = {
