@@ -244,7 +244,12 @@ export default defineEventHandler(async (event) => {
     }
 
     // ── Série trial (J+1 onboarding / J+2 urgence) ──────────────────────────
-    const trialUsers = users.filter((r: any) => r.subscription_status === "trialing");
+    // Inclut aussi les "active" sans CB : Stripe crée parfois active au lieu de
+    // trialing selon la config checkout, ce qui faisait ignorer ces users.
+    const trialUsers = users.filter((r: any) =>
+      r.subscription_status === "trialing" ||
+      (r.subscription_status === "active" && r.had_trial && !r.payment_method_set)
+    );
 
     for (const [stepStr, minDays] of Object.entries(TR_DELAYS)) {
       const step = Number(stepStr);
