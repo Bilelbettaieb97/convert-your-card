@@ -1735,6 +1735,17 @@ export function Footer() {
             <span>© {new Date().getFullYear()}</span>
           </div>
           <p className="text-xs text-center">Carte de visite digitale professionnelle — Compatible iPhone &amp; Android, sans application</p>
+          <p className="text-xs text-center">
+            Un produit{" "}
+            <a
+              href="https://www.convertilab.com"
+              target="_blank"
+              rel="noopener"
+              className="hover:text-foreground transition underline underline-offset-2"
+            >
+              ConvertiLab, agence web
+            </a>
+          </p>
         </div>
       </div>
     </footer>
